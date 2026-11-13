@@ -15,7 +15,11 @@ def _secs(a: str | None, b: str | None) -> float | None:
 
 
 def _sum(rows, key: str) -> tuple[int | None, int]:
-    """Sum a nullable column over calls that have usage at all; return (sum or None, number of unknown rows)."""
+    """Sum a nullable column over calls that have usage at all; return (sum or None, number of unknown rows).
+
+    A run that made no model request at all used 0 tokens (known), not an unknown amount."""
+    if not rows:
+        return 0, 0
     vals = [r[key] for r in rows if r["usage_source"] != "not_applicable"]
     unknown = sum(1 for v in vals if v is None)
     known = [v for v in vals if v is not None]
@@ -36,7 +40,7 @@ def _ledger(calls) -> dict:
     known = [c["cost_usd"] for c in costs if c["cost_usd"] is not None]
     unknown = sum(1 for c in costs if c["cost_usd"] is None)
     out["cost_usd"] = round(sum(known), 6) if known else (0.0 if not costs else None)
-    out["cost_status"] = "unknown" if unknown and not known else ("partial" if unknown else
+    out["cost_status"] = "no_model_calls" if not calls else "unknown" if unknown and not known else ("partial" if unknown else
                          ("estimated" if any(c["cost_status"] == "estimated" for c in costs) else
                           ("local_no_api_fee" if costs else "not_applicable")))
     out["cost_unknown_calls"] = unknown

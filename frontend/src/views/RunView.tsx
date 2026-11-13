@@ -301,7 +301,7 @@ function Experiments({ r }: { r: Research }) {
 }
 
 function costNote(s: string) {
-  return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '脚本模型不计费', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
+  return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '脚本模型不计费', no_model_calls: '没有调用模型', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
 }
 
 function StepRow({ s, rep }: { s: Step; rep: Report }) {

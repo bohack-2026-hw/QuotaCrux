@@ -75,6 +75,30 @@ def run_markdown(run_id: str) -> str:
             what += f"（假设，未验证：{s['hypothesis']}）"
         lines.append(f"| {s['seq']} | {'模型' if s['actor'] == 'model' else '程序'} | {ACTION_ZH.get(s['action'], s['action'])} | "
                      f"{s['status']} | {_cell(what)} | {_cell('；'.join(fb))} |")
+    lines += ["", "## 假设与实验", "",
+              "状态由程序根据随后的评测判定：通过且全部样本快于基线 = 得到支持；通过但未改善 = 被反驳；"
+              "候选出错（输出错误、契约用例、超时等）= 未能检验。", "",
+              "| 候选 | 假设（模型提出，未验证） | 评测 | 判定 |", "|---|---|---|---|"]
+    evals = {}
+    for s in r["steps"]:
+        if s["actor"] == "program" and s["action"] == "run_validation" and s["candidate_id"]:
+            evals[s["candidate_id"]] = s["result"]
+    tested = 0
+    for s in r["steps"]:
+        if s["action"] != "propose_candidate" or not s["candidate_id"]:
+            continue
+        res = evals.get(s["candidate_id"], {})
+        if res.get("status") == "passed":
+            verdict = "得到支持" if res.get("improved") else "被反驳（无收益）"
+        elif res:
+            verdict = f"未能检验（{res.get('status')}）"
+        else:
+            verdict = "未评测"
+        tested += 1
+        lines.append(f"| {s['candidate_id']} | {_cell(s['hypothesis'] or s['purpose'])} | "
+                     f"{res.get('status', '—')}{(' · ' + _x(res['speedup'])) if res.get('speedup') is not None else ''} | {verdict} |")
+    if not tested:
+        lines.append("| — | 本次运行没有提出候选 | — | — |")
     lines += ["", "## 候选", "", "| 候选 | 来源 | 父候选 | 开发验证 | 加速比 | 代码 |", "|---|---|---|---|---|---|"]
     for c in r["candidates"]:
         ev = c["dev_evaluations"][-1] if c["dev_evaluations"] else {}

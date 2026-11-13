@@ -1,22 +1,313 @@
 {
   "family": "groupagg",
-  "notes": "M1 instances only. A/B/C lists are chosen and frozen by the team before any comparison is run.",
+  "notes": "Frozen before any A/B/C comparison. A = learning, B = development comparison, C = final held-out. B and C each mix new instances of A-like workloads with condition changes where A's optimizations may not hold (nearly-sorted trap, small inputs, different cardinality).",
   "tasks": [
     {
       "task_id": "smoke-01",
       "split": "smoke",
       "notes": "tiny instance for functional checks and tests; never part of A/B/C",
-      "params": {"rows": 50000, "keys": 1000, "skew": 0.5, "order": "random"},
+      "params": {
+        "rows": 50000,
+        "keys": 1000,
+        "order": "random",
+        "skew": 0.5,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
       "dev_seed": 9001,
-      "final_seed": 9002
+      "final_seed": 9002,
+      "examples_seed": 9003
     },
     {
       "task_id": "A-01",
       "split": "A",
-      "notes": "M1 connectivity instance: medium cardinality, mild skew, random order",
-      "params": {"rows": 1500000, "keys": 20000, "skew": 0.8, "order": "random"},
+      "notes": "general case: random order, medium cardinality, mild skew",
+      "params": {
+        "rows": 1500000,
+        "keys": 20000,
+        "order": "random",
+        "skew": 0.8,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
       "dev_seed": 1101,
-      "final_seed": 1102
+      "final_seed": 1102,
+      "examples_seed": 1103
+    },
+    {
+      "task_id": "A-02",
+      "split": "A",
+      "notes": "sorted input: streaming group-by is valid if checked",
+      "params": {
+        "rows": 1500000,
+        "keys": 20000,
+        "order": "sorted",
+        "skew": 0.5,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 1201,
+      "final_seed": 1202,
+      "examples_seed": 1203
+    },
+    {
+      "task_id": "A-03",
+      "split": "A",
+      "notes": "clustered keys (each key contiguous, key order random)",
+      "params": {
+        "rows": 1200000,
+        "keys": 200000,
+        "order": "clustered",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 1301,
+      "final_seed": 1302,
+      "examples_seed": 1303
+    },
+    {
+      "task_id": "A-04",
+      "split": "A",
+      "notes": "low cardinality, heavy skew, short keys",
+      "params": {
+        "rows": 2000000,
+        "keys": 50,
+        "order": "random",
+        "skew": 1.2,
+        "key_len_min": 2,
+        "key_len_max": 6
+      },
+      "dev_seed": 1401,
+      "final_seed": 1402,
+      "examples_seed": 1403
+    },
+    {
+      "task_id": "A-05",
+      "split": "A",
+      "notes": "high cardinality: about 1.7 rows per key",
+      "params": {
+        "rows": 1000000,
+        "keys": 600000,
+        "order": "random",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 1501,
+      "final_seed": 1502,
+      "examples_seed": 1503
+    },
+    {
+      "task_id": "A-06",
+      "split": "A",
+      "notes": "nearly sorted trap: 1% displaced rows",
+      "params": {
+        "rows": 1500000,
+        "keys": 20000,
+        "order": "nearly_sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12,
+        "disorder": 0.01
+      },
+      "dev_seed": 1601,
+      "final_seed": 1602,
+      "examples_seed": 1603
+    },
+    {
+      "task_id": "B-01",
+      "split": "B",
+      "notes": "new instance of the general case",
+      "params": {
+        "rows": 1800000,
+        "keys": 30000,
+        "order": "random",
+        "skew": 0.5,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 2101,
+      "final_seed": 2102,
+      "examples_seed": 2103
+    },
+    {
+      "task_id": "B-02",
+      "split": "B",
+      "notes": "sorted input, fewer keys",
+      "params": {
+        "rows": 1200000,
+        "keys": 5000,
+        "order": "sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 2201,
+      "final_seed": 2202,
+      "examples_seed": 2203
+    },
+    {
+      "task_id": "B-03",
+      "split": "B",
+      "notes": "nearly sorted trap: 2% displaced rows",
+      "params": {
+        "rows": 1500000,
+        "keys": 50000,
+        "order": "nearly_sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12,
+        "disorder": 0.02
+      },
+      "dev_seed": 2301,
+      "final_seed": 2302,
+      "examples_seed": 2303
+    },
+    {
+      "task_id": "B-04",
+      "split": "B",
+      "notes": "low cardinality",
+      "params": {
+        "rows": 1500000,
+        "keys": 100,
+        "order": "random",
+        "skew": 1.0,
+        "key_len_min": 3,
+        "key_len_max": 8
+      },
+      "dev_seed": 2401,
+      "final_seed": 2402,
+      "examples_seed": 2403
+    },
+    {
+      "task_id": "B-05",
+      "split": "B",
+      "notes": "clustered, high cardinality",
+      "params": {
+        "rows": 1000000,
+        "keys": 300000,
+        "order": "clustered",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 2501,
+      "final_seed": 2502,
+      "examples_seed": 2503
+    },
+    {
+      "task_id": "B-06",
+      "split": "B",
+      "notes": "condition change: small input where fixed costs matter more",
+      "params": {
+        "rows": 80000,
+        "keys": 2000,
+        "order": "random",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 2601,
+      "final_seed": 2602,
+      "examples_seed": 2603
+    },
+    {
+      "task_id": "C-01",
+      "split": "C",
+      "notes": "new instance of the general case, stronger skew",
+      "params": {
+        "rows": 1600000,
+        "keys": 10000,
+        "order": "random",
+        "skew": 1.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 3101,
+      "final_seed": 3102,
+      "examples_seed": 3103
+    },
+    {
+      "task_id": "C-02",
+      "split": "C",
+      "notes": "sorted input, more keys",
+      "params": {
+        "rows": 1800000,
+        "keys": 60000,
+        "order": "sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 3201,
+      "final_seed": 3202,
+      "examples_seed": 3203
+    },
+    {
+      "task_id": "C-03",
+      "split": "C",
+      "notes": "nearly sorted trap: 0.5% displaced rows",
+      "params": {
+        "rows": 1200000,
+        "keys": 8000,
+        "order": "nearly_sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12,
+        "disorder": 0.005
+      },
+      "dev_seed": 3301,
+      "final_seed": 3302,
+      "examples_seed": 3303
+    },
+    {
+      "task_id": "C-04",
+      "split": "C",
+      "notes": "very low cardinality, uniform",
+      "params": {
+        "rows": 2000000,
+        "keys": 20,
+        "order": "random",
+        "skew": 0.0,
+        "key_len_min": 2,
+        "key_len_max": 5
+      },
+      "dev_seed": 3401,
+      "final_seed": 3402,
+      "examples_seed": 3403
+    },
+    {
+      "task_id": "C-05",
+      "split": "C",
+      "notes": "high cardinality, long keys",
+      "params": {
+        "rows": 1200000,
+        "keys": 800000,
+        "order": "random",
+        "skew": 0.0,
+        "key_len_min": 12,
+        "key_len_max": 24
+      },
+      "dev_seed": 3501,
+      "final_seed": 3502,
+      "examples_seed": 3503
+    },
+    {
+      "task_id": "C-06",
+      "split": "C",
+      "notes": "condition change: small clustered input",
+      "params": {
+        "rows": 60000,
+        "keys": 3000,
+        "order": "clustered",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 3601,
+      "final_seed": 3602,
+      "examples_seed": 3603
     }
   ]
 }

@@ -108,7 +108,9 @@ function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) 
     <button className={on ? 'on' : ''} onClick={pick}>
       <div className="spread">
         <b>{r.task_id} · {r.mode === 'learn' ? '学习' : '评测'} · 读 {r.snapshot_id}</b>
-        <span>{r.status === 'running' ? '运行中' : STOP[r.stop_reason ?? ''] ?? r.status}</span>
+        <span>{r.status === 'running' ? '运行中'
+          : r.final_goal_met ? <span style={{ color: 'var(--good-ink)' }}>达标 {fmt.x(r.final_speedup)}</span>
+          : `未达标 · ${STOP[r.stop_reason ?? ''] ?? r.status}`}</span>
       </div>
       <div className="rid">{r.run_id}</div>
     </button>

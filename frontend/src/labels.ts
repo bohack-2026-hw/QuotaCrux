@@ -21,7 +21,7 @@ const STATUS: Record<string, [string, Tone]> = {
 export const status = (s: string | null | undefined): [string, Tone] => (s ? STATUS[s] ?? [s, 'neutral'] : ['—', 'neutral'])
 
 export const STOP: Record<string, string> = {
-  goal_reached: '目标达成', budget_exhausted: '预算耗尽', agent_finished: 'Agent 主动结束', user_stopped: '用户停止',
+  goal_reached: '开发数据达标', budget_exhausted: '预算耗尽', agent_finished: 'Agent 主动结束', user_stopped: '用户停止',
   model_api_error: '模型接口错误', environment_error: '环境错误', internal_error: '内部错误', process_interrupted: '进程中断',
 }
 

@@ -9,7 +9,7 @@ from . import compare, config, memory, report
 
 ACTION_ZH = {"analyze": "分析", "get_evidence": "取证", "propose_candidate": "提出候选", "run_validation": "验证",
              "finish": "结束", "upgrade_model": "升级模型", "model_request": "模型请求", "invalid": "无效回复"}
-STOP_ZH = {"goal_reached": "目标达成", "budget_exhausted": "预算耗尽", "agent_finished": "Agent 主动结束",
+STOP_ZH = {"goal_reached": "开发数据达标", "budget_exhausted": "预算耗尽", "agent_finished": "Agent 主动结束",
            "user_stopped": "用户停止", "model_api_error": "模型接口错误", "environment_error": "环境错误",
            "internal_error": "内部错误"}
 

@@ -61,12 +61,14 @@ def get_task(task_id: str) -> dict:
 
 @app.get("/api/runs")
 def list_runs(task_id: str | None = None, limit: int = 50) -> list[dict]:
-    sql = ("SELECT run_id, task_id, mode, snapshot_id, status, stop_reason, best_candidate_id, config_fingerprint,"
-           " started_at, ended_at FROM runs")
+    # The final-test outcome travels with each row: a run can stop on "goal reached" (dev data) and still miss the final test.
+    sql = ("SELECT r.run_id, r.task_id, r.mode, r.snapshot_id, r.status, r.stop_reason, r.best_candidate_id, r.config_fingerprint,"
+           " r.started_at, r.ended_at, e.goal_met AS final_goal_met, e.speedup AS final_speedup"
+           " FROM runs r LEFT JOIN evaluations e ON e.evaluation_id = r.final_evaluation_id")
     params: tuple = ()
     if task_id:
-        sql, params = sql + " WHERE task_id = ?", (task_id,)
-    return [dict(r) for r in db.all_rows(sql + " ORDER BY started_at DESC LIMIT ?", (*params, limit))]
+        sql, params = sql + " WHERE r.task_id = ?", (task_id,)
+    return [dict(r) for r in db.all_rows(sql + " ORDER BY r.started_at DESC LIMIT ?", (*params, limit))]
 
 
 @app.post("/api/runs", status_code=202)

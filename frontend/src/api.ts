@@ -35,6 +35,8 @@ export interface RunRow {
   stop_reason: string | null
   best_candidate_id: string | null
   started_at: string
+  final_goal_met: number | null
+  final_speedup: number | null
 }
 
 export interface Step {

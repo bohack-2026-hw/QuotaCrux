@@ -38,6 +38,25 @@ def test_success_flow(task):
 
 
 @requires_docker
+def test_research_view_and_bundle(task, tmp_path):
+    from routeevo import cli, narrative
+
+    rep = run(task, "failure_upgrade")
+    r = rep["research"]
+    assert r["definition"]["budget"]["model_requests"] == rep["config"]["limits"]["max_model_requests"]
+    assert r["definition"]["baseline"]["dev_median_s"] > 0
+    # verdicts come from the evaluations, one per proposed candidate, in order
+    assert [e["verdict"] for e in r["experiments"]] == ["untestable", "untestable", "supported"]
+    assert r["verdicts"]["supported"] == 1 and r["verdicts"]["untestable"] == 2
+    out = tmp_path / "bundle"
+    cli.export_bundle(rep["run_id"], out, narrative.run_markdown(rep["run_id"]))
+    names = {x.name for x in out.iterdir()}
+    assert {"README.md", "report.json", "best.py", "candidates", "reproduce.sh"} <= names
+    assert (out / "best.py").read_text() == (out / "candidates" / "c3.py").read_text()
+    assert "## 研究任务" in (out / "README.md").read_text()
+
+
+@requires_docker
 def test_failures_keep_best_and_trigger_upgrade(task):
     rep = run(task, "failure_upgrade")
     statuses = [c["dev_evaluations"][-1]["status"] for c in rep["candidates"]]

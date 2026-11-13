@@ -1,0 +1,100 @@
+"""System prompt (fixed, versioned) and the per-request state message."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+
+PROMPT_VERSION = "agent-prompt-v1"
+
+SYSTEM_PROMPT = """\
+You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
+Each request you receive describes the full current state. Reply with exactly one JSON object choosing the next action.
+
+Goal and rules
+- The program must stay correct for every input that satisfies the contract. An external evaluator checks the output
+  against hidden reference data; you never see the evaluator, the reference output or the hidden final test data.
+- Primary metric: speedup = median runtime of the initial program / median runtime of the candidate, measured on the
+  task's dev data in a Docker container (1 CPU, 1 GB memory, no network, read-only filesystem, a fresh process per
+  sample, input on stdin). A candidate counts as improved only if every timed candidate sample is faster than every
+  baseline sample; the goal is an improved candidate with speedup >= the target. When a candidate reaches it, the run
+  stops and that candidate is frozen and tested once on hidden final data of the same task.
+- Candidates are complete single-file programs using only the Python 3.12 standard library. They read stdin and write
+  stdout. Nothing persists between samples, so caching across runs is impossible.
+- Budgets are enforced by the program. Every reply consumes one model request. Candidates are limited.
+
+Actions (set every field; fields an action does not use must be null)
+- analyze: reason about the evidence so far. Put the reasoning in `analysis`. No program effect.
+- get_evidence: run a tool. `tool` = "profile_candidate" runs cProfile on `candidate_id` with the dev input and returns
+  the top functions by cumulative time and whether the output was correct.
+- propose_candidate: submit a full program in `code`, with `parent_candidate_id` naming the candidate it modifies.
+  The program checks and validates it immediately; you see the result in the next request.
+- run_validation: re-measure an existing `candidate_id` on dev data (e.g. when timing looks noisy).
+- finish: stop the run when further attempts are unlikely to help. Explain in `finish_reason`.
+
+Always fill `purpose` (why this action now), `expected_result` (what you expect to observe) and `verification`
+(how the result will be checked). Put an unverified causal explanation in `hypothesis`; it is stored as a hypothesis,
+not a fact. Write purpose, expected_result, verification, hypothesis, analysis and finish_reason in Simplified Chinese.
+
+Experience records, when provided, come from earlier runs: the observed workload conditions, the change that was tried
+and the measured result, including failures. They are evidence, not rules. Check that their conditions match the
+current workload before relying on them, and mind their sample counts.
+"""
+
+SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()
+
+
+def _block(title: str, body: str) -> str:
+    return f"## {title}\n{body.rstrip()}\n"
+
+
+def build_state(
+    *,
+    task,
+    candidates: list[dict],
+    evidence: list[dict],
+    history: list[dict],
+    experiences: list[dict] | None,
+    snapshot_id: str,
+    budget: dict,
+    last_feedback: dict | None,
+) -> str:
+    examples = "\n".join(
+        f"Example {i + 1} input:\n```\n{ex['input']}```\nExample {i + 1} output:\n```\n{ex['output']}```"
+        for i, ex in enumerate(task.examples)
+    )
+    parts = [
+        _block("Task", f"task_id: {task.task_id}\ntarget: speedup >= {task.target_min_speedup}\n\n{task.contract}"),
+        _block("Visible examples", examples),
+        _block("Dev data profile (the timed input; computed by the program)", json.dumps(task.dev_profile, indent=2)),
+    ]
+
+    cand_lines = []
+    for c in candidates:
+        head = {k: c[k] for k in ("candidate_id", "origin", "parent_candidate_id", "latest_evaluation") if k in c}
+        cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
+    parts.append(_block("Candidates (c0 is the initial program; best so far is marked in budget)", "\n".join(cand_lines)))
+
+    if evidence:
+        ev_lines = [f"### {e['tool']} on {e['candidate_id']} (step {e['step']})\n{json.dumps(e['result'], ensure_ascii=False, indent=2)}" for e in evidence]
+        parts.append(_block("Evidence collected in this run", "\n".join(ev_lines)))
+
+    if experiences:
+        exp_lines = []
+        for e in experiences:
+            change = dict(e["change"])
+            diff = change.pop("diff_vs_initial_program", "")
+            meta = {**{k: v for k, v in e.items() if k != "change"}, "change": change}
+            exp_lines.append(f"### {e['experience_id']} ({e['outcome']})\n{json.dumps(meta, ensure_ascii=False, indent=2)}\n"
+                             f"Change as a diff against the initial program:\n```diff\n{diff}\n```")
+        parts.append(_block(f"Experience records from snapshot {snapshot_id}", "\n".join(exp_lines)))
+    else:
+        parts.append(_block(f"Experience records from snapshot {snapshot_id}", "none"))
+
+    if history:
+        parts.append(_block("Steps so far", "\n".join(json.dumps(h, ensure_ascii=False) for h in history)))
+    if last_feedback:
+        parts.append(_block("Feedback on your previous reply", json.dumps(last_feedback, ensure_ascii=False, indent=2)))
+    parts.append(_block("Budget", json.dumps(budget, ensure_ascii=False, indent=2)))
+    parts.append("Reply with one JSON object for the next action.")
+    return "\n".join(parts)

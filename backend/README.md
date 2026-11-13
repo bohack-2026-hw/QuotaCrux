@@ -38,6 +38,7 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
 | `uv run routeevo comparison <id> [--json]` | Comparison summary |
+| `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Three-line evolution note / Markdown research record of one run |
 | `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
 | `uv run routeevo serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
 | `uv run pytest` | Unit tests plus end-to-end flows (needs Docker) |
@@ -77,13 +78,18 @@ all hash-pinned in `manifest.json`. Only contract, initial code, examples and de
 - `compare` runs held-out tasks with two frozen snapshots, alternating order, serially, rejects tasks that
   contributed experience to either snapshot, checks that all runs share one config fingerprint, and reports
   per-side and per-task results plus the learning cost along the snapshot lineage.
+- A two-round session (`POST /api/sessions`) learns one task from a base snapshot, publishes the new version (which
+  becomes active), then runs a one-repeat comparison of base vs new on an unseen task. Re-activate the formal
+  snapshot afterwards.
 
 ## Loop and budgets
 
 Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated immediately), `run_validation`,
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
-The small model runs first; after 2 consecutive candidates that are not correct-and-on-target the run switches to
-the large model for good. Stop reasons: `goal_reached`, `budget_exhausted`, `agent_finished`, `user_stopped`,
+The small model runs first; after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model
+requests without an on-target candidate (`upgrade-rule-v2`; B ran under v1, which only had the first condition), the
+run switches to the large model for good. `goal_reached` means the dev-data goal stopped the loop; the frozen best
+candidate's final test is reported separately and can still miss. Stop reasons: `goal_reached`, `budget_exhausted`, `agent_finished`, `user_stopped`,
 `model_api_error`, `environment_error`, `internal_error`. Runs are globally serial (file lock).
 
 Every model call stores provider, model, role, effort, tokens (`null` = unknown, never 0), latency, request id,
@@ -95,4 +101,5 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `GET /api/runs/{id}/events?after=N`, `POST /api/runs/{id}/stop`, `GET /api/runs/{id}/candidates/{cid}`,
 `GET /api/snapshots`, `GET /api/snapshots/{id}`, `GET /api/snapshots/{a}/diff/{b}`, `PUT /api/snapshots/active`,
 `GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `GET /api/comparisons/{id}`,
-`POST /api/comparisons/{id}/stop`. Interactive docs at `/docs` when `routeevo serve` is running.
+`POST /api/comparisons/{id}/stop`, `GET /api/comparisons/{id}/note` (three-line evolution note),
+`GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `routeevo serve` is running.

@@ -7,6 +7,7 @@ serial and alternate the snapshot order per task and repeat. Nothing is written 
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import json
 import statistics
 import uuid
@@ -127,6 +128,28 @@ def _execute(comparison_id: str) -> dict:
     return summary
 
 
+# Run config keys that legitimately differ between runs of a fair comparison (or are not configuration).
+NON_CONFIG_KEYS = {"fingerprint", "environment", "label", "scripted", "fingerprint_excludes", "task_manifest_sha256"}
+
+
+def config_hash(config_json: str) -> str:
+    cfg = {k: v for k, v in json.loads(config_json).items() if k not in NON_CONFIG_KEYS}
+    return hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def _fairness(finished_rows) -> dict:
+    """Fair = within each task both snapshots ran the identical fingerprint, and the configuration apart from the
+    task itself (models, prompt, schema, limits, measurement, evaluator, image, retrieval) is identical overall."""
+    per_task: dict[str, set] = {}
+    cfg_hashes: set[str] = set()
+    for r in finished_rows:
+        run = db.one("SELECT config_fingerprint, config_json FROM runs WHERE run_id = ?", (r["run_id"],))
+        per_task.setdefault(r["task_id"], set()).add(run["config_fingerprint"])
+        cfg_hashes.add(config_hash(run["config_json"]))
+    split = sorted(t for t, f in per_task.items() if len(f) > 1)
+    return {"fair": not split and len(cfg_hashes) <= 1, "config_hashes": sorted(cfg_hashes), "tasks_with_mixed_fingerprints": split}
+
+
 def _median(xs: list[float]) -> float | None:
     return round(statistics.median(xs), 4) if xs else None
 
@@ -197,7 +220,7 @@ def summarize(comparison_id: str) -> dict:
     rows = db.all_rows("SELECT * FROM comparison_runs WHERE comparison_id = ? ORDER BY seq", (comparison_id,))
     finished = [r for r in rows if r["run_id"] and db.one("SELECT status FROM runs WHERE run_id = ?", (r["run_id"],))["status"] != "running"]
     reports = {r["run_id"]: report.build(r["run_id"]) for r in finished}
-    fingerprints = sorted({rep["config_fingerprint"] for rep in reports.values()})
+    fairness = _fairness(finished)
 
     per_task = {}
     for t in p["tasks"]:
@@ -221,8 +244,9 @@ def summarize(comparison_id: str) -> dict:
         "scripted_model": bool(p.get("scripted")),
         "planned_runs": len(rows), "finished_runs": len(finished),
         "errors": [{"seq": r["seq"], "task_id": r["task_id"], "snapshot_id": r["snapshot_id"], "error": r["error"]} for r in rows if r["error"]],
-        "fair": len(fingerprints) <= 1,
-        "config_fingerprints": fingerprints,
+        "fair": fairness["fair"],
+        "config_fingerprints": fairness["config_hashes"],
+        "tasks_with_mixed_fingerprints": fairness["tasks_with_mixed_fingerprints"],
         "sides": {s: _side([reports[r["run_id"]] for r in finished if r["snapshot_id"] == s]) for s in (a, b)},
         "per_task": per_task,
         "learning_cost": _learning_cost(a, b),

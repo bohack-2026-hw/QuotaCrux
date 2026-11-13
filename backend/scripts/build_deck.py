@@ -25,7 +25,7 @@ from pptx.enum.shapes import MSO_SHAPE  # noqa: E402
 from pptx.enum.text import PP_ALIGN  # noqa: E402
 from pptx.util import Emu, Pt  # noqa: E402
 
-from routeevo import compare, db, memory, narrative, report  # noqa: E402
+from routeevo import compare, db, memory, narrative, report, research  # noqa: E402
 
 PAPER, CARD, INK, INK2, INK3 = "F2EEE5", "FBF9F4", "141412", "4A4843", "807C72"
 ACCENT, GOOD, BAD, OLD, NEW, RULE = "E8452C", "0A7A0A", "A12B2B", "2A78D6", "EB6834", "D9D2C2"
@@ -257,23 +257,23 @@ def build(out: Path, shots: Path) -> None:
     evo.text = "Evo"
     evo.font.size, evo.font.italic, evo.font.name = Pt(80), True, "Georgia"
     evo.font.color.rgb = rgb(ACCENT)
-    d.text(s, "从已验证的执行结果中进化的 Agent", 0.95, 3.5, 11, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
-    d.text(s, "决策 → 执行 → 验证 → 修正 → 经验 → 更好的下一次决策", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
-    d.text(s, "BoHack 2026 · 共用核心实测版", 0.95, 6.3, 6, 0.4, size=12, color="9A9485")
+    d.text(s, "在实验反馈中推进研究、从经验中自我改进的 Research Agent", 0.95, 3.5, 11.5, 0.7, size=26, color=PAPER, font=HEAD_FONT, bold=True)
+    d.text(s, "规划 → 取证 → 假设 → 实验 → 验证 → 修正 → 经验 → 更好的下一次研究", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
+    d.text(s, "BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
 
     # 2 questions
     s = d.slide("我们要回答的两个问题", "问题定义")
     d.card(s, 0.6, 1.8, 5.9, 2.6, ACCENT)
-    d.text(s, "① 闭环能否成立", 0.9, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
-    d.text(s, "在预算内完成“决策—执行—验证—修正”，留下可追溯、可复现的结果；运行完成、验证通过、指标改善、达到目标分开记录。", 0.9, 2.6, 5.4, 1.6, size=15, color=INK2)
+    d.text(s, "① 研究闭环能否成立", 0.9, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
+    d.text(s, "在预算内完成“取证—假设—实验—验证—修正”：每个实验有事前假设，判定来自独立评测，反馈改变下一步；交付可复现的成果。", 0.9, 2.6, 5.4, 1.6, size=15, color=INK2)
     d.card(s, 6.8, 1.8, 5.9, 2.6, ACCENT)
-    d.text(s, "② 经验能否让下一次更好", 7.1, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
-    d.text(s, "同样的模型、提示词、预算和评测，只换经验快照：在未参与学习的任务上，质量、成本或耗时是否改善？", 7.1, 2.6, 5.4, 1.6, size=15, color=INK2)
+    d.text(s, "② 系统能否自我改进", 7.1, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
+    d.text(s, "花了多少 Token、费用和时间？同样的模型、提示词、预算和评测，只换经验快照：在未参与学习的任务上是否更好、更省？", 7.1, 2.6, 5.4, 1.6, size=15, color=INK2)
     d.bullets(s, ["学习发生在系统层：不训练模型、不改提示词，程序把经过评测的执行事实写成不可变的经验快照",
                   "结论只来自留出任务上的对照数据，全部运行（包括失败与无收益）都计入"], 0.6, 4.8, 12, 2, size=16)
 
     # 3 task
-    s = d.slide("首个任务：在正确性约束下优化程序", "任务")
+    s = d.slide("研究任务：在正确性约束下优化程序", "研究任务")
     d.bullets(s, ["按字符串 key 分组 CSV，输出每组数量与整数和，按 key 升序",
                   "初始程序：csv + 两个 dict + sorted，正确、正常，不人为削弱",
                   "主指标：加速比 = 初始程序耗时中位数 / 候选耗时中位数",
@@ -285,7 +285,7 @@ def build(out: Path, shots: Path) -> None:
     d.text(s, "按字节解析 + 单字典：\n  中等基数（A-01）≈ 1.44×\n  高基数（A-05）≈ 0.82×\n\n带有序检查的 groupby：\n  所有 A 任务 ≈ 0.7×\n\n只用 groupby 不检查：\n  有序数据上正确，\n  但违反契约用例 → 判失败", 8.35, 2.45, 4.2, 3.9, size=14, color=INK2)
 
     # 4 loop
-    s = d.slide("执行循环：模型选行动，程序执行并验证", "架构")
+    s = d.slide("研究循环：模型选行动，程序执行并验证", "架构")
     steps = [("构造状态", "契约 · 数据画像 · 候选\n反馈 · 预算 · 经验"), ("模型选行动", "分析 · 取证 · 提出候选\n验证 · 结束"),
              ("程序检查", "动作参数 · 预算\n仅标准库 · 代码大小"), ("沙箱 + 评测器", "正确性 · 契约用例\n交替计时 · 最佳产物"),
              ("反馈", "状态 · 加速比 · 反例\n→ 下一步")]
@@ -309,25 +309,62 @@ def build(out: Path, shots: Path) -> None:
                   "“改善”= 全部候选样本快于全部基线样本（单侧 Mann-Whitney U=0，p≈0.004）；同一程序靠噪声测出 1.05× 也不算",
                   "循环结束后最佳候选冻结，在隐藏最终数据上测一次，结果不回流"], 0.6, 1.75, 12.1, 5, size=16)
 
-    # 6 feedback chain
+    # 6 one real research chain: hypothesis → measurement → program verdict
     first = learn[0] if learn else None
     if first:
-        s = d.slide(f"一条真实的决策链：{first['task']['task_id']}（无经验 v0）", "反馈驱动")
-        rows = [["#", "执行者", "动作", "结果", "下一步"]]
-        for st in first["steps"]:
-            res = st["result"]
-            out_s = narrative.STATUS_ZH.get(st["status"], st["status"]) + (f" · {res['speedup']:.2f}×" if isinstance(res.get("speedup"), (int, float)) else "")
-            who = "程序" if st["actor"] == "program" else ("GPT" if first["iterations"]["upgrade_at_step"] and st["seq"] > first["iterations"]["upgrade_at_step"] else "Qwen")
-            rows.append([str(st["seq"]), who, narrative.ACTION_ZH.get(st["action"], st["action"]), out_s, narrative._decision(st["next_decision"] or "")])
-        d.table(s, rows, 0.6, 1.8, 7.4, [0.5, 0.9, 1.4, 2.4, 2.2], size=12)
-        d.card(s, 8.3, 1.8, 4.4, 4.7, ACCENT)
-        d.text(s, "发生了什么", 8.55, 1.95, 4, 0.4, size=15, bold=True, color=ACCENT)
-        hyp = [st["hypothesis"] for st in first["steps"] if st["hypothesis"]]
-        d.text(s, (f"结论：{first['outcome']['summary']}\n\n"
-                   f"Qwen 的两次尝试一次变慢、一次表头格式错误，按规则升级到 GPT；GPT 读到具体失败反馈后修正。\n\n"
-                   f"模型假设（未验证）：{(hyp[-1] or '')[:90]}…\n\n"
-                   f"费用 ${first['usage']['total']['cost_usd'] or 0:.3f} · {first['iterations']['model_requests']} 次请求"),
-               8.55, 2.4, 4, 4, size=12.5, color=INK2)
+        s = d.slide(f"一条真实的研究链：{first['task']['task_id']}（无经验 v0）", "反馈驱动")
+        up = first["iterations"]["upgrade_at_step"]
+        labels = first["research"]["verdict_labels"]
+        rows = [["候选", "执行者", "事前假设", "实测", "判定"]]
+        for e in first["research"]["experiments"]:
+            res = e["result"]
+            rows.append([e["candidate_id"], "GPT" if up and e["step"] > up else "Qwen", (e["hypothesis"] or e["purpose"] or "")[:64] + "…",
+                         (res["status"] or "—") + (f" · {res['speedup']:.2f}×" if res["speedup"] is not None else ""),
+                         labels[e["verdict"]].split("（")[0]])
+        d.table(s, rows, 0.6, 1.8, 7.6, [0.6, 0.8, 3.9, 1.3, 1.0], size=11)
+        d.card(s, 8.5, 1.8, 4.2, 4.7, ACCENT)
+        d.text(s, "反馈如何改变下一步", 8.75, 1.95, 3.8, 0.4, size=15, bold=True, color=ACCENT)
+        d.text(s, ("c1 实测 0.90×，假设被反驳 → Qwen 写下“c1 慢是因为 bytes key”，改用 str key，但输出格式错误。\n\n"
+                   "连续两次未达标 → 程序按固定规则升级到 GPT。\n\n"
+                   "GPT 读到表头错误与 c1 的慢因，提出批量分行 + 单字典：1.45×，假设得到支持，达标后停止。\n\n"
+                   f"冻结 c3，隐藏最终数据上测一次：{first['outcome']['final_speedup']:.2f}×。"
+                   f"{first['iterations']['model_requests']} 次请求 · ${first['usage']['total']['cost_usd'] or 0:.3f}"),
+               8.75, 2.4, 3.8, 4, size=12.5, color=INK2)
+        d.text(s, "判定由程序依据评测给出：改善且达标 = 支持；正确但没有改善 = 反驳；候选出错 = 未能检验。模型不能自评。",
+               0.6, 6.3, 7.6, 0.5, size=11, color=INK3)
+
+    # 6b research statistics over every formal run
+    groups = [("A 学习", [r["run_id"] for r in learn])]
+    for c, key in ((cmp_b, "B"), (cmp_c, "C")):
+        if c and c["finished_runs"]:
+            for side in (c["snapshot_a"], c["snapshot_b"]):
+                groups.append((f"{key} · {side}", [r["run_id"] for t in c["tasks"] for r in c["per_task"][t][side]["runs"]]))
+    aggs = [(name, research.aggregate([report.build(i) for i in ids])) for name, ids in groups]
+    rtotal = {k: sum(a[k] for _, a in aggs) for k in ("runs", "experiments", "supported", "partial", "refuted", "untestable", "follow_ups", "follow_ups_citing_prior")}
+    s = d.slide(f"研究过程统计：{rtotal['runs']} 次运行、{rtotal['experiments']} 个实验，全部如实判定", "研究过程")
+    rows = [["批次 · 快照", "运行", "实验", "支持", "部分支持", "反驳", "未能检验", "引用此前候选"]]
+    for name, a in aggs:
+        rows.append([name, str(a["runs"]), str(a["experiments"]), str(a["supported"]), str(a["partial"]), str(a["refuted"]),
+                     str(a["untestable"]), f"{a['follow_ups_citing_prior']} / {a['follow_ups']}"])
+    d.table(s, rows, 0.6, 1.8, 12.1, [2.3, 1.1, 1.1, 1.1, 1.4, 1.1, 1.5, 2.5], size=13)
+    d.bullets(s, [f"合计：支持 {rtotal['supported']} · 部分支持 {rtotal['partial']} · 反驳 {rtotal['refuted']} · 未能检验 {rtotal['untestable']}——被反驳和出错的实验同样保留，不写成假设成立",
+                  "有经验时实验更少，被反驳或出错的比例更低（" + "，".join(
+                      f"{k} " + " → ".join(f"{(a['refuted'] + a['untestable']) / a['experiments']:.0%}" for n, a in aggs if n.startswith(k + " ") and a["experiments"])
+                      for k in ("B", "C")) + "）",
+                  f"“引用此前候选”：后续假设点名同一运行中更早的候选（{rtotal['follow_ups_citing_prior']}/{rtotal['follow_ups']}），只是反馈驱动的文字下限"],
+              0.6, 4.6, 12.1, 2, size=14)
+
+    # 6c deliverables
+    s = d.slide("研究成果：可运行、可复核、可追溯", "交付")
+    d.bullets(s, ["export-run --bundle：研究记录（研究任务 · 过程 · 假设与实验 · 最终测试 · 资源 · 复现）",
+                  "best.py 最佳已验证程序 · 全部候选代码 · 原始模型请求与回复 · report.json",
+                  "reproduce.sh：在同一评测器、全新容器中复核最终数据；可选重跑整个研究循环",
+                  "没有验证出改进时，交付初始程序并写明“无改进”，不包装成提升"], 0.6, 1.75, 7.0, 3.2, size=15)
+    d.card(s, 8.0, 1.8, 4.7, 4.5, ACCENT)
+    d.text(s, "docs/research/ 中的四个样例", 8.25, 1.95, 4.3, 0.4, size=15, bold=True, color=ACCENT)
+    d.text(s, ("按规则从正式运行中选出：\n\n① 反馈驱动的修正链（A-01）\n② 没有验证出改进（A-05）\n"
+               "③ 读取经验后一次达标（C 留出任务）\n④ 开发达标、最终测试未达标\n\n"
+               "A-01 复核：最终数据正确，1.44×（记录值 1.4367×）"), 8.25, 2.4, 4.3, 3.8, size=13, color=INK2)
 
     # 7 experience
     s = d.slide("经验是什么：程序从已验证的执行事实中提取", "经验")
@@ -414,7 +451,7 @@ def build(out: Path, shots: Path) -> None:
         # the task where the old snapshot needed the most requests in repeat 1 shows the change most plainly
         task = max(cmp_b["tasks"], key=lambda t: (pt[t][a]["runs"][0]["model_requests"] - pt[t][b]["runs"][0]["model_requests"]))
         ra, rb = report.build(pt[task][a]["runs"][0]["run_id"]), report.build(pt[task][b]["runs"][0]["run_id"])
-        s = d.slide(f"行为对照：{task} 第 1 轮，同一任务两版经验各做了什么", "RX-05")
+        s = d.slide(f"行为对照：{task} 第 1 轮，同一任务两版经验各做了什么", "RA-08 系统对照")
         for i, (rep, snapname, col) in enumerate(((ra, a, OLD), (rb, b, NEW))):
             x = 0.6 + i * 6.2
             d.card(s, x, 1.75, 5.9, 4.9, col)
@@ -492,7 +529,7 @@ def build(out: Path, shots: Path) -> None:
         sc = compare.summarize(ses["comparison_id"])
         lr = report.build(ses["learn_run_id"])
         a, b = sc["snapshot_a"], sc["snapshot_b"]
-        s = d.slide("两轮现场演示：学习 → 自动发布 → 在没见过的任务上对照", "日新 · RX-01/02")
+        s = d.slide("自我迭代：学习 → 自动发布 → 在没见过的任务上对照", "自我改进")
         phases = [("第一轮 学习", f"{ses['learn_task']} 读取 {ses['base_snapshot_id']}\n{'达标' if lr['outcome']['goal_met'] else '未达标'} {lr['outcome']['final_speedup'] or 0:.2f}×\n"
                                 f"{lr['iterations']['model_requests']} 次请求 · {lr['timing']['wall_clock_total_s']:.0f}s"),
                   ("自动发布", f"{ses['new_snapshot_id']}（父版本 {ses['base_snapshot_id']}）\n"
@@ -519,10 +556,23 @@ def build(out: Path, shots: Path) -> None:
     target = cmp_c or cmp_b
     if target and target["finished_runs"]:
         note = narrative.evolution_note(target["comparison_id"])
-        s = d.slide("三行进化说明（由对照数据自动填写）", "日新")
+        s = d.slide("经验带来的变化（由对照数据自动填写）", "系统评估")
         for i, line in enumerate(note["lines"]):
             d.card(s, 0.6, 1.8 + i * 1.65, 12.1, 1.45, ACCENT)
             d.text(s, line, 0.9, 1.9 + i * 1.65, 11.6, 1.3, size=13.5, color=INK)
+
+    # RA-AC acceptance at a glance
+    s = d.slide("Research Agent 验收对照", "RA-AC")
+    rows = [["编号", "要求", "证据"],
+            ["RA-AC-01", "问题、目标、约束、预算、基线事前确定", "任务包哈希锁定；运行配置指纹；“研究任务”在开始前固定"],
+            ["RA-AC-02", "关键实验有事前假设与验证方法", f"{rtotal['experiments']} 个实验都有事前预期与验证方法，判定引用评测 ID"],
+            ["RA-AC-03", "可核验的反馈驱动决策", "A-01：反驳 → 修正 → 升级 → 支持；引用此前候选 " + f"{rtotal['follow_ups_citing_prior']}/{rtotal['follow_ups']}"],
+            ["RA-AC-04", "错误、退化、证据不足如实记录", f"反驳 {rtotal['refuted']}、未能检验 {rtotal['untestable']}；A-05 结论“无改进”"],
+            ["RA-AC-05", "独立最终评价，通过与未通过都报告", "开发达标但最终未达标的运行如实记为未达标"],
+            ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；预算耗尽交付初始程序"],
+            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 1.44×（记录 1.4367×）"],
+            ["RA-AC-08", "有无经验的完整对照", "B/C 各 36 次，配置一致，全部计入，学习成本单列"]]
+    d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.2, 6.5], size=12)
 
     # 12 limits
     s = d.slide("诚实声明与下一步", "边界")
@@ -530,14 +580,15 @@ def build(out: Path, shots: Path) -> None:
                   "计时在一台 Mac（OrbStack 虚拟化）上；交替测量与“全部样本更快”规则压低噪声，小输入任务固定开销仍占约一半",
                   "模型不支持固定种子：每个配置重复 3 次，报告全部结果；3 次重复衡量运行波动，不等于学习过程被重复验证",
                   "Qwen 自部署机器成本未核算；GPT 费用按 2026-11-13 官方价表估算",
-                  "下一步：更多任务族；用同一批任务对照专用决策模型是否降低总成本；经验的去重与合并"], 0.6, 1.75, 12.1, 5, size=16)
+                  "后置：专用决策模型对照、多个独立 Agent、开放式文献检索——首版只做一个研究循环和一个软件优化任务族",
+                  "下一步：更多研究任务族；用同一批任务对照专用决策模型是否降低总成本；经验的去重与合并"], 0.6, 1.75, 12.1, 5, size=16)
 
     # 13 reproduce
     s = d.slide("复现与界面", "交付")
     d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
                   "scripts/experiment.sh   # 重建任务包 → A 学习 → B 对照 → C 对照",
-                  "uv run routeevo serve   # 界面：任务运行 · 经验查看 · 对照结果 · 版本管理",
-                  "uv run routeevo export-run <run_id>   # 单次运行的研究记录",
+                  "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理",
+                  "uv run routeevo export-run <run_id> --bundle <目录>   # 研究成果交付包",
                   "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
     shot = shots / "home.png"
     if shot.exists():

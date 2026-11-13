@@ -4,7 +4,7 @@ import { usePoll } from '../hooks'
 import { Chip } from './ui'
 
 /* 日新 two-round demo: learn on one task, auto-publish, compare an unseen task under base vs new snapshot. */
-export function SessionCard({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: () => void }) {
+export function SessionCard({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: (id: string) => void }) {
   const tasks = usePoll(api.tasks, [], 0, false)
   const sessions = usePoll(api.sessions, [], 2500)
   const snaps = usePoll(api.snapshots, [], 5000)
@@ -64,7 +64,7 @@ export function SessionCard({ onOpenRun, onOpenComparison }: { onOpenRun: (id: s
               <li key={id} style={{ color: done || current ? 'var(--ink)' : 'var(--ink-3)', fontWeight: current ? 700 : 400 }}>
                 {done ? '✓ ' : current ? '● ' : ''}{label}
                 {id === 'round1_learning' && s.learn_run_id && <button className="link" style={{ marginLeft: 8 }} onClick={() => onOpenRun(s.learn_run_id!)}>查看第一轮</button>}
-                {id === 'round2_comparison' && s.comparison_id && <button className="link" style={{ marginLeft: 8 }} onClick={onOpenComparison}>查看对照</button>}
+                {id === 'round2_comparison' && s.comparison_id && <button className="link" style={{ marginLeft: 8 }} onClick={() => onOpenComparison(s.comparison_id!)}>查看对照</button>}
                 {id === 'done' && order.indexOf(s.phase) >= 4 && <span className="small muted">（对照页显示三行说明；版本页可回退到 {s.base_snapshot_id}）</span>}
               </li>
             )

@@ -81,10 +81,10 @@ export default function App() {
             <div className="t">生效经验版本<b>{activeRow ? `${activeRow.experience_count} 条经验` : '—'}</b></div>
           </div>
         </header>
-        {tab === 'home' && <OverviewView onOpenRun={openRun} onOpenComparison={() => go('cmp')} />}
+        {tab === 'home' && <OverviewView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
         {tab === 'run' && <RunView runId={runId} setRunId={openRun} activeSnapshot={active} onOpenExperience={openExperience} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}
-        {tab === 'cmp' && <CompareView onOpenRun={openRun} />}
+        {tab === 'cmp' && <CompareView selected={arg} onSelect={(id) => go('cmp', id)} onOpenRun={openRun} />}
         {tab === 'ver' && <VersionView onOpenSnapshot={(s) => openExperience(s)} onOpenRun={openRun} onChanged={() => snaps.refresh()} />}
       </main>
     </div>

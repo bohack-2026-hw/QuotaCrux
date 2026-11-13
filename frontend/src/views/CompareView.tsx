@@ -7,11 +7,11 @@ import { Chip, Empty, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
 import { STOP, fmt } from '../labels'
 
-export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) {
+/* `selected` comes from the URL (#cmp/<id>) so a comparison can be linked directly; otherwise the newest is shown. */
+export function CompareView({ selected, onSelect, onOpenRun }: { selected: string | null; onSelect: (id: string) => void; onOpenRun: (id: string) => void }) {
   const list = usePoll(api.comparisons, [], 4000)
   const snaps = usePoll(api.snapshots, [], 5000)
-  const [sel, setSel] = useState<string | null>(null)
-  const current = sel ?? list.data?.[0]?.comparison_id ?? null
+  const current = selected ?? list.data?.[0]?.comparison_id ?? null
   const live = list.data?.find((c) => c.comparison_id === current)?.status === 'running'
   const cmp = usePoll(() => (current ? api.comparison(current) : Promise.resolve(null)), [current], 4000, live)
 
@@ -24,7 +24,7 @@ export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) 
     try {
       const tasks = [1, 2, 3, 4, 5, 6].map((i) => `${split}-0${i}`)
       const r = await api.startComparison({ task_ids: tasks, snapshot_a: 'v0', snapshot_b: latest, repeats, label: `${split} dashboard` })
-      setSel(r.comparison_id)
+      onSelect(r.comparison_id)
       list.refresh()
     } catch (e) { setErr((e as Error).message) }
   }
@@ -52,7 +52,7 @@ export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) 
           <h3>对照记录</h3>
           <div className="runlist">
             {(list.data ?? []).map((c) => (
-              <button key={c.comparison_id} className={c.comparison_id === current ? 'on' : ''} onClick={() => setSel(c.comparison_id)}>
+              <button key={c.comparison_id} className={c.comparison_id === current ? 'on' : ''} onClick={() => onSelect(c.comparison_id)}>
                 <div className="spread"><b>{c.label ?? c.tasks.join(' ')}</b><span>{c.status === 'running' ? '运行中' : c.status === 'completed' ? '完成' : c.status}</span></div>
                 <div className="rid">{c.snapshot_a} vs {c.snapshot_b} · ×{c.repeats} · {c.comparison_id}</div>
               </button>

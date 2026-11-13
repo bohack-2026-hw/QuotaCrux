@@ -6,7 +6,7 @@ import { usePoll } from '../hooks'
 import { STOP, fmt } from '../labels'
 
 /* The first screen for judges: what was learned, what the held-out comparisons show, and where the evidence is. */
-export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: () => void }) {
+export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: (id: string) => void }) {
   const runs = usePoll(() => api.runs(), [], 5000)
   const list = usePoll(api.comparisons, [], 5000)
   const snaps = usePoll(api.snapshots, [], 5000)
@@ -66,7 +66,7 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
   )
 }
 
-function ComparisonStrip({ title, c, onOpen }: { title: string; c: Comparison | null; onOpen: () => void }) {
+function ComparisonStrip({ title, c, onOpen }: { title: string; c: Comparison | null; onOpen: (id: string) => void }) {
   if (!c) return <div className="card"><div className="eyebrow">{title}</div><Empty title="尚未运行" /></div>
   const A: SideSummary | undefined = c.sides[c.snapshot_a]
   const B: SideSummary | undefined = c.sides[c.snapshot_b]
@@ -88,7 +88,7 @@ function ComparisonStrip({ title, c, onOpen }: { title: string; c: Comparison | 
         <div className="row">
           <Chip tone={c.fair ? 'good' : 'bad'} icon={c.fair ? '✓' : '✕'}>{c.fair ? '配置一致' : '配置不一致'}</Chip>
           {c.status === 'running' && <Chip tone="accent" icon="●">运行中</Chip>}
-          <button className="link" onClick={onOpen}>逐任务详情</button>
+          <button className="link" onClick={() => onOpen(c.comparison_id)}>逐任务详情</button>
         </div>
       </div>
       {tiles.length > 0 && (

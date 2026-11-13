@@ -34,6 +34,7 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo calibrate A-01` | Time the initial program and fixed input-transfer overhead |
 | `uv run routeevo tasks list` / `tasks lock` | Show tasks / pin manifests in `tasks/lock.json` before B/C comparisons |
 | `uv run routeevo learn A-01 A-02 …` | Serial learn-mode runs; each publishes a snapshot on top of the previous one |
+| `scripts/experiment.sh [learn\|compare-b\|compare-d]` | The formal experiment: two A learning rounds from v0, B comparison, sealed D comparison |
 | `uv run routeevo snapshots list\|show v3\|diff v0 v3\|activate v1 --reason …` | Snapshots, diffs and rollback |
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
@@ -50,6 +51,8 @@ Group CSV rows `key,value` by key, output `key,count,sum` sorted by key ([contra
 The initial program is a plain `csv` + dict implementation. A task package (`tasks/spec.json` → `var/tasks/<id>/`)
 holds the contract, initial code, visible examples, a dev data profile, dev data and an independent final test set,
 all hash-pinned in `manifest.json`. Only contract, initial code, examples and dev profile reach the model.
+Splits: A (learning), B (development comparison), C (held-out for the text-experience version), D (sealed on
+2026-11-14 before re-use was built, held out for the re-use version), smoke (tests).
 
 ## Evaluation
 
@@ -67,14 +70,22 @@ all hash-pinned in `manifest.json`. Only contract, initial code, examples and de
 
 ## Experience, snapshots, comparison
 
-- Learn-mode runs (A and smoke tasks only) end by extracting one record per model candidate with a usable dev
-  evaluation: workload conditions (profile + buckets), the change (code features, diff vs the initial program),
-  the measured result, resources and source ids. Success, no-gain and failure are all kept. Model explanations are
+- Learn-mode runs (A and smoke tasks only) end by extracting one record per model or re-validated candidate with a
+  usable dev evaluation: workload conditions (profile + buckets), the change (the full program, code features, diff
+  vs the initial program), the measured result, resources and source ids (`extractor-v2`). Success, no-gain and failure are all kept. Model explanations are
   stored as unverified hypotheses. Records are published atomically as `v{n}` (parent = the snapshot the run read)
   and the active pointer moves to it; no qualifying records means no new version.
 - Every run reads one snapshot fixed at start. Retrieval is deterministic: at least 3 of 5 workload buckets must
   match; up to 3 successes, 2 failures, 1 no-gain are injected with match details and sample counts. The run
   records exactly which experiences it read.
+- Re-use (`reuse-v1`, `memory.REUSE`): before the first model request a run re-validates up to 3 verified programs
+  from its snapshot with the normal dev evaluation — programs from success records, ranked by how many workload
+  buckets their best success matches, then by measured speedup; equal programs (ignoring blank lines and trailing
+  spaces) count once; a program is skipped when a no-gain or failure record matches the workload more closely than
+  any of its successes. An eval run that reaches the target this way stops without calling a model (stop detail
+  `re-used cN …; no model request needed`). A learn run instead raises its own target to 5% above the best re-used
+  program (`set_target` step) so its model requests go to beating it. Each re-use is an experiment with a
+  program-written hypothesis (source, recorded speedup, differing buckets) and a program verdict.
 - Rollback switches the active pointer only (refused while a learn run is in progress); history stays.
 - `compare` runs held-out tasks with two frozen snapshots, alternating order, serially, rejects tasks that
   contributed experience to either snapshot, checks that all runs share one config fingerprint, and reports
@@ -87,8 +98,8 @@ all hash-pinned in `manifest.json`. Only contract, initial code, examples and de
 
 Every report carries `research`: the task definition fixed before the run (question, workload, baseline, allowed
 scope, tools, verification method, budget, final-test rule) and one experiment per proposed candidate with the
-model's purpose, hypothesis, expected result and verification method, the measured result, and a verdict assigned by
-the program — `supported` (improved and on target), `partial` (improved, below target), `refuted` (correct, no
+model's purpose, hypothesis, expected result and verification method (for re-used programs, written by the program),
+the measured result, and a verdict assigned by the program against the target in force at the time — `supported` (improved and on target), `partial` (improved, below target), `refuted` (correct, no
 improvement), `untestable` (the candidate failed), `untested`. `scripts/write_results.py` aggregates verdicts over all
 formal runs; `scripts/export_research.py` exports rule-selected sample bundles to `docs/research/`.
 

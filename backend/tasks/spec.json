@@ -1,6 +1,6 @@
 {
   "family": "groupagg",
-  "notes": "Frozen before any A/B/C comparison. A = learning, B = development comparison, C = final held-out. B and C each mix new instances of A-like workloads with condition changes where A's optimizations may not hold (nearly-sorted trap, small inputs, different cardinality).",
+  "notes": "Frozen before any A/B/C comparison. A = learning, B = development comparison, C = final held-out. B and C each mix new instances of A-like workloads with condition changes where A's optimizations may not hold (nearly-sorted trap, small inputs, different cardinality). D = second sealed held-out batch, added on 2026-11-14 before the solution-reuse configuration was built or tuned; it is run only once, after that configuration is frozen on B.",
   "tasks": [
     {
       "task_id": "smoke-01",
@@ -308,6 +308,103 @@
       "dev_seed": 3601,
       "final_seed": 3602,
       "examples_seed": 3603
+    },
+    {
+      "task_id": "D-01",
+      "split": "D",
+      "notes": "new instance of the general case",
+      "params": {
+        "rows": 1700000,
+        "keys": 15000,
+        "order": "random",
+        "skew": 0.6,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 4101,
+      "final_seed": 4102,
+      "examples_seed": 4103
+    },
+    {
+      "task_id": "D-02",
+      "split": "D",
+      "notes": "sorted input, medium cardinality",
+      "params": {
+        "rows": 1400000,
+        "keys": 40000,
+        "order": "sorted",
+        "skew": 0.3,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 4201,
+      "final_seed": 4202,
+      "examples_seed": 4203
+    },
+    {
+      "task_id": "D-03",
+      "split": "D",
+      "notes": "nearly sorted trap: 3% displaced rows",
+      "params": {
+        "rows": 1600000,
+        "keys": 30000,
+        "order": "nearly_sorted",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12,
+        "disorder": 0.03
+      },
+      "dev_seed": 4301,
+      "final_seed": 4302,
+      "examples_seed": 4303
+    },
+    {
+      "task_id": "D-04",
+      "split": "D",
+      "notes": "low cardinality, skewed",
+      "params": {
+        "rows": 1800000,
+        "keys": 300,
+        "order": "random",
+        "skew": 0.9,
+        "key_len_min": 3,
+        "key_len_max": 8
+      },
+      "dev_seed": 4401,
+      "final_seed": 4402,
+      "examples_seed": 4403
+    },
+    {
+      "task_id": "D-05",
+      "split": "D",
+      "notes": "condition change: high cardinality with longer keys, where earlier optimizations may not hold",
+      "params": {
+        "rows": 1000000,
+        "keys": 450000,
+        "order": "random",
+        "skew": 0.0,
+        "key_len_min": 8,
+        "key_len_max": 20
+      },
+      "dev_seed": 4501,
+      "final_seed": 4502,
+      "examples_seed": 4503
+    },
+    {
+      "task_id": "D-06",
+      "split": "D",
+      "notes": "condition change: mid-size clustered input",
+      "params": {
+        "rows": 400000,
+        "keys": 8000,
+        "order": "clustered",
+        "skew": 0.0,
+        "key_len_min": 4,
+        "key_len_max": 12
+      },
+      "dev_seed": 4601,
+      "final_seed": 4602,
+      "examples_seed": 4603
     }
   ]
 }

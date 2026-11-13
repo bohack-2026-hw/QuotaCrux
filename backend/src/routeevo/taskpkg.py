@@ -91,8 +91,8 @@ def build_task(family: str, entry: dict, out_root: Path = config.TASK_DATA_DIR) 
     if family != groupagg.FAMILY:
         raise ValueError(f"unsupported family {family!r}")
     task_id, split = entry["task_id"], entry["split"]
-    if split not in ("A", "B", "C", "smoke"):
-        raise ValueError(f"{task_id}: split must be A, B, C or smoke")
+    if split not in ("A", "B", "C", "D", "smoke"):
+        raise ValueError(f"{task_id}: split must be A, B, C, D or smoke")
     params = dict(entry["params"])
     dev_p = groupagg.GenParams(**params, seed=entry["dev_seed"])
     final_p = groupagg.GenParams(**{**params, **entry.get("final_overrides", {})}, seed=entry["final_seed"])

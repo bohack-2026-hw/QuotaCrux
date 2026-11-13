@@ -25,6 +25,16 @@ def n(v) -> str:
     return "—" if v is None else f"{v:,}"
 
 
+def g(v) -> str:
+    return "—" if v is None else f"{v:g}"
+
+
+def upgrade_rule(cid: str) -> str:
+    rows = db.all_rows("SELECT DISTINCT json_extract(r.config_json, '$.upgrade_rule.id') AS u FROM comparison_runs cr"
+                       " JOIN runs r ON r.run_id = cr.run_id WHERE cr.comparison_id = ?", (cid,))
+    return ", ".join(r["u"] or "?" for r in rows)
+
+
 def comparisons() -> dict[str, dict]:
     out = {}
     for r in db.all_rows("SELECT comparison_id, label FROM comparisons WHERE status != 'running' ORDER BY created_at"):
@@ -61,17 +71,17 @@ def section_comparison(lines: list[str], key: str, c: dict) -> None:
     A, B = c["sides"][a], c["sides"][b]
     lines += [f"## {title}：{a} vs {b}", "",
               f"`{c['comparison_id']}` · {len(c['tasks'])} 个任务 × 2 个快照 × {c['repeats']} 次 · 完成 {c['finished_runs']}/{c['planned_runs']} · "
-              f"配置指纹{'一致' if c['fair'] else '**不一致**'}（{', '.join(c['config_fingerprints'])}）", "",
+              f"配置指纹{'一致' if c['fair'] else '**不一致**'}（{', '.join(c['config_fingerprints'])}） · 升级规则 {upgrade_rule(c['comparison_id'])}", "",
               f"| 指标 | {a}（旧经验） | {b}（新经验） |", "|---|---|---|",
               f"| 达标 / 运行 | {A['goal_met']} / {A['runs']} | {B['goal_met']} / {B['runs']} |",
               f"| 最终加速比中位数（有计时结果的运行） | {x(A['final_speedup_median'])} | {x(B['final_speedup_median'])} |",
               f"| 无改进运行（保留初始程序） | {A['no_improvement_runs']} | {B['no_improvement_runs']} |",
-              f"| 模型请求中位数 | {A['model_requests_median']} | {B['model_requests_median']} |",
+              f"| 模型请求中位数 | {g(A['model_requests_median'])} | {g(B['model_requests_median'])} |",
               f"| 升级到 GPT 次数 | {A['upgrades_total']} | {B['upgrades_total']} |",
               f"| 失败候选合计 | {A['candidates_failed_total']} | {B['candidates_failed_total']} |",
               f"| 输入 / 输出 Token 合计 | {n(A['input_tokens']['total'])} / {n(A['output_tokens']['total'])} | {n(B['input_tokens']['total'])} / {n(B['output_tokens']['total'])} |",
               f"| 模型费用合计（GPT 估算） | {usd(A['cost_usd_total'])} | {usd(B['cost_usd_total'])} |",
-              f"| 总耗时 / 循环时长中位数 | {A['wall_clock_s_total']:.0f}s / {A['agent_loop_s_median']}s | {B['wall_clock_s_total']:.0f}s / {B['agent_loop_s_median']}s |",
+              f"| 总耗时 / 循环时长中位数 | {A['wall_clock_s_total']:.0f}s / {A['agent_loop_s_median']:.0f}s | {B['wall_clock_s_total']:.0f}s / {B['agent_loop_s_median']:.0f}s |",
               f"| 终止原因 | {json.dumps(A['stop_reasons'], ensure_ascii=False)} | {json.dumps(B['stop_reasons'], ensure_ascii=False)} |",
               "", "逐任务（每格为 3 次运行的最终加速比；`✕` 表示未达标，`—` 表示没有计时结果）：", "",
               f"| 任务 | {a} | {b} | {a} 请求 | {b} 请求 |", "|---|---|---|---|---|"]
@@ -86,10 +96,35 @@ def section_comparison(lines: list[str], key: str, c: dict) -> None:
     if lc.get("in_lineage"):
         lines += ["", f"学习成本（{a} → {b} 的 {len(lc['learn_runs'])} 次学习运行）：{usd(lc['cost_usd'])}，"
                       f"输出 Token {n(lc['output_tokens'])}，耗时 {lc['wall_clock_s']:.0f}s。"]
+    observations(lines, c)
     if c["errors"]:
         lines += ["", f"出错的计划运行：{len(c['errors'])} 次，例如 {c['errors'][0]['error']}"]
     note = narrative.evolution_note(c["comparison_id"])
     lines += ["", "三行进化说明（自动生成）：", ""] + [f"{i}. {line}" for i, line in enumerate(note["lines"], 1)] + [""]
+
+
+def observations(lines: list[str], c: dict) -> None:
+    """Facts computed from the per-task table that the headline medians hide."""
+    a, b = c["snapshot_a"], c["snapshot_b"]
+    lower, higher, missed = [], [], []
+    for t in c["tasks"]:
+        med = {}
+        for s in (a, b):
+            sp = sorted(r["final_speedup"] for r in c["per_task"][t][s]["runs"] if r["final_speedup"] is not None)
+            med[s] = sp[len(sp) // 2] if sp else None
+            missed += [f"{t}/{s}（{x(r['final_speedup'])}）" for r in c["per_task"][t][s]["runs"]
+                       if r["stop_reason"] == "goal_reached" and not r["goal_met"]]
+        if med[a] is not None and med[b] is not None:
+            (lower if med[b] < med[a] - 0.05 else higher if med[b] > med[a] + 0.05 else []).append(t)
+    A, B = c["sides"][a], c["sides"][b]
+    lines += ["", "观察（由上表计算）：", "",
+              f"- 每任务加速比中位数：{b} 明显更低的任务 {', '.join(lower) or '无'}；明显更高的任务 {', '.join(higher) or '无'}（相差超过 0.05×）。"
+              f"达标线是 1.10×，智能体达到目标即停止，所以更少的请求也可能停在更小的加速比上。"]
+    if missed:
+        lines.append(f"- 开发数据上已达标、但最终测试未满足“全部样本快于基线”的运行 {len(missed)} 次：{'、'.join(missed)}；按规则记为未达标。")
+    ia, ib = A["input_tokens"]["total"], B["input_tokens"]["total"]
+    if ia and ib and ib > ia:
+        lines.append(f"- 输入 Token {n(ia)} → {n(ib)}：经验摘要进入提示词，单次请求更长；请求次数和输出 Token 减少，GPT 费用仍以实测为准。")
 
 
 def main() -> None:

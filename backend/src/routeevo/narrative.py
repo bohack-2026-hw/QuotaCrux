@@ -49,6 +49,10 @@ def _usd(v) -> str:
     return "未知" if v is None else f"${v:.4f}"
 
 
+def _g(v) -> str:
+    return "—" if v is None else f"{v:g}"
+
+
 def _cell(text) -> str:
     return (str(text) if text is not None else "").replace("|", "\\|").replace("\n", " ")[:160]
 
@@ -165,7 +169,7 @@ def evolution_note(comparison_id: str) -> dict:
         examples.append(f"失败例 {worst[0]['conditions']['task_id']}：{worst[0]['result']['status']}")
     line2 = (f"学到什么：{a} → {b} 新增 {len(added)} 条已验证经验（成功 {by['success']}、无收益 {by['no_gain']}、失败 {by['failure']}）"
              + (f"，{'；'.join(examples)}" if examples else "")
-             + f"；行动变化：模型请求中位数 {A['model_requests_median']} → {B['model_requests_median']}，"
+             + f"；行动变化：模型请求中位数 {_g(A['model_requests_median'])} → {_g(B['model_requests_median'])}，"
              f"升级到 GPT {A['upgrades_total']} → {B['upgrades_total']} 次，失败候选 {A['candidates_failed_total']} → {B['candidates_failed_total']} 个。")
     line3 = (f"如何回退：在界面「04 版本管理」或执行 `uv run routeevo snapshots activate {a} --reason 回退` 把生效快照切回 {a}；"
              f"之后的运行读取 {a} 并从相同初始程序开始，{b} 及全部运行记录保留可查。")

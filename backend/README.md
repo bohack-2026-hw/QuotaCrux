@@ -1,7 +1,8 @@
 # RouteEvo backend
 
-M1 of the [shared core](../docs/shared-core-prd.md): one task family, the Qwen → GPT execution loop, a Docker
-sandbox with an external evaluator, a resource ledger and a reproducible entry point. Decisions follow
+The [shared core](../docs/shared-core-prd.md), M1–M3: one task family, the Qwen → GPT execution loop, a Docker
+sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots and
+rollback, frozen held-out comparisons, and an HTTP API that also serves the dashboard. Decisions follow
 [implementation-decisions.md](../docs/implementation-decisions.md).
 
 ## Setup
@@ -10,10 +11,16 @@ sandbox with an external evaluator, a resource ledger and a reproducible entry p
 cd backend
 uv sync                      # Python 3.12 + deps
 cp .env.example .env         # fill OPENAI_API_KEY, QWEN_BASE_URL, QWEN_MODEL
-uv run routeevo tasks build  # generate task packages from tasks/spec.json into var/tasks
+uv run routeevo tasks build  # regenerate the frozen task packages (hashes checked against tasks/lock.json)
+(cd ../frontend && pnpm install && pnpm build)   # dashboard, served by `routeevo serve`
+uv run routeevo serve        # http://127.0.0.1:8000
 ```
 
-Docker (OrbStack) must be running; the sandbox image is built on first use.
+Docker (OrbStack) must be running; the sandbox image is built on first use. Local Qwen runs in Ollama
+(`QWEN_MODEL=qwen3.8:27b-mlx`, thinking off via `QWEN_REASONING_EFFORT=none`). The project `.env` overrides the
+shell, which matters because the shell may export `OPENAI_API_KEY=ollama` for local tools.
+
+Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then compare B and C).
 
 ## Commands
 
@@ -26,7 +33,13 @@ Docker (OrbStack) must be running; the sandbox image is built on first use.
 | `uv run routeevo check A-01 path/to/candidate.py [--dataset final]` | Evaluate a program outside any run |
 | `uv run routeevo calibrate A-01` | Time the initial program and fixed input-transfer overhead |
 | `uv run routeevo tasks list` / `tasks lock` | Show tasks / pin manifests in `tasks/lock.json` before B/C comparisons |
-| `uv run routeevo serve` | HTTP API on :8000 for the frontend |
+| `uv run routeevo learn A-01 A-02 …` | Serial learn-mode runs; each publishes a snapshot on top of the previous one |
+| `uv run routeevo snapshots list\|show v3\|diff v0 v3\|activate v1 --reason …` | Snapshots, diffs and rollback |
+| `uv run routeevo experience <id>` | One experience record with its evidence |
+| `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
+| `uv run routeevo comparison <id> [--json]` | Comparison summary |
+| `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
+| `uv run routeevo serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
 | `uv run pytest` | Unit tests plus end-to-end flows (needs Docker) |
 
 ## Task family `groupagg`
@@ -46,7 +59,24 @@ all hash-pinned in `manifest.json`. Only contract, initial code, examples and de
   Speedup = baseline median / candidate median.
 - **Improved** means every candidate sample beat every baseline sample (one-sided Mann-Whitney U = 0, p = 1/252).
   Only improved candidates can replace the best artifact; the goal is improved and speedup ≥ 1.10.
+- Before timing, candidates must also pass small public contract cases (empty input, interleaved repeats, ASCII
+  order, big integers, an almost-sorted trap, 32-char keys), so data-specific shortcuts without a fallback fail.
 - After the loop the best candidate is frozen and tested once on the final data; that result never feeds back.
+
+## Experience, snapshots, comparison
+
+- Learn-mode runs (A and smoke tasks only) end by extracting one record per model candidate with a usable dev
+  evaluation: workload conditions (profile + buckets), the change (code features, diff vs the initial program),
+  the measured result, resources and source ids. Success, no-gain and failure are all kept. Model explanations are
+  stored as unverified hypotheses. Records are published atomically as `v{n}` (parent = the snapshot the run read)
+  and the active pointer moves to it; no qualifying records means no new version.
+- Every run reads one snapshot fixed at start. Retrieval is deterministic: at least 3 of 5 workload buckets must
+  match; up to 3 successes, 2 failures, 1 no-gain are injected with match details and sample counts. The run
+  records exactly which experiences it read.
+- Rollback switches the active pointer only (refused while a learn run is in progress); history stays.
+- `compare` runs held-out tasks with two frozen snapshots, alternating order, serially, rejects tasks that
+  contributed experience to either snapshot, checks that all runs share one config fingerprint, and reports
+  per-side and per-task results plus the learning cost along the snapshot lineage.
 
 ## Loop and budgets
 
@@ -63,4 +93,6 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 
 `GET /api/tasks`, `GET /api/tasks/{id}`, `GET|POST /api/runs`, `GET /api/runs/{id}` (report, also while running),
 `GET /api/runs/{id}/events?after=N`, `POST /api/runs/{id}/stop`, `GET /api/runs/{id}/candidates/{cid}`,
-`GET /api/snapshots`. Interactive docs at `/docs` when `routeevo serve` is running.
+`GET /api/snapshots`, `GET /api/snapshots/{id}`, `GET /api/snapshots/{a}/diff/{b}`, `PUT /api/snapshots/active`,
+`GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `GET /api/comparisons/{id}`,
+`POST /api/comparisons/{id}/stop`. Interactive docs at `/docs` when `routeevo serve` is running.

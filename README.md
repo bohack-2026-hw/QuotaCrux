@@ -12,6 +12,18 @@
 
 先按共用核心推进，选定方向后实施对应增量。两份方向 PRD 是备选方案，不要求同时开发。赛道选择须在 11 月 14 日 10:00 锁定前完成，不以共用核心全部完成为前提。
 
-当前状态：产品需求草案，尚未开始业务实现。
+当前状态：共用核心 M1—M3 已实现（后端 + 展示界面），A 批学习与 B/C 留出对照按 `backend/scripts/experiment.sh` 运行。
+
+## 快速开始
+
+```sh
+cd backend && uv sync && cp .env.example .env   # 填 OPENAI_API_KEY；本地 Qwen 走 Ollama
+uv run routeevo tasks build                     # 按 tasks/lock.json 重建冻结的任务包
+(cd ../frontend && pnpm install && pnpm build)
+uv run routeevo serve                           # 打开 http://127.0.0.1:8000
+```
+
+- [后端说明](backend/README.md)：执行循环、Docker 沙箱与外部评测器、经验快照、对照评测、命令与接口。
+- `frontend/`：四个区域的展示界面——任务运行、经验查看、对照结果、版本管理。
 
 首版已确定使用自部署 Qwen + GPT-6.1 Sol（xhigh）、Python 3.12 + SQLite + FastAPI，并在固定机器的 Docker 环境中验证程序优化。具体任务、A/B/C 数据划分、重复次数与开发分工见开工决策。

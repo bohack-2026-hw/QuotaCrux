@@ -12,7 +12,7 @@ export function SpeedupBars({ candidates, target, bestId, onPick }: {
   const rows = candidates.map((c) => {
     const ev = c.dev_evaluations[c.dev_evaluations.length - 1]
     const speed = c.candidate_id === 'c0' ? 1 : ev?.status === 'passed' ? ev.speedup : null
-    return { id: c.candidate_id, speed, ev, initial: c.candidate_id === 'c0' }
+    return { id: c.candidate_id, speed, ev, initial: c.candidate_id === 'c0', reused: c.origin === 'experience' }
   })
   const maxX = Math.max(1.6, target + 0.2, ...rows.map((r) => (r.speed ?? 0) + 0.1))
   const left = 64, right = 70, rowH = 34, top = 22
@@ -34,7 +34,7 @@ export function SpeedupBars({ candidates, target, bestId, onPick }: {
           const best = r.id === bestId
           const [label] = status(r.ev?.status)
           const tipText = r.initial ? 'c0 初始程序：加速比定义为 1.00×'
-            : r.speed != null ? `${r.id}：${fmt.x(r.speed)}${r.ev?.improved ? '，全部样本快于基线' : '，与基线重叠，不计改善'}`
+            : r.speed != null ? `${r.id}${r.reused ? '（复用经验中的程序）' : ''}：${fmt.x(r.speed)}${r.ev?.improved ? '，全部样本快于基线' : '，与基线重叠，不计改善'}`
             : r.ev ? `${r.id}：${label}` : `${r.id}：验证中`
           return (
             <g key={r.id} style={{ cursor: onPick ? 'pointer' : undefined }} onClick={() => onPick?.(r.id)}
@@ -44,7 +44,7 @@ export function SpeedupBars({ candidates, target, bestId, onPick }: {
               }}>
               <rect x={0} y={y} width={W} height={rowH} fill="transparent" />
               <text x={left - 12} y={y + rowH / 2 + 4} textAnchor="end" className={best ? 'lbl-strong' : 'lbl'}>
-                {r.id}{best ? ' ★' : ''}
+                {r.id}{r.reused ? ' ↺' : ''}{best ? ' ★' : ''}
               </text>
               {r.speed != null ? (
                 <>

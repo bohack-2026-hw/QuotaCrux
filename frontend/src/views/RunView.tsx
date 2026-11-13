@@ -278,7 +278,7 @@ function Experiments({ r }: { r: Research }) {
           {Object.entries(r.verdicts).filter(([, n]) => n > 0).map(([k, n]) => `${r.verdict_labels[k].split('（')[0]} ${n}`).join(' · ')}
         </span>
       </div>
-      <p className="small muted" style={{ marginTop: 0 }}>假设、预期与验证方法由模型在提交候选前写下；判定由程序依据随后的评测给出，不由模型自评。</p>
+      <p className="small muted" style={{ marginTop: 0 }}>假设、预期与验证方法在实验前写下（复用的程序由程序依据经验记录写明，模型候选由模型写）；判定由程序依据随后的评测给出，不由模型自评。</p>
       <table className="tbl exp-table">
         <thead><tr><th>候选</th><th>假设（事前）</th><th>预期</th><th>实测</th><th>判定</th><th>之后</th></tr></thead>
         <tbody>{r.experiments.map((e) => {
@@ -286,7 +286,7 @@ function Experiments({ r }: { r: Research }) {
           const res = e.result
           return (
             <tr key={e.candidate_id}>
-              <td className="mono">{e.candidate_id}</td>
+              <td className="mono nowrap">{e.candidate_id}{e.kind === 'reuse' && <span className="tag" style={{ marginLeft: 6 }}>复用</span>}</td>
               <td>{e.hypothesis ?? e.purpose ?? '—'}</td>
               <td className="muted">{e.expected ?? '—'}</td>
               <td className="nowrap">{res.status ?? '—'}{res.speedup != null ? ` · ${fmt.x(res.speedup)}` : ''}{res.contract_case ? ` · ${res.contract_case}` : ''}</td>

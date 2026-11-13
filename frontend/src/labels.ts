@@ -5,6 +5,7 @@ export type Tone = 'good' | 'bad' | 'warn' | 'neutral' | 'accent'
 export const ACTION: Record<string, string> = {
   analyze: '分析', get_evidence: '取证', propose_candidate: '提出候选', run_validation: '验证',
   finish: '结束', upgrade_model: '升级模型', model_request: '模型请求', invalid: '无效回复',
+  reuse_candidate: '复用已验证程序', set_target: '提高本次目标',
 }
 
 const STATUS: Record<string, [string, Tone]> = {
@@ -46,6 +47,8 @@ const DECISION: [RegExp, string][] = [
   [/^continue with feedback$/, '带着反馈继续'], [/^continue with large model$/, '改用大模型继续'],
   [/^upgrade to large model, continue$/, '升级到大模型并继续'], [/^retry with a new request if budget allows$/, '预算允许则重发请求'],
   [/^upgrade rule met but no model requests left$/, '满足升级条件，但模型请求已用完'],
+  [/^validate re-used program$/, '复验'], [/^validate next re-used program$/, '复验下一个'], [/^re-use finished$/, '复用复验结束'],
+  [/^continue with the model to beat the best known program$/, '交给模型，尝试超越已知最佳'],
   [/^stop: (\w+)$/, '停止：$1'], [/^stop$/, '停止'],
 ]
 export function decision(d: string): string {
@@ -55,7 +58,7 @@ export function decision(d: string): string {
   return d
 }
 
-export const SPLIT: Record<string, string> = { A: 'A · 学习', B: 'B · 开发对照', C: 'C · 最终留出', smoke: '冒烟' }
+export const SPLIT: Record<string, string> = { A: 'A · 学习', B: 'B · 开发对照', C: 'C · 最终留出', D: 'D · 封存留出', smoke: '冒烟' }
 
 export const fmt = {
   x: (v: number | null | undefined) => (v == null ? '—' : `${v.toFixed(2)}×`),
@@ -75,6 +78,8 @@ export function stopDetail(d: string): string {
   const line = d.split('\n')[0]
   let m = line.match(/^(c\d+) dev speedup ([\d.]+) >= ([\d.]+)$/)
   if (m) return `${m[1]} 开发数据加速比 ${m[2]}× ≥ 目标 ${m[3]}×`
+  m = line.match(/^re-used (c\d+) dev speedup ([\d.]+) >= ([\d.]+); no model request needed$/)
+  if (m) return `复用的 ${m[1]} 开发数据加速比 ${m[2]}× ≥ 目标 ${m[3]}×，无需调用模型`
   m = line.match(/^(candidates|model_requests|tokens): used (\d+)\/(\d+)$/)
   if (m) return `${({ candidates: '候选', model_requests: '模型请求', tokens: 'Token' } as Record<string, string>)[m[1]]}已用完（${m[2]}/${m[3]}）`
   m = line.match(/^wall_clock: ([\d.]+)s left/)

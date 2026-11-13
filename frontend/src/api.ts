@@ -85,6 +85,8 @@ export interface Experiment {
   result: { status: string | null; speedup: number | null; improved: number | boolean | null; failure: string | null; contract_case: string | null }
   verdict: 'supported' | 'partial' | 'refuted' | 'untestable' | 'untested'
   then: string | null
+  kind?: 'reuse' | 'model'
+  target?: number
 }
 
 export interface Research {
@@ -185,9 +187,12 @@ export interface SideSummary {
   candidates_failed_total: number
   upgrades_total: number
   stop_reasons: Record<string, number>
+  runs_without_model_request?: number
+  goal_met_from_reuse?: number
+  model_requests_total?: number
 }
 
-export interface TaskRun { run_id: string; goal_met: boolean; final_speedup: number | null; stop_reason: string; model_requests: number; output_tokens: number | null; cost_usd: number | null; wall_clock_s: number | null; experiences_read: number }
+export interface TaskRun { run_id: string; goal_met: boolean; final_speedup: number | null; stop_reason: string; model_requests: number; output_tokens: number | null; cost_usd: number | null; wall_clock_s: number | null; experiences_read: number; best_from_reuse?: boolean; programs_reused?: number; agent_loop_s?: number | null }
 
 export interface Comparison {
   comparison_id: string

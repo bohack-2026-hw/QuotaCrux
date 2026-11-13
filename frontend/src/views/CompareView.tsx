@@ -154,6 +154,8 @@ function SideTable({ a, b, A, B }: { a: string; b: string; A: SideSummary; B: Si
     ['最终加速比中位数', fmt.x(A.final_speedup_median), fmt.x(B.final_speedup_median)],
     ['无改进运行', String(A.no_improvement_runs), String(B.no_improvement_runs)],
     ['模型请求中位数', String(A.model_requests_median ?? '—'), String(B.model_requests_median ?? '—')],
+    ...(B.goal_met_from_reuse ? [['复用经验程序直接达标', `${A.goal_met_from_reuse ?? 0} 次`, `${B.goal_met_from_reuse} 次`] as [string, string, string]] : []),
+    ...(B.runs_without_model_request != null ? [['未调用模型的运行', `${A.runs_without_model_request ?? 0} 次`, `${B.runs_without_model_request} 次`] as [string, string, string]] : []),
     ['升级到 GPT 次数', String(A.upgrades_total), String(B.upgrades_total)],
     ['失败候选', String(A.candidates_failed_total), String(B.candidates_failed_total)],
     ['输出 Token 合计', fmt.n(A.output_tokens.total), fmt.n(B.output_tokens.total)],

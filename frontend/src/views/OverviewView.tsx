@@ -74,6 +74,7 @@ function ComparisonStrip({ title, c, onOpen }: { title: string; c: Comparison | 
     ['达标率', fmt.pct(A.success_rate), fmt.pct(B.success_rate)],
     ['最终加速比中位数', fmt.x(A.final_speedup_median), fmt.x(B.final_speedup_median)],
     ['模型请求中位数', String(A.model_requests_median ?? '—'), String(B.model_requests_median ?? '—')],
+    ...(B.goal_met_from_reuse ? [['复用经验程序直接达标', `${A.goal_met_from_reuse ?? 0} 次`, `${B.goal_met_from_reuse} 次`] as [string, string, string]] : []),
     ['升级到 GPT', `${A.upgrades_total} 次`, `${B.upgrades_total} 次`],
     ['模型费用', fmt.usd(A.cost_usd_total), fmt.usd(B.cost_usd_total)],
     ['总耗时', fmt.s(A.wall_clock_s_total), fmt.s(B.wall_clock_s_total)],

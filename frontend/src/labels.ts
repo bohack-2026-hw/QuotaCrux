@@ -68,3 +68,15 @@ export const fmt = {
 
 export const roleName = (role: string | undefined, model?: string) =>
   role === 'large' ? `GPT${model ? ` · ${model}` : ''}` : role === 'small' ? `Qwen${model ? ` · ${model}` : ''}` : role ?? ''
+
+/** Program stop details are short English facts; render the common shapes in Chinese, keep anything else verbatim. */
+export function stopDetail(d: string): string {
+  const line = d.split('\n')[0]
+  let m = line.match(/^(c\d+) dev speedup ([\d.]+) >= ([\d.]+)$/)
+  if (m) return `${m[1]} 开发数据加速比 ${m[2]}× ≥ 目标 ${m[3]}×`
+  m = line.match(/^(candidates|model_requests|tokens): used (\d+)\/(\d+)$/)
+  if (m) return `${({ candidates: '候选', model_requests: '模型请求', tokens: 'Token' } as Record<string, string>)[m[1]]}已用完（${m[2]}/${m[3]}）`
+  m = line.match(/^wall_clock: ([\d.]+)s left/)
+  if (m) return `循环时长只剩 ${m[1]} 秒，不足以发起新请求`
+  return line
+}

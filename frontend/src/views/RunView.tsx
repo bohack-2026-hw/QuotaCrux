@@ -4,7 +4,7 @@ import type { Report, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
-import { ACTION, ORDER, OUTCOME, SPLIT, STOP, decision, fmt, roleName } from '../labels'
+import { ACTION, ORDER, OUTCOME, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
 
 export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   runId: string | null
@@ -58,7 +58,7 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
           </label>
           {task && (
             <p className="small muted" style={{ margin: '-6px 0 14px' }}>
-              {task.notes} · 目标 {task.target.min_speedup}×
+              {ORDER[task.dev_params.order] ?? task.dev_params.order} · {fmt.rows(task.dev_params.rows)} 行 · {fmt.rows(task.dev_params.keys)} key · 偏斜 {task.dev_params.skew} · 目标 {task.target.min_speedup}×
             </p>
           )}
           <div className="field"><span>运行模式</span>
@@ -141,7 +141,7 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
     <>
       <div className="card">
         <div className="spread">
-          <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} · {rep.mode === 'learn' ? '学习模式' : '评测模式'} · 读取 {rep.snapshot_id}</div>
+          <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} 批 · {rep.mode === 'learn' ? '学习模式' : '评测模式'} · 读取 {rep.snapshot_id}</div>
           <div className="row">
             {rep.scripted_model.length > 0 && <Chip tone="warn" icon="!">脚本模型：仅功能检查</Chip>}
             <StatusChip value={rep.status} />
@@ -157,7 +157,7 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
             </div>
           ))}
         </div>
-        {rep.stop_detail && !live && <p className="small muted" style={{ marginBottom: 0 }}>终止依据：{rep.stop_detail.split('\n')[0]}</p>}
+        {rep.stop_detail && !live && <p className="small muted" style={{ marginBottom: 0 }}>终止依据：{stopDetail(rep.stop_detail)}</p>}
       </div>
 
       <div className="card">

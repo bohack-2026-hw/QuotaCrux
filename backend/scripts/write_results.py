@@ -128,7 +128,7 @@ def section_comparison(lines: list[str], key: str, c: dict) -> None:
     lines += [f"### {TITLES[key]}：{a} vs {b}", "",
               f"`{c['comparison_id']}` · {len(c['tasks'])} 个任务 × 2 个快照 × {c['repeats']} 次 · 完成 {c['finished_runs']}/{c['planned_runs']} · "
               f"配置指纹{'一致' if c['fair'] else '**不一致**'}（{', '.join(c['config_fingerprints'])}） · 升级规则 {upgrade_rule(c['comparison_id'])}", "",
-              f"| 指标 | {a}（旧经验） | {b}（新经验） |", "|---|---|---|",
+              f"| 指标 | {a}（{'无经验' if a == 'v0' else '旧经验'}） | {b}（新经验） |", "|---|---|---|",
               f"| 达标 / 运行 | {A['goal_met']} / {A['runs']} | {B['goal_met']} / {B['runs']} |",
               f"| 最终加速比中位数（有计时结果的运行） | {x(A['final_speedup_median'])} | {x(B['final_speedup_median'])} |",
               f"| 无改进运行（保留初始程序） | {A['no_improvement_runs']} | {B['no_improvement_runs']} |",
@@ -182,6 +182,9 @@ def observations(lines: list[str], c: dict) -> None:
     if wins:
         loops = sorted(r["agent_loop_s"] for t in c["tasks"] for r in c["per_task"][t][b]["runs"] if r.get("best_from_reuse") and r["agent_loop_s"])
         lines.append(f"- {b} 有 {wins} 次运行由复用的程序直接达标，这些运行的循环时长中位数 {loops[len(loops) // 2]:.0f}s。")
+        lines.append("- 最终交付的复用程序来自哪次学习（任务 / 候选，原实测加速比）：" + "；".join(
+            f"{t} ← " + "、".join(sorted(set(reuse_source(r["run_id"]) for r in c["per_task"][t][b]["runs"] if r.get("best_from_reuse"))))
+            for t in c["tasks"] if any(r.get("best_from_reuse") for r in c["per_task"][t][b]["runs"])) + "。")
     if missed:
         lines.append(f"- 开发数据上已达标、但最终测试未满足“全部样本快于基线”的运行 {len(missed)} 次：{'、'.join(missed)}；按规则记为未达标。")
     per = {t: sum(r["cost_usd"] or 0 for r in c["per_task"][t][b]["runs"]) for t in c["tasks"]}
@@ -193,6 +196,14 @@ def observations(lines: list[str], c: dict) -> None:
     ia, ib = A["input_tokens"]["total"], B["input_tokens"]["total"]
     if ia and ib and ib > ia:
         lines.append(f"- 输入 Token {n(ia)} → {n(ib)}：经验摘要进入提示词，单次请求更长；请求次数和输出 Token 减少，GPT 费用仍以实测为准。")
+
+
+def reuse_source(run_id: str) -> str:
+    rep = report.build(run_id)
+    best = rep["best_candidate"]["candidate_id"]
+    st = next(x for x in rep["steps"] if x["action"] == "reuse_candidate" and x["candidate_id"] == best)
+    e = memory.experience(st["params"]["experience_id"])
+    return f"{e['conditions']['task_id']} {e['source']['candidate_id']}（{x(e['result']['speedup'])}）"
 
 
 def section_research(lines: list[str], cs: dict) -> None:

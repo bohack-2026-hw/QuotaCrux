@@ -29,10 +29,15 @@ def price_version_for(provider: str, model: str) -> str | None:
     return None
 
 
+# Requests the provider rejected or never received are not billed.
+NOT_BILLED_ERRORS = {"config", "http_4xx", "rate_limit"}
+
+
 def estimate_cost(provider: str, model: str, usage: Usage, request_sent: bool) -> tuple[float | None, str, str | None]:
     """Return (cost_usd, cost_status, price_version).
 
-    cost_status: estimated | unknown | local_no_api_fee | not_applicable.
+    cost_status: estimated | unknown | not_billed | local_no_api_fee | not_applicable.
+    `request_sent` is False when the provider rejected the request or it never left this machine.
     """
     if provider == "scripted":
         return 0.0, "not_applicable", None
@@ -44,7 +49,7 @@ def estimate_cost(provider: str, model: str, usage: Usage, request_sent: bool) -
         return None, "unknown", None
     if usage.source != "reported" or usage.input_tokens is None or usage.output_tokens is None:
         # A request that reached the provider may still be billed even if we never saw usage.
-        return None, "unknown" if request_sent else "not_applicable", version
+        return (None, "unknown", version) if request_sent else (0.0, "not_billed", version)
     t = PRICE_TABLES[version]
     cached = usage.cached_input_tokens or 0
     writes = usage.cache_write_tokens or 0

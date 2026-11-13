@@ -16,7 +16,8 @@ RUN_LOCK_PATH = VAR_DIR / "run.lock"
 
 
 def load_dotenv(path: Path = BACKEND_DIR / ".env") -> None:
-    """Minimal KEY=VALUE loader; existing environment variables win."""
+    """Minimal KEY=VALUE loader. The project .env wins over the shell, which may carry unrelated values
+    (e.g. OPENAI_API_KEY=ollama set for local tools)."""
     if not path.exists():
         return
     for raw in path.read_text().splitlines():
@@ -25,7 +26,8 @@ def load_dotenv(path: Path = BACKEND_DIR / ".env") -> None:
             continue
         key, value = line.split("=", 1)
         value = value.strip().strip('"').strip("'")
-        os.environ.setdefault(key.strip(), value)
+        if value:
+            os.environ[key.strip()] = value
 
 
 @dataclass(frozen=True)

@@ -47,4 +47,5 @@ def test_cost_estimate_and_unknowns():
     assert status == "estimated" and version.startswith("openai/gpt-6.1-sol")
     assert cost == pytest.approx((8_000 * 2 + 2_000 * 0.1 + 30_000 * 10) / 1e6)
     assert estimate_cost("openai_responses", "gpt-6.1-sol", Usage(), request_sent=True)[:2] == (None, "unknown")
+    assert estimate_cost("openai_responses", "gpt-6.1-sol", Usage(), request_sent=False)[:2] == (0.0, "not_billed")
     assert estimate_cost("chat_compat", "qwen", Usage(), request_sent=True)[1] == "local_no_api_fee"

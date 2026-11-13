@@ -21,8 +21,20 @@ RETRIEVAL = {
     "max_per_outcome": {"success": 3, "failure": 2, "no_gain": 1},
     "rank": "matching features desc, then newest first",
 }
+# Verified programs are experience too: a success record keeps the full program, and a new run first re-validates
+# the closest ones itself (no model request). The model is called only when none reaches the run's target; a
+# learning run instead raises its target above the best re-validated program, so the library can only get better.
+REUSE = {
+    "version": "reuse-v1",
+    "max_programs": 3,
+    "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+    "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+    "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+    "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+    "learn_target_margin": 0.05,
+}
 LEARNABLE_SPLITS = {"A", "smoke"}
-EXTRACTOR_VERSION = "extractor-v1"
+EXTRACTOR_VERSION = "extractor-v2"
 NON_EVIDENCE_STATUSES = {"sandbox_error", "baseline_failed"}
 _NOTABLE_CALLS = {
     "reader", "writer", "DictReader", "read", "readline", "readlines", "splitlines", "split", "rsplit", "partition",
@@ -108,8 +120,14 @@ def _outcome(ev) -> str:
     return "failure"
 
 
+def normalized_code(code: str) -> str:
+    return "\n".join(line.rstrip() for line in code.strip().splitlines() if line.strip())
+
+
 def extract(run_id: str) -> list[dict]:
-    """Build experience records for every model candidate of a run that has a usable dev evaluation."""
+    """Build experience records for every model or re-validated candidate of a run that has a usable dev evaluation.
+
+    A re-validated program measured on a new workload is a new record: it tells later runs where the program holds."""
     run = db.one("SELECT * FROM runs WHERE run_id = ?", (run_id,))
     task_row = db.one("SELECT * FROM tasks WHERE task_id = ?", (run["task_id"],))
     manifest = json.loads(task_row["manifest_json"])
@@ -123,7 +141,7 @@ def extract(run_id: str) -> list[dict]:
 
     out = []
     for cid, c in cands.items():
-        if c["origin"] != "model":
+        if c["origin"] not in ("model", "experience"):
             continue
         ev = db.one("SELECT * FROM evaluations WHERE run_id = ? AND candidate_id = ? AND dataset = 'dev'"
                     " ORDER BY ended_at DESC LIMIT 1", (run_id, cid))
@@ -133,7 +151,8 @@ def extract(run_id: str) -> list[dict]:
             continue
         detail = json.loads(ev["detail_json"])
         failure = detail.get("failure") or {}
-        step = db.one("SELECT * FROM steps WHERE run_id = ? AND candidate_id = ? AND action = 'propose_candidate'", (run_id, cid))
+        step = db.one("SELECT * FROM steps WHERE run_id = ? AND candidate_id = ? AND action IN ('propose_candidate', 'reuse_candidate')",
+                      (run_id, cid))
         call = db.one("SELECT * FROM model_calls WHERE call_id = ?", (step["model_call_id"],)) if step and step["model_call_id"] else None
         code = Path(c["code_path"]).read_text()
         timing = detail.get("timing") or {}
@@ -142,9 +161,11 @@ def extract(run_id: str) -> list[dict]:
             "outcome": _outcome(ev),
             "conditions": conditions,
             "action": {
-                "kind": "propose_candidate",
+                "kind": "reuse_candidate" if c["origin"] == "experience" else "propose_candidate",
+                "reused_experience_id": (json.loads(step["params_json"]) or {}).get("experience_id") if step and c["origin"] == "experience" else None,
                 "parent_candidate_id": c["parent_candidate_id"],
                 "code_sha256": c["code_sha256"],
+                "code": code,
                 "code_features": code_features(code),
                 "diff_vs_initial": _diff(initial_code, code),
                 "model_stated_purpose": step["purpose"] if step else None,
@@ -327,3 +348,44 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
                "matched_by_outcome": matched_counts, "selected": [r["experience_id"] for r in records],
                "scores": {r["experience_id"]: r["match"]["matching_features"] for r in records}}
     return records, summary
+
+
+def reusable_programs(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], dict]:
+    """Verified programs to re-validate before the first model request (REUSE), closest workload first."""
+    current = buckets(profile)
+    programs: dict[str, dict] = {}
+    for eid in snapshot_experience_ids(snapshot_id):
+        e = experience(eid)
+        code = e["action"].get("code")
+        if e["conditions"]["family"] != family or not code:
+            continue
+        matches = sum(1 for f in RETRIEVAL["features"] if e["conditions"]["buckets"].get(f) == current.get(f))
+        p = programs.setdefault(normalized_code(code), {"code": code, "success": [], "other": []})
+        (p["success"] if e["outcome"] == "success" else p["other"]).append((matches, e))
+    chosen, skipped = [], []
+    for p in programs.values():
+        if not p["success"]:
+            continue
+        best_match = max(m for m, _ in p["success"])
+        matches, rec = max(p["success"], key=lambda t: (t[0], t[1]["result"]["speedup"] or 0))
+        against = [(m, e) for m, e in p["other"] if m > best_match]
+        item = {"experience_id": rec["experience_id"], "code": p["code"], "matching_features": matches,
+                "of": len(RETRIEVAL["features"]), "speedup": rec["result"]["speedup"], "task_id": rec["conditions"]["task_id"],
+                "buckets": rec["conditions"]["buckets"],
+                "differs": {f: {"experience": rec["conditions"]["buckets"].get(f), "current": current.get(f)}
+                            for f in RETRIEVAL["features"] if rec["conditions"]["buckets"].get(f) != current.get(f)},
+                "successes": len(p["success"]), "other_records": len(p["other"])}
+        if against:
+            m, e = max(against, key=lambda t: t[0])
+            skipped.append({**item, "code": None, "skipped_because": {"experience_id": e["experience_id"], "outcome": e["outcome"],
+                                                                      "matching_features": m, "speedup": e["result"]["speedup"]}})
+        else:
+            chosen.append(item)
+    chosen.sort(key=lambda x: (x["matching_features"], x["speedup"] or 0), reverse=True)
+    picked = chosen[:REUSE["max_programs"]]
+    summary = {"reuse": REUSE["version"], "programs_in_snapshot": len(programs),
+               "with_success": sum(1 for p in programs.values() if p["success"]),
+               "selected": [{k: v for k, v in x.items() if k != "code"} for x in picked],
+               "not_selected": [x["experience_id"] for x in chosen[REUSE["max_programs"]:]],
+               "skipped": skipped}
+    return picked, summary

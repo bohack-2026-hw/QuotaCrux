@@ -8,7 +8,8 @@ from pathlib import Path
 from . import compare, config, memory, report
 
 ACTION_ZH = {"analyze": "分析", "get_evidence": "取证", "propose_candidate": "提出候选", "run_validation": "验证",
-             "finish": "结束", "upgrade_model": "升级模型", "model_request": "模型请求", "invalid": "无效回复"}
+             "finish": "结束", "upgrade_model": "升级模型", "model_request": "模型请求", "invalid": "无效回复",
+             "reuse_candidate": "复用已验证程序", "set_target": "提高本次目标"}
 STOP_ZH = {"goal_reached": "开发数据达标", "budget_exhausted": "预算耗尽", "agent_finished": "Agent 主动结束",
            "user_stopped": "用户停止", "model_api_error": "模型接口错误", "environment_error": "环境错误",
            "internal_error": "内部错误"}
@@ -25,7 +26,10 @@ DECISION_ZH = {"continue": "继续", "validate candidate": "验证候选", "re-m
                "continue with feedback": "带着反馈继续", "continue with large model": "改用大模型继续",
                "upgrade to large model, continue": "升级到大模型并继续", "stop": "停止",
                "retry with a new request if budget allows": "预算允许则重发请求",
-               "upgrade rule met but no model requests left": "满足升级条件，但模型请求已用完"}
+               "upgrade rule met but no model requests left": "满足升级条件，但模型请求已用完",
+               "validate re-used program": "复验", "validate next re-used program": "复验下一个",
+               "re-use finished": "复用复验结束",
+               "continue with the model to beat the best known program": "交给模型，尝试超越已知最佳"}
 
 
 def _decision(d: str) -> str:
@@ -101,15 +105,17 @@ def run_markdown(run_id: str) -> str:
         lines.append(f"| {s['seq']} | {'模型' if s['actor'] == 'model' else '程序'} | {ACTION_ZH.get(s['action'], s['action'])} | "
                      f"{STATUS_ZH.get(s['status'], s['status'])} | {_cell(what)} | {_cell('；'.join(fb))} |")
     lines += ["", "## 假设与实验", "",
-              "每个候选提交前，模型写下假设、预期结果和验证方法；判定由程序根据随后的评测给出，不由模型自评："
-              "改善且达到目标 = 得到支持；改善但未达目标 = 部分支持；正确但没有改善 = 被反驳；候选出错 = 未能检验。", "",
+              "每个候选提交前写下假设、预期结果和验证方法（复用的程序由程序依据经验记录写明，模型候选由模型写）；"
+              "判定由程序根据随后的评测给出，不由模型自评：改善且达到当时目标 = 得到支持；改善但未达目标 = 部分支持；"
+              "正确但没有改善 = 被反驳；候选出错 = 未能检验。", "",
               "| 候选 | 假设（事前，未验证） | 预期 | 实测 | 判定 | 之后 |", "|---|---|---|---|---|---|"]
     for e in r["research"]["experiments"]:
         res = e["result"]
         measured = f"{res['status'] or '—'}{(' · ' + _x(res['speedup'])) if res['speedup'] is not None else ''}"
         if res["contract_case"]:
             measured += f" · {res['contract_case']}"
-        lines.append(f"| {e['candidate_id']} | {_cell(e['hypothesis'] or e['purpose'])} | {_cell(e['expected'])} | {measured} | "
+        tag = "（复用）" if e.get("kind") == "reuse" else ""
+        lines.append(f"| {e['candidate_id']}{tag} | {_cell(e['hypothesis'] or e['purpose'])} | {_cell(e['expected'])} | {measured} | "
                      f"{r['research']['verdict_labels'][e['verdict']]} | {_decision(e['then'] or '')} |")
     if not r["research"]["experiments"]:
         lines.append("| — | 本次运行没有提出候选 | — | — | — | — |")
@@ -134,7 +140,8 @@ def run_markdown(run_id: str) -> str:
     lines += [
         "", "## 资源", "",
         f"- 模型请求 {r['iterations']['model_requests']} 次，升级 {r['iterations']['upgrades']} 次；候选 {r['iterations']['candidates_proposed']} 个"
-        f"（通过 {r['iterations']['candidates_passed']}，改善 {r['iterations']['candidates_improved']}，失败 {r['iterations']['candidates_failed']}）",
+        f"（通过 {r['iterations']['candidates_passed']}，改善 {r['iterations']['candidates_improved']}，失败 {r['iterations']['candidates_failed']}）"
+        f"；复用已验证程序 {r['iterations'].get('programs_reused', 0)} 个（改善 {r['iterations'].get('programs_reused_improved', 0)}）",
         f"- Token：输入 {u['input_tokens']}，输出 {u['output_tokens']}（推理 {u['reasoning_tokens']}）；费用 {_usd(u['cost_usd'])}（{u['cost_status']}）",
         f"- 时间：总 {tm['wall_clock_total_s']}s，循环 {tm['agent_loop_s']}s / 上限 {tm['agent_loop_limit_s']}s，模型等待 {tm['model_wait_s']}s，"
         f"开发验证 {tm['dev_evaluation_s']}s，最终测试 {tm['final_evaluation_s']}s",
@@ -171,6 +178,8 @@ def evolution_note(comparison_id: str) -> dict:
         examples.append(f"失败例 {worst[0]['conditions']['task_id']}：{worst[0]['result']['status']}")
     line2 = (f"学到什么：{a} → {b} 新增 {len(added)} 条已验证经验（成功 {by['success']}、无收益 {by['no_gain']}、失败 {by['failure']}）"
              + (f"，{'；'.join(examples)}" if examples else "")
+             + (f"；{B['goal_met_from_reuse']} 次运行直接复用经验中的程序达标，{B['runs_without_model_request']} 次没有调用模型"
+                if B.get("goal_met_from_reuse") else "")
              + f"；行动变化：模型请求中位数 {_g(A['model_requests_median'])} → {_g(B['model_requests_median'])}，"
              f"升级到 GPT {A['upgrades_total']} → {B['upgrades_total']} 次，失败候选 {A['candidates_failed_total']} → {B['candidates_failed_total']} 个。")
     line3 = (f"如何回退：在界面「04 版本管理」或执行 `uv run routeevo snapshots activate {a} --reason 回退` 把生效快照切回 {a}；"

@@ -10,6 +10,7 @@ QUESTION = "在输出完全正确的前提下，能否让这段分组聚合程�
 SCOPE = ("只能整体替换程序文件；仅 Python 标准库；代码不超过 {max_code_bytes} 字节；输入经 stdin、输出到 stdout；"
          "评测器、参考输出和最终测试数据不可见、不可改")
 TOOLS = [
+    ("reuse_candidate", "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"),
     ("analyze", "分析：写下推理与计划，不执行"),
     ("get_evidence", "取证：在沙箱中对某个候选做 cProfile，返回热点"),
     ("propose_candidate", "提出候选：提交完整程序，程序立即验证"),
@@ -64,18 +65,21 @@ def _verdict(res: dict, target: float) -> str:
 
 
 def experiments(rep: dict) -> list[dict]:
-    """RA-03: one row per proposed candidate, in order; `then` is what the program decided after the result."""
+    """RA-03: one row per re-used or proposed candidate, in order; `then` is what the program decided after the result.
+
+    A verdict is judged against the target in force for that experiment (a learning run raises it after re-use)."""
     steps = rep["steps"]
-    target = rep["task"]["target_min_speedup"]
     out = []
     for i, s in enumerate(steps):
-        if s["action"] != "propose_candidate" or not s["candidate_id"]:
+        if s["action"] not in ("propose_candidate", "reuse_candidate") or not s["candidate_id"]:
             continue
         check = next((x for x in steps[i + 1:] if x["action"] == "run_validation" and x["candidate_id"] == s["candidate_id"]), None)
         res = check["result"] if check else {}
         failure = res.get("failure") or {}
+        target = res.get("run_target_speedup") or rep["task"]["target_min_speedup"]
         out.append({
             "candidate_id": s["candidate_id"], "step": s["seq"],
+            "kind": "reuse" if s["action"] == "reuse_candidate" else "model", "target": target,
             "hypothesis": s["hypothesis"], "purpose": s["purpose"],
             "expected": s["expected_result"], "verification": s["verification"],
             "result": {"status": res.get("status"), "speedup": res.get("speedup"), "improved": res.get("improved"),
@@ -99,15 +103,20 @@ def aggregate(reports: list[dict]) -> dict:
     import re
 
     out = {k: 0 for k in VERDICTS}
-    out.update(runs=len(reports), experiments=0, follow_ups=0, follow_ups_citing_prior=0, evidence_calls=0, upgrades=0)
+    out.update(runs=len(reports), experiments=0, reuse_experiments=0, reuse_supported=0, follow_ups=0, follow_ups_citing_prior=0,
+               evidence_calls=0, upgrades=0)
     for rep in reports:
         exps = rep["research"]["experiments"]
         out["experiments"] += len(exps)
+        out["reuse_experiments"] += sum(1 for e in exps if e.get("kind") == "reuse")
+        out["reuse_supported"] += sum(1 for e in exps if e.get("kind") == "reuse" and e["verdict"] == "supported")
         out["evidence_calls"] += rep["iterations"]["evidence_calls"]
         out["upgrades"] += rep["iterations"]["upgrades"]
         for k, v in rep["research"]["verdicts"].items():
             out[k] += v
         for i, e in enumerate(exps[1:], 1):
+            if e.get("kind") == "reuse":
+                continue
             out["follow_ups"] += 1
             prior = {p["candidate_id"] for p in exps[:i]}
             text = f"{e['purpose'] or ''} {e['hypothesis'] or ''}"

@@ -185,6 +185,10 @@ def _side(reports: list[dict]) -> dict:
         "wall_clock_s_total": round(sum(r["timing"]["wall_clock_total_s"] or 0 for r in reports), 3),
         "agent_loop_s_median": _median([r["timing"]["agent_loop_s"] for r in reports if r["timing"]["agent_loop_s"] is not None]),
         "model_requests_median": _median([r["iterations"]["model_requests"] for r in reports]),
+        "model_requests_total": sum(r["iterations"]["model_requests"] for r in reports),
+        "runs_without_model_request": sum(1 for r in reports if r["iterations"]["model_requests"] == 0),
+        "goal_met_from_reuse": sum(1 for r in reports if r["outcome"]["goal_met"] and r["outcome"].get("best_from_reuse")),
+        "programs_reused_total": sum(r["iterations"].get("programs_reused", 0) for r in reports),
         "candidates_failed_total": sum(r["iterations"]["candidates_failed"] for r in reports),
         "candidates_no_gain_total": sum(r["iterations"]["candidates_no_gain"] for r in reports),
         "upgrades_total": sum(r["iterations"]["upgrades"] for r in reports),
@@ -231,7 +235,9 @@ def summarize(comparison_id: str) -> dict:
                 "runs": [{"run_id": x["run_id"], "goal_met": x["outcome"]["goal_met"], "final_speedup": x["outcome"]["final_speedup"],
                           "stop_reason": x["stop_reason"], "model_requests": x["iterations"]["model_requests"],
                           "output_tokens": x["usage"]["total"]["output_tokens"], "cost_usd": x["usage"]["total"]["cost_usd"],
-                          "wall_clock_s": x["timing"]["wall_clock_total_s"], "experiences_read": len(x["experience"]["read"])}
+                          "wall_clock_s": x["timing"]["wall_clock_total_s"], "experiences_read": len(x["experience"]["read"]),
+                          "agent_loop_s": x["timing"]["agent_loop_s"], "best_from_reuse": x["outcome"].get("best_from_reuse", False),
+                          "programs_reused": x["iterations"].get("programs_reused", 0)}
                          for x in reps],
                 "goal_met": sum(1 for x in reps if x["outcome"]["goal_met"]),
                 "final_speedup_median": _median([x["outcome"]["final_speedup"] for x in reps if x["outcome"]["final_speedup"] is not None]),

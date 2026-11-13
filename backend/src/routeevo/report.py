@@ -72,9 +72,14 @@ def build(run_id: str) -> dict:
                                  "speedup": e["speedup"], "improved": e["improved"], "goal_met": e["goal_met"]} for e in mine],
         })
     model_cands = [c for c in cand_out if c["origin"] == "model"]
-    latest = {c["candidate_id"]: (c["dev_evaluations"][-1] if c["dev_evaluations"] else None) for c in model_cands}
-    passed = [cid for cid, e in latest.items() if e and e["status"] == "passed"]
-    improved = [cid for cid in passed if latest[cid]["improved"]]
+    reused = [c for c in cand_out if c["origin"] == "experience"]
+    latest = {c["candidate_id"]: (c["dev_evaluations"][-1] if c["dev_evaluations"] else None) for c in model_cands + reused}
+    passed_all = [cid for cid, e in latest.items() if e and e["status"] == "passed"]
+    improved_all = [cid for cid in passed_all if latest[cid]["improved"]]
+    model_ids = {c["candidate_id"] for c in model_cands}
+    passed = [cid for cid in passed_all if cid in model_ids]
+    improved = [cid for cid in improved_all if cid in model_ids]
+    raised = next((s for s in steps if s["action"] == "set_target"), None)
 
     final_out = None
     if final:
@@ -108,8 +113,9 @@ def build(run_id: str) -> dict:
         "outcome": {
             "run_completed": run["status"] == "completed",
             "candidate_ran": any(e["executed"] for e in dev_evals if e["candidate_id"] != "c0"),
-            "dev_validation_passed": bool(passed),
-            "dev_improved": bool(improved),
+            "dev_validation_passed": bool(passed_all),
+            "dev_improved": bool(improved_all),
+            "best_from_reuse": any(c["candidate_id"] == best_id for c in reused),
             "best_is_initial": best_id == "c0",
             "final_evaluated": final is not None,
             "final_correct": final_out["correct"] if final_out else None,
@@ -131,6 +137,7 @@ def build(run_id: str) -> dict:
         },
         "best_candidate": next((c for c in cand_out if c["candidate_id"] == best_id), None),
         "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+        "run_target_speedup": json.loads(raised["result_json"])["run_target_speedup"] if raised else target,
         "final_evaluation": final_out,
         "candidates": cand_out,
         "iterations": {
@@ -140,6 +147,8 @@ def build(run_id: str) -> dict:
             "candidates_improved": len(improved),
             "candidates_no_gain": len(passed) - len(improved),
             "candidates_failed": len(model_cands) - len(passed),
+            "programs_reused": len(reused),
+            "programs_reused_improved": sum(1 for c in reused if c["candidate_id"] in improved_all),
             "invalid_actions": sum(1 for s in steps if s["status"] == "invalid_action"),
             "unusable_replies": sum(1 for s in steps if s["status"] == "unusable_reply"),
             "api_errors": sum(1 for s in steps if s["status"] == "api_error"),

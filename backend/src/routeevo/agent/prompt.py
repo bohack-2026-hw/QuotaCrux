@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v1"
+PROMPT_VERSION = "agent-prompt-v2"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -42,6 +42,12 @@ not a fact. Write purpose, expected_result, verification, hypothesis, analysis a
 Experience records, when provided, come from earlier runs: the observed workload conditions, the change that was tried
 and the measured result, including failures. They are evidence, not rules. Check that their conditions match the
 current workload before relying on them, and mind their sample counts.
+
+Before your first request the program re-validates up to three verified programs from the experience snapshot whose
+conditions are closest to this workload; they appear as candidates with origin "experience" and their results are real
+measurements on this task. You are only asked when none of them reached the target, or in a learning run, where the
+target in Budget (`target_speedup`) is raised above the best of them: then a candidate must beat that program, so
+build on it (set it as parent) rather than on c0, and do not resubmit a program that is already in the list.
 """
 
 SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()

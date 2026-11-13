@@ -112,6 +112,7 @@ class Runner:
         self.experience_summary: dict | None = None
         self.stop_reason: str | None = None
         self.stop_detail: str | None = None
+        self.run_target = self.task.target_min_speedup
         self.t0 = 0.0
 
     # ---------- setup ----------
@@ -158,6 +159,7 @@ class Runner:
             "evaluator_version": evaluator.EVALUATOR_VERSION,
             "sandbox_image_id": self.env["image_id"],
             "retrieval": memory.RETRIEVAL,
+            "reuse": memory.REUSE,
             "experience_extractor": memory.EXTRACTOR_VERSION,
         }
         fingerprint = hashlib.sha256(json.dumps(comparable, sort_keys=True).encode()).hexdigest()[:16]
@@ -186,6 +188,8 @@ class Runner:
         try:
             self._load_experiences()
             self._check_initial()
+            if not self.stop_reason:
+                self._reuse()
             while not self.stop_reason:
                 self._iterate()
         except Exception as exc:  # noqa: BLE001 - recorded, never swallowed silently
@@ -251,6 +255,73 @@ class Runner:
         if not ok:
             self._stop("environment_error", f"initial program failed dev check: {ev.status} {ev.detail.get('failure')}")
 
+    def _reuse(self) -> None:
+        """Re-validate the closest verified programs from the snapshot before any model request (memory.REUSE).
+
+        Eval runs stop here when one reaches the target. Learning runs raise their target above the best of them, so
+        the model spends its requests on beating what is already known instead of re-deriving it."""
+        programs, summary = memory.reusable_programs(self.snapshot_id, self.task.manifest["family"], self.task.dev_profile)
+        db.add_event(self.run_id, "reuse_selected", summary)
+        if not programs:
+            return
+        target = self.task.target_min_speedup
+        for i, prog in enumerate(programs):
+            if db.one("SELECT stop_requested FROM runs WHERE run_id = ?", (self.run_id,))["stop_requested"]:
+                return self._stop("user_stopped", "stop requested")
+            remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)
+            if remaining < self.limits.min_request_window_s:
+                break
+            cid = self._add_candidate(prog["code"], origin="experience", parent="c0", model_call_id=None)
+            differs = "、".join(f"{f}（经验 {d['experience']}，本任务 {d['current']}）" for f, d in prog["differs"].items()) or "无"
+            self._step("program", "reuse_candidate", "submitted", candidate_id=cid,
+                       purpose=f"复用经验 {prog['experience_id']} 中已验证的程序，不调用模型（第 {i + 1}/{len(programs)} 个）",
+                       hypothesis=(f"该程序在 {prog['task_id']} 上实测 {prog['speedup']}×（{prog['successes']} 条成功记录）；本任务 "
+                                   f"{prog['matching_features']}/{prog['of']} 项负载条件相同，不同项：{differs}。预计在本任务上仍正确且有改善"),
+                       expected=f"正确，且全部样本快于基线、加速比 ≥ {target}",
+                       verification="与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+                       params={"experience_id": prog["experience_id"], "source_task_id": prog["task_id"],
+                               "recorded_speedup": prog["speedup"], "matching_features": prog["matching_features"]},
+                       next_decision="validate re-used program")
+            ev = self._validate(cid)
+            fb = ev.public_feedback()
+            self.candidates[cid]["latest_evaluation"] = {k: fb.get(k) for k in ("status", "correct", "speedup", "improved", "goal_met", "failure", "timing_spread")}
+            if ev.status in ("sandbox_error", "baseline_failed"):
+                self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
+                           result=fb, next_decision="stop: environment_error")
+                return self._stop("environment_error", f"evaluation of {cid}: {ev.status} {ev.detail.get('failure')}")
+            replaced = self._recompute_best()
+            last = i == len(programs) - 1
+            self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
+                       result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced, "run_target_speedup": target},
+                       next_decision="validate next re-used program" if not last else "re-use finished")
+            db.add_event(self.run_id, "evaluation_finished", {"candidate_id": cid, "status": ev.status, "speedup": ev.speedup,
+                                                              "goal_met": ev.goal_met, "best_candidate_id": self.best_id})
+            self.last_feedback = {"validation_of": cid, **fb, "best_candidate_id": self.best_id}
+
+        best = self.candidates[self.best_id].get("latest_evaluation") or {}
+        reached = self.best_id != "c0" and best.get("improved") and (best.get("speedup") or 0) >= target
+        if not reached:
+            self.last_feedback = {"re_use": f"{len(programs)} verified program(s) from experience were re-validated on this task "
+                                            "(origin 'experience' in Candidates); none reached the target",
+                                  "best_candidate_id": self.best_id}
+            return
+        if self.opts.mode == "eval":
+            return self._stop("goal_reached", f"re-used {self.best_id} dev speedup {best['speedup']} >= {target}; no model request needed")
+        self.run_target = round(max(target, best["speedup"] * (1 + memory.REUSE["learn_target_margin"])), 4)
+        self._step("program", "set_target", "done", candidate_id=self.best_id,
+                   purpose=(f"学习运行：复用的 {self.best_id} 已达标（{best['speedup']}×），本次目标提高到超过它 "
+                            f"{memory.REUSE['learn_target_margin']:.0%}，即 ≥ {self.run_target}×"),
+                   result={"best_candidate_id": self.best_id, "best_dev_speedup": best["speedup"],
+                           "task_target_speedup": target, "run_target_speedup": self.run_target},
+                   next_decision="continue with the model to beat the best known program")
+        db.add_event(self.run_id, "run_target_raised", {"from": target, "to": self.run_target, "best_candidate_id": self.best_id})
+        self.last_feedback = {"re_use": f"re-validated program {self.best_id} already meets the task target; this learning run "
+                                        f"only counts a candidate as on target at speedup >= {self.run_target}",
+                              "best_candidate_id": self.best_id}
+
+    def _on_target(self, ev: evaluator.Evaluation) -> bool:
+        return bool(ev.status == "passed" and ev.improved and ev.speedup is not None and ev.speedup >= self.run_target)
+
     def _iterate(self) -> None:
         if db.one("SELECT stop_requested FROM runs WHERE run_id = ?", (self.run_id,))["stop_requested"]:
             return self._stop("user_stopped", "stop requested")
@@ -300,7 +371,7 @@ class Runner:
             "wall_clock_elapsed_s": round(elapsed, 1), "wall_clock_limit_s": self.limits.wall_clock_s,
             "current_model_role": self.role, "upgraded_to_large_model": self.role == "large",
             "best_candidate_id": self.best_id, "best_dev_speedup": best.get("speedup"),
-            "target_speedup": self.task.target_min_speedup,
+            "target_speedup": self.run_target, "task_target_speedup": self.task.target_min_speedup,
         }
 
     def _call_model(self) -> tuple[LLMResult, str, config.ModelConfig]:
@@ -466,7 +537,8 @@ class Runner:
             return self._stop("environment_error", f"evaluation of {cid}: {ev.status} {ev.detail.get('failure')}")
 
         replaced = self._recompute_best()
-        if ev.goal_met:
+        on_target = self._on_target(ev)
+        if on_target:
             decision = "stop: goal_reached"
         else:
             if counts_as_attempt:
@@ -476,13 +548,15 @@ class Runner:
                 decision = ("upgrade to large model, continue" if self.requests_used < self.limits.max_model_requests
                             else "upgrade rule met but no model requests left")
         self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
-                   result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced}, next_decision=decision)
+                   result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced, "run_target_speedup": self.run_target},
+                   next_decision=decision)
         db.add_event(self.run_id, "evaluation_finished", {"candidate_id": cid, "status": ev.status, "speedup": ev.speedup,
                                                           "goal_met": ev.goal_met, "best_candidate_id": self.best_id})
-        self.last_feedback = {"validation_of": cid, **fb, "best_candidate_id": self.best_id}
+        self.last_feedback = {"validation_of": cid, **fb, "best_candidate_id": self.best_id,
+                              "run_target_speedup": self.run_target, "on_run_target": on_target}
 
-        if ev.goal_met:
-            return self._stop("goal_reached", f"{cid} dev speedup {ev.speedup} >= {self.task.target_min_speedup}")
+        if on_target:
+            return self._stop("goal_reached", f"{cid} dev speedup {ev.speedup} >= {self.run_target}")
         if decision.startswith("upgrade to"):
             self._upgrade(f"连续 {self.misses} 次候选未达到正确且达标，按升级规则切换到大模型")
         if self.model_candidates >= self.limits.max_candidates:

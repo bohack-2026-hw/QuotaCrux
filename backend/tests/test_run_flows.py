@@ -23,7 +23,8 @@ def run(task, script: str, **limits):
     from routeevo import config
     from routeevo.agent.runner import RunOptions, Runner
 
-    r = Runner(RunOptions(task_id=task.task_id, script=SCRIPTS / f"{script}.json",
+    # v0 holds no programs to re-use, so these flows exercise the model loop whatever earlier tests published
+    r = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=SCRIPTS / f"{script}.json",
                           limits=dataclasses.replace(config.RunLimits(), **limits)))
     r.create()
     return r.execute()
@@ -190,3 +191,40 @@ def test_small_model_stalling_triggers_upgrade(task):
     up = next(s for s in rep["steps"] if s["action"] == "upgrade_model")
     assert up["result"]["small_requests"] == 3 and up["result"]["rule"] == "upgrade-rule-v2"
     assert rep["stop_reason"] == "goal_reached" and rep["best_candidate"]["candidate_id"] == "c1"
+
+
+@requires_docker
+def test_reuse_skips_the_model_and_learning_raises_the_target():
+    from routeevo import memory, taskpkg
+    from routeevo.agent.runner import RunOptions, Runner
+
+    params = {"rows": 300000, "keys": 5000, "skew": 0.8}
+    learn_task = taskpkg.build_task("groupagg", {"task_id": "t-reuse-a", "split": "smoke", "params": params, "dev_seed": 51, "final_seed": 52})
+    held = taskpkg.build_task("groupagg", {"task_id": "t-reuse-b", "split": "B", "params": params, "dev_seed": 53, "final_seed": 54})
+
+    def go(task_id, mode, snapshot, script):
+        r = Runner(RunOptions(task_id=task_id, mode=mode, snapshot_id=snapshot, script=SCRIPTS / f"{script}.json"))
+        r.create()
+        return r.execute()
+
+    first = go(learn_task.task_id, "learn", "v0", "success")
+    snap = first["experience"]["published_snapshot_id"]
+    stored = memory.snapshot(snap)["experiences"]
+    assert any(e["outcome"] == "success" and e["action"]["code"] for e in stored)
+    assert first["iterations"]["programs_reused"] == 0  # v0 holds no programs
+
+    # Eval: the verified program is re-validated by the program itself; any model request would be an API error.
+    ev = go(held.task_id, "eval", snap, "api_errors")
+    assert ev["stop_reason"] == "goal_reached" and ev["iterations"]["model_requests"] == 0
+    assert ev["outcome"]["best_from_reuse"] and ev["outcome"]["goal_met"]
+    exps = ev["research"]["experiments"]
+    assert [(e["kind"], e["verdict"]) for e in exps] == [("reuse", "supported")]
+
+    # Learn: re-use meets the task target, so the run raises its own target and asks the model to beat the program.
+    again = go(learn_task.task_id, "learn", snap, "success")
+    raised = next(s for s in again["steps"] if s["action"] == "set_target")
+    assert again["run_target_speedup"] == raised["result"]["run_target_speedup"] > 1.10
+    assert again["iterations"]["model_requests"] >= 1
+    later = memory.snapshot(again["experience"]["published_snapshot_id"])["diff"]["added"]
+    kinds = {memory.experience(a["experience_id"])["action"]["kind"] for a in later}
+    assert "reuse_candidate" in kinds

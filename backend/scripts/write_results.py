@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from routeevo import compare, db, memory, narrative, report
+from routeevo import compare, db, memory, narrative, report, research
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "results.md"
 
@@ -127,6 +127,29 @@ def observations(lines: list[str], c: dict) -> None:
         lines.append(f"- 输入 Token {n(ia)} → {n(ib)}：经验摘要进入提示词，单次请求更长；请求次数和输出 Token 减少，GPT 费用仍以实测为准。")
 
 
+def section_research(lines: list[str], cs: dict) -> None:
+    """RA view over all formal runs: how hypotheses fared and whether follow-ups built on earlier results."""
+    groups = []
+    sql = "SELECT run_id FROM runs WHERE mode = 'learn' AND json_extract(config_json, '$.label') = 'formal A learning' ORDER BY started_at"
+    groups.append(("A 学习（v0 → v6）", [r["run_id"] for r in db.all_rows(sql)]))
+    for key in ("B", "C"):
+        if key in cs:
+            c = cs[key]
+            for side in (c["snapshot_a"], c["snapshot_b"]):
+                groups.append((f"{key} · {side}", [r["run_id"] for t in c["tasks"] for r in c["per_task"][t][side]["runs"]]))
+    lines += ["## 4. 研究过程统计", "",
+              "每个候选提交前，模型写下假设、预期结果和验证方法；判定由程序依据随后的评测给出：得到支持（改善且达标）、部分支持（改善未达标）、"
+              "被反驳（正确但没有改善）、未能检验（候选出错）。“引用此前候选”统计后续假设的文字里是否点名同一运行中更早的候选编号，"
+              "只是反馈驱动的下限（不点名的修正不计入）。", "",
+              "| 批次 · 快照 | 运行 | 实验（候选） | 支持 | 部分支持 | 反驳 | 未能检验 | 后续实验引用此前候选 | 取证 | 升级 |",
+              "|---|---|---|---|---|---|---|---|---|---|"]
+    for name, ids in groups:
+        a = research.aggregate([report.build(i) for i in ids])
+        lines.append(f"| {name} | {a['runs']} | {a['experiments']} | {a['supported']} | {a['partial']} | {a['refuted']} | {a['untestable']} | "
+                     f"{a['follow_ups_citing_prior']} / {a['follow_ups']} | {a['evidence_calls']} | {a['upgrades']} |")
+    lines.append("")
+
+
 def main() -> None:
     lines = ["# RouteEvo 实验结果", "",
              "本文由 `backend/scripts/write_results.py` 从运行记录生成，不含手工填写的数字。口径见[项目说明](project-description.md)。", ""]
@@ -137,7 +160,8 @@ def main() -> None:
             section_comparison(lines, key, cs[key])
         else:
             lines += [f"## {'2. B 批开发对照' if key == 'B' else '3. C 批最终留出'}", "", "尚未完成。", ""]
-    lines += ["## 4. 说明", "",
+    section_research(lines, cs)
+    lines += ["## 5. 说明", "",
               "- 3 次重复衡量固定快照下的运行波动，不代表学习过程本身被重复验证。",
               "- 所有运行都计入，包括失败、无收益和预算耗尽的运行；没有挑选任务或样本。",
               "- GPT 费用按 2026-11-13 官方价表估算；本地 Qwen 无 API 费用，机器成本未核算。",

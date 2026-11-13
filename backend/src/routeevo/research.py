@@ -91,3 +91,26 @@ def summarize(rep: dict) -> dict:
     exps = experiments(rep)
     counts = {k: sum(1 for e in exps if e["verdict"] == k) for k in VERDICTS}
     return {"definition": definition(rep), "experiments": exps, "verdicts": counts, "verdict_labels": VERDICTS}
+
+
+def aggregate(reports: list[dict]) -> dict:
+    """Totals over many runs: verdicts, and how often a follow-up hypothesis names an earlier candidate of the same run
+    (a plain-text check that the next experiment was built on the previous result, not a fixed script)."""
+    import re
+
+    out = {k: 0 for k in VERDICTS}
+    out.update(runs=len(reports), experiments=0, follow_ups=0, follow_ups_citing_prior=0, evidence_calls=0, upgrades=0)
+    for rep in reports:
+        exps = rep["research"]["experiments"]
+        out["experiments"] += len(exps)
+        out["evidence_calls"] += rep["iterations"]["evidence_calls"]
+        out["upgrades"] += rep["iterations"]["upgrades"]
+        for k, v in rep["research"]["verdicts"].items():
+            out[k] += v
+        for i, e in enumerate(exps[1:], 1):
+            out["follow_ups"] += 1
+            prior = {p["candidate_id"] for p in exps[:i]}
+            text = f"{e['purpose'] or ''} {e['hypothesis'] or ''}"
+            if prior & set(re.findall(r"\bc\d+\b", text)):
+                out["follow_ups_citing_prior"] += 1
+    return out

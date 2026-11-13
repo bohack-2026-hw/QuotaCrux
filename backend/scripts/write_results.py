@@ -58,7 +58,7 @@ def section_learning(lines: list[str]) -> None:
         lines.append(f"| {r['task']['task_id']} | {r['snapshot_id']} | {len(r['experience']['read'])} | {r['outcome']['summary']} | "
                      f"{x(r['outcome']['final_speedup'])} | {r['iterations']['model_requests']} | {r['iterations']['upgrades']} | "
                      f"{usd(u['cost_usd'])} | {r['timing']['wall_clock_total_s']:.0f}s | {r['experience']['published_snapshot_id'] or '—'} |")
-    final = db.one("SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1")["snapshot_id"]
+    final = next((r["experience"]["published_snapshot_id"] for r in reversed(reps) if r["experience"]["published_snapshot_id"]), "v0")
     snap = memory.snapshot(final)
     lines += ["", f"学习总费用 {usd(total)}。最终快照 **{final}** 含 {len(snap['experiences'])} 条经验："
               f"成功 {snap['counts'].get('success', 0)}、无收益 {snap['counts'].get('no_gain', 0)}、失败 {snap['counts'].get('failure', 0)}。",

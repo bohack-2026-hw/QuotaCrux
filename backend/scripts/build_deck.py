@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
+from datetime import datetime
 from pathlib import Path
 
 import matplotlib
@@ -145,6 +146,29 @@ def learn_rows() -> list[dict]:
     return [report.build(r["run_id"]) for r in db.all_rows(sql)]
 
 
+def learned_snapshot() -> str:
+    """The snapshot published by the last formal A learning run (a later demo session may publish a newer branch)."""
+    row = db.one("SELECT published_snapshot_id FROM runs WHERE mode = 'learn' AND published_snapshot_id IS NOT NULL"
+                 " AND json_extract(config_json, '$.label') = 'formal A learning' ORDER BY started_at DESC LIMIT 1")
+    return row["published_snapshot_id"] if row else "v0"
+
+
+def g(v) -> str:
+    return "—" if v is None else f"{v:g}"
+
+
+def gpt_split(c: dict) -> dict:
+    """Final speedups of goal-met runs, split by whether the run upgraded to GPT (both snapshots pooled)."""
+    out = {"gpt": [], "qwen": []}
+    for t in c["tasks"]:
+        for s in (c["snapshot_a"], c["snapshot_b"]):
+            for r in c["per_task"][t][s]["runs"]:
+                if r["goal_met"] and r["final_speedup"] is not None:
+                    up = report.build(r["run_id"])["iterations"]["upgrades"]
+                    out["gpt" if up else "qwen"].append(r["final_speedup"])
+    return out
+
+
 def find_comparison(prefix: str) -> dict | None:
     for r in db.all_rows("SELECT comparison_id, label FROM comparisons ORDER BY created_at DESC"):
         if (r["label"] or "").startswith(prefix):
@@ -205,7 +229,7 @@ def side_rows(c: dict) -> list[list[str]]:
         ["指标", f"{a}（旧经验）", f"{b}（新经验）"],
         ["达标 / 运行", f"{A['goal_met']} / {A['runs']}", f"{B['goal_met']} / {B['runs']}"],
         ["最终加速比中位数", x(A["final_speedup_median"]), x(B["final_speedup_median"])],
-        ["模型请求中位数", str(A["model_requests_median"]), str(B["model_requests_median"])],
+        ["模型请求中位数", g(A["model_requests_median"]), g(B["model_requests_median"])],
         ["升级到 GPT 次数", str(A["upgrades_total"]), str(B["upgrades_total"])],
         ["失败候选", str(A["candidates_failed_total"]), str(B["candidates_failed_total"])],
         ["输出 Token 合计", n(A["output_tokens"]["total"]), n(B["output_tokens"]["total"])],
@@ -222,7 +246,7 @@ def build(out: Path, shots: Path) -> None:
     charts.mkdir(parents=True, exist_ok=True)
     learn = learn_rows()
     cmp_b, cmp_c = find_comparison("B"), find_comparison("C")
-    final_snap = db.one("SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1")["snapshot_id"]
+    final_snap = learned_snapshot()
     snap = memory.snapshot(final_snap)
 
     # 1 cover
@@ -272,7 +296,7 @@ def build(out: Path, shots: Path) -> None:
         d.text(s, v, x + 0.2, 2.65, 1.9, 1.1, size=11.5, color=INK2)
         if i < 4:
             d.text(s, "→", x + 2.2, 2.6, 0.3, 0.5, size=20, color=ACCENT, bold=True)
-    d.bullets(s, ["本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未“正确且达标” → 固定规则升级到 GPT-6.1 Sol（xhigh），本次运行不再切回",
+    d.bullets(s, ["本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未“正确且达标”，或 Qwen 请求 3 次仍无达标候选 → 固定规则升级到 GPT-6.1 Sol（xhigh），本次运行不再切回",
                   "每次运行最多 6 次模型请求、4 个候选、300 秒；预算耗尽后不再为总结调用模型",
                   "终止原因分开记录：目标达成 · 预算耗尽 · Agent 结束 · 用户停止 · 接口错误 · 环境错误"], 0.6, 4.3, 12.1, 2.6, size=15)
 
@@ -360,6 +384,29 @@ def build(out: Path, shots: Path) -> None:
                 + (f"学习成本另计 ${lc['cost_usd']:.3f} / {lc['wall_clock_s']:.0f}s" if lc.get("in_lineage") and lc.get("cost_usd") is not None else ""))
         d.text(s, foot, 8.0, 5.3, 4.8, 0.8, size=11, color=INK3)
 
+    # what the headline medians hide: fewer upgrades also means stopping at a smaller speedup
+    if cmp_c and cmp_c["finished_runs"]:
+        a, b = cmp_c["snapshot_a"], cmp_c["snapshot_b"]
+        s = d.slide("代价：少升级，也就更早停在较小的加速比", "C 批解读")
+        rows = [["任务", f"{a} 加速比", f"{b} 加速比", f"{a} 请求", f"{b} 请求"]]
+        for t in cmp_c["tasks"]:
+            cells = []
+            for snapname in (a, b):
+                runs = cmp_c["per_task"][t][snapname]["runs"]
+                cells.append(" ".join(("—" if r["final_speedup"] is None else f"{r['final_speedup']:.2f}") + ("" if r["goal_met"] else "✕") for r in runs))
+            rows.append([t, *cells, *(" ".join(str(r["model_requests"]) for r in cmp_c["per_task"][t][sn]["runs"]) for sn in (a, b))])
+        d.table(s, rows, 0.6, 1.8, 7.4, [0.9, 2.0, 2.0, 1.25, 1.25], size=12)
+        split = {k: gpt_split(c) for k, c in (("B", cmp_b), ("C", cmp_c)) if c and c["finished_runs"]}
+        med = lambda v: f"{statistics.median(v):.2f}×" if v else "—"  # noqa: E731
+        d.card(s, 8.3, 1.8, 4.4, 4.7, ACCENT)
+        d.text(s, "为什么", 8.55, 1.95, 4, 0.4, size=15, bold=True, color=ACCENT)
+        d.text(s, ("达标线是 1.10×，智能体达标即停止。\n\n达标运行的最终加速比中位数（两版合计）：\n"
+                   + "\n".join(f"  {k}：用过 GPT {med(v['gpt'])}（{len(v['gpt'])} 次）· 只用 Qwen {med(v['qwen'])}（{len(v['qwen'])} 次）" for k, v in split.items())
+                   + f"\n\n{a} 更常升级到 GPT，在 C-01、C-02 上停在更快的程序；{b} 用学到的做法一次达标就停。"
+                   "学到的是更省的达标路径，不是更高的上限；要追求上限需要改终止条件。"),
+               8.55, 2.4, 4, 4, size=12.5, color=INK2)
+        d.text(s, "✕ = 未达标；— = 没有计时结果。开发数据上达标、最终测试有样本不快于基线的运行同样记为 ✕。", 0.6, 6.3, 7.4, 0.5, size=11, color=INK3)
+
     # behaviour pair: same held-out task, same repeat, two snapshots
     if cmp_b and cmp_b["finished_runs"]:
         pt = cmp_b["per_task"]
@@ -406,7 +453,10 @@ def build(out: Path, shots: Path) -> None:
                    "升级规则（只看连续失败候选）来不及触发，预算耗尽。\n\n"
                    "这是 B（开发对照）的结论。C 之前把升级规则改为 v2：再加一条“小模型 3 次请求仍无达标候选就升级”，"
                    "对旧、新经验同样生效；同时修正记录，规则满足但没有请求额度时如实写明。\n\n"
-                   "C 是未参与任何调整的最终留出验收。"), 8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
+                   "C 是未参与任何调整的最终留出验收"
+                   + (f"；其中同类的高基数任务 C-05：{cmp_c['snapshot_a']} {cmp_c['per_task']['C-05'][cmp_c['snapshot_a']]['goal_met']}/{cmp_c['repeats']}、"
+                      f"{cmp_c['snapshot_b']} {cmp_c['per_task']['C-05'][cmp_c['snapshot_b']]['goal_met']}/{cmp_c['repeats']}。"
+                      if cmp_c and "C-05" in cmp_c["tasks"] else "。")), 8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
 
     # cost ledger
     target_cost = cmp_c if cmp_c and cmp_c["finished_runs"] else cmp_b
@@ -420,7 +470,7 @@ def build(out: Path, shots: Path) -> None:
             rows.append([name, f"${A['cost_usd_total'] or 0:.3f}", f"${B['cost_usd_total'] or 0:.3f}",
                          f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):+.3f}",
                          f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s",
-                         f"{A['model_requests_median']} → {B['model_requests_median']}"])
+                         f"{g(A['model_requests_median'])} → {g(B['model_requests_median'])}"])
         d.table(s, rows, 0.6, 1.8, 12.1, [2.0, 1.7, 1.7, 1.5, 1.7, 1.7, 1.8], size=13)
         lc = target_cost["learning_cost"]
         if lc.get("in_lineage"):
@@ -428,6 +478,42 @@ def build(out: Path, shots: Path) -> None:
                        "不摊进任何一侧。费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；"
                        "一次 GPT 请求被循环剩余时间截断、服务方未返回用量，记为“未知”。"),
                    0.6, 3.6, 12.1, 1.2, size=14, color=INK2)
+            saved = [((c["sides"][c["snapshot_a"]]["cost_usd_total"] or 0) - (c["sides"][c["snapshot_b"]]["cost_usd_total"] or 0)) / c["sides"][c["snapshot_b"]]["runs"]
+                     for c in (cmp_b, cmp_c) if c and c["finished_runs"]]
+            if lc.get("cost_usd") and saved and min(saved) > 0:
+                d.text(s, (f"每次运行少花 {' / '.join(f'${v:.4f}' for v in saved)}（B / C），按此学习成本约在 "
+                           f"{' / '.join(f'{lc['cost_usd'] / v:.0f}' for v in saved)} 次运行后收回。"
+                           "加入经验后提示词更长，输入 Token 反而增加；节省来自更少的请求、升级与输出 Token。"),
+                       0.6, 4.9, 12.1, 1.0, size=14, color=INK2)
+
+    # RX-01/02: one real two-round session, end to end
+    ses = db.one("SELECT * FROM sessions WHERE status = 'completed' AND comparison_id IS NOT NULL ORDER BY created_at DESC LIMIT 1")
+    if ses:
+        sc = compare.summarize(ses["comparison_id"])
+        lr = report.build(ses["learn_run_id"])
+        a, b = sc["snapshot_a"], sc["snapshot_b"]
+        s = d.slide("两轮现场演示：学习 → 自动发布 → 在没见过的任务上对照", "日新 · RX-01/02")
+        phases = [("第一轮 学习", f"{ses['learn_task']} 读取 {ses['base_snapshot_id']}\n{'达标' if lr['outcome']['goal_met'] else '未达标'} {lr['outcome']['final_speedup'] or 0:.2f}×\n"
+                                f"{lr['iterations']['model_requests']} 次请求 · {lr['timing']['wall_clock_total_s']:.0f}s"),
+                  ("自动发布", f"{ses['new_snapshot_id']}（父版本 {ses['base_snapshot_id']}）\n"
+                              f"{lr['experience']['published_experiences']} 条经验，程序核对来源后原子发布"),
+                  ("第二轮 对照", f"{ses['eval_task']}：{a} 与 {b} 各 1 次\n配置一致性{'通过' if sc['fair'] else '未通过'}"),
+                  ("三行说明", "由对照数据自动填写\n可回退到任一版本")]
+        for i, (k, v) in enumerate(phases):
+            x = 0.6 + i * 3.1
+            d.card(s, x, 1.8, 2.8, 1.9, ACCENT if i == 1 else None)
+            d.text(s, f"✓ {k}", x + 0.2, 1.95, 2.5, 0.45, size=15, bold=True, font=HEAD_FONT)
+            d.text(s, v, x + 0.2, 2.45, 2.5, 1.2, size=11.5, color=INK2)
+        rows = [["", f"{a}（旧经验）", f"{b}（新经验）"]]
+        A, B = sc["sides"][a], sc["sides"][b]
+        rows += [["结果", f"{'达标' if A['goal_met'] else '未达标'} {A['final_speedup_median'] or 0:.2f}×", f"{'达标' if B['goal_met'] else '未达标'} {B['final_speedup_median'] or 0:.2f}×"],
+                 ["模型请求 / 升级", f"{g(A['model_requests_median'])} / {A['upgrades_total']}", f"{g(B['model_requests_median'])} / {B['upgrades_total']}"],
+                 ["费用 / 耗时", f"${A['cost_usd_total'] or 0:.3f} / {A['wall_clock_s_total']:.0f}s", f"${B['cost_usd_total'] or 0:.3f} / {B['wall_clock_s_total']:.0f}s"]]
+        d.table(s, rows, 0.6, 4.1, 7.4, [2.0, 2.7, 2.7], size=13)
+        t0 = datetime.fromisoformat(ses["created_at"]); t1 = datetime.fromisoformat(ses["ended_at"])
+        d.text(s, (f"实测一次（{ses['session_id']}），全程 {(t1 - t0).total_seconds() / 60:.1f} 分钟，中间无人工操作；"
+                   "模型、提示词、预算、评测器不变，只换快照。\n\n单次结果只验证流程是否走通，不作为效果证据——效果见 B/C 对照。"
+                   "演示结束后把生效版本切回正式快照。"), 8.3, 4.1, 4.4, 2.6, size=12.5, color=INK2)
 
     # 11 three lines
     target = cmp_c or cmp_b

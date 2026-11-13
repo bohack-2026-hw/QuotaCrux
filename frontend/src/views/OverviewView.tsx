@@ -12,10 +12,11 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
   const snaps = usePoll(api.snapshots, [], 5000)
   const pick = (p: string) => list.data?.find((c) => (c.label ?? '').startsWith(p))?.comparison_id ?? null
   const bId = pick('B'), cId = pick('C')
-  const b = usePoll(() => (bId ? api.comparison(bId) : Promise.resolve(null)), [bId], 6000)
-  const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 6000)
+  const running = (id: string | null) => list.data?.find((x) => x.comparison_id === id)?.status === 'running'
+  const b = usePoll(() => (bId ? api.comparison(bId) : Promise.resolve(null)), [bId], 8000, running(bId))
+  const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 8000, running(cId))
   const noteFor = cId && c.data?.finished_runs ? cId : bId
-  const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor], 10000)
+  const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor, c.data?.finished_runs], 10000, false)
   // The learned snapshot is the one the held-out comparison used; a live demo session may have published a newer branch.
   const learnedId = b.data?.snapshot_b ?? snaps.data?.active_snapshot_id
   const latest = snaps.data?.snapshots.find((x) => x.snapshot_id === learnedId)

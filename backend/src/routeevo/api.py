@@ -225,20 +225,40 @@ def list_comparisons() -> list[dict]:
     return out
 
 
+# Finished comparisons never change; summarising one builds every run's report, so keep the result per process.
+_SUMMARY_CACHE: dict[tuple, dict] = {}
+
+
+def _summary(comparison_id: str) -> dict:
+    row = db.one("SELECT status, ended_at FROM comparisons WHERE comparison_id = ?", (comparison_id,))
+    if not row:
+        raise HTTPException(404, "comparison not found")
+    if row["status"] == "running":
+        return compare.summarize(comparison_id)
+    key = (comparison_id, row["status"], row["ended_at"])
+    if key not in _SUMMARY_CACHE:
+        _SUMMARY_CACHE[key] = compare.summarize(comparison_id)
+    return _SUMMARY_CACHE[key]
+
+
 @app.get("/api/comparisons/{comparison_id}")
 def get_comparison(comparison_id: str) -> dict:
-    if not db.one("SELECT 1 FROM comparisons WHERE comparison_id = ?", (comparison_id,)):
-        raise HTTPException(404, "comparison not found")
-    return compare.summarize(comparison_id)
+    return _summary(comparison_id)
 
 
 @app.get("/api/comparisons/{comparison_id}/note")
 def comparison_note(comparison_id: str) -> dict:
     from .narrative import evolution_note
 
-    if not db.one("SELECT 1 FROM comparisons WHERE comparison_id = ?", (comparison_id,)):
+    row = db.one("SELECT status, ended_at FROM comparisons WHERE comparison_id = ?", (comparison_id,))
+    if not row:
         raise HTTPException(404, "comparison not found")
-    return evolution_note(comparison_id)
+    key = ("note", comparison_id, row["status"], row["ended_at"])
+    if row["status"] == "running":
+        return evolution_note(comparison_id)
+    if key not in _SUMMARY_CACHE:
+        _SUMMARY_CACHE[key] = evolution_note(comparison_id)
+    return _SUMMARY_CACHE[key]
 
 
 @app.post("/api/comparisons/{comparison_id}/stop")

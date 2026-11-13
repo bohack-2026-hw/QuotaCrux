@@ -54,6 +54,21 @@ def cmd_run(args) -> None:
     _print_summary(rep)
 
 
+def cmd_learn(args) -> None:
+    """Serial learn-mode runs; each reads the snapshot the previous one published."""
+    from .agent.runner import RunOptions, Runner
+
+    start = memory.active_snapshot()
+    for task_id in args.task_ids:
+        runner = Runner(RunOptions(task_id=task_id, mode="learn", label=args.label))
+        runner.create()
+        print(f"learn {task_id}: run {runner.run_id} reads {runner.snapshot_id}", file=sys.stderr)
+        rep = runner.execute()
+        _print_summary(rep)
+        print()
+    print(f"snapshots: {start} -> {memory.active_snapshot()}")
+
+
 def _print_summary(rep: dict) -> None:
     o, u, t = rep["outcome"], rep["usage"]["total"], rep["timing"]
     lines = [
@@ -242,6 +257,11 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--wall-clock", type=float)
     r.add_argument("--request-timeout", type=float)
     r.set_defaults(fn=cmd_run)
+
+    ln = sub.add_parser("learn", help="serial learn-mode runs over tasks (each publishes on top of the last)")
+    ln.add_argument("task_ids", nargs="+")
+    ln.add_argument("--label")
+    ln.set_defaults(fn=cmd_learn)
 
     rp = sub.add_parser("report")
     rp.add_argument("run_id")

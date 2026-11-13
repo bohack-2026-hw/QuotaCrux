@@ -38,7 +38,8 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
 | `uv run routeevo comparison <id> [--json]` | Comparison summary |
-| `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Three-line evolution note / Markdown research record of one run |
+| `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Note on what experience changed / Markdown research record of one run |
+| `uv run routeevo export-run <run_id> --bundle DIR` | Research deliverable: record, `best.py`, all candidates, raw model calls, `report.json`, `reproduce.sh` |
 | `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
 | `uv run routeevo serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
 | `uv run pytest` | Unit tests plus end-to-end flows (needs Docker) |
@@ -81,6 +82,15 @@ all hash-pinned in `manifest.json`. Only contract, initial code, examples and de
 - A two-round session (`POST /api/sessions`) learns one task from a base snapshot, publishes the new version (which
   becomes active), then runs a one-repeat comparison of base vs new on an unseen task. Re-activate the formal
   snapshot afterwards.
+
+## Research view
+
+Every report carries `research`: the task definition fixed before the run (question, workload, baseline, allowed
+scope, tools, verification method, budget, final-test rule) and one experiment per proposed candidate with the
+model's purpose, hypothesis, expected result and verification method, the measured result, and a verdict assigned by
+the program — `supported` (improved and on target), `partial` (improved, below target), `refuted` (correct, no
+improvement), `untestable` (the candidate failed), `untested`. `scripts/write_results.py` aggregates verdicts over all
+formal runs; `scripts/export_research.py` exports rule-selected sample bundles to `docs/research/`.
 
 ## Loop and budgets
 

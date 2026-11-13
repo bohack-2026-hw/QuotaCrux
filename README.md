@@ -4,6 +4,7 @@
 
 当前先实现日新赛道与 Research Agent 赛道共用的核心：给定任务和预算，自主执行、验证结果、保存经验，并比较不同经验版本的实际效果。具体参赛方向和研究场景在共用核心验证后确定。
 
+- [项目说明](docs/project-description.md) · [实验结果](docs/results.md) · [演示脚本](docs/demo.md) · [赛道选择建议](docs/track-decision.md) · [演示文稿](docs/RouteEvo.pptx)
 - [共用核心 PRD](docs/shared-core-prd.md)
 - [首版开工决策与 agent 问题答复](docs/implementation-decisions.md)
 - [两个方向的差异与选择依据](docs/track-differences.md)

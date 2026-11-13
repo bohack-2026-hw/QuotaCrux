@@ -1,5 +1,6 @@
 import { api } from '../api'
 import type { Comparison, SideSummary } from '../api'
+import { SessionCard } from '../components/SessionCard'
 import { Chip, Empty } from '../components/ui'
 import { usePoll } from '../hooks'
 import { STOP, fmt } from '../labels'
@@ -49,6 +50,7 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
       </div>
       <ComparisonStrip title="B 批 · 开发对照" c={b.data} onOpen={onOpenComparison} />
       <ComparisonStrip title="C 批 · 最终留出（配置冻结后一次性验收）" c={c.data} onOpen={onOpenComparison} />
+      <SessionCard onOpenRun={onOpenRun} onOpenComparison={onOpenComparison} />
     </div>
   )
 }

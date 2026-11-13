@@ -182,6 +182,20 @@ export interface Comparison {
   notes: string[]
 }
 
+export interface Session {
+  session_id: string
+  learn_task: string
+  eval_task: string
+  base_snapshot_id: string
+  phase: string
+  status: string
+  learn_run_id: string | null
+  new_snapshot_id: string | null
+  comparison_id: string | null
+  detail: string | null
+  created_at: string
+}
+
 export const api = {
   health: () => call<{ ok: boolean; running_run_id: string | null }>('/health'),
   tasks: () => call<TaskSummary[]>('/tasks'),
@@ -201,4 +215,6 @@ export const api = {
   stopComparison: (id: string) => post(`/comparisons/${id}/stop`),
   note: (id: string) => call<{ lines: string[]; fair: boolean; scripted_model: boolean }>(`/comparisons/${id}/note`),
   markdownUrl: (runId: string) => `/api/runs/${runId}/markdown`,
+  sessions: () => call<Session[]>('/sessions'),
+  startSession: (body: { learn_task: string; eval_task: string; base_snapshot_id: string }) => post<{ session_id: string }>('/sessions', body),
 }

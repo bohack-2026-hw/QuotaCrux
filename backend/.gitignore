@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Generated task data, runs, sandbox scratch and the SQLite database
+var/
+# Credentials
+.env

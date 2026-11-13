@@ -17,7 +17,9 @@
       "verification": "外部评测器",
       "parent_candidate_id": "c0",
       "code_file": "../cands/same_as_initial.py"
-    },
+    }
+  ],
+  "large": [
     {
       "action": "analyze",
       "purpose": "继续分析",

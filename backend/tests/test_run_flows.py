@@ -55,6 +55,7 @@ def test_budget_stop_reports_no_improvement(task):
     assert rep["stop_reason"] == "budget_exhausted" and "model_requests" in rep["stop_detail"]
     assert rep["outcome"]["best_is_initial"] and not rep["outcome"]["goal_met"]
     assert rep["iterations"]["invalid_actions"] == 1 and rep["iterations"]["candidates_no_gain"] == 1
+    assert rep["iterations"]["upgrades"] == 1  # 3 small requests without an on-target candidate (rule v2)
 
 
 @requires_docker
@@ -162,3 +163,11 @@ def test_two_round_session(task):
     assert memory.snapshot(s["new_snapshot_id"])["parent_snapshot_id"] == "v0"
     summary = compare.summarize(s["comparison_id"])
     assert summary["tasks"] == [unseen.task_id] and summary["finished_runs"] == 2 and summary["fair"]
+
+
+@requires_docker
+def test_small_model_stalling_triggers_upgrade(task):
+    rep = run(task, "small_stalls")
+    up = next(s for s in rep["steps"] if s["action"] == "upgrade_model")
+    assert up["result"]["small_requests"] == 3 and up["result"]["rule"] == "upgrade-rule-v2"
+    assert rep["stop_reason"] == "goal_reached" and rep["best_candidate"]["candidate_id"] == "c1"

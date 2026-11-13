@@ -1,0 +1,10 @@
+{
+  "small": [
+    {"action": "analyze", "purpose": "分析", "expected_result": "定位瓶颈", "verification": "无", "analysis": "先看画像"},
+    {"action": "get_evidence", "purpose": "取证", "expected_result": "看到热点", "verification": "cProfile", "tool": "profile_candidate", "candidate_id": "c0"},
+    {"action": "analyze", "purpose": "继续分析", "expected_result": "形成方案", "verification": "无", "analysis": "还没有候选"}
+  ],
+  "large": [
+    {"action": "propose_candidate", "purpose": "按字节读取并减少字典查找", "expected_result": "加速", "verification": "评测器", "parent_candidate_id": "c0", "code_file": "../cands/fast_bytes.py"}
+  ]
+}

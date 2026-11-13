@@ -24,11 +24,16 @@ from ..llm.scripted import ScriptedClient
 from ..sandbox import executor
 from . import actions, prompt
 
+# v1 (used for A learning and the B comparison) only counted candidate misses. B showed that a small model can
+# spend its requests on analysis without producing a second miss, so the switch never happened. v2 also caps the
+# small model's requests without an on-target candidate. Applied to every snapshot alike.
 UPGRADE_RULE = {
-    "id": "upgrade-rule-v1",
-    "description": "start with the small model; after 2 consecutive candidate attempts that are not correct-and-on-target, "
-                   "switch to the large model for the rest of the run if model requests remain",
+    "id": "upgrade-rule-v2",
+    "description": "start with the small model; switch to the large model for the rest of the run, if model requests "
+                   "remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model "
+                   "requests without an on-target candidate",
     "consecutive_misses": 2,
+    "max_small_requests_without_goal": 3,
 }
 API_ERRORS = {"timeout", "network", "rate_limit", "http_5xx", "http_4xx", "config"}
 FATAL_API_ERRORS = {"config", "http_4xx"}
@@ -96,6 +101,7 @@ class Runner:
         self.tokens_used = 0
         self.model_candidates = 0
         self.misses = 0
+        self.small_requests = 0
         self.api_errors_in_row = 0
         self.candidates: dict[str, dict] = {}
         self.best_id: str | None = None
@@ -251,6 +257,8 @@ class Runner:
         blocked = self._budget_block()
         if blocked:
             return self._stop("budget_exhausted", blocked)
+        if self.role == "small" and self.small_requests >= UPGRADE_RULE["max_small_requests_without_goal"]:
+            self._upgrade(f"小模型已用 {self.small_requests} 次请求仍没有达标候选，按升级规则切换到大模型")
 
         started = db.now()
         res, call_id, cfg = self._call_model()
@@ -312,6 +320,8 @@ class Runner:
         res = self.clients[self.role].complete(prompt.SYSTEM_PROMPT, state, actions.ACTION_SCHEMA, timeout, cfg.max_output_tokens)
         ended = db.now()
         self.requests_used += 1
+        if self.role == "small":
+            self.small_requests += 1
         cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
                                                          res.error_kind not in NOT_BILLED_ERRORS)
         u = res.usage
@@ -463,7 +473,8 @@ class Runner:
                 self.misses += 1
             decision = "continue"
             if self.role == "small" and self.misses >= UPGRADE_RULE["consecutive_misses"]:
-                decision = "upgrade to large model, continue"
+                decision = ("upgrade to large model, continue" if self.requests_used < self.limits.max_model_requests
+                            else "upgrade rule met but no model requests left")
         self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
                    result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced}, next_decision=decision)
         db.add_event(self.run_id, "evaluation_finished", {"candidate_id": cid, "status": ev.status, "speedup": ev.speedup,
@@ -472,8 +483,8 @@ class Runner:
 
         if ev.goal_met:
             return self._stop("goal_reached", f"{cid} dev speedup {ev.speedup} >= {self.task.target_min_speedup}")
-        if decision.startswith("upgrade"):
-            self._upgrade()
+        if decision.startswith("upgrade to"):
+            self._upgrade(f"连续 {self.misses} 次候选未达到正确且达标，按升级规则切换到大模型")
         if self.model_candidates >= self.limits.max_candidates:
             return self._stop("budget_exhausted", f"candidates: used {self.model_candidates}/{self.limits.max_candidates}")
 
@@ -491,13 +502,13 @@ class Runner:
         self.best_id = best
         return changed
 
-    def _upgrade(self) -> None:
+    def _upgrade(self, reason: str) -> None:
         if self.requests_used >= self.limits.max_model_requests:
             return
         self.role = "large"
-        detail = {"rule": UPGRADE_RULE["id"], "misses": self.misses, "to": self.model_cfgs["large"].model}
-        self._step("program", "upgrade_model", "done", result=detail, next_decision="continue with large model",
-                   purpose=f"连续 {self.misses} 次候选未达到正确且达标，按升级规则切换到大模型")
+        detail = {"rule": UPGRADE_RULE["id"], "misses": self.misses, "small_requests": self.small_requests,
+                  "to": self.model_cfgs["large"].model}
+        self._step("program", "upgrade_model", "done", result=detail, next_decision="continue with large model", purpose=reason)
         db.add_event(self.run_id, "model_upgraded", detail)
 
     def _existing_candidate(self, cid: str | None, require_runnable: bool) -> str:

@@ -45,6 +45,7 @@ const DECISION: [RegExp, string][] = [
   [/^continue$/, '继续'], [/^validate candidate$/, '验证候选'], [/^re-measure candidate$/, '重新测量'],
   [/^continue with feedback$/, '带着反馈继续'], [/^continue with large model$/, '改用大模型继续'],
   [/^upgrade to large model, continue$/, '升级到大模型并继续'], [/^retry with a new request if budget allows$/, '预算允许则重发请求'],
+  [/^upgrade rule met but no model requests left$/, '满足升级条件，但模型请求已用完'],
   [/^stop: (\w+)$/, '停止：$1'], [/^stop$/, '停止'],
 ]
 export function decision(d: string): string {

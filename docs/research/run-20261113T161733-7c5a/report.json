@@ -1,0 +1,774 @@
+{
+ "run_id": "run-20261113T161733-7c5a",
+ "task": {
+  "task_id": "A-01",
+  "split": "A",
+  "target_min_speedup": 1.1,
+  "dev_params": {
+   "disorder": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 20000,
+   "order": "random",
+   "rows": 1500000,
+   "seed": 1101,
+   "skew": 0.8,
+   "value_max": 1000000,
+   "value_min": -1000000
+  },
+  "final_params": {
+   "disorder": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 20000,
+   "order": "random",
+   "rows": 1500000,
+   "seed": 1102,
+   "skew": 0.8,
+   "value_max": 1000000,
+   "value_min": -1000000
+  }
+ },
+ "mode": "learn",
+ "snapshot_id": "v0",
+ "label": "formal A learning",
+ "scripted_model": [],
+ "status": "completed",
+ "stop_reason": "goal_reached",
+ "stop_detail": "c3 dev speedup 1.4547 >= 1.1",
+ "config_fingerprint": "b322a7eecc94a476",
+ "outcome": {
+  "run_completed": true,
+  "candidate_ran": true,
+  "dev_validation_passed": true,
+  "dev_improved": true,
+  "best_is_initial": false,
+  "final_evaluated": true,
+  "final_correct": true,
+  "final_speedup": 1.4367,
+  "goal_met": true,
+  "valid_artifact": true,
+  "summary": "达到目标：c3 最终测试正确，加速比 1.4367"
+ },
+ "experience": {
+  "snapshot_read": "v0",
+  "retrieval": {
+   "current_buckets": {
+    "distinct_keys": "<100k",
+    "order": "unsorted",
+    "rows": ">=1M",
+    "rows_per_key": ">20",
+    "skew": "low"
+   },
+   "matched_by_outcome": {},
+   "min_matches": 3,
+   "retrieval": "retrieval-v1",
+   "scores": {},
+   "selected": [],
+   "snapshot_size": 0
+  },
+  "read": [],
+  "published_snapshot_id": "v1",
+  "published_experiences": [
+   "e-20261113T161733-7c5a-c1",
+   "e-20261113T161733-7c5a-c2",
+   "e-20261113T161733-7c5a-c3"
+  ]
+ },
+ "best_candidate": {
+  "candidate_id": "c3",
+  "origin": "model",
+  "parent_candidate_id": "c0",
+  "code_path": "var/runs/run-20261113T161733-7c5a/candidates/c3.py",
+  "code_sha256": "15e025a185d65c8a283afe2f19a32fc7a5159f746ff02c0829b6789de90c9628",
+  "model_call_id": "m3",
+  "dev_evaluations": [
+   {
+    "evaluation_id": "7117f01b3c0f",
+    "status": "passed",
+    "correct": 1,
+    "speedup": 1.4547,
+    "improved": 1,
+    "goal_met": 1
+   }
+  ]
+ },
+ "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+ "final_evaluation": {
+  "evaluation_id": "41e647c0cfb8",
+  "candidate_id": "c3",
+  "status": "passed",
+  "correct": true,
+  "speedup": 1.4367,
+  "candidate_median_s": 0.43873195815831423,
+  "baseline_median_s": 0.6303048329427838,
+  "timing": {
+   "baseline": {
+    "iqr": 0.023672646027989686,
+    "max": 0.6392507920973003,
+    "median": 0.6303048329427838,
+    "min": 0.6067277078982443
+   },
+   "baseline_min_max_s": [
+    0.6067277078982443,
+    0.6392507920973003
+   ],
+   "baseline_s": [
+    0.6392507920973003,
+    0.6312703748699278,
+    0.6164481670130044,
+    0.6303048329427838,
+    0.6067277078982443
+   ],
+   "candidate": {
+    "iqr": 0.02571204153355211,
+    "max": 0.45521583314985037,
+    "median": 0.43873195815831423,
+    "min": 0.4230277498718351
+   },
+   "candidate_min_max_s": [
+    0.4230277498718351,
+    0.45521583314985037
+   ],
+   "candidate_s": [
+    0.43873195815831423,
+    0.45521583314985037,
+    0.4501089998520911,
+    0.4308730000630021,
+    0.4230277498718351
+   ],
+   "improved_rule": "all candidate samples faster than all baseline samples",
+   "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+  },
+  "failure": null,
+  "duration_s": 8.477,
+  "note": null
+ },
+ "candidates": [
+  {
+   "candidate_id": "c0",
+   "origin": "initial",
+   "parent_candidate_id": null,
+   "code_path": "var/runs/run-20261113T161733-7c5a/candidates/c0.py",
+   "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "246a3c7fa2b7",
+     "status": "passed",
+     "correct": 1,
+     "speedup": null,
+     "improved": null,
+     "goal_met": null
+    }
+   ]
+  },
+  {
+   "candidate_id": "c1",
+   "origin": "model",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T161733-7c5a/candidates/c1.py",
+   "code_sha256": "fbcd688e4b8a49c0533109a81a64b2e38a13fadf13b01b9184eccf8858d86128",
+   "model_call_id": "m1",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "2a7b9f8370cb",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 0.8963,
+     "improved": 0,
+     "goal_met": 0
+    }
+   ]
+  },
+  {
+   "candidate_id": "c2",
+   "origin": "model",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T161733-7c5a/candidates/c2.py",
+   "code_sha256": "f466204fbd87826c52a31b70ab334ba7de3f8bf7f7162e7273a9762a9502c582",
+   "model_call_id": "m2",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "47c806a438e7",
+     "status": "format_error",
+     "correct": 0,
+     "speedup": null,
+     "improved": null,
+     "goal_met": null
+    }
+   ]
+  },
+  {
+   "candidate_id": "c3",
+   "origin": "model",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T161733-7c5a/candidates/c3.py",
+   "code_sha256": "15e025a185d65c8a283afe2f19a32fc7a5159f746ff02c0829b6789de90c9628",
+   "model_call_id": "m3",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "7117f01b3c0f",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 1.4547,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  }
+ ],
+ "iterations": {
+  "model_requests": 3,
+  "candidates_proposed": 3,
+  "candidates_passed": 2,
+  "candidates_improved": 1,
+  "candidates_no_gain": 1,
+  "candidates_failed": 1,
+  "invalid_actions": 0,
+  "unusable_replies": 0,
+  "api_errors": 0,
+  "evidence_calls": 0,
+  "upgrades": 1,
+  "upgrade_at_step": 6
+ },
+ "usage": {
+  "total": {
+   "requests": 3,
+   "ok": 3,
+   "errors": {},
+   "latency_s": 90.363,
+   "input_tokens": 7743,
+   "input_tokens_unknown_calls": 0,
+   "cached_input_tokens": 0,
+   "cached_input_tokens_unknown_calls": 0,
+   "output_tokens": 3045,
+   "output_tokens_unknown_calls": 0,
+   "reasoning_tokens": 1680,
+   "reasoning_tokens_unknown_calls": 2,
+   "cost_usd": 0.029038,
+   "cost_status": "estimated",
+   "cost_unknown_calls": 0,
+   "price_versions": [
+    "openai/gpt-6.1-sol/standard/2026-11-13"
+   ]
+  },
+  "by_model": {
+   "small:chat_compat:qwen3.8:27b-mlx": {
+    "requests": 2,
+    "ok": 2,
+    "errors": {},
+    "latency_s": 40.867,
+    "input_tokens": 4619,
+    "input_tokens_unknown_calls": 0,
+    "cached_input_tokens": 0,
+    "cached_input_tokens_unknown_calls": 0,
+    "output_tokens": 922,
+    "output_tokens_unknown_calls": 0,
+    "reasoning_tokens": null,
+    "reasoning_tokens_unknown_calls": 2,
+    "cost_usd": 0.0,
+    "cost_status": "local_no_api_fee",
+    "cost_unknown_calls": 0,
+    "price_versions": []
+   },
+   "large:openai_responses:gpt-6.1-sol": {
+    "requests": 1,
+    "ok": 1,
+    "errors": {},
+    "latency_s": 49.496,
+    "input_tokens": 3124,
+    "input_tokens_unknown_calls": 0,
+    "cached_input_tokens": 0,
+    "cached_input_tokens_unknown_calls": 0,
+    "output_tokens": 2123,
+    "output_tokens_unknown_calls": 0,
+    "reasoning_tokens": 1680,
+    "reasoning_tokens_unknown_calls": 0,
+    "cost_usd": 0.029038,
+    "cost_status": "estimated",
+    "cost_unknown_calls": 0,
+    "price_versions": [
+     "openai/gpt-6.1-sol/standard/2026-11-13"
+    ]
+   }
+  },
+  "self_hosted_machine_cost": "unknown (not accounted)"
+ },
+ "timing": {
+  "wall_clock_total_s": 121.394,
+  "agent_loop_s": 112.907,
+  "agent_loop_elapsed_s": 112.907,
+  "agent_loop_limit_s": 300.0,
+  "agent_loop_overrun_s": 0.0,
+  "final_evaluation_s": 8.477,
+  "model_wait_s": 90.363,
+  "dev_evaluation_s": 22.523,
+  "evidence_tool_s": 0,
+  "container_startup_s": 6.516
+ },
+ "steps": [
+  {
+   "seq": 1,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": null,
+    "candidate_median_s": null,
+    "correct": true,
+    "evaluation_id": "246a3c7fa2b7",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": null,
+    "improved": null,
+    "speedup": null,
+    "status": "passed"
+   },
+   "next_decision": "continue",
+   "candidate_id": "c0",
+   "evaluation_id": "246a3c7fa2b7",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:17:33.358+00:00",
+   "ended_at": "2026-11-13T16:17:35.299+00:00"
+  },
+  {
+   "seq": 2,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "c0使用csv模块逐行解析，开销较大。改为直接读取stdin.buffer并手动解析CSV，避免csv模块和字符串解码开销，用bytes作为dict的key，减少Python对象转换。",
+   "expected_result": "由于跳过了csv模块和str解码，预计速度提升10%以上，达到目标1.1。",
+   "verification": "程序应在公共验证用例（空输入、单行、重复key、ASCII排序、大/负整数、近乎排序、32字符key）上全部通过，在dev数据上正确且速度超过1.1。",
+   "hypothesis": "使用bytes级别的解析和输出可以避免大量str转换，降低CPU开销。",
+   "params": {
+    "parent_candidate_id": "c0"
+   },
+   "result": {
+    "parent_candidate_id": "c0"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c1",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T161733-7c5a/m1",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:17:35.300+00:00",
+   "ended_at": "2026-11-13T16:17:53.298+00:00"
+  },
+  {
+   "seq": 3,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 0.6785432498436421,
+    "best_candidate_id": "c0",
+    "best_replaced": false,
+    "candidate_median_s": 0.7570115409325808,
+    "correct": true,
+    "evaluation_id": "2a7b9f8370cb",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": false,
+    "improved": false,
+    "speedup": 0.8963,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      0.646086584078148,
+      0.7063471251167357
+     ],
+     "candidate_min_max_s": [
+      0.7332310411147773,
+      0.7847580411471426
+     ]
+    }
+   },
+   "next_decision": "continue",
+   "candidate_id": "c1",
+   "evaluation_id": "2a7b9f8370cb",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:18:04.254+00:00",
+   "ended_at": "2026-11-13T16:18:04.254+00:00"
+  },
+  {
+   "seq": 4,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "c1比c0慢，原因是用了bytes做dict key（bytes哈希和比较比str慢），以及输出时用%格式化和bytes操作。改进方案：用str(key)作为dict key（str哈希更快），输出时改用str直接拼接，减少bytes转换。整体仍用buffer读取避免逐行解析开销。",
+   "expected_result": "预期比c0快10%以上，因为避免了csv模块的逐行解析开销，同时用str key避免bytes哈希的性能损失",
+   "verification": "检查是否正确通过所有测试用例，以及speedup是否>=1.1",
+   "hypothesis": "c1慢是因为bytes key的字典操作比str key慢，而c0的csv.reader虽然逐行解析但用str key。新方案结合buffer读取+str key+str输出应该同时获得两方面优势",
+   "params": {
+    "parent_candidate_id": "c0"
+   },
+   "result": {
+    "parent_candidate_id": "c0"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c2",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T161733-7c5a/m2",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:18:04.254+00:00",
+   "ended_at": "2026-11-13T16:18:27.133+00:00"
+  },
+  {
+   "seq": 5,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "format_error",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": null,
+    "best_candidate_id": "c0",
+    "best_replaced": false,
+    "candidate_median_s": null,
+    "correct": false,
+    "evaluation_id": "47c806a438e7",
+    "executed": true,
+    "failure": {
+     "category": "format_error",
+     "message": "first line must be 'key,count,sum', got 'key,count'"
+    },
+    "format_ok": false,
+    "goal_met": null,
+    "improved": null,
+    "speedup": null,
+    "status": "format_error"
+   },
+   "next_decision": "upgrade to large model, continue",
+   "candidate_id": "c2",
+   "evaluation_id": "47c806a438e7",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:18:28.093+00:00",
+   "ended_at": "2026-11-13T16:18:28.093+00:00"
+  },
+  {
+   "seq": 6,
+   "actor": "program",
+   "action": "upgrade_model",
+   "status": "done",
+   "purpose": "连续 2 次候选未达到正确且达标，按升级规则切换到大模型",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "misses": 2,
+    "rule": "upgrade-rule-v1",
+    "to": "gpt-6.1-sol"
+   },
+   "next_decision": "continue with large model",
+   "candidate_id": null,
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:18:28.094+00:00",
+   "ended_at": "2026-11-13T16:18:28.094+00:00"
+  },
+  {
+   "seq": 7,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "修正输出表头，并替换前两版的逐字段索引扫描：使用批量分行、单次字段切分及一个保存可变聚合记录的字典，减少每行的解析与字典查找开销。",
+   "expected_result": "保持完整契约正确，开发集运行时间低于基线，并争取达到至少 1.1 倍加速。",
+   "verification": "由自动验证检查空输入、重复键、排序、大整数等契约案例及开发集输出，再比较候选与基线的全部计时样本。",
+   "hypothesis": "c1 的两次 index 调用和 Python 层索引循环可能抵消了二进制输入的收益；C 层批量分行配合单字典原地更新，有望比原始 CSV 解析和双字典更新更快。",
+   "params": {
+    "parent_candidate_id": "c0"
+   },
+   "result": {
+    "parent_candidate_id": "c0"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c3",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T161733-7c5a/m3",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:18:28.094+00:00",
+   "ended_at": "2026-11-13T16:19:17.595+00:00"
+  },
+  {
+   "seq": 8,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 0.6340414579026401,
+    "best_candidate_id": "c3",
+    "best_replaced": true,
+    "candidate_median_s": 0.43584549985826015,
+    "correct": true,
+    "evaluation_id": "7117f01b3c0f",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "speedup": 1.4547,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      0.6135973748750985,
+      0.6408057920634747
+     ],
+     "candidate_min_max_s": [
+      0.4231410420034081,
+      0.4457683749496937
+     ]
+    }
+   },
+   "next_decision": "stop: goal_reached",
+   "candidate_id": "c3",
+   "evaluation_id": "7117f01b3c0f",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T16:19:26.263+00:00",
+   "ended_at": "2026-11-13T16:19:26.263+00:00"
+  }
+ ],
+ "config": {
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "evaluator_version": "groupagg-eval-2",
+  "experience_extractor": "extractor-v1",
+  "fingerprint": "b322a7eecc94a476",
+  "fingerprint_excludes": [
+   "mode",
+   "snapshot_id",
+   "label",
+   "environment details beyond image id"
+  ],
+  "label": "formal A learning",
+  "limits": {
+   "max_candidates": 4,
+   "max_code_bytes": 20000,
+   "max_model_requests": 6,
+   "measurement_timeout_s": 10.0,
+   "min_request_window_s": 15.0,
+   "model_request_timeout_s": 120.0,
+   "token_budget": null,
+   "wall_clock_s": 300.0
+  },
+  "measure": {
+   "cpus": 1.0,
+   "max_output_bytes": 67108864,
+   "memory": "1g",
+   "pids_limit": 64,
+   "ready_timeout_s": 30.0,
+   "repeats": 5
+  },
+  "models": {
+   "large": {
+    "base_url": "https://api.openai.com/v1",
+    "extra": {},
+    "max_output_tokens": 32000,
+    "model": "gpt-6.1-sol",
+    "provider": "openai_responses",
+    "reasoning_effort": "xhigh",
+    "response_format": "json_schema",
+    "role": "large",
+    "temperature": null
+   },
+   "small": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "extra": {},
+    "max_output_tokens": 8192,
+    "model": "qwen3.8:27b-mlx",
+    "provider": "chat_compat",
+    "reasoning_effort": "none",
+    "response_format": "none",
+    "role": "small",
+    "temperature": null
+   }
+  },
+  "prompt": {
+   "system_sha256": "21877a5b8cfd7ebbeaf09026a0bc8dcb1535acf5bb3834553bb0f9488bb83ac8",
+   "version": "agent-prompt-v1"
+  },
+  "retrieval": {
+   "features": [
+    "rows",
+    "distinct_keys",
+    "rows_per_key",
+    "order",
+    "skew"
+   ],
+   "max_per_outcome": {
+    "failure": 2,
+    "no_gain": 1,
+    "success": 3
+   },
+   "min_matches": 3,
+   "rank": "matching features desc, then newest first",
+   "version": "retrieval-v1"
+  },
+  "sandbox_image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "scripted": [],
+  "task_manifest_sha256": "9759991a23db49ffa2005185b5d773f094c858b8dacb8642ad512e191c751e3e",
+  "upgrade_rule": {
+   "consecutive_misses": 2,
+   "description": "start with the small model; after 2 consecutive candidate attempts that are not correct-and-on-target, switch to the large model for the rest of the run if model requests remain",
+   "id": "upgrade-rule-v1"
+  }
+ },
+ "environment": {
+  "container_python": "3.12-slim (pinned digest in Dockerfile)",
+  "docker_server": "29.8.2 linux/arm64",
+  "image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "image_tag": "routeevo-sandbox:d055c99c833a",
+  "limits": {
+   "cpus": 1.0,
+   "memory": "1g",
+   "network": "none",
+   "pids_limit": 64,
+   "read_only_rootfs": true,
+   "user": "65534:65534"
+  }
+ },
+ "reproduce": {
+  "run_again": "uv run routeevo run A-01 --mode learn --snapshot v0",
+  "recheck_best": "uv run routeevo check A-01 var/runs/run-20261113T161733-7c5a/candidates/c3.py --dataset final",
+  "report": "uv run routeevo report run-20261113T161733-7c5a"
+ },
+ "started_at": "2026-11-13T16:17:33.357+00:00",
+ "loop_ended_at": "2026-11-13T16:19:26.264+00:00",
+ "ended_at": "2026-11-13T16:19:34.751+00:00",
+ "research": {
+  "definition": {
+   "question": "在输出完全正确的前提下，能否让这段分组聚合程序在该工作负载上至少快 1.1×？",
+   "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+   "workload": "1,500,000 行 · 20,000 个 key · random · 偏斜 0.8",
+   "baseline": {
+    "program": "c0：csv + 两个 dict + sorted（初始程序，正确）",
+    "dev_median_s": 0.6785432498436421,
+    "final_median_s": 0.6303048329427838
+   },
+   "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+   "tools": [
+    {
+     "action": "analyze",
+     "label": "分析：写下推理与计划，不执行"
+    },
+    {
+     "action": "get_evidence",
+     "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+    },
+    {
+     "action": "propose_candidate",
+     "label": "提出候选：提交完整程序，程序立即验证"
+    },
+    {
+     "action": "run_validation",
+     "label": "运行验证：重新评测已有候选"
+    },
+    {
+     "action": "finish",
+     "label": "结束：交付当前最佳已验证候选"
+    }
+   ],
+   "verification": "开发数据正确性 + 7 个公开契约用例 + 基线与候选各预热一次、交替计时 5 轮；全部候选样本快于全部基线样本才算改善，加速比 = 两者中位数之比",
+   "budget": {
+    "model_requests": 6,
+    "candidates": 4,
+    "loop_s": 300.0,
+    "request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0
+   },
+   "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+  },
+  "experiments": [
+   {
+    "candidate_id": "c1",
+    "step": 2,
+    "hypothesis": "使用bytes级别的解析和输出可以避免大量str转换，降低CPU开销。",
+    "purpose": "c0使用csv模块逐行解析，开销较大。改为直接读取stdin.buffer并手动解析CSV，避免csv模块和字符串解码开销，用bytes作为dict的key，减少Python对象转换。",
+    "expected": "由于跳过了csv模块和str解码，预计速度提升10%以上，达到目标1.1。",
+    "verification": "程序应在公共验证用例（空输入、单行、重复key、ASCII排序、大/负整数、近乎排序、32字符key）上全部通过，在dev数据上正确且速度超过1.1。",
+    "result": {
+     "status": "passed",
+     "speedup": 0.8963,
+     "improved": false,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "refuted",
+    "then": "continue",
+    "evaluation_id": "2a7b9f8370cb"
+   },
+   {
+    "candidate_id": "c2",
+    "step": 4,
+    "hypothesis": "c1慢是因为bytes key的字典操作比str key慢，而c0的csv.reader虽然逐行解析但用str key。新方案结合buffer读取+str key+str输出应该同时获得两方面优势",
+    "purpose": "c1比c0慢，原因是用了bytes做dict key（bytes哈希和比较比str慢），以及输出时用%格式化和bytes操作。改进方案：用str(key)作为dict key（str哈希更快），输出时改用str直接拼接，减少bytes转换。整体仍用buffer读取避免逐行解析开销。",
+    "expected": "预期比c0快10%以上，因为避免了csv模块的逐行解析开销，同时用str key避免bytes哈希的性能损失",
+    "verification": "检查是否正确通过所有测试用例，以及speedup是否>=1.1",
+    "result": {
+     "status": "format_error",
+     "speedup": null,
+     "improved": null,
+     "failure": "format_error",
+     "contract_case": null
+    },
+    "verdict": "untestable",
+    "then": "upgrade to large model, continue",
+    "evaluation_id": "47c806a438e7"
+   },
+   {
+    "candidate_id": "c3",
+    "step": 7,
+    "hypothesis": "c1 的两次 index 调用和 Python 层索引循环可能抵消了二进制输入的收益；C 层批量分行配合单字典原地更新，有望比原始 CSV 解析和双字典更新更快。",
+    "purpose": "修正输出表头，并替换前两版的逐字段索引扫描：使用批量分行、单次字段切分及一个保存可变聚合记录的字典，减少每行的解析与字典查找开销。",
+    "expected": "保持完整契约正确，开发集运行时间低于基线，并争取达到至少 1.1 倍加速。",
+    "verification": "由自动验证检查空输入、重复键、排序、大整数等契约案例及开发集输出，再比较候选与基线的全部计时样本。",
+    "result": {
+     "status": "passed",
+     "speedup": 1.4547,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "supported",
+    "then": "stop: goal_reached",
+    "evaluation_id": "7117f01b3c0f"
+   }
+  ],
+  "verdicts": {
+   "supported": 1,
+   "partial": 0,
+   "refuted": 1,
+   "untestable": 1,
+   "untested": 0
+  },
+  "verdict_labels": {
+   "supported": "得到支持",
+   "partial": "部分支持（改善，但未达目标）",
+   "refuted": "被反驳（正确但没有改善）",
+   "untestable": "未能检验（候选出错）",
+   "untested": "未评测（预算或运行结束）"
+  }
+ }
+}

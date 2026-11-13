@@ -134,7 +134,7 @@ uv run routeevo serve                             # 界面：http://127.0.0.1:80
 
 单次研究运行：`uv run routeevo run B-01 --snapshot v0`；导出完整研究成果：`uv run routeevo export-run <run_id> --bundle <目录>`（研究记录、最佳程序、全部候选、原始模型调用、`report.json`、`reproduce.sh`）；经验带来的变化：`uv run routeevo explain <comparison_id>`。
 
-[研究成果样例](research/)按规则从正式运行中选出：反馈驱动的修正链、站在已知最佳上继续研究、没有验证出改进、复验已验证程序直接达标、开发达标但最终测试未达标。A-01 样例的 `reproduce.sh` 在最终数据上复核得到 1.44×（记录值 1.4367×）。RA-01—08 与 RA-AC-01—08 的逐条对照见 [Research Agent 验收对照](research-agent-acceptance.md)。
+[研究成果样例](research/)按规则从正式运行中选出：反馈驱动的修正链、站在已知最佳上继续研究、没有验证出改进、复验已验证程序直接达标、开发达标但最终测试未达标。A-01 样例的 `reproduce.sh` 在最终数据上复核得到 1.44×（记录值 1.4367×），第二版 D-01 样例复核得到 1.4473×（记录值 1.4481×）。RA-01—08 与 RA-AC-01—08 的逐条对照见 [Research Agent 验收对照](research-agent-acceptance.md)。
 
 ## 7. 已知限制
 

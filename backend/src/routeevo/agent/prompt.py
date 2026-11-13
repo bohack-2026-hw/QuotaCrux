@@ -59,6 +59,7 @@ def build_state(
     history: list[dict],
     experiences: list[dict] | None,
     snapshot_id: str,
+    experience_summary: dict | None = None,
     budget: dict,
     last_feedback: dict | None,
 ) -> str:
@@ -90,7 +91,14 @@ def build_state(
             meta = {**{k: v for k, v in e.items() if k != "change"}, "change": change}
             exp_lines.append(f"### {e['experience_id']} ({e['outcome']})\n{json.dumps(meta, ensure_ascii=False, indent=2)}\n"
                              f"Change as a diff against the initial program:\n```diff\n{diff}\n```")
-        parts.append(_block(f"Experience records from snapshot {snapshot_id}", "\n".join(exp_lines)))
+        counts = ""
+        if experience_summary:
+            counts = (f"Snapshot holds {experience_summary['snapshot_size']} records; "
+                      f"{sum(experience_summary['matched_by_outcome'].values())} match this workload on at least "
+                      f"{experience_summary['min_matches']} of 5 features "
+                      f"(by outcome: {json.dumps(experience_summary['matched_by_outcome'])}); "
+                      f"{len(experiences)} are shown.\n")
+        parts.append(_block(f"Experience records from snapshot {snapshot_id}", counts + "\n".join(exp_lines)))
     else:
         parts.append(_block(f"Experience records from snapshot {snapshot_id}", "none"))
 

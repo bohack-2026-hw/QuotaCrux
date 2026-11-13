@@ -322,7 +322,8 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
                      "latency_s": e["resources"]["latency_s"]},
             "source": {"run_id": e["source"]["run_id"], "step_seq": e["source"]["step_seq"], "candidate_id": e["source"]["candidate_id"]},
         })
-    summary = {"retrieval": RETRIEVAL["version"], "current_buckets": current, "snapshot_size": len(snapshot_experience_ids(snapshot_id)),
+    summary = {"retrieval": RETRIEVAL["version"], "min_matches": RETRIEVAL["min_matches"], "current_buckets": current,
+               "snapshot_size": len(snapshot_experience_ids(snapshot_id)),
                "matched_by_outcome": matched_counts, "selected": [r["experience_id"] for r in records],
                "scores": {r["experience_id"]: r["match"]["matching_features"] for r in records}}
     return records, summary

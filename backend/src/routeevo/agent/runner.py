@@ -103,6 +103,7 @@ class Runner:
         self.history: list[dict] = []
         self.last_feedback: dict | None = None
         self.experiences: list[dict] = []
+        self.experience_summary: dict | None = None
         self.stop_reason: str | None = None
         self.stop_detail: str | None = None
         self.t0 = 0.0
@@ -206,6 +207,7 @@ class Runner:
     def _load_experiences(self) -> None:
         """Retrieve once per run from the fixed snapshot; the same records go into every request."""
         self.experiences, summary = memory.retrieve(self.snapshot_id, self.task.manifest["family"], self.task.dev_profile)
+        self.experience_summary = summary
         for rank, e in enumerate(self.experiences, start=1):
             db.insert("run_experiences", {"run_id": self.run_id, "experience_id": e["experience_id"], "rank": rank,
                                           "matching_features": e["match"]["matching_features"]})
@@ -299,6 +301,7 @@ class Runner:
             task=self.task,
             candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items()],
             evidence=self.evidence, history=self.history, experiences=self.experiences, snapshot_id=self.snapshot_id,
+            experience_summary=self.experience_summary,
             budget=self._budget_view(), last_feedback=self.last_feedback,
         )
         remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)

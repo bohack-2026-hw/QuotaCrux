@@ -12,7 +12,7 @@ from pathlib import Path
 
 FAMILY = "groupagg"
 GENERATOR_VERSION = "groupagg-gen-1"
-CHECKER_VERSION = "groupagg-check-1"
+CHECKER_VERSION = "groupagg-check-2"
 INITIAL_CODE_PATH = Path(__file__).with_name("groupagg_initial.py")
 
 KEY_ALPHABET = string.ascii_letters + string.digits + "_"
@@ -101,6 +101,19 @@ def generate(p: GenParams) -> bytes:
     out = [INPUT_HEADER]
     out.extend(f"{k},{v}" for k, v in rows)
     return ("\n".join(out) + "\n").encode()
+
+
+# Small public inputs every candidate must pass before it is timed. They catch programs that are correct on the
+# task's data distribution but violate the contract (e.g. assuming sorted input without checking).
+CONTRACT_CASES = {
+    "empty": "key,value\n",
+    "single_row": "key,value\nz,5\n",
+    "interleaved_repeats": "key,value\nb,1\na,2\nb,3\nc,-4\na,5\n",
+    "ascii_order": "key,value\nb,1\nB,2\n_,3\n9,4\nZ,5\nb0,6\na,7\nb,8\n",
+    "big_and_negative": "key,value\nk,99999999999999999999\nk,-1\nm,0\nn,-123456789012345678901\n",
+    "nearly_sorted_trap": "key,value\na,1\nb,1\nc,1\na,1\nd,1\nd,2\n",
+    "long_keys": "key,value\n" + "x" * 32 + ",1\n" + "x" * 31 + ",2\n" + "x" * 32 + ",3\n",
+}
 
 
 def reference_output(data: bytes) -> bytes:

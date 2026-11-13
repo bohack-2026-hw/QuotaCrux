@@ -15,7 +15,7 @@ from .families import groupagg
 from .sandbox import executor
 from .taskpkg import Task, sha256_bytes
 
-EVALUATOR_VERSION = "groupagg-eval-1"
+EVALUATOR_VERSION = "groupagg-eval-2"
 
 # Sample statuses that mean the candidate itself misbehaved, as opposed to the sandbox failing.
 CANDIDATE_FAILURES = {"compile_error", "runtime_error", "timeout", "output_limit", "memory_limit"}
@@ -26,7 +26,8 @@ class Evaluation:
     evaluation_id: str
     task_id: str
     dataset: str
-    status: str  # passed | wrong_output | format_error | <sample failure> | unstable | sandbox_error | baseline_failed
+    # passed | wrong_output | format_error | contract_violation | <sample failure> | unstable | sandbox_error | baseline_failed
+    status: str
     executed: bool  # the program ran to completion on the first sample
     format_ok: bool | None
     correct: bool | None
@@ -113,6 +114,25 @@ def evaluate(
         ev.format_ok, ev.correct = chk["format_ok"], chk["correct"]
         if not chk["correct"]:
             return fail(chk["failure"]["category"], chk["failure"])
+
+        # 1b. Small public contract cases: correct on this data distribution is not enough.
+        for name, text in groupagg.CONTRACT_CASES.items():
+            case_in = text.encode()
+            r = executor.run_sample(code, case_in, timeout, measure)
+            record("candidate", f"contract:{name}", r)
+            if r.status == "sandbox_error":
+                return fail("sandbox_error", sample_failure(r))
+            case_fail = {"contract_case": name, "input": text}
+            if r.status != "ok":
+                return fail(r.status, {**sample_failure(r), **case_fail})
+            chk = groupagg.check_output(r.stdout, groupagg.reference_output(case_in))
+            if not chk["correct"]:
+                ev.format_ok, ev.correct = chk["format_ok"], False
+                return fail("contract_violation", {
+                    "category": "contract_violation", **case_fail,
+                    "expected": groupagg.reference_output(case_in).decode(),
+                    "got": r.stdout[:2000].decode("utf-8", errors="replace"), "check": chk["failure"],
+                })
         if not measure_timing:
             ev.status = "passed"
             return ev

@@ -14,6 +14,9 @@ Each request you receive describes the full current state. Reply with exactly on
 Goal and rules
 - The program must stay correct for every input that satisfies the contract. An external evaluator checks the output
   against hidden reference data; you never see the evaluator, the reference output or the hidden final test data.
+  Before timing it also runs small public contract cases: empty input, a single row, interleaved repeated keys,
+  ASCII ordering of digits/upper/underscore/lower case, very large and negative integers, an almost-sorted input and
+  32-character keys. A program that is only right for this task's data distribution fails them.
 - Primary metric: speedup = median runtime of the initial program / median runtime of the candidate, measured on the
   task's dev data in a Docker container (1 CPU, 1 GB memory, no network, read-only filesystem, a fresh process per
   sample, input on stdin). A candidate counts as improved only if every timed candidate sample is faster than every

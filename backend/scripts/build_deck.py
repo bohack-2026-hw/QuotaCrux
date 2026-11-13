@@ -462,13 +462,13 @@ def build(out: Path, shots: Path) -> None:
     target_cost = cmp_c if cmp_c and cmp_c["finished_runs"] else cmp_b
     if target_cost:
         s = d.slide("成本账：学习花了多少，使用经验省了多少", "效率")
-        rows = [["批次", "旧经验 费用", "新经验 费用", "差额", "旧经验 耗时", "新经验 耗时", "请求中位数"]]
+        rows = [["批次", "旧经验 费用", "新经验 费用", "少花", "旧经验 耗时", "新经验 耗时", "请求中位数"]]
         for c, name in ((cmp_b, "B 开发对照"), (cmp_c, "C 最终留出")):
             if not c or not c["finished_runs"]:
                 continue
             A, B = c["sides"][c["snapshot_a"]], c["sides"][c["snapshot_b"]]
             rows.append([name, f"${A['cost_usd_total'] or 0:.3f}", f"${B['cost_usd_total'] or 0:.3f}",
-                         f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):+.3f}",
+                         f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):.3f}",
                          f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s",
                          f"{g(A['model_requests_median'])} → {g(B['model_requests_median'])}"])
         d.table(s, rows, 0.6, 1.8, 12.1, [2.0, 1.7, 1.7, 1.5, 1.7, 1.7, 1.8], size=13)
@@ -496,7 +496,7 @@ def build(out: Path, shots: Path) -> None:
         phases = [("第一轮 学习", f"{ses['learn_task']} 读取 {ses['base_snapshot_id']}\n{'达标' if lr['outcome']['goal_met'] else '未达标'} {lr['outcome']['final_speedup'] or 0:.2f}×\n"
                                 f"{lr['iterations']['model_requests']} 次请求 · {lr['timing']['wall_clock_total_s']:.0f}s"),
                   ("自动发布", f"{ses['new_snapshot_id']}（父版本 {ses['base_snapshot_id']}）\n"
-                              f"{lr['experience']['published_experiences']} 条经验，程序核对来源后原子发布"),
+                              f"{len(lr['experience']['published_experiences'] or [])} 条经验，程序核对来源后原子发布"),
                   ("第二轮 对照", f"{ses['eval_task']}：{a} 与 {b} 各 1 次\n配置一致性{'通过' if sc['fair'] else '未通过'}"),
                   ("三行说明", "由对照数据自动填写\n可回退到任一版本")]
         for i, (k, v) in enumerate(phases):

@@ -281,7 +281,7 @@ def dots_chart(c: dict, out: Path, title: str) -> Path:
     ax.tick_params(colors="#" + INK2, length=0)
     ax.set_title(title, loc="left", fontsize=13, color="#" + INK, pad=12)
     from matplotlib.lines import Line2D
-    handles = [Line2D([], [], marker="o", ls="", color="#" + OLD, markersize=8, label=f"{a}（旧经验）"),
+    handles = [Line2D([], [], marker="o", ls="", color="#" + OLD, markersize=8, label=f"{a}（{'无经验' if a == 'v0' else '旧经验'}）"),
                Line2D([], [], marker="o", ls="", color="#" + NEW, markersize=8, label=f"{b}（新经验）"),
                Line2D([], [], marker="o", ls="", markerfacecolor="#" + CARD, markeredgecolor="#" + INK3, markersize=8, label="空心 = 未达标")]
     ax.legend(handles=handles, loc="upper left", frameon=False, fontsize=10, ncol=3, bbox_to_anchor=(0, -0.09))
@@ -298,7 +298,7 @@ def side_rows(c: dict) -> list[list[str]]:
     x = lambda v: "—" if v is None else f"{v:.2f}×"  # noqa: E731
     n = lambda v: "—" if v is None else f"{v:,}"  # noqa: E731
     return [
-        ["指标", f"{a}（旧经验）", f"{b}（新经验）"],
+        ["指标", f"{a}（{'无经验' if a == 'v0' else '旧经验'}）", f"{b}（新经验）"],
         ["达标 / 运行", f"{A['goal_met']} / {A['runs']}", f"{B['goal_met']} / {B['runs']}"],
         ["最终加速比中位数", x(A["final_speedup_median"]), x(B["final_speedup_median"])],
         ["模型请求中位数", g(A["model_requests_median"]), g(B["model_requests_median"])],
@@ -464,8 +464,12 @@ def build(out: Path, shots: Path) -> None:
            0.6, 5.95, 12.1, 0.9, size=12.5, color=INK2)
 
     # 9 version 2 research chain: re-use → raised target → beat the known best
-    chain = next((r for r in learn2 if any(st["action"] == "set_target" for st in r["steps"])
-                  and any(e["kind"] == "model" and e["verdict"] == "supported" for e in r["research"]["experiments"])), None)
+    # the learning run that moved furthest beyond the best re-used program (same rule as scripts/export_research.py)
+    def gain(r):
+        raised = next((st for st in r["steps"] if st["action"] == "set_target"), None)
+        won = [e["result"]["speedup"] for e in r["research"]["experiments"] if e["kind"] == "model" and e["verdict"] == "supported"]
+        return max(won) - raised["result"]["best_dev_speedup"] if raised and won else 0.0
+    chain = max(learn2, key=gain) if learn2 and max(map(gain, learn2)) > 0 else None
     if chain:
         s = d.slide(f"站在已知最佳上继续研究：{chain['task']['task_id']}（读取 {chain['snapshot_id']}）", "第二版 · 研究链")
         up = chain["iterations"]["upgrade_at_step"]
@@ -610,20 +614,23 @@ def build(out: Path, shots: Path) -> None:
                              + (f" {sp:.2f}×" if isinstance(sp, (int, float)) else ""))
             d.text(s, "\n".join(lines), xx + 0.3, 1.9, 5.4, 4.7, size=11.5, color=INK)
 
-    # 17 where re-use did not help
-    if headline and headline["finished_runs"]:
-        a, b = headline["snapshot_a"], headline["snapshot_b"]
-        pt = headline["per_task"]
-        worst = min(headline["tasks"], key=lambda t: (sum(r.get("best_from_reuse", False) for r in pt[t][b]["runs"]),
-                                                      pt[t][b]["goal_met"] - pt[t][a]["goal_met"]))
-        s = d.slide(f"复用不适用的地方：{worst}", "反例")
-        rows = [["运行", f"{a} 结果", "路径", f"{b} 结果", "路径"]]
-        for k in range(headline["repeats"]):
+    # 17 where re-use did not help: the task (in B or D) where re-used programs least often carried the run
+    pool = [(c, t) for c in (cmp_b, cmp_d) if c and c["finished_runs"] for t in c["tasks"]]
+    wins = lambda c, t: sum(r.get("best_from_reuse", False) for r in c["per_task"][t][c["snapshot_b"]]["runs"])  # noqa: E731
+    worst_pair = min(pool, key=lambda ct: wins(*ct)) if pool else None
+    if worst_pair and wins(*worst_pair) < worst_pair[0]["repeats"]:
+        cx, worst = worst_pair
+        a, b = cx["snapshot_a"], cx["snapshot_b"]
+        pt = cx["per_task"]
+        s = d.slide(f"复用不适用的地方：{worst}（{'B 开发对照' if cx is cmp_b else 'D 封存留出'}）", "反例")
+        rows = [["运行", f"{a} 结果", "路径 · 费用", f"{b} 结果", "路径 · 费用"]]
+        for k in range(cx["repeats"]):
             cells = []
             for sn in (a, b):
                 r = pt[worst][sn]["runs"][k]
                 rep = report.build(r["run_id"])
-                cells += [("达标 " if r["goal_met"] else "未达标 ") + (f"{r['final_speedup']:.2f}×" if r["final_speedup"] else ""), path_of(rep)]
+                cells += [("达标 " if r["goal_met"] else "未达标 ") + (f"{r['final_speedup']:.2f}×" if r["final_speedup"] else ""),
+                          f"{path_of(rep)} · ${r['cost_usd'] or 0:.3f}"]
             rows.append([f"第 {k + 1} 轮", *cells])
         d.table(s, rows, 0.6, 1.8, 7.2, [1.0, 1.7, 1.5, 1.7, 1.3], size=12)
         rep_b = report.build(pt[worst][b]["runs"][0]["run_id"])
@@ -635,8 +642,9 @@ def build(out: Path, shots: Path) -> None:
         d.text(s, f"{worst}：{dev['rows']:,} 行 · {dev['keys']:,} 个 key · {dev['order']}", 8.35, 1.95, 4.2, 0.4, size=14, bold=True, color=ACCENT)
         d.text(s, (f"复验选中 {len(sel.get('selected', []))} 个程序、跳过 {len(sel.get('skipped', []))} 个（有更接近的无收益/失败记录）。"
                    "R = 程序复验，Q = Qwen 请求，G = GPT 请求。\n\n"
-                   "复验没有达标时，复验结果作为证据交给模型，照常研究；所以复用不会让原本能做的任务变差，"
-                   "但也帮不了经验覆盖不到的工作负载。这类结果同样写回经验：下次遇到相似条件可直接跳过。"),
+                   "复验没有达标时，复验结果作为证据交给模型，照常研究；复用帮不了经验覆盖不到的工作负载。\n\n"
+                   "代价：复验过的程序都留在提示词里，GPT 单次请求更长、更贵——这是这一侧费用高于 v0 的原因，"
+                   "只保留最佳一个程序是已知的下一步改进。"),
                8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
         d.text(s, "全部运行计入；路径按发生顺序。", 0.6, 6.3, 7.2, 0.4, size=11, color=INK3)
 
@@ -648,7 +656,7 @@ def build(out: Path, shots: Path) -> None:
             if not c or not c["finished_runs"]:
                 continue
             A, B = c["sides"][c["snapshot_a"]], c["sides"][c["snapshot_b"]]
-            rows.append([name, usd(A["cost_usd_total"]), usd(B["cost_usd_total"]), f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):.3f}",
+            rows.append([name, usd(A["cost_usd_total"]), usd(B["cost_usd_total"]), (lambda v: f"${v:.3f}" if v >= 0 else f"−${-v:.3f}")((A["cost_usd_total"] or 0) - (B["cost_usd_total"] or 0)),
                          f"{A['agent_loop_s_median']:.0f}s", f"{B['agent_loop_s_median']:.0f}s",
                          f"{g(A['model_requests_median'])} → {g(B['model_requests_median'])}",
                          f"{x(A['final_speedup_median'])} → {x(B['final_speedup_median'])}"])
@@ -693,7 +701,7 @@ def build(out: Path, shots: Path) -> None:
             d.card(s, xx, 1.8, 2.8, 1.9, ACCENT if i == 1 else None)
             d.text(s, f"✓ {k}", xx + 0.2, 1.95, 2.5, 0.45, size=15, bold=True, font=HEAD_FONT)
             d.text(s, v, xx + 0.2, 2.45, 2.5, 1.2, size=11.5, color=INK2)
-        rows = [["", f"{a}（旧经验）", f"{b}（新经验）"]]
+        rows = [["", f"{a}（{'无经验' if a == 'v0' else '旧经验'}）", f"{b}（新经验）"]]
         A, B = sc["sides"][a], sc["sides"][b]
         rows += [["结果", f"{'达标' if A['goal_met'] else '未达标'} {A['final_speedup_median'] or 0:.2f}×", f"{'达标' if B['goal_met'] else '未达标'} {B['final_speedup_median'] or 0:.2f}×"],
                  ["模型请求 / 升级", f"{g(A['model_requests_median'])} / {A['upgrades_total']}", f"{g(B['model_requests_median'])} / {B['upgrades_total']}"],

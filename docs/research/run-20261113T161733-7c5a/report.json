@@ -42,6 +42,7 @@
   "candidate_ran": true,
   "dev_validation_passed": true,
   "dev_improved": true,
+  "best_from_reuse": false,
   "best_is_initial": false,
   "final_evaluated": true,
   "final_correct": true,
@@ -94,6 +95,7 @@
   ]
  },
  "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+ "run_target_speedup": 1.1,
  "final_evaluation": {
   "evaluation_id": "41e647c0cfb8",
   "candidate_id": "c3",
@@ -225,6 +227,8 @@
   "candidates_improved": 1,
   "candidates_no_gain": 1,
   "candidates_failed": 1,
+  "programs_reused": 0,
+  "programs_reused_improved": 0,
   "invalid_actions": 0,
   "unusable_replies": 0,
   "api_errors": 0,
@@ -670,6 +674,10 @@
    "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
    "tools": [
     {
+     "action": "reuse_candidate",
+     "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+    },
+    {
      "action": "analyze",
      "label": "分析：写下推理与计划，不执行"
     },
@@ -704,6 +712,8 @@
    {
     "candidate_id": "c1",
     "step": 2,
+    "kind": "model",
+    "target": 1.1,
     "hypothesis": "使用bytes级别的解析和输出可以避免大量str转换，降低CPU开销。",
     "purpose": "c0使用csv模块逐行解析，开销较大。改为直接读取stdin.buffer并手动解析CSV，避免csv模块和字符串解码开销，用bytes作为dict的key，减少Python对象转换。",
     "expected": "由于跳过了csv模块和str解码，预计速度提升10%以上，达到目标1.1。",
@@ -722,6 +732,8 @@
    {
     "candidate_id": "c2",
     "step": 4,
+    "kind": "model",
+    "target": 1.1,
     "hypothesis": "c1慢是因为bytes key的字典操作比str key慢，而c0的csv.reader虽然逐行解析但用str key。新方案结合buffer读取+str key+str输出应该同时获得两方面优势",
     "purpose": "c1比c0慢，原因是用了bytes做dict key（bytes哈希和比较比str慢），以及输出时用%格式化和bytes操作。改进方案：用str(key)作为dict key（str哈希更快），输出时改用str直接拼接，减少bytes转换。整体仍用buffer读取避免逐行解析开销。",
     "expected": "预期比c0快10%以上，因为避免了csv模块的逐行解析开销，同时用str key避免bytes哈希的性能损失",
@@ -740,6 +752,8 @@
    {
     "candidate_id": "c3",
     "step": 7,
+    "kind": "model",
+    "target": 1.1,
     "hypothesis": "c1 的两次 index 调用和 Python 层索引循环可能抵消了二进制输入的收益；C 层批量分行配合单字典原地更新，有望比原始 CSV 解析和双字典更新更快。",
     "purpose": "修正输出表头，并替换前两版的逐字段索引扫描：使用批量分行、单次字段切分及一个保存可变聚合记录的字典，减少每行的解析与字典查找开销。",
     "expected": "保持完整契约正确，开发集运行时间低于基线，并争取达到至少 1.1 倍加速。",

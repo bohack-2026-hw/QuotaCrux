@@ -12,7 +12,7 @@ export function BehaviorPair({ task, a, b, runA, runB, onOpenRun }: {
   const rb = usePoll(() => (runB ? api.run(runB) : Promise.resolve(null)), [runB], 0, false)
   return (
     <div className="grid cols-2" style={{ marginTop: 14 }}>
-      <Column title={`${task} · ${a}（旧经验）`} color="var(--series-old)" rep={ra.data} onOpenRun={onOpenRun} />
+      <Column title={`${task} · ${a}（${a === 'v0' ? '无经验' : '旧经验'}）`} color="var(--series-old)" rep={ra.data} onOpenRun={onOpenRun} />
       <Column title={`${task} · ${b}（新经验）`} color="var(--series-new)" rep={rb.data} onOpenRun={onOpenRun} />
     </div>
   )

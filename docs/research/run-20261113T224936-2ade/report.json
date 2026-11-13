@@ -1,64 +1,65 @@
 {
- "run_id": "run-20261113T174641-8a40",
+ "run_id": "run-20261113T224936-2ade",
  "task": {
-  "task_id": "C-04",
-  "split": "C",
+  "task_id": "D-02",
+  "split": "D",
   "target_min_speedup": 1.1,
   "dev_params": {
    "disorder": 0.0,
-   "key_len_max": 5,
-   "key_len_min": 2,
-   "keys": 20,
-   "order": "random",
-   "rows": 2000000,
-   "seed": 3401,
-   "skew": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 40000,
+   "order": "sorted",
+   "rows": 1400000,
+   "seed": 4201,
+   "skew": 0.3,
    "value_max": 1000000,
    "value_min": -1000000
   },
   "final_params": {
    "disorder": 0.0,
-   "key_len_max": 5,
-   "key_len_min": 2,
-   "keys": 20,
-   "order": "random",
-   "rows": 2000000,
-   "seed": 3402,
-   "skew": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 40000,
+   "order": "sorted",
+   "rows": 1400000,
+   "seed": 4202,
+   "skew": 0.3,
    "value_max": 1000000,
    "value_min": -1000000
   }
  },
  "mode": "eval",
  "snapshot_id": "v0",
- "label": "cmp-20261113T173855-4450 #8 r1",
+ "label": "cmp-20261113T221908-737d #28 r3",
  "scripted_model": [],
  "status": "completed",
  "stop_reason": "goal_reached",
- "stop_detail": "c1 dev speedup 1.1336 >= 1.1",
- "config_fingerprint": "d394781581e5e158",
+ "stop_detail": "c1 dev speedup 1.1089 >= 1.1",
+ "config_fingerprint": "fb285d751dffd644",
  "outcome": {
   "run_completed": true,
   "candidate_ran": true,
   "dev_validation_passed": true,
   "dev_improved": true,
+  "best_from_reuse": false,
   "best_is_initial": false,
   "final_evaluated": true,
   "final_correct": true,
-  "final_speedup": 1.1576,
+  "final_speedup": 1.0802,
   "goal_met": false,
   "valid_artifact": true,
-  "summary": "有产物但未达标：c1 最终测试正确，加速比 1.1576"
+  "summary": "有产物但未达标：c1 最终测试正确，加速比 1.0802"
  },
  "experience": {
   "snapshot_read": "v0",
   "retrieval": {
    "current_buckets": {
-    "distinct_keys": "<1k",
-    "order": "unsorted",
+    "distinct_keys": "<100k",
+    "order": "sorted",
     "rows": ">=1M",
     "rows_per_key": ">20",
-    "skew": "high"
+    "skew": "low"
    },
    "matched_by_outcome": {},
    "min_matches": 3,
@@ -75,69 +76,70 @@
   "candidate_id": "c1",
   "origin": "model",
   "parent_candidate_id": "c0",
-  "code_path": "var/runs/run-20261113T174641-8a40/candidates/c1.py",
-  "code_sha256": "3acd8189b292aa975c4b5df498f1cf1fc3048ba1aa6b3330aa13071887fe6fc9",
-  "model_call_id": "m2",
+  "code_path": "var/runs/run-20261113T224936-2ade/candidates/c1.py",
+  "code_sha256": "3c517c7ad4ea167cc99d775eb0a6f9be0e91d6f0be4b03144b74161fa3b346cc",
+  "model_call_id": "m1",
   "dev_evaluations": [
    {
-    "evaluation_id": "17a39b42b9dd",
+    "evaluation_id": "efb6ec26ce69",
     "status": "passed",
     "correct": 1,
-    "speedup": 1.1336,
+    "speedup": 1.1089,
     "improved": 1,
     "goal_met": 1
    }
   ]
  },
  "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+ "run_target_speedup": 1.1,
  "final_evaluation": {
-  "evaluation_id": "f05931b3b495",
+  "evaluation_id": "603b85285e0c",
   "candidate_id": "c1",
   "status": "passed",
   "correct": true,
-  "speedup": 1.1576,
-  "candidate_median_s": 0.5264549169223756,
-  "baseline_median_s": 0.6094241661485285,
+  "speedup": 1.0802,
+  "candidate_median_s": 0.47844720794819295,
+  "baseline_median_s": 0.5168012911453843,
   "timing": {
    "baseline": {
-    "iqr": 0.01679010409861803,
-    "max": 0.6180569170974195,
-    "median": 0.6094241661485285,
-    "min": 0.5960599170066416
+    "iqr": 0.02244510455057025,
+    "max": 0.5267391251400113,
+    "median": 0.5168012911453843,
+    "min": 0.501050875056535
    },
    "baseline_min_max_s": [
-    0.5960599170066416,
-    0.6180569170974195
+    0.501050875056535,
+    0.5267391251400113
    ],
    "baseline_s": [
-    0.6180569170974195,
-    0.5960599170066416,
-    0.6128762911539525,
-    0.6094241661485285,
-    0.6012930830474943
+    0.5168012911453843,
+    0.5267391251400113,
+    0.5050520410295576,
+    0.5242540000472218,
+    0.501050875056535
    ],
    "candidate": {
-    "iqr": 0.05029470904264599,
-    "max": 0.6134316250681877,
-    "median": 0.5264549169223756,
-    "min": 0.5223358329385519
+    "iqr": 0.032612645998597145,
+    "max": 0.4879374580923468,
+    "median": 0.47844720794819295,
+    "min": 0.45312920794822276
    },
    "candidate_min_max_s": [
-    0.5223358329385519,
-    0.6134316250681877
+    0.45312920794822276,
+    0.4879374580923468
    ],
    "candidate_s": [
-    0.6134316250681877,
-    0.5223358329385519,
-    0.522833958035335,
-    0.5264549169223756,
-    0.5323275839909911
+    0.4879374580923468,
+    0.45312920794822276,
+    0.47844720794819295,
+    0.4533882080577314,
+    0.48380524991080165
    ],
    "improved_rule": "all candidate samples faster than all baseline samples",
    "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
   },
   "failure": null,
-  "duration_s": 9.191,
+  "duration_s": 8.274,
   "note": null
  },
  "candidates": [
@@ -145,12 +147,12 @@
    "candidate_id": "c0",
    "origin": "initial",
    "parent_candidate_id": null,
-   "code_path": "var/runs/run-20261113T174641-8a40/candidates/c0.py",
+   "code_path": "var/runs/run-20261113T224936-2ade/candidates/c0.py",
    "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
    "model_call_id": null,
    "dev_evaluations": [
     {
-     "evaluation_id": "df3c5ba58b2e",
+     "evaluation_id": "ccc72cd40a7b",
      "status": "passed",
      "correct": 1,
      "speedup": null,
@@ -163,15 +165,15 @@
    "candidate_id": "c1",
    "origin": "model",
    "parent_candidate_id": "c0",
-   "code_path": "var/runs/run-20261113T174641-8a40/candidates/c1.py",
-   "code_sha256": "3acd8189b292aa975c4b5df498f1cf1fc3048ba1aa6b3330aa13071887fe6fc9",
-   "model_call_id": "m2",
+   "code_path": "var/runs/run-20261113T224936-2ade/candidates/c1.py",
+   "code_sha256": "3c517c7ad4ea167cc99d775eb0a6f9be0e91d6f0be4b03144b74161fa3b346cc",
+   "model_call_id": "m1",
    "dev_evaluations": [
     {
-     "evaluation_id": "17a39b42b9dd",
+     "evaluation_id": "efb6ec26ce69",
      "status": "passed",
      "correct": 1,
-     "speedup": 1.1336,
+     "speedup": 1.1089,
      "improved": 1,
      "goal_met": 1
     }
@@ -179,33 +181,35 @@
   }
  ],
  "iterations": {
-  "model_requests": 2,
+  "model_requests": 1,
   "candidates_proposed": 1,
   "candidates_passed": 1,
   "candidates_improved": 1,
   "candidates_no_gain": 0,
   "candidates_failed": 0,
+  "programs_reused": 0,
+  "programs_reused_improved": 0,
   "invalid_actions": 0,
   "unusable_replies": 0,
   "api_errors": 0,
-  "evidence_calls": 1,
+  "evidence_calls": 0,
   "upgrades": 0,
   "upgrade_at_step": null
  },
  "usage": {
   "total": {
-   "requests": 2,
-   "ok": 2,
+   "requests": 1,
+   "ok": 1,
    "errors": {},
-   "latency_s": 32.867,
-   "input_tokens": 5037,
+   "latency_s": 9.683,
+   "input_tokens": 2010,
    "input_tokens_unknown_calls": 0,
-   "cached_input_tokens": 1362,
+   "cached_input_tokens": 2005,
    "cached_input_tokens_unknown_calls": 0,
-   "output_tokens": 881,
+   "output_tokens": 428,
    "output_tokens_unknown_calls": 0,
    "reasoning_tokens": null,
-   "reasoning_tokens_unknown_calls": 2,
+   "reasoning_tokens_unknown_calls": 1,
    "cost_usd": 0.0,
    "cost_status": "local_no_api_fee",
    "cost_unknown_calls": 0,
@@ -213,18 +217,18 @@
   },
   "by_model": {
    "small:chat_compat:qwen3.8:27b-mlx": {
-    "requests": 2,
-    "ok": 2,
+    "requests": 1,
+    "ok": 1,
     "errors": {},
-    "latency_s": 32.867,
-    "input_tokens": 5037,
+    "latency_s": 9.683,
+    "input_tokens": 2010,
     "input_tokens_unknown_calls": 0,
-    "cached_input_tokens": 1362,
+    "cached_input_tokens": 2005,
     "cached_input_tokens_unknown_calls": 0,
-    "output_tokens": 881,
+    "output_tokens": 428,
     "output_tokens_unknown_calls": 0,
     "reasoning_tokens": null,
-    "reasoning_tokens_unknown_calls": 2,
+    "reasoning_tokens_unknown_calls": 1,
     "cost_usd": 0.0,
     "cost_status": "local_no_api_fee",
     "cost_unknown_calls": 0,
@@ -234,16 +238,16 @@
   "self_hosted_machine_cost": "unknown (not accounted)"
  },
  "timing": {
-  "wall_clock_total_s": 53.956,
-  "agent_loop_s": 44.764,
-  "agent_loop_elapsed_s": 44.764,
+  "wall_clock_total_s": 28.17,
+  "agent_loop_s": 19.895,
+  "agent_loop_elapsed_s": 19.895,
   "agent_loop_limit_s": 300.0,
   "agent_loop_overrun_s": 0.0,
-  "final_evaluation_s": 9.191,
-  "model_wait_s": 32.867,
-  "dev_evaluation_s": 11.03,
-  "evidence_tool_s": 0.858,
-  "container_startup_s": 4.726
+  "final_evaluation_s": 8.274,
+  "model_wait_s": 9.683,
+  "dev_evaluation_s": 10.205,
+  "evidence_tool_s": 0,
+  "container_startup_s": 4.89
  },
  "steps": [
   {
@@ -260,7 +264,7 @@
     "baseline_median_s": null,
     "candidate_median_s": null,
     "correct": true,
-    "evaluation_id": "df3c5ba58b2e",
+    "evaluation_id": "ccc72cd40a7b",
     "executed": true,
     "format_ok": true,
     "goal_met": null,
@@ -270,47 +274,21 @@
    },
    "next_decision": "continue",
    "candidate_id": "c0",
-   "evaluation_id": "df3c5ba58b2e",
+   "evaluation_id": "ccc72cd40a7b",
    "model_call_id": null,
    "tool_call_id": null,
-   "started_at": "2026-11-13T17:46:41.836+00:00",
-   "ended_at": "2026-11-13T17:46:43.794+00:00"
+   "started_at": "2026-11-13T22:49:36.899+00:00",
+   "ended_at": "2026-11-13T22:49:38.777+00:00"
   },
   {
    "seq": 2,
    "actor": "model",
-   "action": "get_evidence",
-   "status": "done",
-   "purpose": "对初始程序进行性能剖析，了解瓶颈所在，为优化方向提供依据",
-   "expected_result": "看到top函数调用及累计时间，预期csv.reader、int()、dict操作为主要时间消耗",
-   "verification": "查看profile输出中各函数的cumtime排序，确认瓶颈位置",
-   "hypothesis": "csv.reader是Python CSV解析开销较大的模块，替换为手动行解析可能显著加速；同时用单一dict存储[count,sum]元组可能减少一次哈希查找",
-   "params": {
-    "candidate_id": "c0",
-    "tool": "profile_candidate"
-   },
-   "result": {
-    "output_correct": true,
-    "status": "ok",
-    "tool": "profile_candidate"
-   },
-   "next_decision": "continue",
-   "candidate_id": "c0",
-   "evaluation_id": null,
-   "model_call_id": "run-20261113T174641-8a40/m1",
-   "tool_call_id": "run-20261113T174641-8a40/t1",
-   "started_at": "2026-11-13T17:46:43.794+00:00",
-   "ended_at": "2026-11-13T17:46:53.289+00:00"
-  },
-  {
-   "seq": 3,
-   "actor": "model",
    "action": "propose_candidate",
    "status": "submitted",
-   "purpose": "用手动解析替代csv模块，减少每行解析开销；用单字典存储计数和总和，减少哈希查找。同时用sys.stdin.buffer和sys.stdout.buffer处理，减少I/O和编码开销。",
-   "expected_result": "期望获得1.1-2.0倍加速，因为csv模块的每行解析开销很大，且分开两个字典需要两次哈希查找。",
-   "verification": "验证器会检查输出正确性和速度提升是否达到1.1倍目标。",
-   "hypothesis": "csv.reader每行处理开销显著，手动split(',')更轻量；用单个字典存储count和sum元组可避免第二次字典查找；读缓冲区直接处理bytes可能更快。",
+   "purpose": "使用手动逐行解析替代csv模块，利用input数据已排序的特性在遍历时增量维护有序计数，减少排序开销",
+   "expected_result": "速度提升约15-30%，因为避免csv模块的Python层解析开销且数据已100%排序",
+   "verification": "验证器检查输出正确性和速度提升是否达到1.1x",
+   "hypothesis": "数据已完全排序(sortedness=1.0且相邻相同率97%)，使用bytes解析比csv模块快，减少Python层解析开销",
    "params": {
     "parent_candidate_id": "c0"
    },
@@ -320,13 +298,13 @@
    "next_decision": "validate candidate",
    "candidate_id": "c1",
    "evaluation_id": null,
-   "model_call_id": "run-20261113T174641-8a40/m2",
+   "model_call_id": "run-20261113T224936-2ade/m1",
    "tool_call_id": null,
-   "started_at": "2026-11-13T17:46:53.290+00:00",
-   "ended_at": "2026-11-13T17:47:17.526+00:00"
+   "started_at": "2026-11-13T22:49:38.778+00:00",
+   "ended_at": "2026-11-13T22:49:48.465+00:00"
   },
   {
-   "seq": 4,
+   "seq": 3,
    "actor": "program",
    "action": "run_validation",
    "status": "passed",
@@ -336,50 +314,51 @@
    "hypothesis": null,
    "params": {},
    "result": {
-    "baseline_median_s": 0.605090708937496,
+    "baseline_median_s": 0.514118375023827,
     "best_candidate_id": "c1",
     "best_replaced": true,
-    "candidate_median_s": 0.5337990829721093,
+    "candidate_median_s": 0.4636488331016153,
     "correct": true,
-    "evaluation_id": "17a39b42b9dd",
+    "evaluation_id": "efb6ec26ce69",
     "executed": true,
     "format_ok": true,
     "goal_met": true,
     "improved": true,
-    "speedup": 1.1336,
+    "run_target_speedup": 1.1,
+    "speedup": 1.1089,
     "status": "passed",
     "timing_spread": {
      "baseline_min_max_s": [
-      0.6014317080844194,
-      0.6166390420403332
+      0.5062184578273445,
+      0.5189602500759065
      ],
      "candidate_min_max_s": [
-      0.5066107499878854,
-      0.5478643751703203
+      0.45845145802013576,
+      0.48594129201956093
      ]
     }
    },
    "next_decision": "stop: goal_reached",
    "candidate_id": "c1",
-   "evaluation_id": "17a39b42b9dd",
+   "evaluation_id": "efb6ec26ce69",
    "model_call_id": null,
    "tool_call_id": null,
-   "started_at": "2026-11-13T17:47:26.598+00:00",
-   "ended_at": "2026-11-13T17:47:26.598+00:00"
+   "started_at": "2026-11-13T22:49:56.792+00:00",
+   "ended_at": "2026-11-13T22:49:56.792+00:00"
   }
  ],
  "config": {
   "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
   "evaluator_version": "groupagg-eval-2",
-  "experience_extractor": "extractor-v1",
-  "fingerprint": "d394781581e5e158",
+  "experience_extractor": "extractor-v2",
+  "fingerprint": "fb285d751dffd644",
   "fingerprint_excludes": [
    "mode",
    "snapshot_id",
    "label",
    "environment details beyond image id"
   ],
-  "label": "cmp-20261113T173855-4450 #8 r1",
+  "label": "cmp-20261113T221908-737d #28 r3",
   "limits": {
    "max_candidates": 4,
    "max_code_bytes": 20000,
@@ -423,8 +402,8 @@
    }
   },
   "prompt": {
-   "system_sha256": "21877a5b8cfd7ebbeaf09026a0bc8dcb1535acf5bb3834553bb0f9488bb83ac8",
-   "version": "agent-prompt-v1"
+   "system_sha256": "fa872a24ce885cc78252cddec6f3ca661777bad5278c36b3bc7ea1c909d2393a",
+   "version": "agent-prompt-v2"
   },
   "retrieval": {
    "features": [
@@ -443,9 +422,18 @@
    "rank": "matching features desc, then newest first",
    "version": "retrieval-v1"
   },
+  "reuse": {
+   "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+   "learn_target_margin": 0.05,
+   "max_programs": 3,
+   "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+   "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+   "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+   "version": "reuse-v1"
+  },
   "sandbox_image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
   "scripted": [],
-  "task_manifest_sha256": "f0ecfcd417f5717906b2d7b1edad46198bc602c17f9d553c60454a8080e39817",
+  "task_manifest_sha256": "35e8a7d3720f2f0744d0fd79628c1ff1973d636a50f631e20c644fc73f0dca9c",
   "upgrade_rule": {
    "consecutive_misses": 2,
    "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
@@ -468,25 +456,29 @@
   }
  },
  "reproduce": {
-  "run_again": "uv run routeevo run C-04 --mode eval --snapshot v0",
-  "recheck_best": "uv run routeevo check C-04 var/runs/run-20261113T174641-8a40/candidates/c1.py --dataset final",
-  "report": "uv run routeevo report run-20261113T174641-8a40"
+  "run_again": "uv run routeevo run D-02 --mode eval --snapshot v0",
+  "recheck_best": "uv run routeevo check D-02 var/runs/run-20261113T224936-2ade/candidates/c1.py --dataset final",
+  "report": "uv run routeevo report run-20261113T224936-2ade"
  },
- "started_at": "2026-11-13T17:46:41.835+00:00",
- "loop_ended_at": "2026-11-13T17:47:26.599+00:00",
- "ended_at": "2026-11-13T17:47:35.791+00:00",
+ "started_at": "2026-11-13T22:49:36.897+00:00",
+ "loop_ended_at": "2026-11-13T22:49:56.792+00:00",
+ "ended_at": "2026-11-13T22:50:05.067+00:00",
  "research": {
   "definition": {
    "question": "在输出完全正确的前提下，能否让这段分组聚合程序在该工作负载上至少快 1.1×？",
    "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
-   "workload": "2,000,000 行 · 20 个 key · random · 偏斜 0.0",
+   "workload": "1,400,000 行 · 40,000 个 key · sorted · 偏斜 0.3",
    "baseline": {
     "program": "c0：csv + 两个 dict + sorted（初始程序，正确）",
-    "dev_median_s": 0.605090708937496,
-    "final_median_s": 0.6094241661485285
+    "dev_median_s": 0.514118375023827,
+    "final_median_s": 0.5168012911453843
    },
    "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
    "tools": [
+    {
+     "action": "reuse_candidate",
+     "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+    },
     {
      "action": "analyze",
      "label": "分析：写下推理与计划，不执行"
@@ -521,21 +513,23 @@
   "experiments": [
    {
     "candidate_id": "c1",
-    "step": 3,
-    "hypothesis": "csv.reader每行处理开销显著，手动split(',')更轻量；用单个字典存储count和sum元组可避免第二次字典查找；读缓冲区直接处理bytes可能更快。",
-    "purpose": "用手动解析替代csv模块，减少每行解析开销；用单字典存储计数和总和，减少哈希查找。同时用sys.stdin.buffer和sys.stdout.buffer处理，减少I/O和编码开销。",
-    "expected": "期望获得1.1-2.0倍加速，因为csv模块的每行解析开销很大，且分开两个字典需要两次哈希查找。",
-    "verification": "验证器会检查输出正确性和速度提升是否达到1.1倍目标。",
+    "step": 2,
+    "kind": "model",
+    "target": 1.1,
+    "hypothesis": "数据已完全排序(sortedness=1.0且相邻相同率97%)，使用bytes解析比csv模块快，减少Python层解析开销",
+    "purpose": "使用手动逐行解析替代csv模块，利用input数据已排序的特性在遍历时增量维护有序计数，减少排序开销",
+    "expected": "速度提升约15-30%，因为避免csv模块的Python层解析开销且数据已100%排序",
+    "verification": "验证器检查输出正确性和速度提升是否达到1.1x",
     "result": {
      "status": "passed",
-     "speedup": 1.1336,
+     "speedup": 1.1089,
      "improved": true,
      "failure": null,
      "contract_case": null
     },
     "verdict": "supported",
     "then": "stop: goal_reached",
-    "evaluation_id": "17a39b42b9dd"
+    "evaluation_id": "efb6ec26ce69"
    }
   ],
   "verdicts": {

@@ -92,7 +92,7 @@ export function PairedDots({ tasks, perTask, a, b, target }: {
   return (
     <div className="chart" ref={box} onMouseLeave={() => setTip(null)}>
       <div className="legend">
-        <span><i style={{ background: 'var(--series-old)' }} />{a}（旧经验）</span>
+        <span><i style={{ background: 'var(--series-old)' }} />{a}（{a === 'v0' ? '无经验' : '旧经验'}）</span>
         <span><i style={{ background: 'var(--series-new)' }} />{b}（新经验）</span>
         <span><i style={{ background: 'transparent', border: '2px solid var(--ink-3)' }} />空心 = 未达标或无计时结果</span>
       </div>

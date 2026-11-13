@@ -1,0 +1,1234 @@
+{
+ "run_id": "run-20261113T212515-d6bd",
+ "task": {
+  "task_id": "A-05",
+  "split": "A",
+  "target_min_speedup": 1.1,
+  "dev_params": {
+   "disorder": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 600000,
+   "order": "random",
+   "rows": 1000000,
+   "seed": 1501,
+   "skew": 0.0,
+   "value_max": 1000000,
+   "value_min": -1000000
+  },
+  "final_params": {
+   "disorder": 0.0,
+   "key_len_max": 12,
+   "key_len_min": 4,
+   "keys": 600000,
+   "order": "random",
+   "rows": 1000000,
+   "seed": 1502,
+   "skew": 0.0,
+   "value_max": 1000000,
+   "value_min": -1000000
+  }
+ },
+ "mode": "learn",
+ "snapshot_id": "v17",
+ "label": "reuse A learning r2",
+ "scripted_model": [],
+ "status": "completed",
+ "stop_reason": "goal_reached",
+ "stop_detail": "c6 dev speedup 1.7013 >= 1.3085",
+ "config_fingerprint": "ca54d6ee1039295d",
+ "outcome": {
+  "run_completed": true,
+  "candidate_ran": true,
+  "dev_validation_passed": true,
+  "dev_improved": true,
+  "best_from_reuse": false,
+  "best_is_initial": false,
+  "final_evaluated": true,
+  "final_correct": true,
+  "final_speedup": 1.6925,
+  "goal_met": true,
+  "valid_artifact": true,
+  "summary": "达到目标：c6 最终测试正确，加速比 1.6925"
+ },
+ "experience": {
+  "snapshot_read": "v17",
+  "retrieval": {
+   "current_buckets": {
+    "distinct_keys": ">=100k",
+    "order": "unsorted",
+    "rows": ">=1M",
+    "rows_per_key": "<=20",
+    "skew": "low"
+   },
+   "matched_by_outcome": {
+    "failure": 1,
+    "no_gain": 10,
+    "success": 13
+   },
+   "min_matches": 3,
+   "retrieval": "retrieval-v1",
+   "scores": {
+    "e-20261113T210210-1d75-c1": 5,
+    "e-20261113T210210-1d75-c6": 5,
+    "e-20261113T211643-67b3-c1": 4,
+    "e-20261113T211643-67b3-c2": 4,
+    "e-20261113T211643-67b3-c5": 4
+   },
+   "selected": [
+    "e-20261113T210210-1d75-c6",
+    "e-20261113T210210-1d75-c1",
+    "e-20261113T211643-67b3-c1",
+    "e-20261113T211643-67b3-c2",
+    "e-20261113T211643-67b3-c5"
+   ],
+   "snapshot_size": 49
+  },
+  "read": [
+   {
+    "experience_id": "e-20261113T210210-1d75-c6",
+    "rank": 1,
+    "matching_features": 5,
+    "outcome": "success",
+    "task_id": "A-05",
+    "source_run_id": "run-20261113T210210-1d75"
+   },
+   {
+    "experience_id": "e-20261113T210210-1d75-c1",
+    "rank": 2,
+    "matching_features": 5,
+    "outcome": "no_gain",
+    "task_id": "A-05",
+    "source_run_id": "run-20261113T210210-1d75"
+   },
+   {
+    "experience_id": "e-20261113T211643-67b3-c1",
+    "rank": 3,
+    "matching_features": 4,
+    "outcome": "success",
+    "task_id": "A-03",
+    "source_run_id": "run-20261113T211643-67b3"
+   },
+   {
+    "experience_id": "e-20261113T211643-67b3-c2",
+    "rank": 4,
+    "matching_features": 4,
+    "outcome": "success",
+    "task_id": "A-03",
+    "source_run_id": "run-20261113T211643-67b3"
+   },
+   {
+    "experience_id": "e-20261113T211643-67b3-c5",
+    "rank": 5,
+    "matching_features": 4,
+    "outcome": "failure",
+    "task_id": "A-03",
+    "source_run_id": "run-20261113T211643-67b3"
+   }
+  ],
+  "published_snapshot_id": "v18",
+  "published_experiences": [
+   "e-20261113T212515-d6bd-c1",
+   "e-20261113T212515-d6bd-c2",
+   "e-20261113T212515-d6bd-c3",
+   "e-20261113T212515-d6bd-c4",
+   "e-20261113T212515-d6bd-c5",
+   "e-20261113T212515-d6bd-c6"
+  ]
+ },
+ "best_candidate": {
+  "candidate_id": "c6",
+  "origin": "model",
+  "parent_candidate_id": "c1",
+  "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c6.py",
+  "code_sha256": "6b13072491d56072769a618253a17a9cad93334995202b441d991830478c3af9",
+  "model_call_id": "m4",
+  "dev_evaluations": [
+   {
+    "evaluation_id": "72e39458c834",
+    "status": "passed",
+    "correct": 1,
+    "speedup": 1.7013,
+    "improved": 1,
+    "goal_met": 1
+   }
+  ]
+ },
+ "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+ "run_target_speedup": 1.3085,
+ "final_evaluation": {
+  "evaluation_id": "01e4f73eb5f6",
+  "candidate_id": "c6",
+  "status": "passed",
+  "correct": true,
+  "speedup": 1.6925,
+  "candidate_median_s": 0.7258270001038909,
+  "baseline_median_s": 1.2284610830247402,
+  "timing": {
+   "baseline": {
+    "iqr": 0.01518293737899512,
+    "max": 1.240080582909286,
+    "median": 1.2284610830247402,
+    "min": 1.2209947910159826
+   },
+   "baseline_min_max_s": [
+    1.2209947910159826,
+    1.240080582909286
+   ],
+   "baseline_s": [
+    1.2359728328883648,
+    1.2284610830247402,
+    1.240080582909286,
+    1.224692750023678,
+    1.2209947910159826
+   ],
+   "candidate": {
+    "iqr": 0.011780520668253303,
+    "max": 0.7310234161559492,
+    "median": 0.7258270001038909,
+    "min": 0.7144842918496579
+   },
+   "candidate_min_max_s": [
+    0.7144842918496579,
+    0.7310234161559492
+   ],
+   "candidate_s": [
+    0.7144842918496579,
+    0.7277917498722672,
+    0.7258270001038909,
+    0.7310234161559492,
+    0.720769832842052
+   ],
+   "improved_rule": "all candidate samples faster than all baseline samples",
+   "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+  },
+  "failure": null,
+  "duration_s": 13.987,
+  "note": null
+ },
+ "candidates": [
+  {
+   "candidate_id": "c0",
+   "origin": "initial",
+   "parent_candidate_id": null,
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c0.py",
+   "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "f0aec545d42d",
+     "status": "passed",
+     "correct": 1,
+     "speedup": null,
+     "improved": null,
+     "goal_met": null
+    }
+   ]
+  },
+  {
+   "candidate_id": "c1",
+   "origin": "experience",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c1.py",
+   "code_sha256": "ab60b731c8cc702cc5dc6e7048905fad53ec7f72390fe2217c3a163724206954",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "b585145e7d08",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 1.2462,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  },
+  {
+   "candidate_id": "c2",
+   "origin": "experience",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c2.py",
+   "code_sha256": "c4d1853e2e24bd916c85b1e93094505943f302e2ad2d373ff2f22e0076184ceb",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "56dcd0c6b3a5",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 0.7365,
+     "improved": 0,
+     "goal_met": 0
+    }
+   ]
+  },
+  {
+   "candidate_id": "c3",
+   "origin": "experience",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c3.py",
+   "code_sha256": "293432e664b5287c5247bc15cc07319f77aa2d152402965827f3bcdda7bd492d",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "bd811eef71fa",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 0.7345,
+     "improved": 0,
+     "goal_met": 0
+    }
+   ]
+  },
+  {
+   "candidate_id": "c4",
+   "origin": "model",
+   "parent_candidate_id": "c1",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c4.py",
+   "code_sha256": "1f93fc80e383f19fd6bbaeba52590f99f92bb3305fb9a902133002e06749a362",
+   "model_call_id": "m1",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "f6747b29ba2e",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 1.1987,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  },
+  {
+   "candidate_id": "c5",
+   "origin": "model",
+   "parent_candidate_id": "c4",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c5.py",
+   "code_sha256": "a865f9cd4cd6eca2d9b0e0a36b24651419d179c63eba543936e945c9b7def44b",
+   "model_call_id": "m2",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "5aa5d648459d",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 1.1816,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  },
+  {
+   "candidate_id": "c6",
+   "origin": "model",
+   "parent_candidate_id": "c1",
+   "code_path": "var/runs/run-20261113T212515-d6bd/candidates/c6.py",
+   "code_sha256": "6b13072491d56072769a618253a17a9cad93334995202b441d991830478c3af9",
+   "model_call_id": "m4",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "72e39458c834",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 1.7013,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  }
+ ],
+ "iterations": {
+  "model_requests": 4,
+  "candidates_proposed": 3,
+  "candidates_passed": 3,
+  "candidates_improved": 3,
+  "candidates_no_gain": 0,
+  "candidates_failed": 0,
+  "programs_reused": 3,
+  "programs_reused_improved": 1,
+  "invalid_actions": 0,
+  "unusable_replies": 0,
+  "api_errors": 0,
+  "evidence_calls": 1,
+  "upgrades": 1,
+  "upgrade_at_step": 13
+ },
+ "usage": {
+  "total": {
+   "requests": 4,
+   "ok": 4,
+   "errors": {},
+   "latency_s": 170.952,
+   "input_tokens": 43513,
+   "input_tokens_unknown_calls": 0,
+   "cached_input_tokens": 1614,
+   "cached_input_tokens_unknown_calls": 0,
+   "output_tokens": 3522,
+   "output_tokens_unknown_calls": 0,
+   "reasoning_tokens": 1479,
+   "reasoning_tokens_unknown_calls": 2,
+   "cost_usd": 0.075784,
+   "cost_status": "estimated",
+   "cost_unknown_calls": 0,
+   "price_versions": [
+    "openai/gpt-6.1-sol/standard/2026-11-13"
+   ]
+  },
+  "by_model": {
+   "small:chat_compat:qwen3.8:27b-mlx": {
+    "requests": 2,
+    "ok": 2,
+    "errors": {},
+    "latency_s": 118.738,
+    "input_tokens": 21638,
+    "input_tokens_unknown_calls": 0,
+    "cached_input_tokens": 1614,
+    "cached_input_tokens_unknown_calls": 0,
+    "output_tokens": 1412,
+    "output_tokens_unknown_calls": 0,
+    "reasoning_tokens": null,
+    "reasoning_tokens_unknown_calls": 2,
+    "cost_usd": 0.0,
+    "cost_status": "local_no_api_fee",
+    "cost_unknown_calls": 0,
+    "price_versions": []
+   },
+   "large:openai_responses:gpt-6.1-sol": {
+    "requests": 2,
+    "ok": 2,
+    "errors": {},
+    "latency_s": 52.214,
+    "input_tokens": 21875,
+    "input_tokens_unknown_calls": 0,
+    "cached_input_tokens": 0,
+    "cached_input_tokens_unknown_calls": 0,
+    "output_tokens": 2110,
+    "output_tokens_unknown_calls": 0,
+    "reasoning_tokens": 1479,
+    "reasoning_tokens_unknown_calls": 0,
+    "cost_usd": 0.075784,
+    "cost_status": "estimated",
+    "cost_unknown_calls": 0,
+    "price_versions": [
+     "openai/gpt-6.1-sol/standard/2026-11-13"
+    ]
+   }
+  },
+  "self_hosted_machine_cost": "unknown (not accounted)"
+ },
+ "timing": {
+  "wall_clock_total_s": 289.561,
+  "agent_loop_s": 275.569,
+  "agent_loop_elapsed_s": 275.569,
+  "agent_loop_limit_s": 300.0,
+  "agent_loop_overrun_s": 0.0,
+  "final_evaluation_s": 13.987,
+  "model_wait_s": 170.952,
+  "dev_evaluation_s": 103.215,
+  "evidence_tool_s": 1.356,
+  "container_startup_s": 13.901
+ },
+ "steps": [
+  {
+   "seq": 1,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": null,
+    "candidate_median_s": null,
+    "correct": true,
+    "evaluation_id": "f0aec545d42d",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": null,
+    "improved": null,
+    "speedup": null,
+    "status": "passed"
+   },
+   "next_decision": "continue",
+   "candidate_id": "c0",
+   "evaluation_id": "f0aec545d42d",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:15.412+00:00",
+   "ended_at": "2026-11-13T21:25:17.906+00:00"
+  },
+  {
+   "seq": 2,
+   "actor": "program",
+   "action": "reuse_candidate",
+   "status": "submitted",
+   "purpose": "复用经验 e-20261113T210210-1d75-c6 中已验证的程序，不调用模型（第 1/3 个）",
+   "expected_result": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+   "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+   "hypothesis": "该程序在 A-05 上实测 1.2564×（2 条成功记录）；本任务 5/5 项负载条件相同，不同项：无。预计在本任务上仍正确且有改善",
+   "params": {
+    "experience_id": "e-20261113T210210-1d75-c6",
+    "matching_features": 5,
+    "recorded_speedup": 1.2564,
+    "source_task_id": "A-05"
+   },
+   "result": {},
+   "next_decision": "validate re-used program",
+   "candidate_id": "c1",
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:17.913+00:00",
+   "ended_at": "2026-11-13T21:25:17.913+00:00"
+  },
+  {
+   "seq": 3,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.2238385831005871,
+    "best_candidate_id": "c1",
+    "best_replaced": true,
+    "candidate_median_s": 0.982064416166395,
+    "correct": true,
+    "evaluation_id": "b585145e7d08",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "run_target_speedup": 1.1,
+    "speedup": 1.2462,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.2187438749242574,
+      1.2407256660517305
+     ],
+     "candidate_min_max_s": [
+      0.9785169588867575,
+      0.9952304579783231
+     ]
+    }
+   },
+   "next_decision": "validate next re-used program",
+   "candidate_id": "c1",
+   "evaluation_id": "b585145e7d08",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:33.445+00:00",
+   "ended_at": "2026-11-13T21:25:33.445+00:00"
+  },
+  {
+   "seq": 4,
+   "actor": "program",
+   "action": "reuse_candidate",
+   "status": "submitted",
+   "purpose": "复用经验 e-20261113T211643-67b3-c7 中已验证的程序，不调用模型（第 2/3 个）",
+   "expected_result": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+   "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+   "hypothesis": "该程序在 A-03 上实测 1.2363×（1 条成功记录）；本任务 4/5 项负载条件相同，不同项：order（经验 clustered，本任务 unsorted）。预计在本任务上仍正确且有改善",
+   "params": {
+    "experience_id": "e-20261113T211643-67b3-c7",
+    "matching_features": 4,
+    "recorded_speedup": 1.2363,
+    "source_task_id": "A-03"
+   },
+   "result": {},
+   "next_decision": "validate re-used program",
+   "candidate_id": "c2",
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:33.446+00:00",
+   "ended_at": "2026-11-13T21:25:33.446+00:00"
+  },
+  {
+   "seq": 5,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.2283594580367208,
+    "best_candidate_id": "c1",
+    "best_replaced": false,
+    "candidate_median_s": 1.6677508330903947,
+    "correct": true,
+    "evaluation_id": "56dcd0c6b3a5",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": false,
+    "improved": false,
+    "run_target_speedup": 1.1,
+    "speedup": 0.7365,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.2257005830761045,
+      1.2364132499787956
+     ],
+     "candidate_min_max_s": [
+      1.6489814170636237,
+      1.6944703748449683
+     ]
+    }
+   },
+   "next_decision": "validate next re-used program",
+   "candidate_id": "c2",
+   "evaluation_id": "56dcd0c6b3a5",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:53.184+00:00",
+   "ended_at": "2026-11-13T21:25:53.184+00:00"
+  },
+  {
+   "seq": 6,
+   "actor": "program",
+   "action": "reuse_candidate",
+   "status": "submitted",
+   "purpose": "复用经验 e-20261113T211643-67b3-c6 中已验证的程序，不调用模型（第 3/3 个）",
+   "expected_result": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+   "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+   "hypothesis": "该程序在 A-03 上实测 1.2154×（1 条成功记录）；本任务 4/5 项负载条件相同，不同项：order（经验 clustered，本任务 unsorted）。预计在本任务上仍正确且有改善",
+   "params": {
+    "experience_id": "e-20261113T211643-67b3-c6",
+    "matching_features": 4,
+    "recorded_speedup": 1.2154,
+    "source_task_id": "A-03"
+   },
+   "result": {},
+   "next_decision": "validate re-used program",
+   "candidate_id": "c3",
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:25:53.185+00:00",
+   "ended_at": "2026-11-13T21:25:53.185+00:00"
+  },
+  {
+   "seq": 7,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.2244927079882473,
+    "best_candidate_id": "c1",
+    "best_replaced": false,
+    "candidate_median_s": 1.6672106659971178,
+    "correct": true,
+    "evaluation_id": "bd811eef71fa",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": false,
+    "improved": false,
+    "run_target_speedup": 1.1,
+    "speedup": 0.7345,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.218013416044414,
+      1.2310906250495464
+     ],
+     "candidate_min_max_s": [
+      1.6664265419822186,
+      1.6759337082039565
+     ]
+    }
+   },
+   "next_decision": "re-use finished",
+   "candidate_id": "c3",
+   "evaluation_id": "bd811eef71fa",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:26:12.870+00:00",
+   "ended_at": "2026-11-13T21:26:12.870+00:00"
+  },
+  {
+   "seq": 8,
+   "actor": "program",
+   "action": "set_target",
+   "status": "done",
+   "purpose": "学习运行：复用的 c1 已达标（1.2462×），本次目标提高到超过它 5%，即 ≥ 1.3085×",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "best_candidate_id": "c1",
+    "best_dev_speedup": 1.2462,
+    "run_target_speedup": 1.3085,
+    "task_target_speedup": 1.1
+   },
+   "next_decision": "continue with the model to beat the best known program",
+   "candidate_id": "c1",
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:26:12.870+00:00",
+   "ended_at": "2026-11-13T21:26:12.870+00:00"
+  },
+  {
+   "seq": 9,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "在c1的排序+扫描方案基础上，改用二进制I/O避免文本解码开销，减少字符串操作，目标速度提升超过1.3085×",
+   "expected_result": "二进制I/O减少文本解码开销，字节串操作减少字符串创建，预期速度提升在1.3×以上",
+   "verification": "正确性由评估器检查；速度由与基线对比确认",
+   "hypothesis": "二进制I/O和字节串操作相对于文本I/O和字符串操作节省约5-10%时间，足够超过1.3085×目标",
+   "params": {
+    "analysis": "c1使用文本I/O（sys.stdin.read().splitlines()），文本解码对1.6MB数据引入额外开销。改用sys.stdin.buffer.read()可避免编码/解码。c1中用splitlines()产生字符串列表，改用split(b'\\n')产生字节列表，避免字符串创建。c1中f-string格式化每次需要创建字符串，改用bytes拼接。内层循环用while替代for+if判断，减少分支。排序字节串和排序字符串在C层实现相同，但字节串比较避免编码开销。需要确保正确性：空输入、单行、重复键、前缀键、排序等场景都能正确处理。",
+    "parent_candidate_id": "c1"
+   },
+   "result": {
+    "parent_candidate_id": "c1"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c4",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T212515-d6bd/m1",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:26:12.871+00:00",
+   "ended_at": "2026-11-13T21:27:14.197+00:00"
+  },
+  {
+   "seq": 10,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.2408255408518016,
+    "best_candidate_id": "c1",
+    "best_replaced": false,
+    "candidate_median_s": 1.0351634589023888,
+    "correct": true,
+    "evaluation_id": "f6747b29ba2e",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "run_target_speedup": 1.3085,
+    "speedup": 1.1987,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.2149063749238849,
+      1.2524777499493212
+     ],
+     "candidate_min_max_s": [
+      1.0324780829250813,
+      1.0432077920995653
+     ]
+    }
+   },
+   "next_decision": "continue",
+   "candidate_id": "c4",
+   "evaluation_id": "f6747b29ba2e",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:27:30.023+00:00",
+   "ended_at": "2026-11-13T21:27:30.023+00:00"
+  },
+  {
+   "seq": 11,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "在c4基础上优化：(1)避免在while循环中反复调用lines[i]索引，改用局部变量减少属性查找；(2)使用pop()而非del减少开销；(3)进一步精简输出构建。目标是超过1.3085×速度比",
+   "expected_result": "速度比>1.3085，输出正确",
+   "verification": "检查输出格式与示例对比，确认空输入、单行、重复键、32字符键等边界情况正确",
+   "hypothesis": "c4中while循环内每次lines[i]索引访问和find调用可能成为瓶颈，通过减少不必要的变量重复访问和简化循环体可以进一步加速",
+   "params": {
+    "parent_candidate_id": "c4"
+   },
+   "result": {
+    "parent_candidate_id": "c4"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c5",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T212515-d6bd/m2",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:27:30.024+00:00",
+   "ended_at": "2026-11-13T21:28:27.446+00:00"
+  },
+  {
+   "seq": 12,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.2321596657857299,
+    "best_candidate_id": "c1",
+    "best_replaced": false,
+    "candidate_median_s": 1.0428257500752807,
+    "correct": true,
+    "evaluation_id": "5aa5d648459d",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "run_target_speedup": 1.3085,
+    "speedup": 1.1816,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.230298207839951,
+      1.311955250101164
+     ],
+     "candidate_min_max_s": [
+      1.0300040000583977,
+      1.0643770000897348
+     ]
+    }
+   },
+   "next_decision": "upgrade to large model, continue",
+   "candidate_id": "c5",
+   "evaluation_id": "5aa5d648459d",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:28:43.385+00:00",
+   "ended_at": "2026-11-13T21:28:43.385+00:00"
+  },
+  {
+   "seq": 13,
+   "actor": "program",
+   "action": "upgrade_model",
+   "status": "done",
+   "purpose": "连续 2 次候选未达到正确且达标，按升级规则切换到大模型",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "misses": 2,
+    "rule": "upgrade-rule-v2",
+    "small_requests": 2,
+    "to": "gpt-6.1-sol"
+   },
+   "next_decision": "continue with large model",
+   "candidate_id": null,
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:28:43.386+00:00",
+   "ended_at": "2026-11-13T21:28:43.386+00:00"
+  },
+  {
+   "seq": 14,
+   "actor": "model",
+   "action": "get_evidence",
+   "status": "done",
+   "purpose": "定位当前最快候选 c1 的排序、逐行解析和输出成本，避免继续尝试已实测较慢的二进制双重扫描。",
+   "expected_result": "获得 c1 的热点时间分布，为剩余两个候选选择能超过当前最佳至少 5% 的优化。",
+   "verification": "检查剖析输出的正确性标志，以及 sort、split、主循环和输出的累计耗时。",
+   "hypothesis": "高基数、低重复度的随机输入可能使全量字符串排序成为主要瓶颈；按键首字符分桶再排序可能改善局部性并减少比较。",
+   "params": {
+    "candidate_id": "c1",
+    "tool": "profile_candidate"
+   },
+   "result": {
+    "output_correct": true,
+    "status": "ok",
+    "tool": "profile_candidate"
+   },
+   "next_decision": "continue",
+   "candidate_id": "c1",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T212515-d6bd/m3",
+   "tool_call_id": "run-20261113T212515-d6bd/t1",
+   "started_at": "2026-11-13T21:28:43.386+00:00",
+   "ended_at": "2026-11-13T21:29:03.986+00:00"
+  },
+  {
+   "seq": 15,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "基于最快的 c1 测试分块输出；性能剖析中单次 write 占约三成时间，先验证能否通过聚合过程中输出减少集中写入的等待。",
+   "expected_result": "保持文本排序和单次扫描，争取将速度比提高到 1.3085 以上。",
+   "verification": "运行全部公开契约用例和开发数据正确性检查，再比较候选与基线的各次计时。",
+   "hypothesis": "单次大块输出可能产生较长的管道背压；在聚合过程中每约四千个键输出一次，可能让下游读取与后续聚合交叠，并降低输出列表的内存压力。",
+   "params": {
+    "parent_candidate_id": "c1"
+   },
+   "result": {
+    "parent_candidate_id": "c1"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c6",
+   "evaluation_id": null,
+   "model_call_id": "run-20261113T212515-d6bd/m4",
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:29:03.987+00:00",
+   "ended_at": "2026-11-13T21:29:36.968+00:00"
+  },
+  {
+   "seq": 16,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 1.225557666970417,
+    "best_candidate_id": "c6",
+    "best_replaced": true,
+    "candidate_median_s": 0.7203789588529617,
+    "correct": true,
+    "evaluation_id": "72e39458c834",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "run_target_speedup": 1.3085,
+    "speedup": 1.7013,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      1.2098211660049856,
+      1.2438264170195907
+     ],
+     "candidate_min_max_s": [
+      0.7155835409648716,
+      0.7287968329619616
+     ]
+    }
+   },
+   "next_decision": "stop: goal_reached",
+   "candidate_id": "c6",
+   "evaluation_id": "72e39458c834",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-13T21:29:50.975+00:00",
+   "ended_at": "2026-11-13T21:29:50.975+00:00"
+  }
+ ],
+ "config": {
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "evaluator_version": "groupagg-eval-2",
+  "experience_extractor": "extractor-v2",
+  "fingerprint": "ca54d6ee1039295d",
+  "fingerprint_excludes": [
+   "mode",
+   "snapshot_id",
+   "label",
+   "environment details beyond image id"
+  ],
+  "label": "reuse A learning r2",
+  "limits": {
+   "max_candidates": 4,
+   "max_code_bytes": 20000,
+   "max_model_requests": 6,
+   "measurement_timeout_s": 10.0,
+   "min_request_window_s": 15.0,
+   "model_request_timeout_s": 120.0,
+   "token_budget": null,
+   "wall_clock_s": 300.0
+  },
+  "measure": {
+   "cpus": 1.0,
+   "max_output_bytes": 67108864,
+   "memory": "1g",
+   "pids_limit": 64,
+   "ready_timeout_s": 30.0,
+   "repeats": 5
+  },
+  "models": {
+   "large": {
+    "base_url": "https://api.openai.com/v1",
+    "extra": {},
+    "max_output_tokens": 32000,
+    "model": "gpt-6.1-sol",
+    "provider": "openai_responses",
+    "reasoning_effort": "xhigh",
+    "response_format": "json_schema",
+    "role": "large",
+    "temperature": null
+   },
+   "small": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "extra": {},
+    "max_output_tokens": 8192,
+    "model": "qwen3.8:27b-mlx",
+    "provider": "chat_compat",
+    "reasoning_effort": "none",
+    "response_format": "none",
+    "role": "small",
+    "temperature": null
+   }
+  },
+  "prompt": {
+   "system_sha256": "fa872a24ce885cc78252cddec6f3ca661777bad5278c36b3bc7ea1c909d2393a",
+   "version": "agent-prompt-v2"
+  },
+  "retrieval": {
+   "features": [
+    "rows",
+    "distinct_keys",
+    "rows_per_key",
+    "order",
+    "skew"
+   ],
+   "max_per_outcome": {
+    "failure": 2,
+    "no_gain": 1,
+    "success": 3
+   },
+   "min_matches": 3,
+   "rank": "matching features desc, then newest first",
+   "version": "retrieval-v1"
+  },
+  "reuse": {
+   "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+   "learn_target_margin": 0.05,
+   "max_programs": 3,
+   "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+   "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+   "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+   "version": "reuse-v1"
+  },
+  "sandbox_image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "scripted": [],
+  "task_manifest_sha256": "b1bf64e8067802306da963cee4f61ab89372fff5025c4ddec8782012d9d39d26",
+  "upgrade_rule": {
+   "consecutive_misses": 2,
+   "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+   "id": "upgrade-rule-v2",
+   "max_small_requests_without_goal": 3
+  }
+ },
+ "environment": {
+  "container_python": "3.12-slim (pinned digest in Dockerfile)",
+  "docker_server": "29.8.2 linux/arm64",
+  "image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "image_tag": "routeevo-sandbox:d055c99c833a",
+  "limits": {
+   "cpus": 1.0,
+   "memory": "1g",
+   "network": "none",
+   "pids_limit": 64,
+   "read_only_rootfs": true,
+   "user": "65534:65534"
+  }
+ },
+ "reproduce": {
+  "run_again": "uv run routeevo run A-05 --mode learn --snapshot v17",
+  "recheck_best": "uv run routeevo check A-05 var/runs/run-20261113T212515-d6bd/candidates/c6.py --dataset final",
+  "report": "uv run routeevo report run-20261113T212515-d6bd"
+ },
+ "started_at": "2026-11-13T21:25:15.408+00:00",
+ "loop_ended_at": "2026-11-13T21:29:50.977+00:00",
+ "ended_at": "2026-11-13T21:30:04.969+00:00",
+ "research": {
+  "definition": {
+   "question": "在输出完全正确的前提下，能否让这段分组聚合程序在该工作负载上至少快 1.1×？",
+   "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+   "workload": "1,000,000 行 · 600,000 个 key · random · 偏斜 0.0",
+   "baseline": {
+    "program": "c0：csv + 两个 dict + sorted（初始程序，正确）",
+    "dev_median_s": 1.2238385831005871,
+    "final_median_s": 1.2284610830247402
+   },
+   "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+   "tools": [
+    {
+     "action": "reuse_candidate",
+     "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+    },
+    {
+     "action": "analyze",
+     "label": "分析：写下推理与计划，不执行"
+    },
+    {
+     "action": "get_evidence",
+     "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+    },
+    {
+     "action": "propose_candidate",
+     "label": "提出候选：提交完整程序，程序立即验证"
+    },
+    {
+     "action": "run_validation",
+     "label": "运行验证：重新评测已有候选"
+    },
+    {
+     "action": "finish",
+     "label": "结束：交付当前最佳已验证候选"
+    }
+   ],
+   "verification": "开发数据正确性 + 7 个公开契约用例 + 基线与候选各预热一次、交替计时 5 轮；全部候选样本快于全部基线样本才算改善，加速比 = 两者中位数之比",
+   "budget": {
+    "model_requests": 6,
+    "candidates": 4,
+    "loop_s": 300.0,
+    "request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0
+   },
+   "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+  },
+  "experiments": [
+   {
+    "candidate_id": "c1",
+    "step": 2,
+    "kind": "reuse",
+    "target": 1.1,
+    "hypothesis": "该程序在 A-05 上实测 1.2564×（2 条成功记录）；本任务 5/5 项负载条件相同，不同项：无。预计在本任务上仍正确且有改善",
+    "purpose": "复用经验 e-20261113T210210-1d75-c6 中已验证的程序，不调用模型（第 1/3 个）",
+    "expected": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+    "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+    "result": {
+     "status": "passed",
+     "speedup": 1.2462,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "supported",
+    "then": "validate next re-used program",
+    "evaluation_id": "b585145e7d08"
+   },
+   {
+    "candidate_id": "c2",
+    "step": 4,
+    "kind": "reuse",
+    "target": 1.1,
+    "hypothesis": "该程序在 A-03 上实测 1.2363×（1 条成功记录）；本任务 4/5 项负载条件相同，不同项：order（经验 clustered，本任务 unsorted）。预计在本任务上仍正确且有改善",
+    "purpose": "复用经验 e-20261113T211643-67b3-c7 中已验证的程序，不调用模型（第 2/3 个）",
+    "expected": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+    "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+    "result": {
+     "status": "passed",
+     "speedup": 0.7365,
+     "improved": false,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "refuted",
+    "then": "validate next re-used program",
+    "evaluation_id": "56dcd0c6b3a5"
+   },
+   {
+    "candidate_id": "c3",
+    "step": 6,
+    "kind": "reuse",
+    "target": 1.1,
+    "hypothesis": "该程序在 A-03 上实测 1.2154×（1 条成功记录）；本任务 4/5 项负载条件相同，不同项：order（经验 clustered，本任务 unsorted）。预计在本任务上仍正确且有改善",
+    "purpose": "复用经验 e-20261113T211643-67b3-c6 中已验证的程序，不调用模型（第 3/3 个）",
+    "expected": "正确，且全部样本快于基线、加速比 ≥ 1.1",
+    "verification": "与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+    "result": {
+     "status": "passed",
+     "speedup": 0.7345,
+     "improved": false,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "refuted",
+    "then": "re-use finished",
+    "evaluation_id": "bd811eef71fa"
+   },
+   {
+    "candidate_id": "c4",
+    "step": 9,
+    "kind": "model",
+    "target": 1.3085,
+    "hypothesis": "二进制I/O和字节串操作相对于文本I/O和字符串操作节省约5-10%时间，足够超过1.3085×目标",
+    "purpose": "在c1的排序+扫描方案基础上，改用二进制I/O避免文本解码开销，减少字符串操作，目标速度提升超过1.3085×",
+    "expected": "二进制I/O减少文本解码开销，字节串操作减少字符串创建，预期速度提升在1.3×以上",
+    "verification": "正确性由评估器检查；速度由与基线对比确认",
+    "result": {
+     "status": "passed",
+     "speedup": 1.1987,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "partial",
+    "then": "continue",
+    "evaluation_id": "f6747b29ba2e"
+   },
+   {
+    "candidate_id": "c5",
+    "step": 11,
+    "kind": "model",
+    "target": 1.3085,
+    "hypothesis": "c4中while循环内每次lines[i]索引访问和find调用可能成为瓶颈，通过减少不必要的变量重复访问和简化循环体可以进一步加速",
+    "purpose": "在c4基础上优化：(1)避免在while循环中反复调用lines[i]索引，改用局部变量减少属性查找；(2)使用pop()而非del减少开销；(3)进一步精简输出构建。目标是超过1.3085×速度比",
+    "expected": "速度比>1.3085，输出正确",
+    "verification": "检查输出格式与示例对比，确认空输入、单行、重复键、32字符键等边界情况正确",
+    "result": {
+     "status": "passed",
+     "speedup": 1.1816,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "partial",
+    "then": "upgrade to large model, continue",
+    "evaluation_id": "5aa5d648459d"
+   },
+   {
+    "candidate_id": "c6",
+    "step": 15,
+    "kind": "model",
+    "target": 1.3085,
+    "hypothesis": "单次大块输出可能产生较长的管道背压；在聚合过程中每约四千个键输出一次，可能让下游读取与后续聚合交叠，并降低输出列表的内存压力。",
+    "purpose": "基于最快的 c1 测试分块输出；性能剖析中单次 write 占约三成时间，先验证能否通过聚合过程中输出减少集中写入的等待。",
+    "expected": "保持文本排序和单次扫描，争取将速度比提高到 1.3085 以上。",
+    "verification": "运行全部公开契约用例和开发数据正确性检查，再比较候选与基线的各次计时。",
+    "result": {
+     "status": "passed",
+     "speedup": 1.7013,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "supported",
+    "then": "stop: goal_reached",
+    "evaluation_id": "72e39458c834"
+   }
+  ],
+  "verdicts": {
+   "supported": 2,
+   "partial": 2,
+   "refuted": 2,
+   "untestable": 0,
+   "untested": 0
+  },
+  "verdict_labels": {
+   "supported": "得到支持",
+   "partial": "部分支持（改善，但未达目标）",
+   "refuted": "被反驳（正确但没有改善）",
+   "untestable": "未能检验（候选出错）",
+   "untested": "未评测（预算或运行结束）"
+  }
+ }
+}

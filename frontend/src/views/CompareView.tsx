@@ -16,7 +16,7 @@ export function CompareView({ selected, onSelect, onOpenRun }: { selected: strin
   const cmp = usePoll(() => (current ? api.comparison(current) : Promise.resolve(null)), [current], 4000, live)
 
   const latest = snaps.data?.active_snapshot_id ?? 'v0'
-  const [split, setSplit] = useState<'B' | 'C'>('B')
+  const [split, setSplit] = useState<'B' | 'C' | 'D'>('B')
   const [repeats, setRepeats] = useState(3)
   const [err, setErr] = useState<string | null>(null)
   const start = async () => {
@@ -38,7 +38,8 @@ export function CompareView({ selected, onSelect, onOpenRun }: { selected: strin
           <div className="field"><span>留出批次</span>
             <div className="seg">
               <button className={split === 'B' ? 'on' : ''} onClick={() => setSplit('B')}>B · 开发对照</button>
-              <button className={split === 'C' ? 'on' : ''} onClick={() => setSplit('C')}>C · 最终留出</button>
+              <button className={split === 'C' ? 'on' : ''} onClick={() => setSplit('C')}>C · 第一版留出</button>
+              <button className={split === 'D' ? 'on' : ''} onClick={() => setSplit('D')}>D · 封存留出</button>
             </div>
           </div>
           <label className="field"><span>重复次数（每任务每版本）</span>
@@ -108,7 +109,7 @@ function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: str
 
       <div className="card">
         <div className="spread">
-          <h2>行为对照：同一任务、同一轮，旧经验与新经验分别做了什么</h2>
+          <h2>行为对照：同一任务、同一轮，两个经验版本分别做了什么</h2>
           <div className="row">
             <select value={pair.task} onChange={(e) => setPair({ ...pair, task: e.target.value })} style={{ width: 110 }}>
               {c.tasks.map((t) => <option key={t}>{t}</option>)}
@@ -166,7 +167,7 @@ function SideTable({ a, b, A, B }: { a: string; b: string; A: SideSummary; B: Si
   const stops = (s: SideSummary) => Object.entries(s.stop_reasons).map(([k, v]) => `${STOP[k] ?? k} ${v}`).join('，')
   return (
     <table className="tbl">
-      <thead><tr><th>指标</th><th><span style={{ color: 'var(--series-old)' }}>●</span> {a}（旧经验）</th><th><span style={{ color: 'var(--series-new)' }}>●</span> {b}（新经验）</th></tr></thead>
+      <thead><tr><th>指标</th><th><span style={{ color: 'var(--series-old)' }}>●</span> {a}（{a === 'v0' ? '无经验' : '旧经验'}）</th><th><span style={{ color: 'var(--series-new)' }}>●</span> {b}（新经验）</th></tr></thead>
       <tbody>
         {rows.map(([k, x, y]) => <tr key={k}><td>{k}</td><td>{x}</td><td><b>{y}</b></td></tr>)}
         <tr><td>终止原因</td><td className="small">{stops(A)}</td><td className="small">{stops(B)}</td></tr>

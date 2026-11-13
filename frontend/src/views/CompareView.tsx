@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { api } from '../api'
 import type { Comparison, SideSummary } from '../api'
+import { BehaviorPair } from '../components/BehaviorPair'
 import { PairedDots } from '../components/charts'
 import { Chip, Empty, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
@@ -69,6 +70,7 @@ export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) 
 
 function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: string) => void }) {
   const [table, setTable] = useState(false)
+  const [pair, setPair] = useState<{ task: string; repeat: number }>({ task: c.tasks[0], repeat: 0 })
   const note = usePoll(() => api.note(c.comparison_id), [c.comparison_id, c.finished_runs], 0, false)
   const A = c.sides[c.snapshot_a], B = c.sides[c.snapshot_b]
   const target = 1.1
@@ -102,6 +104,25 @@ function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: str
           <div className="seg"><button className={!table ? 'on' : ''} onClick={() => setTable(false)}>图</button><button className={table ? 'on' : ''} onClick={() => setTable(true)}>表</button></div>
         </div>
         {table ? <RunTable c={c} onOpenRun={onOpenRun} /> : <PairedDots tasks={c.tasks} perTask={c.per_task} a={c.snapshot_a} b={c.snapshot_b} target={target} />}
+      </div>
+
+      <div className="card">
+        <div className="spread">
+          <h2>行为对照：同一任务、同一轮，旧经验与新经验分别做了什么</h2>
+          <div className="row">
+            <select value={pair.task} onChange={(e) => setPair({ ...pair, task: e.target.value })} style={{ width: 110 }}>
+              {c.tasks.map((t) => <option key={t}>{t}</option>)}
+            </select>
+            <div className="seg">
+              {Array.from({ length: c.repeats }, (_, i) => (
+                <button key={i} className={pair.repeat === i ? 'on' : ''} onClick={() => setPair({ ...pair, repeat: i })}>第 {i + 1} 轮</button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <BehaviorPair task={pair.task} a={c.snapshot_a} b={c.snapshot_b}
+          runA={c.per_task[pair.task]?.[c.snapshot_a]?.runs[pair.repeat]?.run_id}
+          runB={c.per_task[pair.task]?.[c.snapshot_b]?.runs[pair.repeat]?.run_id} onOpenRun={onOpenRun} />
       </div>
 
       <div className="grid cols-2">

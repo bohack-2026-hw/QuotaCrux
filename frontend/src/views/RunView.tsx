@@ -222,7 +222,10 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         <div className="ledger">{rep.steps.map((s) => <StepRow key={s.seq} s={s} rep={rep} />)}</div>
         {live && <p className="muted small">等待下一步……</p>}
         {!live && (
-          <p className="small muted">复现：<code>{rep.reproduce.run_again}</code></p>
+          <p className="small muted">
+            复现：<code>{rep.reproduce.run_again}</code>
+            <a className="link" style={{ marginLeft: 12 }} href={api.markdownUrl(rep.run_id)} target="_blank" rel="noreferrer">导出研究记录（Markdown）</a>
+          </p>
         )}
       </div>
     </>

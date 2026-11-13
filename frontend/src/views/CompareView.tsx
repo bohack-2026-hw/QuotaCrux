@@ -69,6 +69,7 @@ export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) 
 
 function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: string) => void }) {
   const [table, setTable] = useState(false)
+  const note = usePoll(() => api.note(c.comparison_id), [c.comparison_id, c.finished_runs], 0, false)
   const A = c.sides[c.snapshot_a], B = c.sides[c.snapshot_b]
   const target = 1.1
   return (
@@ -85,6 +86,15 @@ function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: str
         <div className="headline">{c.snapshot_a} → {c.snapshot_b}：{c.tasks.length} 个留出任务 × {c.repeats} 次，已完成 {c.finished_runs}/{c.planned_runs}</div>
         {A && B && <SideTable a={c.snapshot_a} b={c.snapshot_b} A={A} B={B} />}
       </div>
+
+      {note.data && c.finished_runs > 0 && (
+        <div className="card" style={{ borderTop: '3px solid var(--accent)' }}>
+          <div className="eyebrow">三行进化说明 · 由对照数据自动填写</div>
+          <ol style={{ margin: 0, paddingLeft: 22, fontSize: 16, lineHeight: 1.7 }}>
+            {note.data.lines.map((l) => <li key={l} style={{ marginBottom: 6 }}>{l}</li>)}
+          </ol>
+        </div>
+      )}
 
       <div className="card">
         <div className="spread">

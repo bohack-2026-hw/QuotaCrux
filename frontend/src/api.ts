@@ -199,4 +199,6 @@ export const api = {
   comparison: (id: string) => call<Comparison>(`/comparisons/${id}`),
   startComparison: (body: { task_ids: string[]; snapshot_a: string; snapshot_b: string; repeats: number; label?: string }) => post<{ comparison_id: string }>('/comparisons', body),
   stopComparison: (id: string) => post(`/comparisons/${id}/stop`),
+  note: (id: string) => call<{ lines: string[]; fair: boolean; scripted_model: boolean }>(`/comparisons/${id}/note`),
+  markdownUrl: (runId: string) => `/api/runs/${runId}/markdown`,
 }

@@ -1,0 +1,10 @@
+{
+  "small": [
+    {
+      "error": "network"
+    },
+    {
+      "error": "timeout"
+    }
+  ]
+}

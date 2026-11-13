@@ -1,0 +1,43 @@
+{
+  "small": [
+    {
+      "raw": "this is not json"
+    },
+    {
+      "action": "analyze",
+      "purpose": "整理现有信息",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "analysis": "尚无证据"
+    },
+    {
+      "action": "propose_candidate",
+      "purpose": "复制初始程序作为对照",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/same_as_initial.py"
+    },
+    {
+      "action": "analyze",
+      "purpose": "继续分析",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "analysis": "无收益"
+    },
+    {
+      "action": "analyze",
+      "purpose": "继续分析",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "analysis": "无收益"
+    },
+    {
+      "action": "analyze",
+      "purpose": "继续分析",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "analysis": "无收益"
+    }
+  ]
+}

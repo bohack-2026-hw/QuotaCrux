@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-from . import db
+from . import db, research
 
 
 def _secs(a: str | None, b: str | None) -> float | None:
@@ -97,7 +97,7 @@ def build(run_id: str) -> dict:
     upgrade_steps = [s for s in steps if s["action"] == "upgrade_model"]
     total_ledger = _ledger(calls)
 
-    return {
+    out = {
         "run_id": run_id,
         "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
                  "dev_params": manifest["dev_params"], "final_params": manifest["final_params"]},
@@ -184,6 +184,8 @@ def build(run_id: str) -> dict:
         },
         "started_at": run["started_at"], "loop_ended_at": run["loop_ended_at"], "ended_at": run["ended_at"],
     }
+    out["research"] = research.summarize(out)
+    return out
 
 
 def _summary(run, best_id: str | None, final: dict | None, goal_met: bool) -> str:

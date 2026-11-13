@@ -61,7 +61,7 @@ def run_markdown(run_id: str) -> str:
     r = report.build(run_id)
     t, o, u, tm = r["task"], r["outcome"], r["usage"]["total"], r["timing"]
     lines = [
-        f"# 运行记录 {run_id}",
+        f"# 研究记录 {run_id}",
         "",
         f"- 任务：{t['task_id']}（{t['split']} 批），目标：输出全对且加速比 ≥ {t['target_min_speedup']}×",
         f"- 模式：{'学习' if r['mode'] == 'learn' else '评测'}；读取经验快照：{r['snapshot_id']}；配置指纹：`{r['config_fingerprint']}`",
@@ -71,6 +71,19 @@ def run_markdown(run_id: str) -> str:
     ]
     if r["scripted_model"]:
         lines.append(f"- 注意：{'+'.join(r['scripted_model'])} 角色使用脚本模型，仅用于功能检查，不作为效果证据")
+    d = r["research"]["definition"]
+    b = d["budget"]
+    base = d["baseline"]
+    lines += ["", "## 研究任务（运行开始前固定）", "",
+              f"- 研究问题：{d['question']}",
+              f"- 工作负载（开发数据画像）：{d['workload']}",
+              f"- 基线：{base['program']}；开发数据中位耗时 {base['dev_median_s']:.3f}s" if base["dev_median_s"] else f"- 基线：{base['program']}",
+              f"- 目标与质量约束：{d['goal']}",
+              f"- 允许修改：{d['scope']}",
+              f"- 工具：{'；'.join(t['label'] for t in d['tools'])}",
+              f"- 验证方法：{d['verification']}",
+              f"- 预算：模型请求 {b['model_requests']} 次、候选 {b['candidates']} 个、循环 {b['loop_s']:.0f}s、单次请求 {b['request_timeout_s']:.0f}s、单次测量 {b['measurement_timeout_s']:.0f}s",
+              f"- 独立验收：{d['final_test']}"]
     lines += ["", "## 研究过程", "", "| # | 执行者 | 动作 | 状态 | 目的 / 假设 | 反馈与下一步 |", "|---|---|---|---|---|---|"]
     for s in r["steps"]:
         res = s["result"]
@@ -88,29 +101,18 @@ def run_markdown(run_id: str) -> str:
         lines.append(f"| {s['seq']} | {'模型' if s['actor'] == 'model' else '程序'} | {ACTION_ZH.get(s['action'], s['action'])} | "
                      f"{STATUS_ZH.get(s['status'], s['status'])} | {_cell(what)} | {_cell('；'.join(fb))} |")
     lines += ["", "## 假设与实验", "",
-              "状态由程序根据随后的评测判定：通过且全部样本快于基线 = 得到支持；通过但未改善 = 被反驳；"
-              "候选出错（输出错误、契约用例、超时等）= 未能检验。", "",
-              "| 候选 | 假设（模型提出，未验证） | 评测 | 判定 |", "|---|---|---|---|"]
-    evals = {}
-    for s in r["steps"]:
-        if s["actor"] == "program" and s["action"] == "run_validation" and s["candidate_id"]:
-            evals[s["candidate_id"]] = s["result"]
-    tested = 0
-    for s in r["steps"]:
-        if s["action"] != "propose_candidate" or not s["candidate_id"]:
-            continue
-        res = evals.get(s["candidate_id"], {})
-        if res.get("status") == "passed":
-            verdict = "得到支持" if res.get("improved") else "被反驳（无收益）"
-        elif res:
-            verdict = f"未能检验（{res.get('status')}）"
-        else:
-            verdict = "未评测"
-        tested += 1
-        lines.append(f"| {s['candidate_id']} | {_cell(s['hypothesis'] or s['purpose'])} | "
-                     f"{res.get('status', '—')}{(' · ' + _x(res['speedup'])) if res.get('speedup') is not None else ''} | {verdict} |")
-    if not tested:
-        lines.append("| — | 本次运行没有提出候选 | — | — |")
+              "每个候选提交前，模型写下假设、预期结果和验证方法；判定由程序根据随后的评测给出，不由模型自评："
+              "改善且达到目标 = 得到支持；改善但未达目标 = 部分支持；正确但没有改善 = 被反驳；候选出错 = 未能检验。", "",
+              "| 候选 | 假设（事前，未验证） | 预期 | 实测 | 判定 | 之后 |", "|---|---|---|---|---|---|"]
+    for e in r["research"]["experiments"]:
+        res = e["result"]
+        measured = f"{res['status'] or '—'}{(' · ' + _x(res['speedup'])) if res['speedup'] is not None else ''}"
+        if res["contract_case"]:
+            measured += f" · {res['contract_case']}"
+        lines.append(f"| {e['candidate_id']} | {_cell(e['hypothesis'] or e['purpose'])} | {_cell(e['expected'])} | {measured} | "
+                     f"{r['research']['verdict_labels'][e['verdict']]} | {_decision(e['then'] or '')} |")
+    if not r["research"]["experiments"]:
+        lines.append("| — | 本次运行没有提出候选 | — | — | — | — |")
     lines += ["", "## 候选", "", "| 候选 | 来源 | 父候选 | 开发验证 | 加速比 | 代码 |", "|---|---|---|---|---|---|"]
     for c in r["candidates"]:
         ev = c["dev_evaluations"][-1] if c["dev_evaluations"] else {}

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
 from . import compare, config, db, memory, report, taskpkg
@@ -108,6 +109,15 @@ def get_run(run_id: str) -> dict:
         return report.build(run_id)
     except KeyError:
         raise HTTPException(404, "run not found") from None
+
+
+@app.get("/api/runs/{run_id}/markdown", response_class=PlainTextResponse)
+def run_markdown(run_id: str) -> str:
+    from .narrative import run_markdown as build
+
+    if not db.one("SELECT 1 FROM runs WHERE run_id = ?", (run_id,)):
+        raise HTTPException(404, "run not found")
+    return build(run_id)
 
 
 @app.get("/api/runs/{run_id}/events")
@@ -220,6 +230,15 @@ def get_comparison(comparison_id: str) -> dict:
     if not db.one("SELECT 1 FROM comparisons WHERE comparison_id = ?", (comparison_id,)):
         raise HTTPException(404, "comparison not found")
     return compare.summarize(comparison_id)
+
+
+@app.get("/api/comparisons/{comparison_id}/note")
+def comparison_note(comparison_id: str) -> dict:
+    from .narrative import evolution_note
+
+    if not db.one("SELECT 1 FROM comparisons WHERE comparison_id = ?", (comparison_id,)):
+        raise HTTPException(404, "comparison not found")
+    return evolution_note(comparison_id)
 
 
 @app.post("/api/comparisons/{comparison_id}/stop")

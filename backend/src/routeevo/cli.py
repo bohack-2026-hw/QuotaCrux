@@ -195,6 +195,24 @@ def cmd_comparison(args) -> None:
     _print(s) if args.json else _print_comparison(s)
 
 
+def cmd_export_run(args) -> None:
+    from .narrative import run_markdown
+
+    text = run_markdown(args.run_id)
+    if args.out:
+        Path(args.out).write_text(text)
+        print(f"wrote {args.out}")
+    else:
+        print(text)
+
+
+def cmd_explain(args) -> None:
+    from .narrative import evolution_note
+
+    note = evolution_note(args.comparison_id)
+    print("\n".join(f"{i}. {line}" for i, line in enumerate(note["lines"], 1)))
+
+
 def cmd_probe(args) -> None:
     """Send exactly the first request a run would send to one model role; print latency, usage and cost."""
     from .agent import actions, prompt
@@ -320,6 +338,14 @@ def main(argv: list[str] | None = None) -> None:
     cs.add_argument("comparison_id")
     cs.add_argument("--json", action="store_true")
     cs.set_defaults(fn=cmd_comparison)
+
+    xr = sub.add_parser("export-run", help="Markdown research record of one run, from stored records")
+    xr.add_argument("run_id")
+    xr.add_argument("-o", "--out")
+    xr.set_defaults(fn=cmd_export_run)
+    xp = sub.add_parser("explain", help="three-line evolution note for a comparison")
+    xp.add_argument("comparison_id")
+    xp.set_defaults(fn=cmd_explain)
 
     pr = sub.add_parser("probe", help="send one real first-step request to a model role")
     pr.add_argument("role", choices=["small", "large"])

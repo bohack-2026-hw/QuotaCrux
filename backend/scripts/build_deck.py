@@ -529,7 +529,7 @@ def build(out: Path, shots: Path) -> None:
     readme = Path(__file__).resolve().parents[2] / "docs" / "research" / "README.md"
     cases = [ln.split("](")[0].lstrip("| [") for ln in readme.read_text().splitlines() if ln.startswith("| [")] if readme.exists() else []
     d.text(s, "按规则从正式运行中选出：\n\n" + "\n".join(f"{i}. {c}" for i, c in enumerate(cases, 1))
-           + "\n\nA-01 复核：最终数据正确，1.44×（记录值 1.4367×）", 8.25, 2.4, 4.3, 3.8, size=12.5, color=INK2)
+           + "\n\nreproduce.sh 复核：A-01 1.44×（记录 1.4367×）；D-01 1.4473×（记录 1.4481×）", 8.25, 2.4, 4.3, 3.8, size=12.5, color=INK2)
 
     # 12 experience
     s = d.slide("经验是什么：已验证的程序，加上它成立的条件", "经验")
@@ -729,7 +729,7 @@ def build(out: Path, shots: Path) -> None:
             ["RA-AC-04", "错误、退化、证据不足如实记录", f"反驳 {rtotal['refuted']}、未能检验 {rtotal['untestable']}；无改进的运行交付初始程序"],
             ["RA-AC-05", "独立最终评价，通过与未通过都报告", "开发达标但最终未达标的运行如实记为未达标"],
             ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；复验时间计入循环；学习成本单列"],
-            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 1.44×（记录 1.4367×）；scripts/experiment.sh 重跑全流程"],
+            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 A-01 1.44×、D-01 1.4473×，与记录一致；scripts/experiment.sh 重跑全流程"],
             ["RA-AC-08", "有无经验的完整对照", "第二版 B、D 与第一版 B、C 各 36 次，配置一致，全部计入，学习成本单列"]]
     d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.0, 6.7], size=12)
 

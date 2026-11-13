@@ -226,3 +226,12 @@ def get_comparison(comparison_id: str) -> dict:
 def stop_comparison(comparison_id: str) -> dict:
     compare.request_stop(comparison_id)
     return {"comparison_id": comparison_id, "stop_requested": True}
+
+
+# The built dashboard (frontend/dist) is served at / so one `routeevo serve` runs the whole demo.
+# Mounted last so every /api route above takes precedence.
+_DIST = config.BACKEND_DIR.parent / "frontend" / "dist"
+if _DIST.exists():
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/", StaticFiles(directory=_DIST, html=True), name="dashboard")

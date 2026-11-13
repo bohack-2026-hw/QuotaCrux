@@ -228,7 +228,7 @@ def publish(run_id: str) -> str | None:
         prev = conn.execute("SELECT value FROM settings WHERE key = 'active_snapshot_id'").fetchone()[0]
         conn.execute("UPDATE settings SET value = ? WHERE key = 'active_snapshot_id'", (snap_id,))
         conn.execute("INSERT INTO pointer_history (ts, from_snapshot_id, to_snapshot_id, reason, actor) VALUES (?,?,?,?,?)",
-                     (now, prev, snap_id, f"published by learn run {run_id}", "learning"))
+                     (now, prev, snap_id, f"学习运行 {run_id} 发布", "learning"))
         conn.execute("COMMIT")
     except BaseException:
         conn.execute("ROLLBACK")

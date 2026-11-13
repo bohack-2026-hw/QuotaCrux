@@ -155,6 +155,8 @@ def build(run_id: str) -> dict:
         "timing": {
             "wall_clock_total_s": _secs(run["started_at"], run["ended_at"]),
             "agent_loop_s": loop_s,
+            # Live view: seconds since the loop started (frozen once the loop ends).
+            "agent_loop_elapsed_s": loop_s if loop_s is not None else _secs(run["started_at"], db.now()),
             "agent_loop_limit_s": limit,
             "agent_loop_overrun_s": round(max(0.0, loop_s - limit), 3) if loop_s is not None else None,
             "final_evaluation_s": final_out["duration_s"] if final_out else None,

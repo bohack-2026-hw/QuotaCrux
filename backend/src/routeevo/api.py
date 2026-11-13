@@ -247,6 +247,32 @@ def stop_comparison(comparison_id: str) -> dict:
     return {"comparison_id": comparison_id, "stop_requested": True}
 
 
+class StartSession(BaseModel):
+    learn_task: str
+    eval_task: str
+    base_snapshot_id: str = "v0"
+
+
+@app.post("/api/sessions", status_code=202)
+def start_session(body: StartSession) -> dict:
+    from . import session
+
+    compare.recover_stale()
+    if db.one("SELECT run_id FROM runs WHERE status = 'running'") or db.one("SELECT 1 FROM comparisons WHERE status = 'running'"):
+        raise HTTPException(409, "a run or comparison is in progress")
+    try:
+        sid = session.create(body.learn_task, body.eval_task, body.base_snapshot_id)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(400, str(exc)) from None
+    threading.Thread(target=session.execute, args=(sid,), name=sid, daemon=True).start()
+    return {"session_id": sid}
+
+
+@app.get("/api/sessions")
+def list_sessions() -> list[dict]:
+    return [dict(r) for r in db.all_rows("SELECT * FROM sessions ORDER BY created_at DESC LIMIT 20")]
+
+
 # The built dashboard (frontend/dist) is served at / so one `routeevo serve` runs the whole demo.
 # Mounted last so every /api route above takes precedence.
 _DIST = config.BACKEND_DIR.parent / "frontend" / "dist"

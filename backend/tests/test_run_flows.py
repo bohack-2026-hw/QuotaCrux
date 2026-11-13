@@ -143,3 +143,22 @@ def test_comparison_is_fair_alternating_and_rejects_leaks(task):
     assert s["learning_cost"]["in_lineage"]
     reads = {snap: [r["experiences_read"] for r in v["runs"]] for snap, v in s["per_task"][held.task_id].items()}
     assert reads["v0"] == [0]
+
+
+@requires_docker
+def test_two_round_session(task):
+    from routeevo import compare, memory, session, taskpkg
+
+    learn_task = taskpkg.build_task("groupagg", {"task_id": "t-ses-a", "split": "A", "params": {"rows": 200000, "keys": 3000},
+                                                 "dev_seed": 41, "final_seed": 42})
+    unseen = taskpkg.build_task("groupagg", {"task_id": "t-ses-b", "split": "B", "params": {"rows": 200000, "keys": 4000},
+                                             "dev_seed": 43, "final_seed": 44})
+    with pytest.raises(ValueError):
+        session.create(learn_task.task_id, learn_task.task_id, "v0")
+    sid = session.create(learn_task.task_id, unseen.task_id, "v0")
+    session.execute(sid, script=SCRIPTS / "success.json")
+    s = session.get(sid)
+    assert s["status"] == "completed" and s["phase"] == "done"
+    assert memory.snapshot(s["new_snapshot_id"])["parent_snapshot_id"] == "v0"
+    summary = compare.summarize(s["comparison_id"])
+    assert summary["tasks"] == [unseen.task_id] and summary["finished_runs"] == 2 and summary["fair"]

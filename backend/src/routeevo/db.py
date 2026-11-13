@@ -213,6 +213,21 @@ CREATE TABLE IF NOT EXISTS comparison_runs (
     PRIMARY KEY (comparison_id, seq)
 );
 
+CREATE TABLE IF NOT EXISTS sessions (
+    session_id TEXT PRIMARY KEY,
+    learn_task TEXT NOT NULL,
+    eval_task TEXT NOT NULL,
+    base_snapshot_id TEXT NOT NULL,
+    phase TEXT NOT NULL,
+    status TEXT NOT NULL,
+    learn_run_id TEXT,
+    new_snapshot_id TEXT,
+    comparison_id TEXT,
+    detail TEXT,
+    created_at TEXT NOT NULL,
+    ended_at TEXT
+);
+
 CREATE TABLE IF NOT EXISTS events (
     event_id INTEGER PRIMARY KEY AUTOINCREMENT,
     run_id TEXT NOT NULL,

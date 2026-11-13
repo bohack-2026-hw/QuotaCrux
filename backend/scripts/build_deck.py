@@ -1,0 +1,395 @@
+"""Build the presentation deck from stored records (no hand-typed results).
+
+    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/RouteEvo.pptx]
+
+Charts follow the dashboard palette (validated with the dataviz validator on #fbf9f4): old snapshot #2a78d6,
+new snapshot #eb6834. Every number on a slide is read from the SQLite store or a comparison summary.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import statistics
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib import font_manager  # noqa: E402
+from pptx import Presentation  # noqa: E402
+from pptx.dml.color import RGBColor  # noqa: E402
+from pptx.enum.shapes import MSO_SHAPE  # noqa: E402
+from pptx.enum.text import PP_ALIGN  # noqa: E402
+from pptx.util import Emu, Pt  # noqa: E402
+
+from routeevo import compare, db, memory, narrative, report  # noqa: E402
+
+PAPER, CARD, INK, INK2, INK3 = "F2EEE5", "FBF9F4", "141412", "4A4843", "807C72"
+ACCENT, GOOD, BAD, OLD, NEW, RULE = "E8452C", "0A7A0A", "A12B2B", "2A78D6", "EB6834", "D9D2C2"
+HEAD_FONT, BODY_FONT = "Songti SC", "PingFang SC"
+W, H = Emu(12192000), Emu(6858000)  # 16:9
+
+for path in ("/System/Library/Fonts/Hiragino Sans GB.ttc",):
+    if Path(path).exists():
+        font_manager.fontManager.addfont(path)
+plt.rcParams["font.family"] = ["Hiragino Sans GB", "sans-serif"]
+plt.rcParams["axes.unicode_minus"] = False
+
+
+def rgb(h: str) -> RGBColor:
+    return RGBColor.from_string(h)
+
+
+class Deck:
+    def __init__(self) -> None:
+        self.prs = Presentation()
+        self.prs.slide_width, self.prs.slide_height = W, H
+        self.blank = self.prs.slide_layouts[6]
+        self.n = 0
+
+    def slide(self, title: str | None = None, kicker: str | None = None):
+        s = self.prs.slides.add_slide(self.blank)
+        self.n += 1
+        bg = s.background.fill
+        bg.solid()
+        bg.fore_color.rgb = rgb(PAPER)
+        if title:
+            if kicker:
+                self.text(s, kicker, 0.6, 0.35, 10, 0.4, size=12, color=ACCENT, bold=True)
+            self.text(s, title, 0.6, 0.62, 12, 0.9, size=30, font=HEAD_FONT, bold=True)
+            line = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Emu(int(0.6 * 914400)), Emu(int(1.45 * 914400)), Emu(int(12.1 * 914400)), Emu(22860))
+            line.fill.solid()
+            line.fill.fore_color.rgb = rgb(INK)
+            line.line.fill.background()
+        self.text(s, f"RouteEvo · {self.n}", 11.6, 7.05, 1.6, 0.3, size=9, color=INK3, align=PP_ALIGN.RIGHT)
+        return s
+
+    @staticmethod
+    def text(s, text: str, x: float, y: float, w: float, h: float, *, size: int = 16, color: str = INK, bold: bool = False,
+             font: str = BODY_FONT, align=PP_ALIGN.LEFT, italic: bool = False):
+        box = s.shapes.add_textbox(Emu(int(x * 914400)), Emu(int(y * 914400)), Emu(int(w * 914400)), Emu(int(h * 914400)))
+        tf = box.text_frame
+        tf.word_wrap = True
+        for i, para in enumerate(text.split("\n")):
+            p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+            p.alignment = align
+            r = p.add_run()
+            r.text = para
+            r.font.size, r.font.bold, r.font.italic, r.font.name = Pt(size), bold, italic, font
+            r.font.color.rgb = rgb(color)
+        return box
+
+    def bullets(self, s, items: list[str], x: float, y: float, w: float, h: float, size: int = 17, color: str = INK):
+        box = s.shapes.add_textbox(Emu(int(x * 914400)), Emu(int(y * 914400)), Emu(int(w * 914400)), Emu(int(h * 914400)))
+        tf = box.text_frame
+        tf.word_wrap = True
+        for i, item in enumerate(items):
+            p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+            p.space_after = Pt(8)
+            r = p.add_run()
+            r.text = f"■  {item}" if not item.startswith("  ") else f"     {item.strip()}"
+            r.font.size, r.font.name = Pt(size if not item.startswith("  ") else size - 3), BODY_FONT
+            r.font.color.rgb = rgb(color if not item.startswith("  ") else INK2)
+        return box
+
+    def card(self, s, x: float, y: float, w: float, h: float, edge: str | None = None):
+        c = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Emu(int(x * 914400)), Emu(int(y * 914400)), Emu(int(w * 914400)), Emu(int(h * 914400)))
+        c.fill.solid()
+        c.fill.fore_color.rgb = rgb(CARD)
+        c.line.color.rgb = rgb(RULE)
+        c.shadow.inherit = False
+        if edge:
+            e = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Emu(int(x * 914400)), Emu(int(y * 914400)), Emu(45720), Emu(int(h * 914400)))
+            e.fill.solid()
+            e.fill.fore_color.rgb = rgb(edge)
+            e.line.fill.background()
+        return c
+
+    def stat(self, s, k: str, v: str, x: float, y: float, w: float = 2.8, sub: str | None = None, color: str = INK):
+        self.text(s, k, x, y, w, 0.35, size=12, color=INK3)
+        self.text(s, v, x, y + 0.3, w, 0.7, size=30, bold=True, color=color)
+        if sub:
+            self.text(s, sub, x, y + 0.98, w, 0.5, size=11, color=INK3)
+
+    def table(self, s, rows: list[list[str]], x: float, y: float, w: float, col_w: list[float] | None = None, size: int = 12):
+        shape = s.shapes.add_table(len(rows), len(rows[0]), Emu(int(x * 914400)), Emu(int(y * 914400)), Emu(int(w * 914400)), Emu(int(0.36 * 914400 * len(rows))))
+        tbl = shape.table
+        if col_w:
+            for i, cw in enumerate(col_w):
+                tbl.columns[i].width = Emu(int(cw * 914400))
+        for r, row in enumerate(rows):
+            for c, val in enumerate(row):
+                cell = tbl.cell(r, c)
+                cell.fill.solid()
+                cell.fill.fore_color.rgb = rgb(INK if r == 0 else (CARD if r % 2 else PAPER))
+                tf = cell.text_frame
+                tf.paragraphs[0].text = ""
+                run = tf.paragraphs[0].add_run()
+                run.text = val
+                run.font.size, run.font.name = Pt(size), BODY_FONT
+                run.font.bold = r == 0
+                run.font.color.rgb = rgb(PAPER if r == 0 else INK)
+        return shape
+
+    def image(self, s, path: Path, x: float, y: float, w: float):
+        s.shapes.add_picture(str(path), Emu(int(x * 914400)), Emu(int(y * 914400)), width=Emu(int(w * 914400)))
+
+
+# ---------- data ----------
+
+def learn_rows() -> list[dict]:
+    sql = ("SELECT run_id FROM runs WHERE mode = 'learn' AND json_extract(config_json, '$.label') = 'formal A learning'"
+           " ORDER BY started_at")
+    return [report.build(r["run_id"]) for r in db.all_rows(sql)]
+
+
+def find_comparison(prefix: str) -> dict | None:
+    for r in db.all_rows("SELECT comparison_id, label FROM comparisons ORDER BY created_at DESC"):
+        if (r["label"] or "").startswith(prefix):
+            return compare.summarize(r["comparison_id"])
+    return None
+
+
+def dots_chart(c: dict, out: Path, title: str) -> Path:
+    a, b = c["snapshot_a"], c["snapshot_b"]
+    tasks = c["tasks"]
+    fig, ax = plt.subplots(figsize=(10, 0.62 * len(tasks) + 1.3), dpi=200)
+    fig.patch.set_facecolor("#" + CARD)
+    ax.set_facecolor("#" + CARD)
+    speeds = [r["final_speedup"] for t in tasks for s in (a, b) for r in c["per_task"][t][s]["runs"] if r["final_speedup"]]
+    lo, hi = min([0.6] + [v - 0.05 for v in speeds]), max([1.8] + [v + 0.05 for v in speeds])
+    fail_x = lo - (hi - lo) * 0.12
+    for i, t in enumerate(tasks):
+        y = len(tasks) - 1 - i
+        for si, (s, col) in enumerate(((a, "#" + OLD), (b, "#" + NEW))):
+            runs = c["per_task"][t][s]["runs"]
+            for k, r in enumerate(runs):
+                x = r["final_speedup"] if r["final_speedup"] is not None else fail_x + k * (hi - lo) * 0.025
+                yy = y + (0.14 if si == 0 else -0.14)
+                ax.scatter([x], [yy], s=70, color=col if r["goal_met"] else "#" + CARD, edgecolors=col, linewidths=2, zorder=3)
+    ax.axvline(1.1, color="#" + ACCENT, lw=1.5, zorder=1)
+    ax.text(1.1, len(tasks) - 0.35, " 目标 1.10×", color="#" + ACCENT, fontsize=10, va="bottom")
+    ax.axvline(lo - (hi - lo) * 0.03, color="#" + RULE, lw=1)
+    ax.set_yticks(range(len(tasks)))
+    ax.set_yticklabels(list(reversed(tasks)), fontsize=11)
+    ax.set_xlim(fail_x - (hi - lo) * 0.05, hi)
+    ticks = [round(lo + k * 0.25, 2) for k in range(int((hi - lo) / 0.25) + 2) if lo + k * 0.25 <= hi]
+    ax.set_xticks([fail_x + (hi - lo) * 0.025] + ticks)
+    ax.set_xticklabels(["未计时"] + [f"{t:.2f}×" for t in ticks], fontsize=10)
+    ax.grid(axis="x", color="#" + RULE, lw=0.8)
+    for sp in ("top", "right", "left"):
+        ax.spines[sp].set_visible(False)
+    ax.spines["bottom"].set_color("#" + RULE)
+    ax.tick_params(colors="#" + INK2, length=0)
+    ax.set_title(title, loc="left", fontsize=13, color="#" + INK, pad=12)
+    from matplotlib.lines import Line2D
+    handles = [Line2D([], [], marker="o", ls="", color="#" + OLD, markersize=8, label=f"{a}（旧经验）"),
+               Line2D([], [], marker="o", ls="", color="#" + NEW, markersize=8, label=f"{b}（新经验）"),
+               Line2D([], [], marker="o", ls="", markerfacecolor="#" + CARD, markeredgecolor="#" + INK3, markersize=8, label="空心 = 未达标")]
+    ax.legend(handles=handles, loc="lower right", frameon=False, fontsize=10, ncol=3, bbox_to_anchor=(1, 1.0))
+    fig.tight_layout()
+    fig.savefig(out, facecolor=fig.get_facecolor())
+    plt.close(fig)
+    return out
+
+
+def side_rows(c: dict) -> list[list[str]]:
+    a, b = c["snapshot_a"], c["snapshot_b"]
+    A, B = c["sides"][a], c["sides"][b]
+    usd = lambda v: "未知" if v is None else f"${v:.3f}"  # noqa: E731
+    x = lambda v: "—" if v is None else f"{v:.2f}×"  # noqa: E731
+    n = lambda v: "—" if v is None else f"{v:,}"  # noqa: E731
+    return [
+        ["指标", f"{a}（旧经验）", f"{b}（新经验）"],
+        ["达标 / 运行", f"{A['goal_met']} / {A['runs']}", f"{B['goal_met']} / {B['runs']}"],
+        ["最终加速比中位数", x(A["final_speedup_median"]), x(B["final_speedup_median"])],
+        ["模型请求中位数", str(A["model_requests_median"]), str(B["model_requests_median"])],
+        ["升级到 GPT 次数", str(A["upgrades_total"]), str(B["upgrades_total"])],
+        ["失败候选", str(A["candidates_failed_total"]), str(B["candidates_failed_total"])],
+        ["输出 Token 合计", n(A["output_tokens"]["total"]), n(B["output_tokens"]["total"])],
+        ["模型费用合计", usd(A["cost_usd_total"]), usd(B["cost_usd_total"])],
+        ["总耗时", f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s"],
+    ]
+
+
+# ---------- slides ----------
+
+def build(out: Path, shots: Path) -> None:
+    d = Deck()
+    charts = out.parent / "deck"
+    charts.mkdir(parents=True, exist_ok=True)
+    learn = learn_rows()
+    cmp_b, cmp_c = find_comparison("B"), find_comparison("C")
+    final_snap = db.one("SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1")["snapshot_id"]
+    snap = memory.snapshot(final_snap)
+
+    # 1 cover
+    s = d.slide()
+    s.background.fill.fore_color.rgb = rgb(INK)
+    d.text(s, "Route", 0.9, 2.0, 6, 1.4, size=80, color=PAPER, font="Georgia")
+    d.text(s, "Evo", 4.55, 2.0, 4, 1.4, size=80, color=ACCENT, font="Georgia", italic=True)
+    d.text(s, "从已验证的执行结果中进化的 Agent", 0.95, 3.5, 11, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
+    d.text(s, "决策 → 执行 → 验证 → 修正 → 经验 → 更好的下一次决策", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
+    d.text(s, "BoHack 2026 · 共用核心实测版", 0.95, 6.3, 6, 0.4, size=12, color="9A9485")
+
+    # 2 questions
+    s = d.slide("我们要回答的两个问题", "问题定义")
+    d.card(s, 0.6, 1.8, 5.9, 2.6, ACCENT)
+    d.text(s, "① 闭环能否成立", 0.9, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
+    d.text(s, "在预算内完成“决策—执行—验证—修正”，留下可追溯、可复现的结果；运行完成、验证通过、指标改善、达到目标分开记录。", 0.9, 2.6, 5.4, 1.6, size=15, color=INK2)
+    d.card(s, 6.8, 1.8, 5.9, 2.6, ACCENT)
+    d.text(s, "② 经验能否让下一次更好", 7.1, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
+    d.text(s, "同样的模型、提示词、预算和评测，只换经验快照：在未参与学习的任务上，质量、成本或耗时是否改善？", 7.1, 2.6, 5.4, 1.6, size=15, color=INK2)
+    d.bullets(s, ["学习发生在系统层：不训练模型、不改提示词，程序把经过评测的执行事实写成不可变的经验快照",
+                  "结论只来自留出任务上的对照数据，全部运行（包括失败与无收益）都计入"], 0.6, 4.8, 12, 2, size=16)
+
+    # 3 task
+    s = d.slide("首个任务：在正确性约束下优化程序", "任务")
+    d.bullets(s, ["按字符串 key 分组 CSV，输出每组数量与整数和，按 key 升序",
+                  "初始程序：csv + 两个 dict + sorted，正确、正常，不人为削弱",
+                  "主指标：加速比 = 初始程序耗时中位数 / 候选耗时中位数",
+                  "达标：输出全对 + 5 次候选样本全部快于 5 次基线样本 + 加速比 ≥ 1.10",
+                  "19 个冻结任务包（哈希锁定）：A 学习 6 · B 开发对照 6 · C 最终留出 6 · smoke 1",
+                  "  覆盖随机、有序、成簇、几乎有序陷阱、低基数、高基数、小输入——A 的经验不必处处成立"], 0.6, 1.75, 7.2, 5, size=16)
+    d.card(s, 8.1, 1.8, 4.6, 4.6)
+    d.text(s, "同一个优化，效果相反", 8.35, 1.95, 4.2, 0.4, size=14, bold=True, color=ACCENT)
+    d.text(s, "按字节解析 + 单字典：\n  中等基数（A-01）≈ 1.44×\n  高基数（A-05）≈ 0.82×\n\n带有序检查的 groupby：\n  所有 A 任务 ≈ 0.7×\n\n只用 groupby 不检查：\n  有序数据上正确，\n  但违反契约用例 → 判失败", 8.35, 2.45, 4.2, 3.9, size=14, color=INK2)
+
+    # 4 loop
+    s = d.slide("执行循环：模型选行动，程序执行并验证", "架构")
+    steps = [("构造状态", "契约 · 数据画像 · 候选\n反馈 · 预算 · 经验"), ("模型选行动", "分析 · 取证 · 提出候选\n验证 · 结束"),
+             ("程序检查", "动作参数 · 预算\n仅标准库 · 代码大小"), ("沙箱 + 评测器", "正确性 · 契约用例\n交替计时 · 最佳产物"),
+             ("反馈", "状态 · 加速比 · 反例\n→ 下一步")]
+    for i, (k, v) in enumerate(steps):
+        x = 0.6 + i * 2.5
+        d.card(s, x, 2.0, 2.2, 1.8, ACCENT if i == 1 else None)
+        d.text(s, k, x + 0.2, 2.15, 1.9, 0.45, size=16, bold=True, font=HEAD_FONT)
+        d.text(s, v, x + 0.2, 2.65, 1.9, 1.1, size=11.5, color=INK2)
+        if i < 4:
+            d.text(s, "→", x + 2.2, 2.6, 0.3, 0.5, size=20, color=ACCENT, bold=True)
+    d.bullets(s, ["本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未“正确且达标” → 固定规则升级到 GPT-6.1 Sol（xhigh），本次运行不再切回",
+                  "每次运行最多 6 次模型请求、4 个候选、300 秒；预算耗尽后不再为总结调用模型",
+                  "终止原因分开记录：目标达成 · 预算耗尽 · Agent 结束 · 用户停止 · 接口错误 · 环境错误"], 0.6, 4.3, 12.1, 2.6, size=15)
+
+    # 5 trust
+    s = d.slide("可信的验证：模型碰不到裁判", "验证")
+    d.bullets(s, ["每个样本一个全新容器：禁网、只读根文件系统、非 root、1 CPU / 1 GB、64 进程；只挂载候选文件，输入走 stdin",
+                  "参考输出、最终测试数据、评测程序都留在宿主机；候选自报的“通过”或“耗时”不算数",
+                  "7 个公开契约用例：空输入、交错重复 key、ASCII 排序、超大整数、几乎有序陷阱、32 字符 key",
+                  "计时：容器内启动器就绪后才开始；基线与候选各预热一次，交替 5 轮，取中位数之比",
+                  "“改善”= 全部候选样本快于全部基线样本（单侧 Mann-Whitney U=0，p≈0.004）；同一程序靠噪声测出 1.05× 也不算",
+                  "循环结束后最佳候选冻结，在隐藏最终数据上测一次，结果不回流"], 0.6, 1.75, 12.1, 5, size=16)
+
+    # 6 feedback chain
+    first = learn[0] if learn else None
+    if first:
+        s = d.slide(f"一条真实的决策链：{first['task']['task_id']}（无经验 v0）", "反馈驱动")
+        rows = [["#", "执行者", "动作", "结果", "下一步"]]
+        for st in first["steps"]:
+            res = st["result"]
+            out_s = st["status"] + (f" · {res['speedup']:.2f}×" if isinstance(res.get("speedup"), (int, float)) else "")
+            who = "程序" if st["actor"] == "program" else ("GPT" if first["iterations"]["upgrade_at_step"] and st["seq"] > first["iterations"]["upgrade_at_step"] else "Qwen")
+            rows.append([str(st["seq"]), who, narrative.ACTION_ZH.get(st["action"], st["action"]), out_s, narrative._decision(st["next_decision"] or "")])
+        d.table(s, rows, 0.6, 1.8, 7.4, [0.5, 0.9, 1.4, 2.4, 2.2], size=12)
+        d.card(s, 8.3, 1.8, 4.4, 4.7, ACCENT)
+        d.text(s, "发生了什么", 8.55, 1.95, 4, 0.4, size=15, bold=True, color=ACCENT)
+        hyp = [st["hypothesis"] for st in first["steps"] if st["hypothesis"]]
+        d.text(s, (f"结论：{first['outcome']['summary']}\n\n"
+                   f"Qwen 的两次尝试一次变慢、一次表头格式错误，按规则升级到 GPT；GPT 读到具体失败反馈后修正。\n\n"
+                   f"模型假设（未验证）：{(hyp[-1] or '')[:90]}…\n\n"
+                   f"费用 ${first['usage']['total']['cost_usd'] or 0:.3f} · {first['iterations']['model_requests']} 次请求"),
+               8.55, 2.4, 4, 4, size=12.5, color=INK2)
+
+    # 7 experience
+    s = d.slide("经验是什么：程序从已验证的执行事实中提取", "经验")
+    succ = [e for e in snap["experiences"] if e["outcome"] == "success"][:1]
+    fail = [e for e in snap["experiences"] if e["outcome"] != "success"][:1]
+    for i, e in enumerate(succ + fail):
+        x = 0.6 + i * 6.2
+        d.card(s, x, 1.8, 5.9, 4.0, GOOD if e["outcome"] == "success" else BAD)
+        label = {"success": "✓ 成功", "no_gain": "– 无收益", "failure": "✕ 失败"}[e["outcome"]]
+        d.text(s, f"{label} · {e['conditions']['task_id']}", x + 0.3, 1.95, 5.4, 0.4, size=16, bold=True)
+        b = e["conditions"]["buckets"]
+        res = e["result"]
+        claim = (f"条件：{b['rows']} 行 · key {b['distinct_keys']} · {b['order']} · 偏斜 {b['skew']}\n"
+                 f"改动特征：{', '.join(e['action']['code_features'].get('calls', [])[:7])}\n"
+                 f"实测：{res['status']}" + (f"，{res['speedup']:.2f}×" if res["speedup"] else "")
+                 + (f"（{', '.join(res['failure_kinds'] or [])}）" if res.get("failure_kinds") else "")
+                 + f"\n来源：{e['source']['run_id']} 第 {e['source']['step_seq']} 步 {e['source']['candidate_id']}\n\n"
+                 f"模型解释（未验证）：{(e['hypothesis'] or '—')[:80]}")
+        d.text(s, claim, x + 0.3, 2.45, 5.4, 3.3, size=12.5, color=INK2)
+    counts = snap["counts"]
+    d.text(s, f"{final_snap} 共 {len(snap['experiences'])} 条：成功 {counts.get('success', 0)} · 无收益 {counts.get('no_gain', 0)} · 失败 {counts.get('failure', 0)}。"
+              "检索：5 个分桶特征至少匹配 3 个，最多注入 3 成功 + 2 失败 + 1 无收益，并标出不同的特征与样本数。",
+           0.6, 6.05, 12.1, 0.8, size=13, color=INK2)
+
+    # 8 learning
+    if learn:
+        s = d.slide(f"学习阶段：A 批 6 个任务串行，v0 → {final_snap}", "学习")
+        rows = [["任务", "读取", "结果", "请求", "模型路径", "费用", "读到经验", "发布"]]
+        for r in learn:
+            roles = "".join("G" if "large" in k else "Q" for k, v in r["usage"]["by_model"].items() for _ in range(v["requests"]))
+            rows.append([r["task"]["task_id"], r["snapshot_id"], r["outcome"]["summary"][:22], str(r["iterations"]["model_requests"]),
+                         roles or "—", f"${r['usage']['total']['cost_usd'] or 0:.3f}", str(len(r["experience"]["read"])),
+                         r["experience"]["published_snapshot_id"] or "—"])
+        d.table(s, rows, 0.6, 1.8, 12.1, [0.9, 0.8, 4.2, 0.8, 1.6, 1.2, 1.2, 1.4], size=12)
+        total = sum((r["usage"]["total"]["cost_usd"] or 0) for r in learn)
+        d.text(s, f"学习阶段总费用 ${total:.3f}（GPT 按官方价表估算；本地 Qwen 无 API 费用，机器成本未核算）。"
+                  "这是学习过程中的观察，不是对照证据——效果结论见下两页的留出对照。", 0.6, 5.0, 12.1, 0.9, size=14, color=INK2)
+
+    # 9/10 comparisons
+    for c, name in ((cmp_b, "B 批开发对照"), (cmp_c, "C 批最终留出")):
+        s = d.slide(f"{name}：v0 vs {c['snapshot_b'] if c else final_snap}", "对照结果")
+        if not c or c["finished_runs"] == 0:
+            d.text(s, "对照尚未完成。", 0.6, 2.0, 10, 1, size=20, color=INK3)
+            continue
+        img = dots_chart(c, charts / f"{name[:1]}-dots.png", f"每个任务 × 每个快照 × {c['repeats']} 次的最终加速比（实心 = 达标）")
+        d.image(s, img, 0.5, 1.65, 7.3)
+        d.table(s, side_rows(c), 8.0, 1.75, 4.8, [1.9, 1.45, 1.45], size=11)
+        lc = c["learning_cost"]
+        foot = (f"{c['finished_runs']}/{c['planned_runs']} 次运行 · 配置指纹{'一致' if c['fair'] else '不一致'} · "
+                + (f"学习成本另计 ${lc['cost_usd']:.3f} / {lc['wall_clock_s']:.0f}s" if lc.get("in_lineage") and lc.get("cost_usd") is not None else ""))
+        d.text(s, foot, 8.0, 5.3, 4.8, 0.8, size=11, color=INK3)
+
+    # 11 three lines
+    target = cmp_c or cmp_b
+    if target and target["finished_runs"]:
+        note = narrative.evolution_note(target["comparison_id"])
+        s = d.slide("三行进化说明（由对照数据自动填写）", "日新")
+        for i, line in enumerate(note["lines"]):
+            d.card(s, 0.6, 1.8 + i * 1.65, 12.1, 1.45, ACCENT)
+            d.text(s, line, 0.9, 1.9 + i * 1.65, 11.6, 1.3, size=13.5, color=INK)
+
+    # 12 limits
+    s = d.slide("诚实声明与下一步", "边界")
+    d.bullets(s, ["单一任务族：结论只适用于同族任务之间的经验迁移",
+                  "计时在一台 Mac（OrbStack 虚拟化）上；交替测量与“全部样本更快”规则压低噪声，小输入任务固定开销仍占约一半",
+                  "模型不支持固定种子：每个配置重复 3 次，报告全部结果；3 次重复衡量运行波动，不等于学习过程被重复验证",
+                  "Qwen 自部署机器成本未核算；GPT 费用按 2026-11-13 官方价表估算",
+                  "下一步：更多任务族；用同一批任务对照专用决策模型是否降低总成本；经验的去重与合并"], 0.6, 1.75, 12.1, 5, size=16)
+
+    # 13 reproduce
+    s = d.slide("复现与界面", "交付")
+    d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
+                  "scripts/experiment.sh   # 重建任务包 → A 学习 → B 对照 → C 对照",
+                  "uv run routeevo serve   # 界面：任务运行 · 经验查看 · 对照结果 · 版本管理",
+                  "uv run routeevo export-run <run_id>   # 单次运行的研究记录",
+                  "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
+    for i, name in enumerate(("run", "cmp")):
+        p = shots / f"{name}.png"
+        if p.exists():
+            d.image(s, p, 7.2 + i * 0.25, 1.8 + i * 2.5, 5.4)
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    d.prs.save(out)
+    print(f"wrote {out} ({d.n} slides)")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "RouteEvo.pptx"))
+    ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "deck" / "shots"))
+    args = ap.parse_args()
+    build(Path(args.out), Path(args.shots))

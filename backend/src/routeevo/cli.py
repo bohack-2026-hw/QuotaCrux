@@ -199,11 +199,48 @@ def cmd_export_run(args) -> None:
     from .narrative import run_markdown
 
     text = run_markdown(args.run_id)
-    if args.out:
+    if args.bundle:
+        export_bundle(args.run_id, Path(args.bundle), text)
+    elif args.out:
         Path(args.out).write_text(text)
         print(f"wrote {args.out}")
     else:
         print(text)
+
+
+def export_bundle(run_id: str, out: Path, text: str) -> None:
+    """RA-07 deliverable: research record, best program, every candidate, raw model calls, report and a re-check script.
+    Paths inside are relative to the bundle or the backend directory, so the folder can be moved or committed."""
+    import shutil
+
+    rep = report.build(run_id)
+    src = config.RUNS_DIR / run_id
+    out.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(src / "candidates", out / "candidates", dirs_exist_ok=True)
+    if (src / "calls").exists():
+        shutil.copytree(src / "calls", out / "model_calls", dirs_exist_ok=True)
+    best = rep["best_candidate"]["candidate_id"] if rep["best_candidate"] else None
+    if best:
+        shutil.copyfile(src / "candidates" / f"{best}.py", out / "best.py")
+    local = str(config.BACKEND_DIR) + "/"
+    text = text.replace(local, "").replace(f"var/runs/{run_id}/candidates/", "candidates/")
+    (out / "README.md").write_text(text)
+    (out / "report.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1).replace(local, ""))
+    task = rep["task"]["task_id"]
+    lines = ["#!/usr/bin/env bash",
+             f"# Reproduce {run_id} ({task}). Runs from the repository's backend/ directory.",
+             "set -euo pipefail",
+             'HERE="$(cd "$(dirname "$0")" && pwd)"',
+             'cd "$(git -C "$HERE" rev-parse --show-toplevel)/backend"',
+             "uv run routeevo tasks build >/dev/null   # frozen task packages, hashes checked against tasks/lock.json"]
+    if best:
+        lines += ["# 1. Re-check the delivered program on the hidden final dataset (same evaluator, fresh containers)",
+                  f'uv run routeevo check {task} "$HERE/best.py" --dataset final']
+    lines += ["# 2. Re-run the whole research loop with the same configuration (real models; replies vary between calls):",
+              f"# {rep['reproduce']['run_again']}"]
+    (out / "reproduce.sh").write_text("\n".join(lines) + "\n")
+    (out / "reproduce.sh").chmod(0o755)
+    print(f"wrote {out} (best {best or 'none'})")
 
 
 def cmd_explain(args) -> None:
@@ -342,6 +379,7 @@ def main(argv: list[str] | None = None) -> None:
     xr = sub.add_parser("export-run", help="Markdown research record of one run, from stored records")
     xr.add_argument("run_id")
     xr.add_argument("-o", "--out")
+    xr.add_argument("--bundle", help="write a self-contained deliverable folder instead of one Markdown file")
     xr.set_defaults(fn=cmd_export_run)
     xp = sub.add_parser("explain", help="three-line evolution note for a comparison")
     xp.add_argument("comparison_id")

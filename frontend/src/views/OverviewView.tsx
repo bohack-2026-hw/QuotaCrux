@@ -16,6 +16,9 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
   const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 6000)
   const noteFor = cId && c.data?.finished_runs ? cId : bId
   const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor], 10000)
+  // The learned snapshot is the one the held-out comparison used; a live demo session may have published a newer branch.
+  const learnedId = b.data?.snapshot_b ?? snaps.data?.active_snapshot_id
+  const latest = snaps.data?.snapshots.find((x) => x.snapshot_id === learnedId)
   // The learning runs that built the learned snapshot: walk its parent chain back to v0.
   const chain: string[] = []
   for (let cur = learnedId; cur;) {
@@ -25,9 +28,6 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
     cur = row.parent_snapshot_id ?? undefined
   }
   const learn = chain.map((id) => runs.data?.find((r) => r.run_id === id)).filter((r): r is NonNullable<typeof r> => !!r)
-  // The learned snapshot is the one the held-out comparison used; a live demo session may have published a newer branch.
-  const learnedId = b.data?.snapshot_b ?? snaps.data?.active_snapshot_id
-  const latest = snaps.data?.snapshots.find((x) => x.snapshot_id === learnedId)
 
   return (
     <div className="stack">

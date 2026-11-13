@@ -1,8 +1,8 @@
 # RouteEvo 两个方向的差异与选择依据
 
-版本：v0.2；日期：2026-11-13；状态：方向评估草案。
+版本：v0.3；更新日期：2026-11-14；状态：选题比较历史参考。
 
-本文比较在[共用核心](shared-core-prd.md)之上需要补充的产品能力。两条路线共用任务、执行循环、固定评测、资源账本和经验版本；选定后只实施对应增量，不开发运行时切换赛道的框架。
+团队已于 2026-11-14 确认选择 Research Agent，当前开发按 [Research Agent PRD](research-agent-track-prd.md)及[补充说明](research-agent-clarifications.md)推进。下文保留选题阶段的能力比较和判断依据，不再作为待执行的选赛道流程。
 
 首版的具体任务、Qwen/GPT 两条路径、Docker 环境与 A/B/C 评测划分统一按[开工决策](implementation-decisions.md)执行。
 

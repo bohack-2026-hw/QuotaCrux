@@ -140,17 +140,47 @@ class Deck:
 
 # ---------- data ----------
 
-def learn_rows() -> list[dict]:
-    sql = ("SELECT run_id FROM runs WHERE mode = 'learn' AND json_extract(config_json, '$.label') = 'formal A learning'"
+V1_LEARN, V2_LEARN = ("formal A learning",), ("reuse A learning r1", "reuse A learning r2")
+
+
+def learn_rows(labels=V1_LEARN) -> list[dict]:
+    q = ",".join("?" * len(labels))
+    sql = (f"SELECT run_id FROM runs WHERE mode = 'learn' AND status != 'running' AND json_extract(config_json, '$.label') IN ({q})"
            " ORDER BY started_at")
-    return [report.build(r["run_id"]) for r in db.all_rows(sql)]
+    return [report.build(r["run_id"]) for r in db.all_rows(sql, tuple(labels))]
 
 
-def learned_snapshot() -> str:
-    """The snapshot published by the last formal A learning run (a later demo session may publish a newer branch)."""
+def learned_snapshot(labels=V2_LEARN) -> str:
+    """The snapshot published by the last formal learning run (a later demo session may publish a newer branch)."""
+    q = ",".join("?" * len(labels))
     row = db.one("SELECT published_snapshot_id FROM runs WHERE mode = 'learn' AND published_snapshot_id IS NOT NULL"
-                 " AND json_extract(config_json, '$.label') = 'formal A learning' ORDER BY started_at DESC LIMIT 1")
+                 f" AND json_extract(config_json, '$.label') IN ({q}) ORDER BY started_at DESC LIMIT 1", tuple(labels))
     return row["published_snapshot_id"] if row else "v0"
+
+
+def path_of(rep: dict) -> str:
+    """Q/G per model request in order, plus R per re-validated program, e.g. 'RRR' or 'QQGG'."""
+    up = rep["iterations"]["upgrade_at_step"]
+    out = []
+    for st in rep["steps"]:
+        if st["action"] == "reuse_candidate":
+            out.append("R")
+        elif st["actor"] == "model":
+            out.append("G" if up and st["seq"] > up else "Q")
+    return "".join(out) or "—"
+
+
+def retyped_program() -> tuple[dict, dict] | None:
+    """Version 1 evidence: a model candidate whose program equals one an earlier learning run had already verified."""
+    seen: dict[str, tuple[str, str]] = {}
+    for r in db.all_rows("SELECT c.run_id, c.candidate_id, c.code_path, r.task_id FROM candidates c JOIN runs r USING (run_id)"
+                         " WHERE r.mode = 'learn' AND json_extract(r.config_json, '$.label') = 'formal A learning' AND c.origin = 'model'"
+                         " ORDER BY r.started_at, c.seq"):
+        code = memory.normalized_code(Path(r["code_path"]).read_text())
+        if code in seen and seen[code][0] != r["task_id"]:
+            return ({"task_id": seen[code][0], "candidate_id": seen[code][1]}, {"task_id": r["task_id"], "candidate_id": r["candidate_id"], "run_id": r["run_id"]})
+        seen.setdefault(code, (r["task_id"], r["candidate_id"]))
+    return None
 
 
 def g(v) -> str:
@@ -169,11 +199,53 @@ def gpt_split(c: dict) -> dict:
     return out
 
 
-def find_comparison(prefix: str) -> dict | None:
-    for r in db.all_rows("SELECT comparison_id, label FROM comparisons ORDER BY created_at DESC"):
-        if (r["label"] or "").startswith(prefix):
+def find_comparison(prefix: str, exact: bool = False) -> dict | None:
+    for r in db.all_rows("SELECT comparison_id, label FROM comparisons WHERE status != 'running' ORDER BY created_at DESC"):
+        label = r["label"] or ""
+        if label == prefix if exact else label.startswith(prefix):
             return compare.summarize(r["comparison_id"])
     return None
+
+
+def ratchet_chart(rounds: list[tuple[str, list[dict]]], out: Path) -> Path:
+    """Final speedup per A task after each learning round (hollow = goal not met)."""
+    tasks = sorted({r["task"]["task_id"] for _, reps in rounds for r in reps})
+    fig, ax = plt.subplots(figsize=(7.6, 0.55 * len(tasks) + 1.6), dpi=200)
+    fig.patch.set_facecolor("#" + CARD)
+    ax.set_facecolor("#" + CARD)
+    cols = ["#" + INK3, "#" + NEW, "#" + OLD]
+    h = 0.8 / max(1, len(rounds))
+    for k, (name, reps) in enumerate(rounds):
+        by = {r["task"]["task_id"]: r for r in reps}
+        for i, t in enumerate(tasks):
+            r = by.get(t)
+            if not r:
+                continue
+            v = r["outcome"]["final_speedup"] or 1.0
+            y = len(tasks) - 1 - i + 0.4 - h * (k + 0.5)
+            met = r["outcome"]["goal_met"]
+            ax.barh(y, v - 0.0, height=h * 0.85, left=0, color=cols[k] if met else "#" + CARD, edgecolor=cols[k], linewidth=1.5)
+            ax.text(v + 0.02, y, f"{v:.2f}×" + ("" if met else " ✕"), va="center", fontsize=9, color="#" + INK2)
+    ax.axvline(1.1, color="#" + ACCENT, lw=1.3)
+    ax.axvline(1.0, color="#" + RULE, lw=1)
+    ax.set_yticks(range(len(tasks)))
+    ax.set_yticklabels(list(reversed(tasks)), fontsize=11)
+    xs = [r["outcome"]["final_speedup"] or 1 for _, reps in rounds for r in reps]
+    ax.set_xlim(0.6, max(1.8, max(xs) + 0.25))
+    ax.grid(axis="x", color="#" + RULE, lw=0.6)
+    for sp in ("top", "right", "left"):
+        ax.spines[sp].set_visible(False)
+    ax.spines["bottom"].set_color("#" + RULE)
+    ax.tick_params(colors="#" + INK2, length=0)
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(facecolor=cols[k], label=name) for k, (name, _) in enumerate(rounds)] +
+              [Patch(facecolor="#" + CARD, edgecolor="#" + INK3, label="空心 / ✕ = 最终测试未达标")],
+              loc="upper left", frameon=False, fontsize=9.5, ncol=3, bbox_to_anchor=(0, -0.08))
+    ax.set_title("每轮学习后各任务的最终加速比（隐藏最终数据）", loc="left", fontsize=12, color="#" + INK, pad=10)
+    fig.tight_layout()
+    fig.savefig(out, facecolor=fig.get_facecolor())
+    plt.close(fig)
+    return out
 
 
 def dots_chart(c: dict, out: Path, title: str) -> Path:
@@ -230,11 +302,13 @@ def side_rows(c: dict) -> list[list[str]]:
         ["达标 / 运行", f"{A['goal_met']} / {A['runs']}", f"{B['goal_met']} / {B['runs']}"],
         ["最终加速比中位数", x(A["final_speedup_median"]), x(B["final_speedup_median"])],
         ["模型请求中位数", g(A["model_requests_median"]), g(B["model_requests_median"])],
+        *([["未调用模型的运行", str(A.get("runs_without_model_request", 0)), str(B.get("runs_without_model_request", 0))]]
+          if "runs_without_model_request" in B and B.get("programs_reused_total") else []),
         ["升级到 GPT 次数", str(A["upgrades_total"]), str(B["upgrades_total"])],
         ["失败候选", str(A["candidates_failed_total"]), str(B["candidates_failed_total"])],
         ["输出 Token 合计", n(A["output_tokens"]["total"]), n(B["output_tokens"]["total"])],
         ["模型费用合计", usd(A["cost_usd_total"]), usd(B["cost_usd_total"])],
-        ["总耗时", f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s"],
+        ["总耗时 / 循环中位数", f"{A['wall_clock_s_total']:.0f}s / {A['agent_loop_s_median']:.0f}s", f"{B['wall_clock_s_total']:.0f}s / {B['agent_loop_s_median']:.0f}s"],
     ]
 
 
@@ -244,10 +318,15 @@ def build(out: Path, shots: Path) -> None:
     d = Deck()
     charts = out.parent / "deck"
     charts.mkdir(parents=True, exist_ok=True)
-    learn = learn_rows()
-    cmp_b, cmp_c = find_comparison("B"), find_comparison("C")
-    final_snap = learned_snapshot()
+    learn1 = learn_rows(V1_LEARN)
+    learn2 = learn_rows(V2_LEARN)
+    v1_b, v1_c = find_comparison("B dev comparison", exact=True), find_comparison("C final held-out", exact=True)
+    cmp_b, cmp_d = find_comparison("B dev comparison · reuse"), find_comparison("D final held-out · reuse")
+    final_snap = learned_snapshot(V2_LEARN) if learn2 else learned_snapshot(V1_LEARN)
     snap = memory.snapshot(final_snap)
+    headline = cmp_d if cmp_d and cmp_d["finished_runs"] else cmp_b
+    x = lambda v: "—" if v is None else f"{v:.2f}×"  # noqa: E731
+    usd = lambda v: "未知" if v is None else f"${v:.3f}"  # noqa: E731
 
     # 1 cover
     s = d.slide()
@@ -257,8 +336,14 @@ def build(out: Path, shots: Path) -> None:
     evo.text = "Evo"
     evo.font.size, evo.font.italic, evo.font.name = Pt(80), True, "Georgia"
     evo.font.color.rgb = rgb(ACCENT)
-    d.text(s, "在实验反馈中推进研究、从经验中自我改进的 Research Agent", 0.95, 3.5, 11.5, 0.7, size=26, color=PAPER, font=HEAD_FONT, bold=True)
-    d.text(s, "规划 → 取证 → 假设 → 实验 → 验证 → 修正 → 经验 → 更好的下一次研究", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
+    d.text(s, "把已验证的研究成果，变成下一次研究的起点", 0.95, 3.5, 11.5, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
+    d.text(s, "取证 → 假设 → 实验 → 验证 → 修正 → 已验证成果入库 → 下一次先复验、再超越", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
+    if headline and headline["finished_runs"]:
+        A, B = headline["sides"][headline["snapshot_a"]], headline["sides"][headline["snapshot_b"]]
+        d.text(s, (f"{'D 封存留出' if headline is cmp_d else 'B 开发对照'}：最终加速比中位数 {x(A['final_speedup_median'])} → {x(B['final_speedup_median'])} · "
+                   f"模型请求中位数 {g(A['model_requests_median'])} → {g(B['model_requests_median'])} · GPT 费用 {usd(A['cost_usd_total'])} → {usd(B['cost_usd_total'])} · "
+                   f"循环时长中位数 {A['agent_loop_s_median']:.0f}s → {B['agent_loop_s_median']:.0f}s"),
+               0.95, 5.0, 11.5, 0.5, size=14, color=PAPER)
     d.text(s, "BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
 
     # 2 questions
@@ -268,37 +353,38 @@ def build(out: Path, shots: Path) -> None:
     d.text(s, "在预算内完成“取证—假设—实验—验证—修正”：每个实验有事前假设，判定来自独立评测，反馈改变下一步；交付可复现的成果。", 0.9, 2.6, 5.4, 1.6, size=15, color=INK2)
     d.card(s, 6.8, 1.8, 5.9, 2.6, ACCENT)
     d.text(s, "② 系统能否自我改进", 7.1, 2.0, 5.4, 0.5, size=20, bold=True, font=HEAD_FONT)
-    d.text(s, "花了多少 Token、费用和时间？同样的模型、提示词、预算和评测，只换经验快照：在未参与学习的任务上是否更好、更省？", 7.1, 2.6, 5.4, 1.6, size=15, color=INK2)
-    d.bullets(s, ["学习发生在系统层：不训练模型、不改提示词，程序把经过评测的执行事实写成不可变的经验快照",
+    d.text(s, "同样的模型、提示词、预算和评测，只换经验快照：在没参与学习的任务上，是否更快、更省、结果更好？", 7.1, 2.6, 5.4, 1.6, size=15, color=INK2)
+    d.bullets(s, ["学习发生在系统层：不训练模型、不改提示词，程序把经过评测的执行事实与程序写成不可变的经验快照",
                   "结论只来自留出任务上的对照数据，全部运行（包括失败与无收益）都计入"], 0.6, 4.8, 12, 2, size=16)
 
     # 3 task
+    n_tasks = db.one("SELECT COUNT(*) AS n FROM tasks WHERE split IN ('A','B','C','D','smoke') AND task_id NOT LIKE 't-%'")["n"]
     s = d.slide("研究任务：在正确性约束下优化程序", "研究任务")
     d.bullets(s, ["按字符串 key 分组 CSV，输出每组数量与整数和，按 key 升序",
                   "初始程序：csv + 两个 dict + sorted，正确、正常，不人为削弱",
                   "主指标：加速比 = 初始程序耗时中位数 / 候选耗时中位数",
                   "达标：输出全对 + 5 次候选样本全部快于 5 次基线样本 + 加速比 ≥ 1.10",
-                  "19 个冻结任务包（哈希锁定）：A 学习 6 · B 开发对照 6 · C 最终留出 6 · smoke 1",
+                  f"{n_tasks} 个冻结任务包（哈希锁定）：A 学习 · B 开发对照 · C 第一版留出 · D 第二版封存留出（各 6 个）· smoke",
                   "  覆盖随机、有序、成簇、几乎有序陷阱、低基数、高基数、小输入——A 的经验不必处处成立"], 0.6, 1.75, 7.2, 5, size=16)
     d.card(s, 8.1, 1.8, 4.6, 4.6)
     d.text(s, "同一个优化，效果相反", 8.35, 1.95, 4.2, 0.4, size=14, bold=True, color=ACCENT)
     d.text(s, "按字节解析 + 单字典：\n  中等基数（A-01）≈ 1.44×\n  高基数（A-05）≈ 0.82×\n\n带有序检查的 groupby：\n  所有 A 任务 ≈ 0.7×\n\n只用 groupby 不检查：\n  有序数据上正确，\n  但违反契约用例 → 判失败", 8.35, 2.45, 4.2, 3.9, size=14, color=INK2)
 
     # 4 loop
-    s = d.slide("研究循环：模型选行动，程序执行并验证", "架构")
-    steps = [("构造状态", "契约 · 数据画像 · 候选\n反馈 · 预算 · 经验"), ("模型选行动", "分析 · 取证 · 提出候选\n验证 · 结束"),
+    s = d.slide("研究循环：先复验已知成果，再由模型研究", "架构")
+    steps = [("复验已知成果", "经验中条件最接近的\n已验证程序 ≤ 3 个\n不调用模型"), ("模型选行动", "分析 · 取证 · 提出候选\n验证 · 结束"),
              ("程序检查", "动作参数 · 预算\n仅标准库 · 代码大小"), ("沙箱 + 评测器", "正确性 · 契约用例\n交替计时 · 最佳产物"),
              ("反馈", "状态 · 加速比 · 反例\n→ 下一步")]
     for i, (k, v) in enumerate(steps):
-        x = 0.6 + i * 2.5
-        d.card(s, x, 2.0, 2.2, 1.8, ACCENT if i == 1 else None)
-        d.text(s, k, x + 0.2, 2.15, 1.9, 0.45, size=16, bold=True, font=HEAD_FONT)
-        d.text(s, v, x + 0.2, 2.65, 1.9, 1.1, size=11.5, color=INK2)
+        xx = 0.6 + i * 2.5
+        d.card(s, xx, 2.0, 2.2, 1.8, ACCENT if i in (0, 1) else None)
+        d.text(s, k, xx + 0.2, 2.15, 1.9, 0.45, size=16, bold=True, font=HEAD_FONT)
+        d.text(s, v, xx + 0.2, 2.65, 1.9, 1.1, size=11.5, color=INK2)
         if i < 4:
-            d.text(s, "→", x + 2.2, 2.6, 0.3, 0.5, size=20, color=ACCENT, bold=True)
-    d.bullets(s, ["本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未“正确且达标”，或 Qwen 请求 3 次仍无达标候选 → 固定规则升级到 GPT-6.1 Sol（xhigh），本次运行不再切回",
-                  "每次运行最多 6 次模型请求、4 个候选、300 秒；预算耗尽后不再为总结调用模型",
-                  "终止原因分开记录：开发数据达标 · 预算耗尽 · Agent 结束 · 用户停止 · 接口错误 · 环境错误"], 0.6, 4.3, 12.1, 2.6, size=15)
+            d.text(s, "→", xx + 2.2, 2.6, 0.3, 0.5, size=20, color=ACCENT, bold=True)
+    d.bullets(s, ["评测运行：复验已达标就交付，不调用模型；没达标，复验结果作为证据交给模型。学习运行：复验已达标时把本次目标提高到超过已知最佳 5%",
+                  "本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未达标，或 Qwen 请求 3 次仍无达标候选 → 固定规则升级到 GPT-6.1 Sol（xhigh）",
+                  "每次运行最多 6 次模型请求、4 个模型候选、300 秒（复验也计时）；预算耗尽后不再为总结调用模型"], 0.6, 4.2, 12.1, 2.7, size=15)
 
     # 5 trust
     s = d.slide("可信的验证：模型碰不到裁判", "验证")
@@ -307,10 +393,10 @@ def build(out: Path, shots: Path) -> None:
                   "7 个公开契约用例：空输入、交错重复 key、ASCII 排序、超大整数、几乎有序陷阱、32 字符 key",
                   "计时：容器内启动器就绪后才开始；基线与候选各预热一次，交替 5 轮，取中位数之比",
                   "“改善”= 全部候选样本快于全部基线样本（单侧 Mann-Whitney U=0，p≈0.004）；同一程序靠噪声测出 1.05× 也不算",
-                  "循环结束后最佳候选冻结，在隐藏最终数据上测一次，结果不回流"], 0.6, 1.75, 12.1, 5, size=16)
+                  "复用的程序和模型候选走同一个评测器；循环结束后最佳候选冻结，在隐藏最终数据上测一次，结果不回流"], 0.6, 1.75, 12.1, 5, size=16)
 
-    # 6 one real research chain: hypothesis → measurement → program verdict
-    first = learn[0] if learn else None
+    # 6 one real research chain (version 1, no experience): hypothesis → measurement → program verdict
+    first = learn1[0] if learn1 else None
     if first:
         s = d.slide(f"一条真实的研究链：{first['task']['task_id']}（无经验 v0）", "反馈驱动")
         up = first["iterations"]["upgrade_at_step"]
@@ -333,197 +419,253 @@ def build(out: Path, shots: Path) -> None:
         d.text(s, "判定由程序依据评测给出：改善且达标 = 支持；正确但没有改善 = 反驳；候选出错 = 未能检验。模型不能自评。",
                0.6, 6.3, 7.6, 0.5, size=11, color=INK3)
 
-    # 6b research statistics over every formal run
-    groups = [("A 学习", [r["run_id"] for r in learn])]
-    for c, key in ((cmp_b, "B"), (cmp_c, "C")):
+    # 7 version 1 finding: cheaper, but stopping at a smaller speedup
+    if v1_c and v1_c["finished_runs"]:
+        a, b = v1_c["snapshot_a"], v1_c["snapshot_b"]
+        A, B = v1_c["sides"][a], v1_c["sides"][b]
+        s = d.slide("第一版的发现：更省了，但停在更低的加速比", "第一版 · 只有文字经验")
+        rows = [["任务", f"{a} 加速比", f"{b} 加速比", f"{a} 请求", f"{b} 请求"]]
+        for t in v1_c["tasks"]:
+            cells = []
+            for sn in (a, b):
+                runs = v1_c["per_task"][t][sn]["runs"]
+                cells.append(" ".join(("—" if r["final_speedup"] is None else f"{r['final_speedup']:.2f}") + ("" if r["goal_met"] else "✕") for r in runs))
+            rows.append([t, *cells, *(" ".join(str(r["model_requests"]) for r in v1_c["per_task"][t][sn]["runs"]) for sn in (a, b))])
+        d.table(s, rows, 0.6, 1.8, 7.4, [0.9, 2.0, 2.0, 1.25, 1.25], size=12)
+        split = gpt_split(v1_c)
+        med = lambda v: f"{statistics.median(v):.2f}×" if v else "—"  # noqa: E731
+        d.card(s, 8.3, 1.8, 4.4, 4.7, ACCENT)
+        d.text(s, f"C 最终留出（{a} → {b}）", 8.55, 1.95, 4, 0.4, size=15, bold=True, color=ACCENT)
+        d.text(s, (f"达标 {A['goal_met']}/{A['runs']} → {B['goal_met']}/{B['runs']}\n请求中位数 {g(A['model_requests_median'])} → {g(B['model_requests_median'])}"
+                   f" · 升级 {A['upgrades_total']} → {B['upgrades_total']}\nGPT 费用 {usd(A['cost_usd_total'])} → {usd(B['cost_usd_total'])}\n"
+                   f"最终加速比中位数 {x(A['final_speedup_median'])} → {x(B['final_speedup_median'])}\n\n"
+                   f"达标运行里，用过 GPT 的中位数 {med(split['gpt'])}，只用 Qwen 的 {med(split['qwen'])}。"
+                   f"有经验后 Qwen 一次达标就停，GPT 找到的更快方案用不上。"),
+               8.55, 2.4, 4, 4, size=12.5, color=INK2)
+        d.text(s, "✕ = 未达标；— = 没有计时结果。这批数字来自第一版配置（经验只有文字记录与 diff），是第二版修改的依据。", 0.6, 6.3, 7.4, 0.5, size=11, color=INK3)
+
+    # 8 diagnosis → change (the system's own research loop)
+    s = d.slide("对系统本身做研究：诊断 → 修改 → 封存验收", "第二版")
+    rt = retyped_program()
+    cause1 = ("经验里已有完整的好程序，模型却要花一次请求把它重新写一遍"
+              + (f"：第一版学习中，{rt[1]['task_id']} 的 Qwen 候选 {rt[1]['candidate_id']} 与 {rt[0]['task_id']} 的 {rt[0]['candidate_id']} 去掉空白后逐字相同。" if rt else "。"))
+    cols3 = [("发现（第一版 C）", "有经验后请求、升级、费用都下降，达标率不变，最终加速比中位数却下降。"),
+             ("原因", f"① {cause1}\n② 达标即停：Qwen 写出约 1.27× 就停止，GPT 找到的约 1.5× 方案不会被再次使用。"),
+             ("修改（第二版）", "① 经验保存完整程序；新任务首次请求前，由程序复验条件最接近的 ≤ 3 个已验证程序，评测运行达标即交付。\n"
+                              "② 学习运行复验达标时，把目标提高到超过已知最佳 5%，模型只做“超越”。\n"
+                              "③ 复验结果也写成经验：哪些程序在哪些条件下成立。")]
+    for i, (k, v) in enumerate(cols3):
+        xx = 0.6 + i * 4.1
+        d.card(s, xx, 1.8, 3.85, 3.9, ACCENT if i == 2 else None)
+        d.text(s, k, xx + 0.25, 1.95, 3.4, 0.45, size=17, bold=True, font=HEAD_FONT)
+        d.text(s, v, xx + 0.25, 2.5, 3.4, 3.1, size=12.5, color=INK2)
+    d.text(s, ("公平性：修改改变了配置指纹，所以第二版重新学习、重新对照（v0 与学习后的快照用同一配置）。"
+               "第一版 C 的结果是修改的依据，不能再当留出集；为此在实现第二版之前新建并封存了 D 批 6 个任务（提交 d542906），只在 B 上定型后运行一次。"),
+           0.6, 5.95, 12.1, 0.9, size=12.5, color=INK2)
+
+    # 9 version 2 research chain: re-use → raised target → beat the known best
+    chain = next((r for r in learn2 if any(st["action"] == "set_target" for st in r["steps"])
+                  and any(e["kind"] == "model" and e["verdict"] == "supported" for e in r["research"]["experiments"])), None)
+    if chain:
+        s = d.slide(f"站在已知最佳上继续研究：{chain['task']['task_id']}（读取 {chain['snapshot_id']}）", "第二版 · 研究链")
+        up = chain["iterations"]["upgrade_at_step"]
+        labels = chain["research"]["verdict_labels"]
+        rows = [["候选", "执行者", "事前假设", "实测", "判定（当时目标）"]]
+        for e in chain["research"]["experiments"]:
+            res = e["result"]
+            who = "程序复用" if e["kind"] == "reuse" else ("GPT" if up and e["step"] > up else "Qwen")
+            rows.append([e["candidate_id"], who, (e["hypothesis"] or e["purpose"] or "")[:62] + "…",
+                         (res["status"] or "—") + (f" · {res['speedup']:.2f}×" if res["speedup"] is not None else ""),
+                         f"{labels[e['verdict']].split('（')[0]}（{e['target']:g}×）"])
+        d.table(s, rows, 0.6, 1.8, 7.8, [0.6, 1.0, 3.7, 1.3, 1.2], size=11)
+        raised = next(st for st in chain["steps"] if st["action"] == "set_target")
+        d.card(s, 8.6, 1.8, 4.1, 4.7, ACCENT)
+        d.text(s, "发生了什么", 8.85, 1.95, 3.7, 0.4, size=15, bold=True, color=ACCENT)
+        reuse = [e for e in chain["research"]["experiments"] if e["kind"] == "reuse"]
+        d.text(s, (f"程序先复验 {len(reuse)} 个已验证程序，没有调用模型；最好的 {raised['result']['best_candidate_id']} 在本任务上 "
+                   f"{raised['result']['best_dev_speedup']:.2f}×，已达标。\n\n"
+                   f"学习运行据此把目标提高到 {raised['result']['run_target_speedup']:g}×，模型以它为父候选改进。\n\n"
+                   f"最终：{chain['outcome']['summary']}；{chain['iterations']['model_requests']} 次请求 · "
+                   f"${chain['usage']['total']['cost_usd'] or 0:.3f} · 发布 {chain['experience']['published_snapshot_id'] or '—'}，"
+                   "下一个任务从这个更快的程序起步。"), 8.85, 2.4, 3.7, 4, size=12.5, color=INK2)
+
+    # 10 research statistics over every formal run
+    groups = [("第二版 · A 学习", [r["run_id"] for r in learn2])] if learn2 else []
+    for c, key in ((cmp_b, "第二版 · B"), (cmp_d, "第二版 · D")):
         if c and c["finished_runs"]:
             for side in (c["snapshot_a"], c["snapshot_b"]):
                 groups.append((f"{key} · {side}", [r["run_id"] for t in c["tasks"] for r in c["per_task"][t][side]["runs"]]))
-    aggs = [(name, research.aggregate([report.build(i) for i in ids])) for name, ids in groups]
-    rtotal = {k: sum(a[k] for _, a in aggs) for k in ("runs", "experiments", "supported", "partial", "refuted", "untestable", "follow_ups", "follow_ups_citing_prior")}
+    groups.append(("第一版 · A 学习", [r["run_id"] for r in learn1]))
+    for c, key in ((v1_b, "第一版 · B"), (v1_c, "第一版 · C")):
+        if c and c["finished_runs"]:
+            for side in (c["snapshot_a"], c["snapshot_b"]):
+                groups.append((f"{key} · {side}", [r["run_id"] for t in c["tasks"] for r in c["per_task"][t][side]["runs"]]))
+    aggs = [(name, research.aggregate([report.build(i) for i in ids])) for name, ids in groups if ids]
+    keys = ("runs", "experiments", "reuse_experiments", "reuse_supported", "supported", "partial", "refuted", "untestable", "follow_ups", "follow_ups_citing_prior")
+    rtotal = {k: sum(a[k] for _, a in aggs) for k in keys}
     s = d.slide(f"研究过程统计：{rtotal['runs']} 次运行、{rtotal['experiments']} 个实验，全部如实判定", "研究过程")
-    rows = [["批次 · 快照", "运行", "实验", "支持", "部分支持", "反驳", "未能检验", "引用此前候选"]]
+    rows = [["批次 · 快照", "运行", "实验", "其中复用", "支持", "部分", "反驳", "未能检验", "引用此前候选"]]
     for name, a in aggs:
-        rows.append([name, str(a["runs"]), str(a["experiments"]), str(a["supported"]), str(a["partial"]), str(a["refuted"]),
-                     str(a["untestable"]), f"{a['follow_ups_citing_prior']} / {a['follow_ups']}"])
-    d.table(s, rows, 0.6, 1.8, 12.1, [2.3, 1.1, 1.1, 1.1, 1.4, 1.1, 1.5, 2.5], size=13)
-    d.bullets(s, [f"合计：支持 {rtotal['supported']} · 部分支持 {rtotal['partial']} · 反驳 {rtotal['refuted']} · 未能检验 {rtotal['untestable']}——被反驳和出错的实验同样保留，不写成假设成立",
-                  "有经验时实验更少，被反驳或出错的比例更低（" + "，".join(
-                      f"{k} " + " → ".join(f"{(a['refuted'] + a['untestable']) / a['experiments']:.0%}" for n, a in aggs if n.startswith(k + " ") and a["experiments"])
-                      for k in ("B", "C")) + "）",
-                  f"“引用此前候选”：后续假设点名同一运行中更早的候选（{rtotal['follow_ups_citing_prior']}/{rtotal['follow_ups']}），只是反馈驱动的文字下限"],
-              0.6, 4.6, 12.1, 2, size=14)
+        rows.append([name, str(a["runs"]), str(a["experiments"]), f"{a['reuse_experiments']}（{a['reuse_supported']}）", str(a["supported"]),
+                     str(a["partial"]), str(a["refuted"]), str(a["untestable"]), f"{a['follow_ups_citing_prior']} / {a['follow_ups']}"])
+    d.table(s, rows, 0.6, 1.7, 12.1, [2.6, 0.9, 0.9, 1.4, 0.9, 0.9, 0.9, 1.4, 2.2], size=10.5)
+    d.text(s, (f"合计：支持 {rtotal['supported']} · 部分支持 {rtotal['partial']} · 反驳 {rtotal['refuted']} · 未能检验 {rtotal['untestable']}；"
+               f"其中复用实验 {rtotal['reuse_experiments']} 个（得到支持 {rtotal['reuse_supported']}）。被反驳和出错的实验同样保留。"
+               "“引用此前候选”只统计模型假设里点名同一运行更早的候选，是反馈驱动的文字下限。"),
+           0.6, 1.7 + 0.36 * len(rows) + 0.2, 12.1, 0.9, size=12, color=INK2)
 
-    # 6c deliverables
+    # 11 deliverables
     s = d.slide("研究成果：可运行、可复核、可追溯", "交付")
     d.bullets(s, ["export-run --bundle：研究记录（研究任务 · 过程 · 假设与实验 · 最终测试 · 资源 · 复现）",
                   "best.py 最佳已验证程序 · 全部候选代码 · 原始模型请求与回复 · report.json",
                   "reproduce.sh：在同一评测器、全新容器中复核最终数据；可选重跑整个研究循环",
                   "没有验证出改进时，交付初始程序并写明“无改进”，不包装成提升"], 0.6, 1.75, 7.0, 3.2, size=15)
     d.card(s, 8.0, 1.8, 4.7, 4.5, ACCENT)
-    d.text(s, "docs/research/ 中的四个样例", 8.25, 1.95, 4.3, 0.4, size=15, bold=True, color=ACCENT)
-    d.text(s, ("按规则从正式运行中选出：\n\n① 反馈驱动的修正链（A-01）\n② 没有验证出改进（A-05）\n"
-               "③ 读取经验后一次达标（C 留出任务）\n④ 开发达标、最终测试未达标\n\n"
-               "A-01 复核：最终数据正确，1.44×（记录值 1.4367×）"), 8.25, 2.4, 4.3, 3.8, size=13, color=INK2)
+    d.text(s, "docs/research/ 中的样例", 8.25, 1.95, 4.3, 0.4, size=15, bold=True, color=ACCENT)
+    readme = Path(__file__).resolve().parents[2] / "docs" / "research" / "README.md"
+    cases = [ln.split("](")[0].lstrip("| [") for ln in readme.read_text().splitlines() if ln.startswith("| [")] if readme.exists() else []
+    d.text(s, "按规则从正式运行中选出：\n\n" + "\n".join(f"{i}. {c}" for i, c in enumerate(cases, 1))
+           + "\n\nA-01 复核：最终数据正确，1.44×（记录值 1.4367×）", 8.25, 2.4, 4.3, 3.8, size=12.5, color=INK2)
 
-    # 7 experience
-    s = d.slide("经验是什么：程序从已验证的执行事实中提取", "经验")
-    succ = [e for e in snap["experiences"] if e["outcome"] == "success"][:1]
-    fail = ([e for e in snap["experiences"] if e["outcome"] == "failure"] or [e for e in snap["experiences"] if e["outcome"] != "success"])[:1]
-    for i, e in enumerate(succ + fail):
-        x = 0.6 + i * 6.2
-        d.card(s, x, 1.8, 5.9, 4.0, GOOD if e["outcome"] == "success" else BAD)
+    # 12 experience
+    s = d.slide("经验是什么：已验证的程序，加上它成立的条件", "经验")
+    succ = sorted([e for e in snap["experiences"] if e["outcome"] == "success"], key=lambda e: -(e["result"]["speedup"] or 0))[:1]
+    other = [e for e in snap["experiences"] if e["outcome"] != "success" and e["action"].get("kind") == "reuse_candidate"] or \
+            [e for e in snap["experiences"] if e["outcome"] != "success"]
+    for i, e in enumerate(succ + other[:1]):
+        xx = 0.6 + i * 6.2
+        d.card(s, xx, 1.8, 5.9, 4.0, GOOD if e["outcome"] == "success" else BAD)
         label = {"success": "✓ 成功", "no_gain": "– 无收益", "failure": "✕ 失败"}[e["outcome"]]
-        d.text(s, f"{label} · {e['conditions']['task_id']}", x + 0.3, 1.95, 5.4, 0.4, size=16, bold=True)
+        kind = "复验已有程序" if e["action"].get("kind") == "reuse_candidate" else "模型提出"
+        d.text(s, f"{label} · {e['conditions']['task_id']} · {kind}", xx + 0.3, 1.95, 5.4, 0.4, size=16, bold=True)
         b = e["conditions"]["buckets"]
         res = e["result"]
         claim = (f"条件：{b['rows']} 行 · key {b['distinct_keys']} · {b['order']} · 偏斜 {b['skew']}\n"
-                 f"改动特征：{', '.join(e['action']['code_features'].get('calls', [])[:7])}\n"
+                 f"程序：{len((e['action'].get('code') or '').splitlines())} 行，调用 {', '.join(e['action']['code_features'].get('calls', [])[:6])}\n"
                  f"实测：{res['status']}" + (f"，{res['speedup']:.2f}×" if res["speedup"] else "")
                  + (f"（{', '.join(res['failure_kinds'] or [])}）" if res.get("failure_kinds") else "")
                  + f"\n来源：{e['source']['run_id']} 第 {e['source']['step_seq']} 步 {e['source']['candidate_id']}\n\n"
-                 f"模型解释（未验证）：{(e['hypothesis'] or '—')[:80]}")
-        d.text(s, claim, x + 0.3, 2.45, 5.4, 3.3, size=12.5, color=INK2)
+                 f"解释（未验证）：{(e['hypothesis'] or '—')[:90]}")
+        d.text(s, claim, xx + 0.3, 2.45, 5.4, 3.3, size=12.5, color=INK2)
     counts = snap["counts"]
-    d.text(s, f"{final_snap} 共 {len(snap['experiences'])} 条：成功 {counts.get('success', 0)} · 无收益 {counts.get('no_gain', 0)} · 失败 {counts.get('failure', 0)}。"
-              "检索：5 个分桶特征至少匹配 3 个，最多注入 3 成功 + 2 失败 + 1 无收益，并标出不同的特征与样本数。",
+    progs = {memory.normalized_code(e["action"]["code"]) for e in snap["experiences"] if e["outcome"] == "success" and e["action"].get("code")}
+    d.text(s, (f"{final_snap} 共 {len(snap['experiences'])} 条：成功 {counts.get('success', 0)} · 无收益 {counts.get('no_gain', 0)} · 失败 {counts.get('failure', 0)}；"
+               f"可复验的不同程序 {len(progs)} 个。程序从评测记录中提取，不额外调用模型；有更接近当前负载的无收益或失败记录时，该程序不会被复验。"),
            0.6, 6.05, 12.1, 0.8, size=13, color=INK2)
 
-    # 8 learning
-    if learn:
-        s = d.slide(f"学习阶段：A 批 6 个任务串行，v0 → {final_snap}", "学习")
-        rows = [["任务", "读取", "结果", "请求", "模型路径", "费用", "读到经验", "发布"]]
-        for r in learn:
-            roles = "".join("G" if "large" in k else "Q" for k, v in r["usage"]["by_model"].items() for _ in range(v["requests"]))
-            res = (f"达标 {r['outcome']['final_speedup']:.2f}×" if r["outcome"]["goal_met"]
-                   else f"未达标（{narrative.STOP_ZH.get(r['stop_reason'], r['stop_reason'])}）")
-            rows.append([r["task"]["task_id"], r["snapshot_id"], res, str(r["iterations"]["model_requests"]),
-                         roles or "—", f"${r['usage']['total']['cost_usd'] or 0:.3f}", str(len(r["experience"]["read"])),
-                         r["experience"]["published_snapshot_id"] or "—"])
-        d.table(s, rows, 0.6, 1.8, 12.1, [0.9, 0.8, 4.2, 0.8, 1.6, 1.2, 1.2, 1.4], size=12)
-        total = sum((r["usage"]["total"]["cost_usd"] or 0) for r in learn)
-        d.text(s, f"学习阶段总费用 ${total:.3f}（GPT 按官方价表估算；本地 Qwen 无 API 费用，机器成本未核算）。"
-                  "这是学习过程中的观察，不是对照证据——效果结论见下两页的留出对照。", 0.6, 5.0, 12.1, 0.9, size=14, color=INK2)
+    # 13 learning in two rounds
+    if learn2:
+        rounds = [(f"第 {lbl[-1]} 轮", [r for r in learn2 if r["label"] == lbl]) for lbl in V2_LEARN]
+        rounds = [(n_, reps) for n_, reps in rounds if reps]
+        s = d.slide(f"学习：A 批 {len(rounds)} 轮，v0 → {final_snap}，方案库越学越快", "第二版 · 学习")
+        img = ratchet_chart(rounds, charts / "ratchet.png")
+        d.image(s, img, 0.5, 1.65, 6.9)
+        rows = [["轮次", "达标", "请求", "复验", "费用", "耗时"]]
+        for name, reps in rounds:
+            rows.append([name, f"{sum(r['outcome']['goal_met'] for r in reps)}/{len(reps)}",
+                         str(sum(r["iterations"]["model_requests"] for r in reps)),
+                         str(sum(r["iterations"]["programs_reused"] for r in reps)),
+                         f"${sum(r['usage']['total']['cost_usd'] or 0 for r in reps):.3f}",
+                         f"{sum(r['timing']['wall_clock_total_s'] or 0 for r in reps):.0f}s"])
+        d.table(s, rows, 7.7, 1.8, 5.0, [1.0, 0.8, 0.8, 0.8, 0.8, 0.8], size=12)
+        d.text(s, ("每个学习运行先复验已有程序：已达标就把目标提高 5%，模型只做超越；没达标（如高基数任务）就照常研究。"
+                   "第 2 轮在第 1 轮的成果上重学同样 6 个任务。这些是学习过程的观察，效果以留出对照为准。"),
+               7.7, 1.8 + 0.36 * len(rows) + 0.3, 5.0, 2.5, size=12.5, color=INK2)
 
-    # 9/10 comparisons
-    for c, name in ((cmp_b, "B 批开发对照"), (cmp_c, "C 批最终留出")):
-        s = d.slide(f"{name}：v0 vs {c['snapshot_b'] if c else final_snap}", "对照结果")
+    # 14/15 comparisons (version 2)
+    for c, name, key in ((cmp_b, "B 开发对照", "B2"), (cmp_d, "D 封存留出（最终验收）", "D")):
+        s = d.slide(f"{name}：v0 vs {c['snapshot_b'] if c else final_snap}", "第二版 · 对照结果")
         if not c or c["finished_runs"] == 0:
             d.text(s, "对照尚未完成。", 0.6, 2.0, 10, 1, size=20, color=INK3)
             continue
-        img = dots_chart(c, charts / f"{name[:1]}-dots.png", f"每个任务 × 每个快照 × {c['repeats']} 次的最终加速比（实心 = 达标）")
+        img = dots_chart(c, charts / f"{key}-dots.png", f"每个任务 × 每个快照 × {c['repeats']} 次的最终加速比（实心 = 达标）")
         d.image(s, img, 0.5, 1.65, 7.3)
         d.table(s, side_rows(c), 8.0, 1.75, 4.8, [1.9, 1.45, 1.45], size=11)
         lc = c["learning_cost"]
-        first_run = next(r["run_id"] for t in c["tasks"] for r in c["per_task"][t][c["snapshot_a"]]["runs"])
-        rule = json.loads(db.one("SELECT config_json FROM runs WHERE run_id = ?", (first_run,))["config_json"])["upgrade_rule"]["id"]
-        foot = (f"{c['finished_runs']}/{c['planned_runs']} 次运行 · 配置一致性{'通过' if c['fair'] else '未通过'} · {rule} · "
-                + (f"学习成本另计 ${lc['cost_usd']:.3f} / {lc['wall_clock_s']:.0f}s" if lc.get("in_lineage") and lc.get("cost_usd") is not None else ""))
-        d.text(s, foot, 8.0, 5.3, 4.8, 0.8, size=11, color=INK3)
+        foot = (f"{c['finished_runs']}/{c['planned_runs']} 次运行 · 配置一致性{'通过' if c['fair'] else '未通过'} · "
+                + (f"学习成本另计 ${lc['cost_usd']:.3f} / {lc['wall_clock_s']:.0f}s（{len(lc['learn_runs'])} 次学习运行）" if lc.get("in_lineage") and lc.get("cost_usd") is not None else ""))
+        d.text(s, foot, 8.0, 5.55, 4.8, 0.8, size=11, color=INK3)
 
-    # what the headline medians hide: fewer upgrades also means stopping at a smaller speedup
-    if cmp_c and cmp_c["finished_runs"]:
-        a, b = cmp_c["snapshot_a"], cmp_c["snapshot_b"]
-        s = d.slide("代价：少升级，也就更早停在较小的加速比", "C 批解读")
-        rows = [["任务", f"{a} 加速比", f"{b} 加速比", f"{a} 请求", f"{b} 请求"]]
-        for t in cmp_c["tasks"]:
-            cells = []
-            for snapname in (a, b):
-                runs = cmp_c["per_task"][t][snapname]["runs"]
-                cells.append(" ".join(("—" if r["final_speedup"] is None else f"{r['final_speedup']:.2f}") + ("" if r["goal_met"] else "✕") for r in runs))
-            rows.append([t, *cells, *(" ".join(str(r["model_requests"]) for r in cmp_c["per_task"][t][sn]["runs"]) for sn in (a, b))])
-        d.table(s, rows, 0.6, 1.8, 7.4, [0.9, 2.0, 2.0, 1.25, 1.25], size=12)
-        split = {k: gpt_split(c) for k, c in (("B", cmp_b), ("C", cmp_c)) if c and c["finished_runs"]}
-        med = lambda v: f"{statistics.median(v):.2f}×" if v else "—"  # noqa: E731
-        d.card(s, 8.3, 1.8, 4.4, 4.7, ACCENT)
-        d.text(s, "为什么", 8.55, 1.95, 4, 0.4, size=15, bold=True, color=ACCENT)
-        d.text(s, ("达标线是 1.10×，智能体达标即停止。\n\n达标运行的最终加速比中位数（两版合计）：\n"
-                   + "\n".join(f"  {k}：用过 GPT {med(v['gpt'])}（{len(v['gpt'])} 次）· 只用 Qwen {med(v['qwen'])}（{len(v['qwen'])} 次）" for k, v in split.items())
-                   + f"\n\n{a} 更常升级到 GPT，在 C-01、C-02 上停在更快的程序；{b} 用学到的做法一次达标就停。"
-                   "学到的是更省的达标路径，不是更高的上限；要追求上限需要改终止条件。"),
-               8.55, 2.4, 4, 4, size=12.5, color=INK2)
-        d.text(s, "✕ = 未达标；— = 没有计时结果。开发数据上达标、最终测试有样本不快于基线的运行同样记为 ✕。", 0.6, 6.3, 7.4, 0.5, size=11, color=INK3)
-
-    # behaviour pair: same held-out task, same repeat, two snapshots
-    if cmp_b and cmp_b["finished_runs"]:
-        pt = cmp_b["per_task"]
-        a, b = cmp_b["snapshot_a"], cmp_b["snapshot_b"]
-        # the task where the old snapshot needed the most requests in repeat 1 shows the change most plainly
-        task = max(cmp_b["tasks"], key=lambda t: (pt[t][a]["runs"][0]["model_requests"] - pt[t][b]["runs"][0]["model_requests"]))
+    # 16 behaviour pair on the headline comparison
+    if headline and headline["finished_runs"]:
+        pt = headline["per_task"]
+        a, b = headline["snapshot_a"], headline["snapshot_b"]
+        task = max(headline["tasks"], key=lambda t: (pt[t][a]["runs"][0]["model_requests"] - pt[t][b]["runs"][0]["model_requests"],
+                                                     -(pt[t][b]["runs"][0]["agent_loop_s"] or 0)))
         ra, rb = report.build(pt[task][a]["runs"][0]["run_id"]), report.build(pt[task][b]["runs"][0]["run_id"])
         s = d.slide(f"行为对照：{task} 第 1 轮，同一任务两版经验各做了什么", "RA-08 系统对照")
-        for i, (rep, snapname, col) in enumerate(((ra, a, OLD), (rb, b, NEW))):
-            x = 0.6 + i * 6.2
-            d.card(s, x, 1.75, 5.9, 4.9, col)
+        for i, (rep, sn, col) in enumerate(((ra, a, OLD), (rb, b, NEW))):
+            xx = 0.6 + i * 6.2
+            d.card(s, xx, 1.75, 5.9, 4.9, col)
             up = rep["iterations"]["upgrade_at_step"]
-            lines = [f"{snapname}（{'旧' if i == 0 else '新'}经验）· 读到经验 {len(rep['experience']['read'])} 条",
+            lines = [f"{sn}（{'无' if i == 0 else '有'}经验）· 复验程序 {rep['iterations']['programs_reused']} 个",
                      f"{rep['outcome']['summary']}",
-                     f"请求 {rep['iterations']['model_requests']} · 升级 {rep['iterations']['upgrades']} · 费用 ${rep['usage']['total']['cost_usd'] or 0:.3f} · {rep['timing']['wall_clock_total_s']:.0f}s", ""]
-            for st in rep["steps"]:
+                     f"请求 {rep['iterations']['model_requests']} · 升级 {rep['iterations']['upgrades']} · 费用 ${rep['usage']['total']['cost_usd'] or 0:.3f} · "
+                     f"循环 {rep['timing']['agent_loop_s']:.0f}s", ""]
+            for st in rep["steps"][:14]:
                 who = "程序" if st["actor"] == "program" else ("GPT" if up and st["seq"] > up else "Qwen")
                 sp = st["result"].get("speedup")
                 lines.append(f"{st['seq']:>2}  {who:<4} {narrative.ACTION_ZH.get(st['action'], st['action'])} "
                              f"{st['candidate_id'] or ''} {narrative.STATUS_ZH.get(st['status'], st['status'])}"
                              + (f" {sp:.2f}×" if isinstance(sp, (int, float)) else ""))
-            first = next((st["purpose"] for st in rep["steps"] if st["actor"] == "model" and st["purpose"]), "")
-            lines += ["", f"第一步的目的：{first[:110]}"]
-            d.text(s, "\n".join(lines), x + 0.3, 1.9, 5.4, 4.7, size=11.5, color=INK)
+            d.text(s, "\n".join(lines), xx + 0.3, 1.9, 5.4, 4.7, size=11.5, color=INK)
 
-    # where experience did not help
-    if cmp_b and cmp_b["finished_runs"]:
-        s = d.slide("经验不适用的地方：如实报告，并据此修改规则", "反例")
-        worst = min(cmp_b["tasks"], key=lambda t: cmp_b["per_task"][t][cmp_b["snapshot_b"]]["goal_met"] - cmp_b["per_task"][t][cmp_b["snapshot_a"]]["goal_met"])
-        rows = [["运行", cmp_b["snapshot_a"] + " 结果", "请求 / 模型", cmp_b["snapshot_b"] + " 结果", "请求 / 模型"]]
-        for k in range(cmp_b["repeats"]):
+    # 17 where re-use did not help
+    if headline and headline["finished_runs"]:
+        a, b = headline["snapshot_a"], headline["snapshot_b"]
+        pt = headline["per_task"]
+        worst = min(headline["tasks"], key=lambda t: (sum(r.get("best_from_reuse", False) for r in pt[t][b]["runs"]),
+                                                      pt[t][b]["goal_met"] - pt[t][a]["goal_met"]))
+        s = d.slide(f"复用不适用的地方：{worst}", "反例")
+        rows = [["运行", f"{a} 结果", "路径", f"{b} 结果", "路径"]]
+        for k in range(headline["repeats"]):
             cells = []
-            for snapname in (cmp_b["snapshot_a"], cmp_b["snapshot_b"]):
-                r = cmp_b["per_task"][worst][snapname]["runs"][k]
+            for sn in (a, b):
+                r = pt[worst][sn]["runs"][k]
                 rep = report.build(r["run_id"])
-                path = "".join("G" if "large" in key else "Q" for key, v in rep["usage"]["by_model"].items() for _ in range(v["requests"]))
-                cells += [("达标 " if r["goal_met"] else "未达标 ") + (f"{r['final_speedup']:.2f}×" if r["final_speedup"] else ""),
-                          f"{r['model_requests']} / {path}"]
+                cells += [("达标 " if r["goal_met"] else "未达标 ") + (f"{r['final_speedup']:.2f}×" if r["final_speedup"] else ""), path_of(rep)]
             rows.append([f"第 {k + 1} 轮", *cells])
         d.table(s, rows, 0.6, 1.8, 7.2, [1.0, 1.7, 1.5, 1.7, 1.3], size=12)
+        rep_b = report.build(pt[worst][b]["runs"][0]["run_id"])
+        sel = (json.loads(db.one("SELECT payload_json FROM events WHERE run_id = ? AND type = 'reuse_selected'", (rep_b["run_id"],))["payload_json"])
+               if db.one("SELECT 1 FROM events WHERE run_id = ? AND type = 'reuse_selected'", (rep_b["run_id"],)) else {})
+        params = db.one("SELECT manifest_json FROM tasks WHERE task_id = ?", (worst,))
+        dev = json.loads(params["manifest_json"])["dev_params"]
         d.card(s, 8.1, 1.8, 4.6, 4.6, ACCENT)
-        d.text(s, f"{worst}：成簇、高基数", 8.35, 1.95, 4.2, 0.4, size=15, bold=True, color=ACCENT)
-        d.text(s, ("学到的经验对这类数据全是“无收益”。小模型据此把请求花在分析和取证上，迟迟不提出第二个失败候选，"
-                   "升级规则（只看连续失败候选）来不及触发，预算耗尽。\n\n"
-                   "这是 B（开发对照）的结论。C 之前把升级规则改为 v2：再加一条“小模型 3 次请求仍无达标候选就升级”，"
-                   "对旧、新经验同样生效；同时修正记录，规则满足但没有请求额度时如实写明。\n\n"
-                   "C 是未参与任何调整的最终留出验收"
-                   + (f"；其中同类的高基数任务 C-05：{cmp_c['snapshot_a']} {cmp_c['per_task']['C-05'][cmp_c['snapshot_a']]['goal_met']}/{cmp_c['repeats']}、"
-                      f"{cmp_c['snapshot_b']} {cmp_c['per_task']['C-05'][cmp_c['snapshot_b']]['goal_met']}/{cmp_c['repeats']}。"
-                      if cmp_c and "C-05" in cmp_c["tasks"] else "。")), 8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
+        d.text(s, f"{worst}：{dev['rows']:,} 行 · {dev['keys']:,} 个 key · {dev['order']}", 8.35, 1.95, 4.2, 0.4, size=14, bold=True, color=ACCENT)
+        d.text(s, (f"复验选中 {len(sel.get('selected', []))} 个程序、跳过 {len(sel.get('skipped', []))} 个（有更接近的无收益/失败记录）。"
+                   "R = 程序复验，Q = Qwen 请求，G = GPT 请求。\n\n"
+                   "复验没有达标时，复验结果作为证据交给模型，照常研究；所以复用不会让原本能做的任务变差，"
+                   "但也帮不了经验覆盖不到的工作负载。这类结果同样写回经验：下次遇到相似条件可直接跳过。"),
+               8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
+        d.text(s, "全部运行计入；路径按发生顺序。", 0.6, 6.3, 7.2, 0.4, size=11, color=INK3)
 
-    # cost ledger
-    target_cost = cmp_c if cmp_c and cmp_c["finished_runs"] else cmp_b
-    if target_cost:
+    # 18 cost ledger
+    if headline and headline["finished_runs"]:
         s = d.slide("成本账：学习花了多少，使用经验省了多少", "效率")
-        rows = [["批次", "旧经验 费用", "新经验 费用", "少花", "旧经验 耗时", "新经验 耗时", "请求中位数"]]
-        for c, name in ((cmp_b, "B 开发对照"), (cmp_c, "C 最终留出")):
+        rows = [["批次", "v0 费用", "新经验 费用", "少花", "v0 循环中位数", "新经验 循环中位数", "请求中位数", "最终加速比中位数"]]
+        for c, name in ((cmp_b, "第二版 · B 开发"), (cmp_d, "第二版 · D 封存"), (v1_c, "第一版 · C 留出")):
             if not c or not c["finished_runs"]:
                 continue
             A, B = c["sides"][c["snapshot_a"]], c["sides"][c["snapshot_b"]]
-            rows.append([name, f"${A['cost_usd_total'] or 0:.3f}", f"${B['cost_usd_total'] or 0:.3f}",
-                         f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):.3f}",
-                         f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s",
-                         f"{g(A['model_requests_median'])} → {g(B['model_requests_median'])}"])
-        d.table(s, rows, 0.6, 1.8, 12.1, [2.0, 1.7, 1.7, 1.5, 1.7, 1.7, 1.8], size=13)
-        lc = target_cost["learning_cost"]
-        if lc.get("in_lineage"):
-            d.text(s, (f"学习阶段（A 批 {len(lc['learn_runs'])} 次学习运行）另计 ${lc['cost_usd']:.3f}、{lc['wall_clock_s']:.0f}s，"
-                       "不摊进任何一侧。费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；"
-                       "一次 GPT 请求被循环剩余时间截断、服务方未返回用量，记为“未知”。"),
-                   0.6, 3.6, 12.1, 1.2, size=14, color=INK2)
-            saved = [((c["sides"][c["snapshot_a"]]["cost_usd_total"] or 0) - (c["sides"][c["snapshot_b"]]["cost_usd_total"] or 0)) / c["sides"][c["snapshot_b"]]["runs"]
-                     for c in (cmp_b, cmp_c) if c and c["finished_runs"]]
-            if lc.get("cost_usd") and saved and min(saved) > 0:
-                d.text(s, (f"每次运行少花 {' / '.join(f'${v:.4f}' for v in saved)}（B / C），按此学习成本约在 "
-                           f"{' / '.join(f'{lc['cost_usd'] / v:.0f}' for v in saved)} 次运行后收回。"
-                           "加入经验后提示词更长，输入 Token 反而增加；节省来自更少的请求、升级与输出 Token。"),
-                       0.6, 4.9, 12.1, 1.0, size=14, color=INK2)
+            rows.append([name, usd(A["cost_usd_total"]), usd(B["cost_usd_total"]), f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):.3f}",
+                         f"{A['agent_loop_s_median']:.0f}s", f"{B['agent_loop_s_median']:.0f}s",
+                         f"{g(A['model_requests_median'])} → {g(B['model_requests_median'])}",
+                         f"{x(A['final_speedup_median'])} → {x(B['final_speedup_median'])}"])
+        d.table(s, rows, 0.6, 1.8, 12.1, [2.1, 1.2, 1.4, 1.1, 1.6, 1.8, 1.4, 1.5], size=12)
+        lc = headline["learning_cost"]
+        saved = [((c["sides"][c["snapshot_a"]]["cost_usd_total"] or 0) - (c["sides"][c["snapshot_b"]]["cost_usd_total"] or 0)) / c["sides"][c["snapshot_b"]]["runs"]
+                 for c in (cmp_b, cmp_d) if c and c["finished_runs"]]
+        txt = ""
+        if lc.get("in_lineage") and lc.get("cost_usd") is not None:
+            txt = (f"第二版学习（{len(lc['learn_runs'])} 次学习运行）另计 ${lc['cost_usd']:.3f}、{lc['wall_clock_s']:.0f}s，不摊进任何一侧。")
+            if saved and min(saved) > 0:
+                txt += (f"每次运行少花 {' / '.join(f'${v:.4f}' for v in saved)}（B / D），约 "
+                        f"{' / '.join(f'{lc['cost_usd'] / v:.0f}' for v in saved)} 次运行收回学习费用。")
+        txt += "费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；复验的评测时间计入循环时长。"
+        d.text(s, txt, 0.6, 1.8 + 0.36 * len(rows) + 0.3, 12.1, 1.6, size=13.5, color=INK2)
 
-    # self-iteration: one real two-round session, end to end
+    # 19 self-iteration: one real two-round session, end to end
     ses = db.one("SELECT * FROM sessions WHERE status = 'completed' AND comparison_id IS NOT NULL ORDER BY created_at DESC LIMIT 1")
     if ses:
         sc = compare.summarize(ses["comparison_id"])
@@ -537,10 +679,10 @@ def build(out: Path, shots: Path) -> None:
                   ("第二轮 对照", f"{ses['eval_task']}：{a} 与 {b} 各 1 次\n配置一致性{'通过' if sc['fair'] else '未通过'}"),
                   ("三行说明", "由对照数据自动填写\n可回退到任一版本")]
         for i, (k, v) in enumerate(phases):
-            x = 0.6 + i * 3.1
-            d.card(s, x, 1.8, 2.8, 1.9, ACCENT if i == 1 else None)
-            d.text(s, f"✓ {k}", x + 0.2, 1.95, 2.5, 0.45, size=15, bold=True, font=HEAD_FONT)
-            d.text(s, v, x + 0.2, 2.45, 2.5, 1.2, size=11.5, color=INK2)
+            xx = 0.6 + i * 3.1
+            d.card(s, xx, 1.8, 2.8, 1.9, ACCENT if i == 1 else None)
+            d.text(s, f"✓ {k}", xx + 0.2, 1.95, 2.5, 0.45, size=15, bold=True, font=HEAD_FONT)
+            d.text(s, v, xx + 0.2, 2.45, 2.5, 1.2, size=11.5, color=INK2)
         rows = [["", f"{a}（旧经验）", f"{b}（新经验）"]]
         A, B = sc["sides"][a], sc["sides"][b]
         rows += [["结果", f"{'达标' if A['goal_met'] else '未达标'} {A['final_speedup_median'] or 0:.2f}×", f"{'达标' if B['goal_met'] else '未达标'} {B['final_speedup_median'] or 0:.2f}×"],
@@ -548,45 +690,44 @@ def build(out: Path, shots: Path) -> None:
                  ["费用 / 耗时", f"${A['cost_usd_total'] or 0:.3f} / {A['wall_clock_s_total']:.0f}s", f"${B['cost_usd_total'] or 0:.3f} / {B['wall_clock_s_total']:.0f}s"]]
         d.table(s, rows, 0.6, 4.1, 7.4, [2.0, 2.7, 2.7], size=13)
         t0 = datetime.fromisoformat(ses["created_at"]); t1 = datetime.fromisoformat(ses["ended_at"])
-        d.text(s, (f"实测一次（{ses['session_id']}），全程 {(t1 - t0).total_seconds() / 60:.1f} 分钟，中间无人工操作；"
-                   "模型、提示词、预算、评测器不变，只换快照。\n\n单次结果只验证流程是否走通，不作为效果证据——效果见 B/C 对照。"
-                   "演示结束后把生效版本切回正式快照。"), 8.3, 4.1, 4.4, 2.6, size=12.5, color=INK2)
+        d.text(s, (f"实测一次（{ses['session_id']}，第一版配置），全程 {(t1 - t0).total_seconds() / 60:.1f} 分钟，中间无人工操作；"
+                   "模型、提示词、预算、评测器不变，只换快照。\n\n单次结果只验证流程是否走通，不作为效果证据——效果见留出对照。"),
+               8.3, 4.1, 4.4, 2.6, size=12.5, color=INK2)
 
-    # 11 three lines
-    target = cmp_c or cmp_b
-    if target and target["finished_runs"]:
-        note = narrative.evolution_note(target["comparison_id"])
+    # 20 three lines
+    if headline and headline["finished_runs"]:
+        note = narrative.evolution_note(headline["comparison_id"])
         s = d.slide("经验带来的变化（由对照数据自动填写）", "系统评估")
         for i, line in enumerate(note["lines"]):
             d.card(s, 0.6, 1.8 + i * 1.65, 12.1, 1.45, ACCENT)
-            d.text(s, line, 0.9, 1.9 + i * 1.65, 11.6, 1.3, size=13.5, color=INK)
+            d.text(s, line, 0.9, 1.9 + i * 1.65, 11.6, 1.3, size=13, color=INK)
 
-    # RA-AC acceptance at a glance
+    # 21 RA-AC acceptance at a glance
     s = d.slide("Research Agent 验收对照", "RA-AC")
     rows = [["编号", "要求", "证据"],
-            ["RA-AC-01", "问题、目标、约束、预算、基线事前确定", "任务包哈希锁定；运行配置指纹；“研究任务”在开始前固定"],
-            ["RA-AC-02", "关键实验有事前假设与验证方法", f"{rtotal['experiments']} 个实验都有事前预期与验证方法，判定引用评测 ID"],
-            ["RA-AC-03", "可核验的反馈驱动决策", "A-01：反驳 → 修正 → 升级 → 支持；引用此前候选 " + f"{rtotal['follow_ups_citing_prior']}/{rtotal['follow_ups']}"],
-            ["RA-AC-04", "错误、退化、证据不足如实记录", f"反驳 {rtotal['refuted']}、未能检验 {rtotal['untestable']}；A-05 结论“无改进”"],
+            ["RA-AC-01", "问题、目标、约束、预算、基线事前确定", "任务包哈希锁定；运行配置指纹；“研究任务”在开始前固定；D 批在第二版实现前封存"],
+            ["RA-AC-02", "关键实验有事前假设与验证方法", f"{rtotal['experiments']} 个实验都有事前预期与验证方法（复用实验由程序写明来源与条件差异），判定引用评测 ID"],
+            ["RA-AC-03", "可核验的反馈驱动决策", "A-01：反驳 → 修正 → 升级 → 支持；复验达标 → 提高目标 → 超越；" + f"引用此前候选 {rtotal['follow_ups_citing_prior']}/{rtotal['follow_ups']}"],
+            ["RA-AC-04", "错误、退化、证据不足如实记录", f"反驳 {rtotal['refuted']}、未能检验 {rtotal['untestable']}；无改进的运行交付初始程序"],
             ["RA-AC-05", "独立最终评价，通过与未通过都报告", "开发达标但最终未达标的运行如实记为未达标"],
-            ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；预算耗尽交付初始程序"],
-            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 1.44×（记录 1.4367×）"],
-            ["RA-AC-08", "有无经验的完整对照", "B/C 各 36 次，配置一致，全部计入，学习成本单列"]]
-    d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.2, 6.5], size=12)
+            ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；复验时间计入循环；学习成本单列"],
+            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 1.44×（记录 1.4367×）；scripts/experiment.sh 重跑全流程"],
+            ["RA-AC-08", "有无经验的完整对照", "第二版 B、D 与第一版 B、C 各 36 次，配置一致，全部计入，学习成本单列"]]
+    d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.0, 6.7], size=12)
 
-    # 12 limits
+    # 22 limits
     s = d.slide("诚实声明与下一步", "边界")
-    d.bullets(s, ["单一任务族：结论只适用于同族任务之间的经验迁移",
+    d.bullets(s, ["单一任务族：复用已验证程序之所以有效，是因为同族任务共享契约；结论只适用于同族任务之间的迁移",
+                  "复用的上限就是方案库：经验覆盖不到的工作负载（如高基数）仍要靠模型研究，复用帮不上",
                   "计时在一台 Mac（OrbStack 虚拟化）上；交替测量与“全部样本更快”规则压低噪声，小输入任务固定开销仍占约一半",
                   "模型不支持固定种子：每个配置重复 3 次，报告全部结果；3 次重复衡量运行波动，不等于学习过程被重复验证",
                   "Qwen 自部署机器成本未核算；GPT 费用按 2026-11-13 官方价表估算",
-                  "后置：专用决策模型对照、多个独立 Agent、开放式文献检索——首版只做一个研究循环和一个软件优化任务族",
-                  "下一步：更多研究任务族；用同一批任务对照专用决策模型是否降低总成本；经验的去重与合并"], 0.6, 1.75, 12.1, 5, size=16)
+                  "后置：专用决策模型对照、多个独立 Agent、开放式文献检索；下一步：更多任务族、程序库的合并与淘汰"], 0.6, 1.75, 12.1, 5, size=15.5)
 
-    # 13 reproduce
+    # 23 reproduce
     s = d.slide("复现与界面", "交付")
     d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
-                  "scripts/experiment.sh   # 重建任务包 → A 学习 → B 对照 → C 对照",
+                  "scripts/experiment.sh   # 重建任务包 → A 学习两轮 → B 对照 → D 对照",
                   "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理",
                   "uv run routeevo export-run <run_id> --bundle <目录>   # 研究成果交付包",
                   "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)

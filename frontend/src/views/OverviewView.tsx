@@ -11,12 +11,14 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
   const list = usePoll(api.comparisons, [], 5000)
   const snaps = usePoll(api.snapshots, [], 5000)
   const pick = (p: string) => list.data?.find((c) => (c.label ?? '').startsWith(p))?.comparison_id ?? null
-  const bId = pick('B'), cId = pick('C')
+  const bId = pick('B'), cId = pick('C'), dId = pick('D')
   const running = (id: string | null) => list.data?.find((x) => x.comparison_id === id)?.status === 'running'
   const b = usePoll(() => (bId ? api.comparison(bId) : Promise.resolve(null)), [bId], 8000, running(bId))
   const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 8000, running(cId))
-  const noteFor = cId && c.data?.finished_runs ? cId : bId
-  const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor, c.data?.finished_runs], 10000, false)
+  const d = usePoll(() => (dId ? api.comparison(dId) : Promise.resolve(null)), [dId], 8000, running(dId))
+  // The note follows the current configuration: the sealed D comparison once it has runs, else its B comparison.
+  const noteFor = dId && d.data?.finished_runs ? dId : bId
+  const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor, d.data?.finished_runs], 10000, false)
   // The learned snapshot is the one the held-out comparison used; a live demo session may have published a newer branch.
   const learnedId = b.data?.snapshot_b ?? snaps.data?.active_snapshot_id
   const latest = snaps.data?.snapshots.find((x) => x.snapshot_id === learnedId)
@@ -34,7 +36,7 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
     <div className="stack">
       <div className="grid cols-2">
         <div className="card">
-          <div className="eyebrow">学习阶段 · A 批</div>
+          <div className="eyebrow">学习阶段 · A 批{learn.length > 6 ? ` · ${Math.ceil(learn.length / 6)} 轮` : ''}</div>
           <h2>v0 → {latest?.snapshot_id ?? '—'}：{latest?.experience_count ?? 0} 条已验证经验</h2>
           {learn.length === 0 ? <Empty title="还没有学习运行" /> : (
             <table className="tbl">
@@ -59,8 +61,9 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
           ) : <Empty title="对照完成后自动生成" />}
         </div>
       </div>
-      <ComparisonStrip title="B 批 · 开发对照" c={b.data} onOpen={onOpenComparison} />
-      <ComparisonStrip title="C 批 · 最终留出（配置冻结后一次性验收）" c={c.data} onOpen={onOpenComparison} />
+      {dId && <ComparisonStrip title="D 批 · 封存留出（复用已验证程序，配置冻结后一次性验收）" c={d.data} onOpen={onOpenComparison} />}
+      <ComparisonStrip title={dId ? 'B 批 · 开发对照（复用已验证程序）' : 'B 批 · 开发对照'} c={b.data} onOpen={onOpenComparison} />
+      <ComparisonStrip title={dId ? 'C 批 · 第一版（只有文字经验）的最终留出' : 'C 批 · 最终留出（配置冻结后一次性验收）'} c={c.data} onOpen={onOpenComparison} />
       <SessionCard onOpenRun={onOpenRun} onOpenComparison={onOpenComparison} />
     </div>
   )

@@ -1,6 +1,8 @@
 """Scripted stand-in model for functional checks only. Runs using it are labelled and never count as model results.
 
-A script is JSON: {"small": [action, ...], "large": [action, ...]}. Each action is the dict the real model
+A script is JSON: {"small": [action, ...], "large": [action, ...]}. Only the roles listed are scripted; the other
+role uses its real model (e.g. a scripted small model that fails twice to exercise the real large model). Each action
+is the dict the real model
 would return; missing fields default to null. `code_file` (relative to the script) may replace `code`.
 An entry {"raw": "<text>"} returns that text verbatim (e.g. to test invalid JSON); {"error": "<kind>"} simulates
 a failed request. When a role's list is exhausted it returns a finish action.

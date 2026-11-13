@@ -19,7 +19,7 @@ from .. import config, db, evaluator, memory, report, taskpkg
 from ..llm.base import LLMResult
 from ..llm.chat_compat import ChatCompatClient
 from ..llm.openai_responses import OpenAIResponsesClient
-from ..llm.pricing import estimate_cost
+from ..llm.pricing import NOT_BILLED_ERRORS, estimate_cost
 from ..llm.scripted import ScriptedClient
 from ..sandbox import executor
 from . import actions, prompt
@@ -54,15 +54,19 @@ class RunOptions:
 
 
 def _make_clients(opts: RunOptions) -> tuple[dict, dict[str, config.ModelConfig]]:
+    """Real clients per role; a script replaces only the roles it lists (e.g. scripted small + real large)."""
     cfgs = config.default_model_configs()
-    if opts.script:
-        cfgs = {role: config.ModelConfig(provider="scripted", model=f"scripted-{role}", role=role,
-                                         max_output_tokens=c.max_output_tokens, extra={"script": str(opts.script)})
-                for role, c in cfgs.items()}
-        return {role: ScriptedClient(c, opts.script) for role, c in cfgs.items()}, cfgs
+    scripted_roles = set(json.loads(opts.script.read_text())) if opts.script else set()
     clients = {}
-    for role, c in cfgs.items():
-        clients[role] = OpenAIResponsesClient(c) if c.provider == "openai_responses" else ChatCompatClient(c)
+    for role, c in list(cfgs.items()):
+        if role in scripted_roles:
+            cfgs[role] = config.ModelConfig(provider="scripted", model=f"scripted-{role}", role=role,
+                                            max_output_tokens=c.max_output_tokens, extra={"script": str(opts.script)})
+            clients[role] = ScriptedClient(cfgs[role], opts.script)
+        elif c.provider == "openai_responses":
+            clients[role] = OpenAIResponsesClient(c)
+        else:
+            clients[role] = ChatCompatClient(c)
     return clients, cfgs
 
 
@@ -151,7 +155,7 @@ class Runner:
         }
         fingerprint = hashlib.sha256(json.dumps(comparable, sort_keys=True).encode()).hexdigest()[:16]
         return {**comparable, "fingerprint": fingerprint, "environment": self.env, "label": self.opts.label,
-                "scripted": bool(self.opts.script),
+                "scripted": sorted(r for r, c in self.model_cfgs.items() if c.provider == "scripted"),
                 "fingerprint_excludes": ["mode", "snapshot_id", "label", "environment details beyond image id"]}
 
     def _release(self) -> None:
@@ -305,8 +309,8 @@ class Runner:
         res = self.clients[self.role].complete(prompt.SYSTEM_PROMPT, state, actions.ACTION_SCHEMA, timeout, cfg.max_output_tokens)
         ended = db.now()
         self.requests_used += 1
-        request_sent = res.error_kind != "config"
-        cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage, request_sent)
+        cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
+                                                         res.error_kind not in NOT_BILLED_ERRORS)
         u = res.usage
         if u.input_tokens is not None and u.output_tokens is not None:
             self.tokens_used += u.input_tokens + u.output_tokens

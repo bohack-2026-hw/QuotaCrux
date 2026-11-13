@@ -32,7 +32,7 @@ def _ledger(calls) -> dict:
         total, unknown = _sum(calls, key)
         out[key] = total
         out[f"{key}_unknown_calls"] = unknown
-    costs = [c for c in calls if c["cost_status"] != "not_applicable"]
+    costs = [c for c in calls if c["cost_status"] not in ("not_applicable", "not_billed")]
     known = [c["cost_usd"] for c in costs if c["cost_usd"] is not None]
     unknown = sum(1 for c in costs if c["cost_usd"] is None)
     out["cost_usd"] = round(sum(known), 6) if known else (0.0 if not costs else None)
@@ -102,7 +102,7 @@ def build(run_id: str) -> dict:
         "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
                  "dev_params": manifest["dev_params"], "final_params": manifest["final_params"]},
         "mode": run["mode"], "snapshot_id": run["snapshot_id"], "label": cfg.get("label"),
-        "scripted_model": cfg.get("scripted", False),
+        "scripted_model": cfg.get("scripted") or [],
         "status": run["status"], "stop_reason": run["stop_reason"], "stop_detail": run["stop_detail"],
         "config_fingerprint": run["config_fingerprint"],
         "outcome": {

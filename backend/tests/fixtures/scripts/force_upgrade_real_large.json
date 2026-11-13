@@ -1,0 +1,21 @@
+{
+  "small": [
+    {
+      "action": "propose_candidate",
+      "purpose": "用 groupby 流式聚合",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "hypothesis": "输入按 key 有序",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/groupby_unsorted_bug.py"
+    },
+    {
+      "action": "propose_candidate",
+      "purpose": "修正语法",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/syntax_error.py"
+    }
+  ]
+}

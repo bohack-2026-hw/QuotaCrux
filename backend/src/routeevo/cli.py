@@ -57,7 +57,7 @@ def cmd_run(args) -> None:
 def _print_summary(rep: dict) -> None:
     o, u, t = rep["outcome"], rep["usage"]["total"], rep["timing"]
     lines = [
-        f"run            {rep['run_id']}{'  [scripted model: functional check only]' if rep['scripted_model'] else ''}",
+        f"run            {rep['run_id']}{'  [scripted ' + '+'.join(rep['scripted_model']) + ': functional check only]' if rep['scripted_model'] else ''}",
         f"status         {rep['status']} / stop: {rep['stop_reason']} ({rep['stop_detail']})",
         f"outcome        {o['summary']}",
         f"flags          ran={o['candidate_ran']} dev_passed={o['dev_validation_passed']} dev_improved={o['dev_improved']} "
@@ -184,7 +184,7 @@ def cmd_probe(args) -> None:
     """Send exactly the first request a run would send to one model role; print latency, usage and cost."""
     from .agent import actions, prompt
     from .agent.runner import _make_clients, RunOptions
-    from .llm.pricing import estimate_cost
+    from .llm.pricing import NOT_BILLED_ERRORS, estimate_cost
 
     task = taskpkg.load(args.task_id)
     clients, cfgs = _make_clients(RunOptions(task_id=args.task_id))
@@ -198,7 +198,7 @@ def cmd_probe(args) -> None:
     print(f"probing {args.role}: {cfg.provider} {cfg.model} effort={cfg.reasoning_effort} max_output={cfg.max_output_tokens}"
           f" timeout={args.timeout}s", file=sys.stderr)
     res = clients[args.role].complete(prompt.SYSTEM_PROMPT, state, actions.ACTION_SCHEMA, args.timeout, cfg.max_output_tokens)
-    cost, cost_status, version = estimate_cost(cfg.provider, cfg.model, res.usage, res.error_kind != "config")
+    cost, cost_status, version = estimate_cost(cfg.provider, cfg.model, res.usage, res.error_kind not in NOT_BILLED_ERRORS)
     try:
         parsed = actions.parse(res.text or "").action if res.ok else None
     except actions.InvalidAction as exc:

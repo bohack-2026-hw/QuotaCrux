@@ -1,0 +1,22 @@
+{
+  "family": "groupagg",
+  "notes": "M1 instances only. A/B/C lists are chosen and frozen by the team before any comparison is run.",
+  "tasks": [
+    {
+      "task_id": "smoke-01",
+      "split": "smoke",
+      "notes": "tiny instance for functional checks and tests; never part of A/B/C",
+      "params": {"rows": 50000, "keys": 1000, "skew": 0.5, "order": "random"},
+      "dev_seed": 9001,
+      "final_seed": 9002
+    },
+    {
+      "task_id": "A-01",
+      "split": "A",
+      "notes": "M1 connectivity instance: medium cardinality, mild skew, random order",
+      "params": {"rows": 1500000, "keys": 20000, "skew": 0.8, "order": "random"},
+      "dev_seed": 1101,
+      "final_seed": 1102
+    }
+  ]
+}

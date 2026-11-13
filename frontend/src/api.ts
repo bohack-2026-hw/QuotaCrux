@@ -199,7 +199,7 @@ export interface Session {
 export const api = {
   health: () => call<{ ok: boolean; running_run_id: string | null }>('/health'),
   tasks: () => call<TaskSummary[]>('/tasks'),
-  runs: (taskId?: string) => call<RunRow[]>(`/runs${taskId ? `?task_id=${taskId}` : ''}`),
+  runs: (taskId?: string) => call<RunRow[]>(`/runs?limit=300${taskId ? `&task_id=${taskId}` : ''}`),
   startRun: (body: { task_id: string; mode: string; snapshot_id?: string; label?: string }) => post<{ run_id: string }>('/runs', body),
   stopRun: (id: string) => post(`/runs/${id}/stop`),
   run: (id: string) => call<Report>(`/runs/${id}`),

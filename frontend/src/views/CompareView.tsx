@@ -15,7 +15,7 @@ export function CompareView({ onOpenRun }: { onOpenRun: (id: string) => void }) 
   const live = list.data?.find((c) => c.comparison_id === current)?.status === 'running'
   const cmp = usePoll(() => (current ? api.comparison(current) : Promise.resolve(null)), [current], 4000, live)
 
-  const latest = snaps.data?.snapshots.at(-1)?.snapshot_id ?? 'v0'
+  const latest = snaps.data?.active_snapshot_id ?? 'v0'
   const [split, setSplit] = useState<'B' | 'C'>('B')
   const [repeats, setRepeats] = useState(3)
   const [err, setErr] = useState<string | null>(null)

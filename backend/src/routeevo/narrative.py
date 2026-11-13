@@ -14,6 +14,13 @@ STOP_ZH = {"goal_reached": "目标达成", "budget_exhausted": "预算耗尽", "
            "internal_error": "内部错误"}
 
 
+STATUS_ZH = {"passed": "通过", "submitted": "已提交", "done": "完成", "requested": "已请求", "wrong_output": "输出错误",
+             "format_error": "格式错误", "contract_violation": "违反契约", "runtime_error": "运行错误", "timeout": "超时",
+             "memory_limit": "内存超限", "output_limit": "输出超限", "compile_error": "编译错误",
+             "static_check_failed": "静态检查失败", "unstable": "结果不稳定", "sandbox_error": "环境错误",
+             "baseline_failed": "基线失败", "invalid_action": "无效动作", "api_error": "接口错误",
+             "unusable_reply": "回复不可用", "tool_failed": "工具失败"}
+
 DECISION_ZH = {"continue": "继续", "validate candidate": "验证候选", "re-measure candidate": "重新测量",
                "continue with feedback": "带着反馈继续", "continue with large model": "改用大模型继续",
                "upgrade to large model, continue": "升级到大模型并继续", "stop": "停止",
@@ -75,7 +82,7 @@ def run_markdown(run_id: str) -> str:
         if s["hypothesis"]:
             what += f"（假设，未验证：{s['hypothesis']}）"
         lines.append(f"| {s['seq']} | {'模型' if s['actor'] == 'model' else '程序'} | {ACTION_ZH.get(s['action'], s['action'])} | "
-                     f"{s['status']} | {_cell(what)} | {_cell('；'.join(fb))} |")
+                     f"{STATUS_ZH.get(s['status'], s['status'])} | {_cell(what)} | {_cell('；'.join(fb))} |")
     lines += ["", "## 假设与实验", "",
               "状态由程序根据随后的评测判定：通过且全部样本快于基线 = 得到支持；通过但未改善 = 被反驳；"
               "候选出错（输出错误、契约用例、超时等）= 未能检验。", "",

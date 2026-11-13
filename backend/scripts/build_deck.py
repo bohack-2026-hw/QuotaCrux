@@ -155,7 +155,7 @@ def find_comparison(prefix: str) -> dict | None:
 def dots_chart(c: dict, out: Path, title: str) -> Path:
     a, b = c["snapshot_a"], c["snapshot_b"]
     tasks = c["tasks"]
-    fig, ax = plt.subplots(figsize=(10, 0.62 * len(tasks) + 1.3), dpi=200)
+    fig, ax = plt.subplots(figsize=(10, 0.62 * len(tasks) + 1.7), dpi=200)
     fig.patch.set_facecolor("#" + CARD)
     ax.set_facecolor("#" + CARD)
     speeds = [r["final_speedup"] for t in tasks for s in (a, b) for r in c["per_task"][t][s]["runs"] if r["final_speedup"]]
@@ -188,7 +188,7 @@ def dots_chart(c: dict, out: Path, title: str) -> Path:
     handles = [Line2D([], [], marker="o", ls="", color="#" + OLD, markersize=8, label=f"{a}（旧经验）"),
                Line2D([], [], marker="o", ls="", color="#" + NEW, markersize=8, label=f"{b}（新经验）"),
                Line2D([], [], marker="o", ls="", markerfacecolor="#" + CARD, markeredgecolor="#" + INK3, markersize=8, label="空心 = 未达标")]
-    ax.legend(handles=handles, loc="lower right", frameon=False, fontsize=10, ncol=3, bbox_to_anchor=(1, 1.0))
+    ax.legend(handles=handles, loc="upper left", frameon=False, fontsize=10, ncol=3, bbox_to_anchor=(0, -0.09))
     fig.tight_layout()
     fig.savefig(out, facecolor=fig.get_facecolor())
     plt.close(fig)
@@ -228,8 +228,11 @@ def build(out: Path, shots: Path) -> None:
     # 1 cover
     s = d.slide()
     s.background.fill.fore_color.rgb = rgb(INK)
-    d.text(s, "Route", 0.9, 2.0, 6, 1.4, size=80, color=PAPER, font="Georgia")
-    d.text(s, "Evo", 4.55, 2.0, 4, 1.4, size=80, color=ACCENT, font="Georgia", italic=True)
+    box = d.text(s, "Route", 0.9, 2.0, 8, 1.4, size=80, color=PAPER, font="Georgia")
+    evo = box.text_frame.paragraphs[0].add_run()
+    evo.text = "Evo"
+    evo.font.size, evo.font.italic, evo.font.name = Pt(80), True, "Georgia"
+    evo.font.color.rgb = rgb(ACCENT)
     d.text(s, "从已验证的执行结果中进化的 Agent", 0.95, 3.5, 11, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
     d.text(s, "决策 → 执行 → 验证 → 修正 → 经验 → 更好的下一次决策", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
     d.text(s, "BoHack 2026 · 共用核心实测版", 0.95, 6.3, 6, 0.4, size=12, color="9A9485")
@@ -289,7 +292,7 @@ def build(out: Path, shots: Path) -> None:
         rows = [["#", "执行者", "动作", "结果", "下一步"]]
         for st in first["steps"]:
             res = st["result"]
-            out_s = st["status"] + (f" · {res['speedup']:.2f}×" if isinstance(res.get("speedup"), (int, float)) else "")
+            out_s = narrative.STATUS_ZH.get(st["status"], st["status"]) + (f" · {res['speedup']:.2f}×" if isinstance(res.get("speedup"), (int, float)) else "")
             who = "程序" if st["actor"] == "program" else ("GPT" if first["iterations"]["upgrade_at_step"] and st["seq"] > first["iterations"]["upgrade_at_step"] else "Qwen")
             rows.append([str(st["seq"]), who, narrative.ACTION_ZH.get(st["action"], st["action"]), out_s, narrative._decision(st["next_decision"] or "")])
         d.table(s, rows, 0.6, 1.8, 7.4, [0.5, 0.9, 1.4, 2.4, 2.2], size=12)
@@ -305,7 +308,7 @@ def build(out: Path, shots: Path) -> None:
     # 7 experience
     s = d.slide("经验是什么：程序从已验证的执行事实中提取", "经验")
     succ = [e for e in snap["experiences"] if e["outcome"] == "success"][:1]
-    fail = [e for e in snap["experiences"] if e["outcome"] != "success"][:1]
+    fail = ([e for e in snap["experiences"] if e["outcome"] == "failure"] or [e for e in snap["experiences"] if e["outcome"] != "success"])[:1]
     for i, e in enumerate(succ + fail):
         x = 0.6 + i * 6.2
         d.card(s, x, 1.8, 5.9, 4.0, GOOD if e["outcome"] == "success" else BAD)
@@ -331,7 +334,9 @@ def build(out: Path, shots: Path) -> None:
         rows = [["任务", "读取", "结果", "请求", "模型路径", "费用", "读到经验", "发布"]]
         for r in learn:
             roles = "".join("G" if "large" in k else "Q" for k, v in r["usage"]["by_model"].items() for _ in range(v["requests"]))
-            rows.append([r["task"]["task_id"], r["snapshot_id"], r["outcome"]["summary"][:22], str(r["iterations"]["model_requests"]),
+            res = (f"达标 {r['outcome']['final_speedup']:.2f}×" if r["outcome"]["goal_met"]
+                   else f"未达标（{narrative.STOP_ZH.get(r['stop_reason'], r['stop_reason'])}）")
+            rows.append([r["task"]["task_id"], r["snapshot_id"], res, str(r["iterations"]["model_requests"]),
                          roles or "—", f"${r['usage']['total']['cost_usd'] or 0:.3f}", str(len(r["experience"]["read"])),
                          r["experience"]["published_snapshot_id"] or "—"])
         d.table(s, rows, 0.6, 1.8, 12.1, [0.9, 0.8, 4.2, 0.8, 1.6, 1.2, 1.2, 1.4], size=12)
@@ -349,9 +354,80 @@ def build(out: Path, shots: Path) -> None:
         d.image(s, img, 0.5, 1.65, 7.3)
         d.table(s, side_rows(c), 8.0, 1.75, 4.8, [1.9, 1.45, 1.45], size=11)
         lc = c["learning_cost"]
-        foot = (f"{c['finished_runs']}/{c['planned_runs']} 次运行 · 配置指纹{'一致' if c['fair'] else '不一致'} · "
+        first_run = next(r["run_id"] for t in c["tasks"] for r in c["per_task"][t][c["snapshot_a"]]["runs"])
+        rule = json.loads(db.one("SELECT config_json FROM runs WHERE run_id = ?", (first_run,))["config_json"])["upgrade_rule"]["id"]
+        foot = (f"{c['finished_runs']}/{c['planned_runs']} 次运行 · 配置一致性{'通过' if c['fair'] else '未通过'} · {rule} · "
                 + (f"学习成本另计 ${lc['cost_usd']:.3f} / {lc['wall_clock_s']:.0f}s" if lc.get("in_lineage") and lc.get("cost_usd") is not None else ""))
         d.text(s, foot, 8.0, 5.3, 4.8, 0.8, size=11, color=INK3)
+
+    # behaviour pair: same held-out task, same repeat, two snapshots
+    if cmp_b and cmp_b["finished_runs"]:
+        pt = cmp_b["per_task"]
+        a, b = cmp_b["snapshot_a"], cmp_b["snapshot_b"]
+        # the task where the old snapshot needed the most requests in repeat 1 shows the change most plainly
+        task = max(cmp_b["tasks"], key=lambda t: (pt[t][a]["runs"][0]["model_requests"] - pt[t][b]["runs"][0]["model_requests"]))
+        ra, rb = report.build(pt[task][a]["runs"][0]["run_id"]), report.build(pt[task][b]["runs"][0]["run_id"])
+        s = d.slide(f"行为对照：{task} 第 1 轮，同一任务两版经验各做了什么", "RX-05")
+        for i, (rep, snapname, col) in enumerate(((ra, a, OLD), (rb, b, NEW))):
+            x = 0.6 + i * 6.2
+            d.card(s, x, 1.75, 5.9, 4.9, col)
+            up = rep["iterations"]["upgrade_at_step"]
+            lines = [f"{snapname}（{'旧' if i == 0 else '新'}经验）· 读到经验 {len(rep['experience']['read'])} 条",
+                     f"{rep['outcome']['summary']}",
+                     f"请求 {rep['iterations']['model_requests']} · 升级 {rep['iterations']['upgrades']} · 费用 ${rep['usage']['total']['cost_usd'] or 0:.3f} · {rep['timing']['wall_clock_total_s']:.0f}s", ""]
+            for st in rep["steps"]:
+                who = "程序" if st["actor"] == "program" else ("GPT" if up and st["seq"] > up else "Qwen")
+                sp = st["result"].get("speedup")
+                lines.append(f"{st['seq']:>2}  {who:<4} {narrative.ACTION_ZH.get(st['action'], st['action'])} "
+                             f"{st['candidate_id'] or ''} {narrative.STATUS_ZH.get(st['status'], st['status'])}"
+                             + (f" {sp:.2f}×" if isinstance(sp, (int, float)) else ""))
+            first = next((st["purpose"] for st in rep["steps"] if st["actor"] == "model" and st["purpose"]), "")
+            lines += ["", f"第一步的目的：{first[:110]}"]
+            d.text(s, "\n".join(lines), x + 0.3, 1.9, 5.4, 4.7, size=11.5, color=INK)
+
+    # where experience did not help
+    if cmp_b and cmp_b["finished_runs"]:
+        s = d.slide("经验不适用的地方：如实报告，并据此修改规则", "反例")
+        worst = min(cmp_b["tasks"], key=lambda t: cmp_b["per_task"][t][cmp_b["snapshot_b"]]["goal_met"] - cmp_b["per_task"][t][cmp_b["snapshot_a"]]["goal_met"])
+        rows = [["运行", cmp_b["snapshot_a"] + " 结果", "请求 / 模型", cmp_b["snapshot_b"] + " 结果", "请求 / 模型"]]
+        for k in range(cmp_b["repeats"]):
+            cells = []
+            for snapname in (cmp_b["snapshot_a"], cmp_b["snapshot_b"]):
+                r = cmp_b["per_task"][worst][snapname]["runs"][k]
+                rep = report.build(r["run_id"])
+                path = "".join("G" if "large" in key else "Q" for key, v in rep["usage"]["by_model"].items() for _ in range(v["requests"]))
+                cells += [("达标 " if r["goal_met"] else "未达标 ") + (f"{r['final_speedup']:.2f}×" if r["final_speedup"] else ""),
+                          f"{r['model_requests']} / {path}"]
+            rows.append([f"第 {k + 1} 轮", *cells])
+        d.table(s, rows, 0.6, 1.8, 7.2, [1.0, 1.7, 1.5, 1.7, 1.3], size=12)
+        d.card(s, 8.1, 1.8, 4.6, 4.6, ACCENT)
+        d.text(s, f"{worst}：成簇、高基数", 8.35, 1.95, 4.2, 0.4, size=15, bold=True, color=ACCENT)
+        d.text(s, ("学到的经验对这类数据全是“无收益”。小模型据此把请求花在分析和取证上，迟迟不提出第二个失败候选，"
+                   "升级规则（只看连续失败候选）来不及触发，预算耗尽。\n\n"
+                   "这是 B（开发对照）的结论。C 之前把升级规则改为 v2：再加一条“小模型 3 次请求仍无达标候选就升级”，"
+                   "对旧、新经验同样生效；同时修正记录，规则满足但没有请求额度时如实写明。\n\n"
+                   "C 是未参与任何调整的最终留出验收。"), 8.35, 2.45, 4.2, 3.9, size=12.5, color=INK2)
+
+    # cost ledger
+    target_cost = cmp_c if cmp_c and cmp_c["finished_runs"] else cmp_b
+    if target_cost:
+        s = d.slide("成本账：学习花了多少，使用经验省了多少", "效率")
+        rows = [["批次", "旧经验 费用", "新经验 费用", "差额", "旧经验 耗时", "新经验 耗时", "请求中位数"]]
+        for c, name in ((cmp_b, "B 开发对照"), (cmp_c, "C 最终留出")):
+            if not c or not c["finished_runs"]:
+                continue
+            A, B = c["sides"][c["snapshot_a"]], c["sides"][c["snapshot_b"]]
+            rows.append([name, f"${A['cost_usd_total'] or 0:.3f}", f"${B['cost_usd_total'] or 0:.3f}",
+                         f"${(A['cost_usd_total'] or 0) - (B['cost_usd_total'] or 0):+.3f}",
+                         f"{A['wall_clock_s_total']:.0f}s", f"{B['wall_clock_s_total']:.0f}s",
+                         f"{A['model_requests_median']} → {B['model_requests_median']}"])
+        d.table(s, rows, 0.6, 1.8, 12.1, [2.0, 1.7, 1.7, 1.5, 1.7, 1.7, 1.8], size=13)
+        lc = target_cost["learning_cost"]
+        if lc.get("in_lineage"):
+            d.text(s, (f"学习阶段（A 批 {len(lc['learn_runs'])} 次学习运行）另计 ${lc['cost_usd']:.3f}、{lc['wall_clock_s']:.0f}s，"
+                       "不摊进任何一侧。费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；"
+                       "一次 GPT 请求被循环剩余时间截断、服务方未返回用量，记为“未知”。"),
+                   0.6, 3.6, 12.1, 1.2, size=14, color=INK2)
 
     # 11 three lines
     target = cmp_c or cmp_b
@@ -377,10 +453,9 @@ def build(out: Path, shots: Path) -> None:
                   "uv run routeevo serve   # 界面：任务运行 · 经验查看 · 对照结果 · 版本管理",
                   "uv run routeevo export-run <run_id>   # 单次运行的研究记录",
                   "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
-    for i, name in enumerate(("run", "cmp")):
-        p = shots / f"{name}.png"
-        if p.exists():
-            d.image(s, p, 7.2 + i * 0.25, 1.8 + i * 2.5, 5.4)
+    shot = shots / "home.png"
+    if shot.exists():
+        d.image(s, shot, 7.0, 1.75, 5.8)
 
     out.parent.mkdir(parents=True, exist_ok=True)
     d.prs.save(out)

@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react'
 import { api } from './api'
 import { usePoll } from './hooks'
 import { CompareView } from './views/CompareView'
+import { OverviewView } from './views/OverviewView'
 import { ExperienceView } from './views/ExperienceView'
 import { RunView } from './views/RunView'
 import { VersionView } from './views/VersionView'
 
-type Tab = 'run' | 'exp' | 'cmp' | 'ver'
+type Tab = 'home' | 'run' | 'exp' | 'cmp' | 'ver'
 
 const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en: string; desc: string }[] = [
+  { id: 'home', num: '00', lbl: '总览', sub: '学到什么 · 是否更好', title: '总览', en: 'Does experience help?',
+    desc: '模型、提示词、预算与评测全部固定，只有经验快照在变化。下面是学习过程、留出任务上的对照结果，以及由数据自动生成的进化说明。' },
   { id: 'run', num: '01', lbl: '任务运行', sub: '决策 · 执行 · 验证', title: '任务运行', en: 'Run ledger',
     desc: '给定任务、预算与经验快照，Agent 选择行动，程序执行并由固定评测器验证；每一步的目的、预期与实际反馈都记录在案。' },
   { id: 'exp', num: '02', lbl: '经验查看', sub: '已验证的执行事实', title: '经验', en: 'Verified experience',
@@ -21,7 +24,7 @@ const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en:
 
 function readHash(): { tab: Tab; arg: string | null } {
   const [tab, arg] = window.location.hash.replace('#', '').split('/')
-  return { tab: (TABS.some((t) => t.id === tab) ? tab : 'run') as Tab, arg: arg ?? null }
+  return { tab: (TABS.some((t) => t.id === tab) ? tab : 'home') as Tab, arg: arg ?? null }
 }
 
 export default function App() {
@@ -78,6 +81,7 @@ export default function App() {
             <div className="t">生效经验版本<b>{activeRow ? `${activeRow.experience_count} 条经验` : '—'}</b></div>
           </div>
         </header>
+        {tab === 'home' && <OverviewView onOpenRun={openRun} onOpenComparison={() => go('cmp')} />}
         {tab === 'run' && <RunView runId={runId} setRunId={openRun} activeSnapshot={active} onOpenExperience={openExperience} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}
         {tab === 'cmp' && <CompareView onOpenRun={openRun} />}

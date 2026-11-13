@@ -1,0 +1,94 @@
+import { api } from '../api'
+import type { Comparison, SideSummary } from '../api'
+import { Chip, Empty } from '../components/ui'
+import { usePoll } from '../hooks'
+import { STOP, fmt } from '../labels'
+
+/* The first screen for judges: what was learned, what the held-out comparisons show, and where the evidence is. */
+export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: () => void }) {
+  const runs = usePoll(() => api.runs(), [], 5000)
+  const list = usePoll(api.comparisons, [], 5000)
+  const snaps = usePoll(api.snapshots, [], 5000)
+  const pick = (p: string) => list.data?.find((c) => (c.label ?? '').startsWith(p))?.comparison_id ?? null
+  const bId = pick('B'), cId = pick('C')
+  const b = usePoll(() => (bId ? api.comparison(bId) : Promise.resolve(null)), [bId], 6000)
+  const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 6000)
+  const noteFor = cId && c.data?.finished_runs ? cId : bId
+  const note = usePoll(() => (noteFor ? api.note(noteFor) : Promise.resolve(null)), [noteFor], 10000)
+  const learn = (runs.data ?? []).filter((r) => r.mode === 'learn').slice().reverse()
+  const latest = snaps.data?.snapshots.at(-1)
+
+  return (
+    <div className="stack">
+      <div className="grid cols-2">
+        <div className="card">
+          <div className="eyebrow">学习阶段 · A 批</div>
+          <h2>v0 → {latest?.snapshot_id ?? '—'}：{latest?.experience_count ?? 0} 条已验证经验</h2>
+          {learn.length === 0 ? <Empty title="还没有学习运行" /> : (
+            <table className="tbl">
+              <thead><tr><th>任务</th><th>读取</th><th>终止</th><th>发布</th><th /></tr></thead>
+              <tbody>{learn.map((r) => (
+                <tr key={r.run_id}>
+                  <td><b>{r.task_id}</b></td><td>{r.snapshot_id}</td>
+                  <td>{r.status === 'running' ? '运行中' : STOP[r.stop_reason ?? ''] ?? r.stop_reason}</td>
+                  <td>{snaps.data?.snapshots.find((s) => s.source_run_id === r.run_id)?.snapshot_id ?? '—'}</td>
+                  <td><button className="link" onClick={() => onOpenRun(r.run_id)}>查看决策</button></td>
+                </tr>
+              ))}</tbody>
+            </table>
+          )}
+        </div>
+        <div className="card" style={{ borderTop: '3px solid var(--accent)' }}>
+          <div className="eyebrow">三行进化说明 · 由对照数据自动填写</div>
+          {note.data ? (
+            <ol style={{ margin: '6px 0 0', paddingLeft: 22, fontSize: 16, lineHeight: 1.7 }}>
+              {note.data.lines.map((l) => <li key={l} style={{ marginBottom: 8 }}>{l}</li>)}
+            </ol>
+          ) : <Empty title="对照完成后自动生成" />}
+        </div>
+      </div>
+      <ComparisonStrip title="B 批 · 开发对照" c={b.data} onOpen={onOpenComparison} />
+      <ComparisonStrip title="C 批 · 最终留出（配置冻结后一次性验收）" c={c.data} onOpen={onOpenComparison} />
+    </div>
+  )
+}
+
+function ComparisonStrip({ title, c, onOpen }: { title: string; c: Comparison | null; onOpen: () => void }) {
+  if (!c) return <div className="card"><div className="eyebrow">{title}</div><Empty title="尚未运行" /></div>
+  const A: SideSummary | undefined = c.sides[c.snapshot_a]
+  const B: SideSummary | undefined = c.sides[c.snapshot_b]
+  const tiles: [string, string, string][] = A && B ? [
+    ['达标率', fmt.pct(A.success_rate), fmt.pct(B.success_rate)],
+    ['最终加速比中位数', fmt.x(A.final_speedup_median), fmt.x(B.final_speedup_median)],
+    ['模型请求中位数', String(A.model_requests_median ?? '—'), String(B.model_requests_median ?? '—')],
+    ['升级到 GPT', `${A.upgrades_total} 次`, `${B.upgrades_total} 次`],
+    ['模型费用', fmt.usd(A.cost_usd_total), fmt.usd(B.cost_usd_total)],
+    ['总耗时', fmt.s(A.wall_clock_s_total), fmt.s(B.wall_clock_s_total)],
+  ] : []
+  return (
+    <div className="card">
+      <div className="spread">
+        <div>
+          <div className="eyebrow">{title}</div>
+          <h3 style={{ margin: 0 }}>{c.snapshot_a} → {c.snapshot_b} · {c.tasks.length} 任务 × {c.repeats} 次 · 已完成 {c.finished_runs}/{c.planned_runs}</h3>
+        </div>
+        <div className="row">
+          <Chip tone={c.fair ? 'good' : 'bad'} icon={c.fair ? '✓' : '✕'}>{c.fair ? '配置一致' : '配置不一致'}</Chip>
+          {c.status === 'running' && <Chip tone="accent" icon="●">运行中</Chip>}
+          <button className="link" onClick={onOpen}>逐任务详情</button>
+        </div>
+      </div>
+      {tiles.length > 0 && (
+        <div className="stats" style={{ gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', marginTop: 16 }}>
+          {tiles.map(([k, a, b]) => (
+            <div key={k} className="stat">
+              <div className="k">{k}</div>
+              <div className="v" style={{ fontSize: 26 }}>{b}</div>
+              <div className="s"><span style={{ color: 'var(--series-old)' }}>●</span> {c.snapshot_a} {a} → <span style={{ color: 'var(--series-new)' }}>●</span> {c.snapshot_b} {b}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

@@ -75,8 +75,33 @@ export interface Candidate {
   dev_evaluations: { status: string; speedup: number | null; improved: number | null; goal_met: number | null }[]
 }
 
+export interface Experiment {
+  candidate_id: string
+  step: number
+  hypothesis: string | null
+  purpose: string | null
+  expected: string | null
+  verification: string | null
+  result: { status: string | null; speedup: number | null; improved: number | boolean | null; failure: string | null; contract_case: string | null }
+  verdict: 'supported' | 'partial' | 'refuted' | 'untestable' | 'untested'
+  then: string | null
+}
+
+export interface Research {
+  definition: {
+    question: string; goal: string; workload: string; scope: string; verification: string; final_test: string
+    baseline: { program: string; dev_median_s: number | null; final_median_s: number | null }
+    tools: { action: string; label: string }[]
+    budget: { model_requests: number; candidates: number; loop_s: number; request_timeout_s: number; measurement_timeout_s: number }
+  }
+  experiments: Experiment[]
+  verdicts: Record<string, number>
+  verdict_labels: Record<string, string>
+}
+
 export interface Report {
   run_id: string
+  research: Research
   task: { task_id: string; split: string; target_min_speedup: number; dev_params: Json }
   mode: string
   snapshot_id: string

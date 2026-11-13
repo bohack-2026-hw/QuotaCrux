@@ -51,7 +51,7 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
           )}
         </div>
         <div className="card" style={{ borderTop: '3px solid var(--accent)' }}>
-          <div className="eyebrow">三行进化说明 · 由对照数据自动填写</div>
+          <div className="eyebrow">经验带来的变化 · 由对照数据自动填写</div>
           {note.data ? (
             <ol style={{ margin: '6px 0 0', paddingLeft: 22, fontSize: 16, lineHeight: 1.7 }}>
               {note.data.lines.map((l) => <li key={l} style={{ marginBottom: 8 }}>{l}</li>)}

@@ -146,7 +146,7 @@ def run_markdown(run_id: str) -> str:
 
 
 def evolution_note(comparison_id: str) -> dict:
-    """The 日新 three-line note: what was compared, what was learned, how to roll back — each tied to evidence."""
+    """Three-line note on what experience changed: what was compared, what was learned, how to roll back — each tied to evidence."""
     c = compare.summarize(comparison_id)
     a, b = c["snapshot_a"], c["snapshot_b"]
     A, B = c["sides"].get(a), c["sides"].get(b)

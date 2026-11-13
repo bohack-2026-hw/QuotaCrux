@@ -10,10 +10,10 @@ import { VersionView } from './views/VersionView'
 type Tab = 'home' | 'run' | 'exp' | 'cmp' | 'ver'
 
 const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en: string; desc: string }[] = [
-  { id: 'home', num: '00', lbl: '总览', sub: '学到什么 · 是否更好', title: '总览', en: 'Does experience help?',
-    desc: '模型、提示词、预算与评测全部固定，只有经验快照在变化。下面是学习过程、留出任务上的对照结果，以及由数据自动生成的进化说明。' },
-  { id: 'run', num: '01', lbl: '任务运行', sub: '决策 · 执行 · 验证', title: '任务运行', en: 'Run ledger',
-    desc: '给定任务、预算与经验快照，Agent 选择行动，程序执行并由固定评测器验证；每一步的目的、预期与实际反馈都记录在案。' },
+  { id: 'home', num: '00', lbl: '总览', sub: '研究成果 · 系统评估', title: '总览', en: 'Research Agent',
+    desc: '研究闭环：规划—取证—假设—实验—验证—修正。模型、提示词、预算与评测全部固定，只有经验快照在变化；下面是学习过程、留出任务上有无经验的对照，以及由数据自动填写的结论。' },
+  { id: 'run', num: '01', lbl: '研究运行', sub: '证据 · 假设 · 实验', title: '研究运行', en: 'Research run',
+    desc: '研究问题、基线、工具与预算在开始前固定；Agent 取证、提出假设并做实验，固定评测器给出判定，反馈决定下一步。每一步的目的、预期与实际结果都记录在案。' },
   { id: 'exp', num: '02', lbl: '经验查看', sub: '已验证的执行事实', title: '经验', en: 'Verified experience',
     desc: '经验来自学习运行中经过评测的候选：在什么条件下、做了什么改动、实测结果如何、证据在哪里。模型解释单独标为未验证。' },
   { id: 'cmp', num: '03', lbl: '对照结果', sub: '旧经验 vs 新经验', title: '对照', en: 'Held-out comparison',

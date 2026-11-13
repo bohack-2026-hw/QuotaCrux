@@ -91,7 +91,7 @@ function ComparisonDetail({ c, onOpenRun }: { c: Comparison; onOpenRun: (id: str
 
       {note.data && c.finished_runs > 0 && (
         <div className="card" style={{ borderTop: '3px solid var(--accent)' }}>
-          <div className="eyebrow">三行进化说明 · 由对照数据自动填写</div>
+          <div className="eyebrow">经验带来的变化 · 由对照数据自动填写</div>
           <ol style={{ margin: 0, paddingLeft: 22, fontSize: 16, lineHeight: 1.7 }}>
             {note.data.lines.map((l) => <li key={l} style={{ marginBottom: 6 }}>{l}</li>)}
           </ol>

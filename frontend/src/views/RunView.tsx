@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
-import type { Report, RunRow, Step, TaskSummary } from '../api'
+import type { Report, Research, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
@@ -162,6 +162,8 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         {rep.stop_detail && !live && <p className="small muted" style={{ marginBottom: 0 }}>终止依据：{stopDetail(rep.stop_detail)}</p>}
       </div>
 
+      <TaskDefinition r={rep.research} />
+
       <div className="card">
         <div className="meters">
           <Meter label="模型请求" value={rep.iterations.model_requests ?? 0} max={limits.max_model_requests} />
@@ -219,6 +221,8 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         </div>
       </div>
 
+      <Experiments r={rep.research} />
+
       <div className="card">
         <div className="spread"><h2>决策账本</h2><span className="small muted">每一步：目的 → 预期 → 实际反馈 → 下一步</span></div>
         <div className="ledger">{rep.steps.map((s) => <StepRow key={s.seq} s={s} rep={rep} />)}</div>
@@ -231,6 +235,68 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         )}
       </div>
     </>
+  )
+}
+
+/* RA-01: everything here was fixed when the run was created; the model could not change it. */
+function TaskDefinition({ r }: { r: Research }) {
+  const d = r.definition
+  const b = d.budget
+  const rows: [string, string][] = [
+    ['工作负载', d.workload],
+    ['基线', d.baseline.program + (d.baseline.dev_median_s != null ? `；开发数据中位耗时 ${d.baseline.dev_median_s.toFixed(3)}s` : '')],
+    ['目标与约束', d.goal],
+    ['允许修改', d.scope],
+    ['工具', d.tools.map((t) => t.label.split('：')[0]).join(' · ')],
+    ['验证方法', d.verification],
+    ['预算', `模型请求 ${b.model_requests} 次 · 候选 ${b.candidates} 个 · 循环 ${b.loop_s}s · 单次请求 ${b.request_timeout_s}s · 单次测量 ${b.measurement_timeout_s}s`],
+    ['独立验收', d.final_test],
+  ]
+  return (
+    <details className="card research-def">
+      <summary>
+        <span className="eyebrow">研究任务 · 运行开始前固定</span>
+        <span className="q">{d.question}</span>
+      </summary>
+      <dl>{rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    </details>
+  )
+}
+
+const VERDICT_TONE: Record<string, ['good' | 'warn' | 'neutral' | 'bad', string]> = {
+  supported: ['good', '✓'], partial: ['warn', '◐'], refuted: ['neutral', '✕'], untestable: ['bad', '!'], untested: ['neutral', '·'],
+}
+
+/* RA-03: hypothesis, prediction and check written before the experiment; the verdict comes from the evaluator. */
+function Experiments({ r }: { r: Research }) {
+  if (r.experiments.length === 0) return null
+  return (
+    <div className="card">
+      <div className="spread">
+        <h2>假设与实验</h2>
+        <span className="small muted">
+          {Object.entries(r.verdicts).filter(([, n]) => n > 0).map(([k, n]) => `${r.verdict_labels[k].split('（')[0]} ${n}`).join(' · ')}
+        </span>
+      </div>
+      <p className="small muted" style={{ marginTop: 0 }}>假设、预期与验证方法由模型在提交候选前写下；判定由程序依据随后的评测给出，不由模型自评。</p>
+      <table className="tbl exp-table">
+        <thead><tr><th>候选</th><th>假设（事前）</th><th>预期</th><th>实测</th><th>判定</th><th>之后</th></tr></thead>
+        <tbody>{r.experiments.map((e) => {
+          const [tone, icon] = VERDICT_TONE[e.verdict]
+          const res = e.result
+          return (
+            <tr key={e.candidate_id}>
+              <td className="mono">{e.candidate_id}</td>
+              <td>{e.hypothesis ?? e.purpose ?? '—'}</td>
+              <td className="muted">{e.expected ?? '—'}</td>
+              <td className="nowrap">{res.status ?? '—'}{res.speedup != null ? ` · ${fmt.x(res.speedup)}` : ''}{res.contract_case ? ` · ${res.contract_case}` : ''}</td>
+              <td><Chip tone={tone} icon={icon}>{r.verdict_labels[e.verdict].split('（')[0]}</Chip></td>
+              <td className="small">{e.then ? decision(e.then) : '—'}</td>
+            </tr>
+          )
+        })}</tbody>
+      </table>
+    </div>
   )
 }
 

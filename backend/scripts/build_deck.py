@@ -523,7 +523,7 @@ def build(out: Path, shots: Path) -> None:
                            "加入经验后提示词更长，输入 Token 反而增加；节省来自更少的请求、升级与输出 Token。"),
                        0.6, 4.9, 12.1, 1.0, size=14, color=INK2)
 
-    # RX-01/02: one real two-round session, end to end
+    # self-iteration: one real two-round session, end to end
     ses = db.one("SELECT * FROM sessions WHERE status = 'completed' AND comparison_id IS NOT NULL ORDER BY created_at DESC LIMIT 1")
     if ses:
         sc = compare.summarize(ses["comparison_id"])

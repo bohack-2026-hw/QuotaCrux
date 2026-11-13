@@ -100,7 +100,7 @@ def section_comparison(lines: list[str], key: str, c: dict) -> None:
     if c["errors"]:
         lines += ["", f"出错的计划运行：{len(c['errors'])} 次，例如 {c['errors'][0]['error']}"]
     note = narrative.evolution_note(c["comparison_id"])
-    lines += ["", "三行进化说明（自动生成）：", ""] + [f"{i}. {line}" for i, line in enumerate(note["lines"], 1)] + [""]
+    lines += ["", "经验带来的变化（由对照数据自动填写）：", ""] + [f"{i}. {line}" for i, line in enumerate(note["lines"], 1)] + [""]
 
 
 def observations(lines: list[str], c: dict) -> None:

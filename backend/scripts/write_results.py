@@ -184,6 +184,12 @@ def observations(lines: list[str], c: dict) -> None:
         lines.append(f"- {b} 有 {wins} 次运行由复用的程序直接达标，这些运行的循环时长中位数 {loops[len(loops) // 2]:.0f}s。")
     if missed:
         lines.append(f"- 开发数据上已达标、但最终测试未满足“全部样本快于基线”的运行 {len(missed)} 次：{'、'.join(missed)}；按规则记为未达标。")
+    per = {t: sum(r["cost_usd"] or 0 for r in c["per_task"][t][b]["runs"]) for t in c["tasks"]}
+    tot = sum(per.values())
+    if tot:
+        top = max(per, key=per.get)
+        if per[top] / tot >= 0.5:
+            lines.append(f"- {b} 的 GPT 费用 {usd(tot)} 中有 {usd(per[top])}（{per[top] / tot:.0%}）来自 {top}，其余 {len(per) - 1} 个任务合计 {usd(tot - per[top])}。")
     ia, ib = A["input_tokens"]["total"], B["input_tokens"]["total"]
     if ia and ib and ib > ia:
         lines.append(f"- 输入 Token {n(ia)} → {n(ib)}：经验摘要进入提示词，单次请求更长；请求次数和输出 Token 减少，GPT 费用仍以实测为准。")

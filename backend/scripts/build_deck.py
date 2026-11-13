@@ -662,6 +662,16 @@ def build(out: Path, shots: Path) -> None:
             if saved and min(saved) > 0:
                 txt += (f"每次运行少花 {' / '.join(f'${v:.4f}' for v in saved)}（B / D），约 "
                         f"{' / '.join(f'{lc['cost_usd'] / v:.0f}' for v in saved)} 次运行收回学习费用。")
+        for c, name in ((cmp_b, "B"), (cmp_d, "D")):
+            if not c or not c["finished_runs"]:
+                continue
+            sb = c["snapshot_b"]
+            per = {t: sum(r["cost_usd"] or 0 for r in c["per_task"][t][sb]["runs"]) for t in c["tasks"]}
+            tot = sum(per.values())
+            top = max(per, key=per.get)
+            if tot and per[top] / tot >= 0.5:
+                txt += (f"{name} 中新经验一侧的 GPT 费用有 {per[top] / tot:.0%} 来自 {top}（复验未达标，交给模型研究；"
+                        f"提示词里带着复验过的程序，单次请求更长），其余任务合计 ${tot - per[top]:.3f}。")
         txt += "费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；复验的评测时间计入循环时长。"
         d.text(s, txt, 0.6, 1.8 + 0.36 * len(rows) + 0.3, 12.1, 1.6, size=13.5, color=INK2)
 

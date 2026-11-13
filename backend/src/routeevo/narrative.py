@@ -167,7 +167,7 @@ def evolution_note(comparison_id: str) -> dict:
              f"{c['repeats']} 次对比 {a} 与 {b}：达标 {A['goal_met']}/{A['runs']} → {B['goal_met']}/{B['runs']}，"
              f"最终加速比中位数 {_x(A['final_speedup_median'])} → {_x(B['final_speedup_median'])}，"
              f"输出 Token {A['output_tokens']['total']} → {B['output_tokens']['total']}，费用 {_usd(A['cost_usd_total'])} → {_usd(B['cost_usd_total'])}，"
-             f"总耗时 {A['wall_clock_s_total']:.0f}s → {B['wall_clock_s_total']:.0f}s；"
+             f"单次研究循环时长中位数 {A['agent_loop_s_median']:.0f}s → {B['agent_loop_s_median']:.0f}s，总耗时 {A['wall_clock_s_total']:.0f}s → {B['wall_clock_s_total']:.0f}s；"
              + (f"学习成本另计 {_usd(lc.get('cost_usd'))} / {lc.get('wall_clock_s', 0):.0f}s。" if lc.get("in_lineage") else "学习成本不在同一版本链上，未计入。"))
     best = sorted([e for e in added if e["outcome"] == "success"], key=lambda e: -(e["result"]["speedup"] or 0))[:1]
     worst = [e for e in added if e["outcome"] == "failure"][:1]

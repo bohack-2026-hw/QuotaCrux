@@ -1,6 +1,6 @@
 # EffiBench-X 接入设计
 
-实现分支：`feat/effibench-x-adapter`；基线：`f8fbb3e`。本次把任务语义从研究执行循环中拆出，并加入 EffiBench-X 的 Python 导入入口。
+架构边界与导入说明（基于 `f8fbb3e` 扩展）：将题目语义从研究执行循环中拆出，并加入 EffiBench-X 的 Python 导入入口。
 
 ## 1. 当前架构与边界
 
@@ -44,7 +44,7 @@ flowchart LR
 | 分片 | 20 个 Parquet，合计 **2,341,977,516 bytes**，约 **2.34 GB / 2.18 GiB** |
 | 用例数 | 官方说明每题 100 个；导入时记录实际条数并去除重复输入 |
 
-题目目录、分片大小和 SHA256 在 `backend/src/quotacrux/benchmarks/effibench_catalog.json`。规模与 Python 覆盖通过读取全部 20 个分片的元数据和选定列核实；没有把 2.34 GB 数据放进 Git。部分题目的测试字符串很大，解压时所需内存可能明显高于压缩文件大小。
+题目目录、分片大小和 SHA256 在 `backend/src/quotacrux/benchmarks/effibench_catalog.json`。规模与 Python 覆盖通过读取全部 20 个分片的元数据和选定列核实，2.34 GB 原始分片按需缓存于本地，不纳入 Git 仓库。部分题目的测试字符串很大，解压时所需内存可能明显高于压缩文件大小。
 
 上游运行逻辑参考 [EffiBench-X `21b6668a`](https://github.com/EffiBench/EffiBench-X/tree/21b6668a49a342c843e679cc5ed16081064a5768)，相关许可证及修改说明见 [第三方说明](../../THIRD_PARTY_NOTICES.md)。
 
@@ -52,14 +52,14 @@ flowchart LR
 
 - **优化对象**：从数据集已有 Python 参考解开始。`io` 直接作为程序；`functional` 把参考解嵌入该题 Python runner，补入上游标准库导入项，成为完整 stdin/stdout 程序。候选继续提交完整程序。
 - **支持范围**：Python 3.12 标准库、当前 20,000 字节代码上限和既有 Docker 资源限制。需要 `sortedcontainers` 等第三方库的题目明确拒绝，623 题的执行验证仍待完成。
-- **数据划分**：同一输入重复出现时去重；若期望输出冲突则拒绝。按输入 SHA256 排序，默认前 20 个为 dev，其余为 final。`--case-limit` 可指定试接入子集，子集数量和原始用例 ID 写入 manifest。该划分是固定、可复现的工程选择，未按难度分层。
+- **数据划分**：同一输入重复出现时去重；若期望输出冲突则拒绝。按输入 SHA256 排序，默认前 20 个为 dev，其余为 final。`--case-limit` 可指定试接入子集，子集数量和原始用例 ID 写入 manifest。该划分确定可复现，未按难度分层。
 - **模型可见数据**：题目、初始程序、dev 概况和最多两个小型 dev 例子。候选容器只接收单个测试输入；final 数据和 checker 不进入模型上下文。
-- **正确性**：使用数据集的 `evaluate`，调用顺序和文本归一化遵循上述上游版本实际代码，即 `evaluate(actual, expected)`，不根据函数形参名称猜测。checker 在单独的无网络、只读 Docker 沙箱执行；异常、超时或非法返回明确记作 `checker_error`，不写成候选失败经验。
+- **正确性**：使用数据集的 `evaluate`，调用顺序与文本归一化严格对齐上述上游实现，即 `evaluate(actual, expected)`。checker 在单独的无网络、只读 Docker 沙箱执行；异常、超时或非法返回明确记作 `checker_error`，不写成候选失败经验。
 - **性能**：每个 case 使用全新容器；一轮计时为该 suite 各用例运行时间之和，校验器执行时间不计入候选耗时。单轮累计 stdout 也受现有输出预算限制，避免多用例放大输出内存占用。基线和候选各预热一轮，交替运行 5 轮，用两组总时间的中位数之比作为 speedup；每个计时轮仍检查输出。全部候选轮快于全部基线轮且 speedup ≥ 1.10 才达标。
 - **证据工具**：cProfile 使用第一个 dev case，反馈注明 case ID 和 dev 总数。
 - **经验隔离**：EffiBench 的 problem、数据 revision、checker、runner、适配版本和 dev 输入划分共同组成兼容键。只检索/复验同一兼容键的经验，避免跨题误用完整解法，也避免改变 dev 划分后将已见输入带入新的 final。groupagg 保留原有跨输入规模和特点复用。
 
-本实验优化已有参考程序，报告加速比。同题内可复用程序；跨题效果待测。
+该适配以数据集已有参考程序为起点优化并报告加速比；支持同题内程序复用，跨题迁移效果待测。
 
 ## 4. 使用方式
 
@@ -88,6 +88,6 @@ uv run quotacrux run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
 
 ## 5. 验证记录
 
-见 [EffiBench-X 试接入结果](../archive/effibench-preflight.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
+见 [EffiBench-X 试接入结果](../archive/effibench-preflight.md)，列出实际运行的题目、用例覆盖和检查结果；其中试接入脚本模型仅用于验证研究循环与报告链路。
 
-研究评测按[正式研究协议 v2](../research/native-formal-20261114/protocol.md)推进，主线验证同一轮研究 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生适配接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](native-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。
+研究评测按[正式研究协议 v2](../research/native-formal-20261114/protocol.md)推进，主线验证同一轮研究利用反馈的效果；现有适配器和[四题结果](../research/effibench-x-20261114/README.md)保持有效。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生适配接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](native-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。

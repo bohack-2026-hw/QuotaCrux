@@ -4,7 +4,7 @@
 
 本文保存赛题、企业方 comment1—comment4 原话和团队决定。由这些要求整理出的功能与验收目标见[产品需求](product-requirements.md)。
 
-赛题入口：[BoHack 赛道与赛题设置](https://tcnf5s7xd39g.feishu.cn/wiki/EpxXwbYkkieZrfk0QbRc7wWQnRc#doxcn2L75UoUOu4KCukBPrZHmxf)。下列原文来自用户提供的补充内容，项目采用的实现方式在后文单独说明。
+赛题入口：[BoHack 赛道与赛题设置](https://tcnf5s7xd39g.feishu.cn/wiki/EpxXwbYkkieZrfk0QbRc7wWQnRc#doxcn2L75UoUOu4KCukBPrZHmxf)。下列补充说明源自企业方答疑（comment1—comment4），项目采用的实现方式在后文对应说明。
 
 ## 1. 赛题描述
 
@@ -44,25 +44,25 @@
 | 重点在如何使用 Agent 做研究 | 必须展示执行前的假设、工具证据、真实实验，以及反馈如何改变下一步；成果包括可运行方案和复现入口 |
 | 评估系统的成本、时间、改进能力 | 分别报告产物性能和 Agent 效率；全量记录失败尝试与模型用量，使用独立测试和冻结经验对照 |
 
-研究过程是当前主线。经验版本、失败经验、回退和 A/B/C 对照继续用于验证可持续改进；日新的专属两轮会话与三行说明保留在历史方案中。
+研究过程是当前主线。经验版本、失败经验、回退和 A/B/C 对照继续用于验证可持续改进；已归档的早期备选方案（“日新”）专属两轮会话与三行说明仅留作历史参考。
 
 ## 4. 团队已确认的选择
 
 | 项目 | 确认内容 |
 | --- | --- |
 | 参赛方向 | 已选择 Research Agent，确认日期为 2026-11-14 |
-| 小模型 | 使用自部署 Qwen，准确 model ID、服务协议与地址由部署方提供 |
+| 小模型 | 使用自部署或托管 Qwen 服务（实际 model ID 与服务地址以运行配置与批次记录为准） |
 | 大模型 | OpenAI GPT-6.1 Sol，推理强度 xhigh |
 | 调用预算 | 现阶段先不限制金额；保留用量记录和防止无限运行的次数、超时约束 |
-| 凭据 | 用户私下提供给开发 agent，不写入仓库文档 |
+| 凭据 | 通过本地环境配置（如 `backend/.env`）注入，不写入仓库文档 |
 | 开发与演示环境 | 可以使用 Docker，正式对照固定同一台机器和 Docker 环境 |
 
-上述是团队明确回复的内容。任务包数量、测量次数、初始升级规则等属于[开工决策](../archive/initial-implementation-decisions.md)中的首版实施约定，可在开发数据上校准，正式对照前冻结。专用决策模型仍为后置实验项。
+以上为选题阶段确认的技术选型与约束。任务包数量、测量次数、初始升级规则等属于[开工决策](../archive/initial-implementation-decisions.md)中的首版实施约定，在开发数据上校准，正式对照前冻结。专用决策模型在首版主线中列为后置对照项（后续设计与实验见[动作与模型选择](../design/action-model-routing.md)）。
 
 ## 5. 开发文档的使用顺序
 
-1. 按 [Research Agent PRD](product-requirements.md)完成研究过程及 RA-01—RA-08 的能力。
-2. 用[核心 PRD](core-requirements.md)约束执行、验证、账本、经验与版本行为。
-3. 按[开工决策](../archive/initial-implementation-decisions.md)的 14 项答复落实任务、接口、环境、评测规模与人员边界。
+1. 按 [Research Agent PRD](product-requirements.md) 完成研究过程及 RA-01—RA-08 的能力。
+2. 用[核心 PRD](core-requirements.md) 约束执行、验证、账本、经验与版本行为。
+3. 按[开工决策](../archive/initial-implementation-decisions.md) 的 14 项答复落实任务、接口、环境、评测规模与人员边界。
 
-历史[方向对比](../archive/track-comparison.md)和[日新 PRD](../archive/rixin-requirements.md)不覆盖当前已确认的赛道及实施约定。
+已归档的[方向对比](../archive/track-comparison.md)与[日新 PRD](../archive/rixin-requirements.md)仅作历史记录，现行规则以本文及上述主线需求文档为准。

@@ -5,11 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import hashlib
 import json
+import os
 from typing import Protocol
 
 from ..config import ModelConfig, RoutingConfig
 from ..llm.base import LLMResult
-from ..llm import openai_decisions
+from ..llm import openai_decisions, typesafe_jev
 from . import actions
 
 UPGRADE_RULE = {
@@ -107,14 +108,27 @@ class LLMActionRouter:
         return ActionSelection(action=actions.parse(result.text or ""))
 
 
-def decision_config(role: str) -> ModelConfig:
+def decision_config(role: str, provider: str = "decisions") -> ModelConfig:
+    if provider == "jev":
+        return ModelConfig(provider="typesafe_jev", model=os.environ.get("TYPESAFE_MODEL", typesafe_jev.MODEL), role=role,
+                           base_url=typesafe_jev.ENDPOINT.removesuffix("/systemone"), max_output_tokens=0)
     return ModelConfig(provider="openai_decisions", model=openai_decisions.MODEL, role=role,
                        base_url=openai_decisions.ENDPOINT.removesuffix("/decisions"), max_output_tokens=0)
 
 
+def _decide(cfg: ModelConfig, evidence: dict, questions: list[dict], timeout_s: float) -> LLMResult:
+    if cfg.provider == "typesafe_jev":
+        return typesafe_jev.decide(evidence, questions, timeout_s, model=cfg.model)
+    return openai_decisions.decide(evidence, questions, timeout_s)
+
+
 class DecisionsActionRouter:
+    def __init__(self, provider: str = "decisions"):
+        self.config = decision_config("router_action", provider)
+        self.label = "Jev" if provider == "jev" else "Decisions"
+
     def config_for(self, role: str) -> ModelConfig:
-        return decision_config("router_action")
+        return self.config
 
     def question(self, state: RoutingState) -> dict:
         choices = [{"value": "finish", "description": "End the run and deliver the best verified candidate."}]
@@ -131,16 +145,16 @@ class DecisionsActionRouter:
         return {"type": "choice", "name": "action", "instructions": ACTION_INSTRUCTIONS, "choices": choices}
 
     def request(self, state: RoutingState, timeout_s: float) -> LLMResult:
-        return openai_decisions.decide(state.evidence(), [self.question(state)], timeout_s)
+        return _decide(self.config, state.evidence(), [self.question(state)], timeout_s)
 
     def resolve(self, state: RoutingState, result: LLMResult) -> ActionSelection:
         choice = json.loads(result.text)[0]["choice"]
         if choice in ("analyze", "propose_candidate"):
             return ActionSelection(generate=choice, choice=choice)
-        purpose = f"Decisions 动作路由选择 {choice}"
+        purpose = f"{self.label} 动作路由选择 {choice}"
         if choice == "finish":
             action = actions.Action("finish", purpose, "交付当前最佳已验证候选", "由既有评测器执行最终验收",
-                                    finish_reason="Decisions action router selected finish")
+                                    finish_reason=f"{self.label} action router selected finish")
         else:
             kind, cid = choice.split(":", 1)
             action = actions.Action("get_evidence" if kind == "profile_candidate" else "run_validation", purpose,
@@ -171,27 +185,36 @@ class RuleModelRouter:
 class DecisionsModelRouter:
     eager_after_validation = False
 
+    def __init__(self, provider: str = "decisions"):
+        self.config = decision_config("router_model", provider)
+        self.label = "Jev" if provider == "jev" else "Decisions"
+
     def config_for(self, role: str) -> ModelConfig | None:
-        return decision_config("router_model") if role == "small" else None
+        return self.config if role == "small" else None
 
     def request(self, state: RoutingState, timeout_s: float) -> LLMResult:
-        return openai_decisions.decide(state.evidence(), [MODEL_QUESTION], timeout_s)
+        return _decide(self.config, state.evidence(), [MODEL_QUESTION], timeout_s)
 
     def resolve(self, state: RoutingState, result: LLMResult | None) -> ModelSelection:
         if state.role == "large":
             return ModelSelection("large", "already upgraded")
         choice = json.loads(result.text)[0]["choice"]
-        return ModelSelection(choice, f"Decisions 模型路由选择 {choice}")
+        return ModelSelection(choice, f"{self.label} 模型路由选择 {choice}")
 
 
 def make_routers(config: RoutingConfig, clients: dict, models: dict) -> tuple[ActionRouter, ModelRouter]:
-    action = LLMActionRouter(clients, models) if config.action == "llm" else DecisionsActionRouter()
-    model = RuleModelRouter() if config.model == "rule" else DecisionsModelRouter()
+    action = LLMActionRouter(clients, models) if config.action == "llm" else DecisionsActionRouter(config.action)
+    model = RuleModelRouter() if config.model == "rule" else DecisionsModelRouter(config.model)
     return action, model
 
 
 def manifest(config: RoutingConfig) -> dict:
-    return {**config.to_dict(), "version": "routing-adapters-v2", "decision_model": openai_decisions.MODEL,
+    result = {**config.to_dict(), "version": "routing-adapters-v2", "decision_model": openai_decisions.MODEL,
             "action_prompt_sha256": hashlib.sha256(ACTION_INSTRUCTIONS.encode()).hexdigest(),
             "model_prompt_sha256": hashlib.sha256(MODEL_INSTRUCTIONS.encode()).hexdigest(),
             "upgrade_is_irreversible": True, "budget_counts": "all routing and generation requests"}
+    if "jev" in (config.action, config.model):
+        result.update(version="routing-adapters-v3", jev_model=decision_config("router_action", "jev").model,
+                      jev_endpoint=typesafe_jev.ENDPOINT,
+                      jev_evidence_prompt_sha256=hashlib.sha256(typesafe_jev.EVIDENCE_INSTRUCTIONS.encode()).hexdigest())
+    return result

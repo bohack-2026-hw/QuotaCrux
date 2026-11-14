@@ -9,7 +9,7 @@
 | 仅模型 Decisions | 139559 | 5.836% | 389.9秒 | 7 / 4 | 8 |
 | 双 Decisions | 132540 | 0.513% | 112.9秒 | 6 / 0 | 13 |
 
-共同final c0分数为131864。仅动作Decisions这次取得最高分139972，比基线高236；仅模型Decisions为139559。双Decisions保持small、未升级GPT，112.9秒结束，得分132540，表现为更短时间与较小分数提升。每组仅1次，这些是本次运行的探索性观察。
+共同 final `c0` 分数为 131864。仅动作 Decisions 本次取得最高分 139972（较基线高 236 分），仅模型 Decisions 为 139559；双 Decisions 保持在 small 模型未升级 GPT，112.9 秒结束并取得 132540 分，表现为更短耗时与较小涨幅。四组各仅运行一次，以上为本批单次探索观察。
 
 实际共61次HTTP请求：18 small、15 large（含1次timeout）、28 Decisions。24个模型候选全部通过dev，另保留4个c0文件；最终交付候选全部通过15个final用例。
 
@@ -17,6 +17,6 @@
 
 完整[比较、配对与交互项](short-results/comparison.json)、[逐轮报告/候选/请求和曲线](short-results/README.md)、[审计结果](short-results/audit.json)、[SHA256清单](short-results/SHA256SUMS)均已导出。
 
-原900秒长批按用户缩减范围指令停止，作为[独立补充记录](long-batch-stopped/README.md)保留：1 completed、1 user_stopped、10 not_run。其baseline final=139950，已知费用CNY0.128631及USD0.7716757，另有1次timeout用量未知。该长预算数据不混入上述短预算对照。
+原 900 秒长批在中途终止后已作为[独立补充记录](long-batch-stopped/README.md)单列：1 completed、1 user_stopped、10 not_run。其 `baseline` final 为 139950，已知费用为 CNY 0.128631 与 USD 0.7716757（另有 1 次超时用量未知），与上述 360 秒短批分别统计。
 
-Mac因凭据与负载条件未满足，本轮未执行；当前交付范围为已有ALE反馈15项加本次desktop路由4项。
+Mac 端本轮因凭据与负载条件未具备，正式批次未启动；本目录仅包含 desktop 端短批 4 项及上述中止长批（ALE 反馈 15 项另见 `native-formal-20261114`）。

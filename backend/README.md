@@ -1,12 +1,6 @@
-# QuotaCrux（枢决） backend
+# QuotaCrux Backend
 
-The project is named **QuotaCrux（枢决）**. The Python package and CLI are `quotacrux`; use `QUOTACRUX_VAR_DIR` and `QUOTACRUX_NO_DOTENV` for configuration. Existing `ROUTEEVO_VAR_DIR` / `ROUTEEVO_NO_DOTENV` values and `routeevo.sqlite3` databases remain supported. New stores use `quotacrux.sqlite3`.
-
-The [shared core](../docs/requirements/core-requirements.md), M1–M3: three task families, the Qwen / GPT execution loop with a router,
-a Docker sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots
-and rollback, frozen held-out comparisons, an online stream comparison, and an HTTP API that also serves the
-dashboard. Boundary conditions, case by case: [docs/archive/legacy-runtime-rules.md](../docs/archive/legacy-runtime-rules.md). Decisions follow
-[initial implementation decisions](../docs/archive/initial-implementation-decisions.md).
+Python package and CLI (`quotacrux`) implementing the [core requirements](../docs/requirements/core-requirements.md): three built-in task families, the Qwen/GPT research loop with decoupled action/model routers, an isolated Docker sandbox with external evaluation, a full resource ledger, program-extracted experience with immutable snapshots and rollback, frozen held-out and online-stream comparisons, and an HTTP API serving the dashboard. For runtime boundary conditions and initial design decisions, see [legacy-runtime-rules.md](../docs/archive/legacy-runtime-rules.md) and [initial-implementation-decisions.md](../docs/archive/initial-implementation-decisions.md).
 
 ## Setup
 
@@ -19,9 +13,7 @@ uv run quotacrux tasks build  # regenerate the frozen task packages (hashes chec
 uv run quotacrux serve        # http://127.0.0.1:8000
 ```
 
-Docker (OrbStack) must be running; the sandbox image is built on first use. Local Qwen runs in Ollama
-(`QWEN_MODEL=qwen3.8:27b-mlx`, thinking off via `QWEN_REASONING_EFFORT=none`). The project `.env` overrides the
-shell, which matters because the shell may export `OPENAI_API_KEY=ollama` for local tools.
+Docker (Docker Engine or OrbStack) must be running; the sandbox image builds on first use. Local Qwen runs in Ollama (`QWEN_MODEL=qwen3.8:27b-mlx`, thinking disabled via `QWEN_REASONING_EFFORT=none`). Project `.env` settings override shell environment variables (helpful when your shell exports `OPENAI_API_KEY=ollama` for local tooling). Configuration uses `QUOTACRUX_VAR_DIR` / `QUOTACRUX_NO_DOTENV` and `quotacrux.sqlite3` (legacy `ROUTEEVO_VAR_DIR` / `ROUTEEVO_NO_DOTENV` env vars and `routeevo.sqlite3` remain supported).
 
 Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, compare B and D, the S stream, the router
 ablation).
@@ -64,9 +56,7 @@ reference output, workload profile and 5 condition buckets, 7 public contract ca
 experience store, router and UI dispatch on the task's family. A task package (`tasks/spec*.json` →
 `var/tasks/<id>/`) holds the contract, initial code, visible examples, a dev data profile, dev data and an independent
 final test set, all hash-pinned in `manifest.json`. Only contract, initial code, examples and dev profile reach the
-model. Splits: A (learning), B (development comparison), C (held-out for the text-experience version), D (sealed
-before re-use was built), T (tuning tasks for the new families), S (sealed mixed-family stream, run once for version
-3), smoke (tests). Writable splits: A, S, T, smoke.
+model. Splits: A (learning), B (development comparison), C (v1 text-experience held-out), D (v2 sealed held-out), T (tuning tasks for new families), S (v3 sealed mixed-family stream), smoke (tests). Writable splits: A, S, T, smoke.
 
 ## Evaluation
 
@@ -118,9 +108,7 @@ before re-use was built), T (tuning tasks for the new families), S (sealed mixed
   repeat replays the learning from the start snapshot; the active pointer is restored afterwards. The summary
   reports both arms, first-of-family vs later tasks, per family, per position, cumulative large-model cost and
   snapshot growth.
-- A two-round session (`POST /api/sessions`) learns one task from a base snapshot, publishes the new version (which
-  becomes active), then runs a one-repeat comparison of base vs new on an unseen task. Re-activate the formal
-  snapshot afterwards.
+- A two-round session (`POST /api/sessions`) learns one task from a base snapshot, publishes the new version (which becomes active), and then runs a one-repeat comparison of base vs. new on an unseen task. Because publishing updates the active pointer, restore the desired baseline snapshot before running subsequent formal evaluations.
 
 ## Research view
 
@@ -135,26 +123,32 @@ formal runs; `scripts/export_research.py` exports rule-selected sample bundles t
 
 Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated immediately), `run_validation`,
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
-`run` and `learn` accept `--action-router llm|decisions` and `--model-router rule|decisions` (defaults: `llm`, `rule`).
-Decisions calls share the request/token/time budget with generation; reports split routing and generation usage.
+`run` and `learn` accept `--action-router llm|decisions|jev` and `--model-router rule|decisions|jev` (defaults: `llm`, `rule`).
+Both decision providers share the request/token/time budget with generation; reports split routing and generation usage.
 See [routing adapters](../docs/design/action-model-routing.md) for the execution flow, API fields and four-way ablation.
 
-Decisions routing is supported for non-native `legacy` runs. Native tasks and `feedback`/`independent` research runs
-require the default `llm` + `rule` combination; unsupported combinations fail before sending a request.
+OpenAI Decisions and TypeSafe Jev routing support non-native `legacy` runs and explicit
+`--research-mode feedback --research-model-policy adaptive` research, including native tasks.
+Fixed research and independent runs require the default `llm` + `rule` combination.
 `--fixed-model small|large` fixes the generation role and skips model-router requests and upgrades.
 Initial routing from experience is separate: `--no-router` starts on the small model unless a model is fixed;
-`--model-router decisions` also disables initial memory routing so Decisions can make the model choice.
-`ablate-routing` runs all four combinations with initial memory routing disabled and one frozen snapshot.
+`--model-router decisions|jev` also disables initial memory routing so the selected provider can make the model choice.
+`ablate-routing` retains its existing four OpenAI Decisions combinations with initial memory routing disabled and one frozen snapshot.
 
-For legacy runs with rule-based model selection, the initial router picks the starting model. A run that starts small
-switches after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model requests without an
-on-target candidate (`upgrade-rule-v2`; B ran under v1, which only had the first condition). The switch to the large
-model is irreversible. Legacy `goal_reached` means the dev-data goal stopped the loop; the frozen best
-candidate's final test is reported separately and can still miss. Stop reasons: `goal_reached`, `budget_exhausted`, `agent_finished`, `user_stopped`,
-`model_api_error`, `environment_error`, `internal_error`. Runs are globally serial (file lock).
+For Jev, set `TYPESAFE_API_KEY` in the ignored `backend/.env`. `TYPESAFE_MODEL` defaults to the pinned
+`jev-1.14.0`; responses record the actual model version, choice, confidence, full distribution, tokens and latency.
+The adapter uses the existing `httpx` dependency and makes one HTTP attempt per budgeted call. For example:
 
-Every model call stores provider, model, role, effort, tokens (`null` = unknown, never 0), latency, request id,
-price-table version and estimated cost; raw requests and responses are in `var/runs/<id>/calls/`.
+```sh
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
+uv run quotacrux run B-01 --snapshot v0 --action-router jev --model-router jev
+```
+
+The HTTP `POST /api/runs` fields `action_router` and `model_router` also accept `jev`.
+
+For legacy runs with rule-based model selection, the initial router picks the starting model. A run that starts small switches after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model requests without an on-target candidate (`upgrade-rule-v2`; earlier v1 B-batch runs used only the first condition). The switch to the large model is irreversible. Legacy `goal_reached` means the dev-data goal stopped the loop; the frozen best candidate's final test is reported separately and can still miss. Stop reasons: `goal_reached`, `budget_exhausted`, `agent_finished`, `user_stopped`, `model_api_error`, `environment_error`, `internal_error`. Runs are globally serial (file lock).
+
+Every model call stores provider, model, role, effort, tokens (`null` when unavailable, not zero-filled), latency, request id, price-table version and estimated cost; raw requests and responses are in `var/runs/<id>/calls/`.
 
 ## API (polling, no streaming)
 
@@ -165,7 +159,7 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `POST /api/comparisons/{id}/stop`, `GET /api/comparisons/{id}/note` (three-line evolution note),
 `GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `quotacrux serve` is running.
 
-## Additional benchmark: EffiBench-X
+## External Benchmarks: EffiBench-X & Native Suites
 
 `uv sync --extra benchmark --python 3.12.11` enables the pinned Python dataset importer.
 For example, `uv run quotacrux tasks import-effibench codeforces/2104A --split smoke --dev-cases 3 --case-limit 6`

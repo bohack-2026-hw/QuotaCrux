@@ -29,9 +29,9 @@
 - 每题 2 个开发用例、3 个封存最终用例；本轮只做开发评测。卷积 `size=1000, seed=1729`，与第一轮开发输入完全相同。
 - AIPing **Qwen3.8-27B**，固定 small，无模型升级；eval 模式，空经验快照 `v0`，不积累跨任务/session 经验。
 - 每轮研究：最多 900 秒、20 次请求、10 个候选；请求超时 120 秒。允许模型主动 finish。两组预算上限相同，实际支出如实记录。
-- 4 轮研究 全部串行：ALE feedback → independent；AlgoTune independent → feedback。每组 1 次。
+- 4 轮研究全部串行：ALE feedback → independent；AlgoTune independent → feedback。每组 1 次。
 - `MeasureConfig`：`cpus=1.0, cpuset_cpus="2", memory="1g", function_warmups=3, repeats=5`，其余默认项记录于 manifest。ALE 按原生 raw score 选优；AlgoTune 正确性、严格区间比较和 1.10× 目标不变。
-- 本地路由 agent 已交接 CPU/Docker/Qwen 窗口，远端协作记录见仓库 issue #1。实验结束前不并发运行其他容器计时或真实模型测试。
+- 运行期间保持容器计时与真实模型调用串行，避免宿主机资源竞争（协作说明见仓库 issue #1）。
 
 ## 开始前确定的报告指标
 

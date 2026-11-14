@@ -30,8 +30,8 @@ class StartRun(BaseModel):
     label: str | None = None
     # Name of a scripted-model fixture (functional demo only); omit for real models.
     script: str | None = None
-    action_router: Literal["llm", "decisions"] = "llm"
-    model_router: Literal["rule", "decisions"] = "rule"
+    action_router: Literal["llm", "decisions", "jev"] = "llm"
+    model_router: Literal["rule", "decisions", "jev"] = "rule"
     research_mode: Literal["legacy", "feedback", "independent", "no_feedback"] | None = None
     research_model_policy: Literal["fixed", "adaptive"] = "fixed"
     fixed_model: Literal["small", "large"] | None = None

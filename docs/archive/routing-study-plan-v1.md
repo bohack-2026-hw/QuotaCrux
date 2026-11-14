@@ -3,9 +3,8 @@
 > 这是最初的24轮计划。后续范围和结果见[路由研究入口](../research/native-routing/README.md)。
 
 对应 [issue #6](https://github.com/bohack-2026-hw/QuotaCrux/issues/6)。本目录交付实现说明与
-[freeze-template.json](../research/native-routing/freeze-template.json)，当前没有真实路由实验结果。
-ALE ahc026 / AlgoTune convolve_1d 各四组 × 三次，新增 24 轮；#2 的 30 轮反馈对照继续独立。
-旧实验固定 Qwen，本实验允许升级，不能复用旧结果当 baseline。
+[freeze-template.json](../research/native-routing/freeze-template.json)，当前不包含真实路由实验结果。
+ALE ahc026 / AlgoTune convolve_1d 各四组 × 三次，新增 24 轮（与既有 30 轮固定 Qwen 反馈对照独立）；因本批允许模型升级，基线单独执行而不复用固定 Qwen 结果。
 
 ## 已接入的执行链
 
@@ -23,16 +22,11 @@ ALE 原始 score 使用目标方向，AlgoTune 使用 speedup。动作选择、�
 达到目标后继续研究，保留主动 finish；冻结 dev 最优且预算内有效的候选，再执行 final。
 已有 c0 归一化、final 失败与未执行状态由公共报告保留。
 
-**规则组当前真实语义**：research feedback 中，每次计入 attempt 的候选复验都会使 `misses` 加一，
-包括已经达到 milestone 的候选；累计两次时可升级。另有 small 请求计数达到三次的升级条件。
-因此这里不能解释成“只对连续两次质量失败升级”。本次保留该规则算法，四组的
-`comparison_config.config.upgrade_rule` 与代码 SHA 一起冻结；Decisions 根据可见状态独立选择。
+**规则组实际语义**：research feedback 中，每次计入 attempt 的候选复验都会使 `misses` 加一（包括已达 milestone 的候选），累计两次触发升级；另有 small 请求数达到三次的升级条件。该语义与“仅在连续两次质量失败后升级”不同。本次保留该规则算法并将 `comparison_config.config.upgrade_rule` 与代码 SHA 一同冻结；Decisions 根据可见状态独立决策。
 
 ## 运行与导出
 
-由 #3 desktop 执行 ALE 12 轮，#4 Mac 执行 AlgoTune 12 轮。同一 task 的全部组和重复使用同一主机、
-任务包、裁判镜像、MeasureConfig 和校准后的并发条件。新建 routing 批次目录与 VAR_DIR，
-使用独立冻结 checkout；不在正在执行原 30 轮的 checkout 中更新代码。
+计划由 desktop 节点执行 ALE 12 轮，Mac 节点执行 AlgoTune 12 轮。同一 task 的全部组和重复使用同一主机、任务包、裁判镜像、MeasureConfig 与校准并发条件。新建 routing 批次目录与 VAR_DIR，使用独立冻结 checkout，与运行中的其他批次环境隔离。
 
 正式启动前将模板中的两个占位 task_id 替换为注册任务 ID，填入各自 manifest/文件 hash，
 确认 5 dev / 15 final。按 task 分出两份 12 项 JSON plan，保留中央 seq、repeat 和 variant。
@@ -54,10 +48,9 @@ Python 入口同时支持完整 `RunLimits` / `MeasureConfig`、`final_evaluatio
 省略 final 开关即启用 final，`--dev-only` 只用于功能检查。单次报告的 reproduce 命令保留 adaptive 与两个路由开关。
 
 产物位于 `VAR_DIR/comparisons/research-routing-*.json`，单次证据仍位于 `VAR_DIR/runs/<run_id>/`。
-共享比较锁保证每个 VAR_DIR 串行执行；中途失败停止该 worker 批次，所有后续 slot 保持 not_run。
-不要删除失败项或用新的成功结果覆盖；重跑应另建批次并注明原始 slot。
+共享比较锁保证每个 VAR_DIR 串行执行；中途失败停止该 worker 批次，后续 slot 保持 not_run，以保留完整的批内执行记录；如需补测则另建批次并注明原始 slot。
 
-## 给 #2 / #5 的读取契约
+## 汇总导出与接口读取契约
 
 - 顶层 `study="routing"`、`protocol="within-task-routing-v2"`、`variants`；每行 `mode="feedback"`
   与 `variant` 分开。读取 API 沿用 `/api/research-comparisons` 及其详情入口。
@@ -80,12 +73,11 @@ Python 入口同时支持完整 `RunLimits` / `MeasureConfig`、`final_evaluatio
   `interactions` 为 both − action − model + baseline。ALE 分数与 AlgoTune speedup 分别解释，不跨题平均。
 
 `routing_ablation.summarize(data)` 仅依赖导出的 JSON，不访问原始数据库。
-跨 worker 合并时保留完整中央 24 项 plan/hash，将两份 runs 按中央 seq 排序，并保留原 worker 产物路径；
-用该函数重建汇总。每题公平性依据行内完整配置，不能删除 affinity 或 manifest 来消除差异。
+跨 worker 合并时保留完整中央 24 项 plan/hash，将两份 runs 按中央 seq 排序并保留原 worker 产物路径后重建汇总；每题公平性依据行内完整配置判定，各环境字段原样保留。
 
 ## 正式启动前需要填写的冻结信息
 
-模板标记为 `template`，空值表示尚未冻结。#2/#3/#4 在正式调用前共同确定：
+模板标记为 `template`，空值表示尚未冻结，需在正式调用前逐项确定：
 
 1. 最终执行 SHA、uv.lock、提示/动作 schema/路由问题 hash；两端一致的 small/large/Decisions 公开配置。
    small 预期为 AIPing Qwen3.8-27B，Decisions 为现有 gpt-6-luna；large 的准确模型、推理强度、输出上限从执行环境读取。
@@ -94,18 +86,15 @@ Python 入口同时支持完整 `RunLimits` / `MeasureConfig`、`final_evaluatio
 4. 路由调用、生成调用、dev/final 裁判分项耗时和 Token 估计。只读配置不足以给出可信实际费用；
    先填同模型同端点路由 pilot 或经负责人确认的估算假设，标明来源，再发布正式启动估算。
 
-当前可确定的预算规模为 **24 × 20 = 480 次总请求配额**、**24 × 900 = 21,600 秒累计研究循环预算**。
-每台机器各 12 轮、累计循环预算三小时；两机并行时实际历时还需加入 final、初始化、排队及超时差异。
-这些是预算量，不能写成预计完成时刻。费用按每角色的预计调用数 × 预计输入/输出 Token × 冻结单价计算，
-分别给出 CNY / USD；输入长度增长、角色选择和失败未知用量保留为估算不确定项。
-原 Qwen-only pilot 不能直接用于本批 GPT/Decisions 的成本或耗时外推。
+当前可确定的预算上限为 **24 × 20 = 480 次总请求配额**、**24 × 900 = 21,600 秒累计研究循环预算**。
+每台机器各 12 轮、累计循环预算三小时；两机并行时实际墙钟历时还需计入 final、初始化、排队与超时余量（上述数字为预算配额上限，不作为实际完成时刻）。费用按各角色预计调用数 × 预计输入/输出 Token × 冻结单价分别估算 CNY / USD；输入长度增长、角色切换及失败缺失用量保留为不确定项。
+原 Qwen-only pilot 仅作流程参考，不直接用于本批 GPT/Decisions 的成本或耗时外推。
 
 ## 本次验证与后续交接
 
 已通过 19 项路由检查、7 项执行器/portable 费用与公平性检查、6 项新增 native 集成检查，
 以及 28 项 fixed / independent / no_feedback 交叉回归。native 集成使用 fake providers 和 fake judges，
 覆盖 ALE score、AlgoTune speedup 四组的实际调用角色、升级、预算、工具菜单、dev 选择和 final 隔离。
-这些检查覆盖调用流程和记录格式，质量与性能等待正式 24 轮实验验证。
+这些检查覆盖调用流程和记录格式，实际效果待正式实验数据验证。
 
-#2 维护公共 Runner/CLI/report/API；本分支负责适配器和对照实验；#3/#4 在冻结后执行各 12 轮；
-#5 按 study + variant 展示。issue #6 继续保持开放，直到完整 24 轮证据和逐题分析交付。
+后续沿公共 Runner/CLI/API、两台执行机独立推进及前端按 `study + variant` 展示协同衔接，具体进度同步于 [issue #6](https://github.com/bohack-2026-hw/QuotaCrux/issues/6)。

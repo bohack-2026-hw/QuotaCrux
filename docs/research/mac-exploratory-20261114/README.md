@@ -1,18 +1,18 @@
 # Mac 探索结果包（2026-11-14）
 
-本目录归档 Snowball 在 Mac 高主机负载环境下完成的 **dev-only 探索**。OpenAI 批次关闭了 final evaluation；远端 LM Studio 批次没有产生完整的协议内模型候选。所有结果均为非正式证据，不得并入或替代已取消启动的 formal fixed 15 + routing 12 计划，也不支持跨机器、跨模型或跨评测口径比较。
+本目录归档 Mac 在高宿主机负载环境下完成的 **dev-only 探索**。OpenAI 批次关闭了 final evaluation；远端 LM Studio 批次未产生完整的协议内模型候选。所有结果均为非正式探索证据，与正式评测批次及不同机器/模型口径分别列示。
 
 ## 来源与边界
 
 - 执行代码固定为 [`912b20a4cfeb51af9c36d0679b23f0990abe862f`](https://github.com/bohack-2026-hw/QuotaCrux/commit/912b20a4cfeb51af9c36d0679b23f0990abe862f)。
 - OpenAI 批次固定 `gpt-6.1-sol`，每个任务只有 2 个 dev 用例，final evaluation disabled；运行时宿主处于高负载。
-- 远端批次使用 LM Studio 的 `qwen3.8-27b-uncensored-mlx`，与托管 Qwen 配置不是同一运行时或量化，不能合并统计。
+- 远端批次使用 LM Studio 的 `qwen3.8-27b-uncensored-mlx`，与托管 Qwen 配置不是同一运行时或量化，两者分开统计。
 - 包内的机器路径、私有端点和凭据已清理；脱敏后的捕获 `run.log` 会提交，原始 SQLite/WAL、锁及 sealed dev/final 输入不提交。任务身份、输入文件和公开工件由哈希与字节数标识。
 - 顶层 [`export-manifest.json`](export-manifest.json) 将整个包标为 `formal_results_eligible=false`；[`SHA256SUMS`](SHA256SUMS) 与 [`audit_results.py`](audit_results.py) 用于离线完整性和口径复核。
 
 ## 收尾与代码完整性
 
-本轮按现有材料收尾，不再等待 Mac 补交或追加测试。旧导出器误删 `[0]`、`[1:]`、`[0.0]` 等代码方括号；已修正为仅脱敏可解析的 IPv6，Python 文件必须保持原字节，否则导出明确失败并要求隐私复核。
+旧导出器误删了代码中的 `[0]`、`[1:]`、`[0.0]` 等方括号；现已修正为仅脱敏可解析的 IPv6 地址，并在导出校验中要求 Python 文件保持原字节。
 
 已恢复 25 份受影响的候选、best 和公开任务源码文件。恢复后的候选逐项匹配原有 report/ledger 的运行时 SHA256，任务源码匹配原有 task-identity 的 SHA256 与字节数；调用记录中匹配的完整程序副本同步恢复。恢复清单见 [recovery.json](recovery.json)。原始运行数值与身份哈希保持不变，没有重跑实验；其他脱敏说明和截断响应保留原导出内容，不作为原始字节证据。
 
@@ -53,7 +53,7 @@
 
 ## 人工辅助语义重建
 
-直连响应的完整 reasoning 已描述 rfft/irfft/next_fast_len 方案，但可见代码在尾部截断。人工据此语义重建尾部，同时移除未使用 import 并重命名局部变量；这不是模型自主交付，也不是“只补两行”。
+直连响应的完整 reasoning 已描述 rfft/irfft/next_fast_len 方案，可见代码在尾部发生截断。据此由人工按语义重建尾部，并移除未使用 import、重命名局部变量；因包含人工改动，下文单独列示评估结果。
 
 单独的 2-case dev 检查结果为 2/2 correct、1.225486×。严格计时区间中，candidate max 为 0.000856825 秒，baseline min 为 0.000881116 秒。证据分别见 [`manual-completion-evaluation.json`](remote/04-direct/evidence/manual-completion-evaluation.json) 与 [`manual-completion-metadata.json`](remote/04-direct/evidence/manual-completion-metadata.json)。元数据明确：
 
@@ -62,7 +62,7 @@ eligible_as_model_generated_candidate=false
 formal_results_eligible=false
 ```
 
-因此该产物不计入模型候选成功率、OpenAI 四项结果或任何正式结果。
+该产物单列归档，不计入模型候选成功率、OpenAI 四项结果或正式结果统计。
 
 ## 工件索引
 
@@ -78,7 +78,7 @@ formal_results_eligible=false
 | [`remote`](remote/) | 三本 503 失败账本、一次直连截断及人工检查证据 |
 | [`SHA256SUMS`](SHA256SUMS) | 除自身与 `audit.json` 外所有已提交工件的 SHA-256 清单 |
 
-各远端子目录同样包含 `inventory.json`、`comparison.json`、`ledger.json`、`runs/` 和 `tasks/`。调用失败、截断响应与候选均保留，没有只挑选成功项。
+各远端子目录同样包含 `inventory.json`、`comparison.json`、`ledger.json`、`runs/` 和 `tasks/`，调用失败、截断响应与合法候选均完整保留。
 
 ## 审计与复现
 
@@ -105,7 +105,7 @@ python3 docs/research/mac-exploratory-20261114/export_results.py \
 
 ## 限制
 
-- 每个 OpenAI 任务仅一次模式运行、2 个 dev 用例，且 final disabled。
-- 主机处于高负载，绝对耗时和加速比不应外推到安静窗口或其他硬件。
-- 远端 LM Studio 没有完整协议候选；人工语义重建必须始终单列。
-- 原 formal fixed 15 + routing 12 计划取消启动；本目录不能被解释为其部分完成或替代结果。
+- 每个 OpenAI 任务仅一次单模式运行、使用 2 个 dev 用例，且关闭 final 评测。
+- 主机执行期间处于高负载状态，绝对耗时与加速比不适用于跨硬件或安静窗口外推。
+- 远端 LM Studio 未产生完整协议候选；人工语义重建产物单独列示。
+- 本目录为独立的 dev-only 探索档案（对应原 formal fixed 15 + routing 12 计划未启动）。

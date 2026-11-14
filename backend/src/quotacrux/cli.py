@@ -443,10 +443,10 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--snapshot", help="experience snapshot id (default: active)")
     r.add_argument("--script", help="scripted model JSON (functional checks only)")
     r.add_argument("--label")
-    r.add_argument("--action-router", choices=["llm", "decisions"], default="llm",
-                   help="decisions requires legacy or explicit adaptive feedback research")
-    r.add_argument("--model-router", choices=["rule", "decisions"], default="rule",
-                   help="decisions disables initial memory routing; native feedback requires adaptive policy")
+    r.add_argument("--action-router", choices=["llm", "decisions", "jev"], default="llm",
+                   help="decisions/jev requires legacy or explicit adaptive feedback research")
+    r.add_argument("--model-router", choices=["rule", "decisions", "jev"], default="rule",
+                   help="decisions/jev disables initial memory routing; native feedback requires adaptive policy")
     r.add_argument("--max-requests", type=int)
     r.add_argument("--max-candidates", type=int)
     r.add_argument("--wall-clock", type=float)
@@ -464,10 +464,10 @@ def main(argv: list[str] | None = None) -> None:
     ln = sub.add_parser("learn", help="serial learn-mode runs over tasks (each publishes on top of the last)")
     ln.add_argument("task_ids", nargs="+")
     ln.add_argument("--label")
-    ln.add_argument("--action-router", choices=["llm", "decisions"], default="llm",
+    ln.add_argument("--action-router", choices=["llm", "decisions", "jev"], default="llm",
                     help="action selection for non-native legacy tasks")
-    ln.add_argument("--model-router", choices=["rule", "decisions"], default="rule",
-                    help="decisions disables initial memory routing")
+    ln.add_argument("--model-router", choices=["rule", "decisions", "jev"], default="rule",
+                    help="decisions/jev disables initial memory routing")
     ln.set_defaults(fn=cmd_learn)
 
     rp = sub.add_parser("report")

@@ -1,2 +1,4 @@
 .DS_Store
 
+# Local project-scoped DSH evidence references.
+.quotacrux/

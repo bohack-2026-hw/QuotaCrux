@@ -17,5 +17,24 @@
       "parent_candidate_id": "c0",
       "code_file": "../cands/fast_bytes.py"
     }
+  ],
+  "large": [
+    {
+      "action": "get_evidence",
+      "purpose": "定位初始程序耗时",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "tool": "profile_candidate",
+      "candidate_id": "c0"
+    },
+    {
+      "action": "propose_candidate",
+      "purpose": "改为按字节读取并减少字典查找",
+      "expected_result": "见目的",
+      "verification": "外部评测器",
+      "hypothesis": "csv 模块解析是主要开销",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/fast_bytes.py"
+    }
   ]
 }

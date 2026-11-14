@@ -3,7 +3,7 @@ import { api } from '../api'
 import type { Experience } from '../api'
 import { Chip, DiffView, Empty } from '../components/ui'
 import { usePoll } from '../hooks'
-import { OUTCOME, fmt, roleName, status } from '../labels'
+import { FAMILY, OUTCOME, fmt, roleName, status } from '../labels'
 
 export function ExperienceView({ snapshotId, setSnapshotId, focus, onOpenRun }: {
   snapshotId: string
@@ -69,7 +69,9 @@ function ExperienceCard({ e, isNew, focused, onOpenRun }: { e: Experience; isNew
   return (
     <div id={`exp-${e.experience_id}`} className={`card exp ${e.outcome}`} style={focused ? { outline: '3px solid var(--accent)' } : undefined}>
       <div className="spread">
-        <div className="row"><Chip tone={tone} icon={icon}>{label}</Chip>{isNew && <span className="tag diff">新增</span>}<b>{e.conditions.task_id}</b></div>
+        <div className="row"><Chip tone={tone} icon={icon}>{label}</Chip>{isNew && <span className="tag diff">新增</span>}<b>{e.conditions.task_id}</b>
+          <span className="tag">{FAMILY[e.conditions.family] ?? e.conditions.family}</span>
+          {(e.action as { kind?: string }).kind === 'reuse_candidate' && <span className="tag">复验</span>}</div>
         <span className="id">{e.experience_id}</span>
       </div>
       <div className="claim">
@@ -82,6 +84,7 @@ function ExperienceCard({ e, isNew, focused, onOpenRun }: { e: Experience; isNew
       {e.hypothesis && <p className="why">{e.hypothesis}</p>}
       <dl className="kv">
         <dt>改动特征</dt><dd>{(e.action.code_features.calls ?? []).slice(0, 10).map((c) => <span key={c} className="tag mono" style={{ marginRight: 4 }}>{c}</span>)}</dd>
+        <dt>数据画像</dt><dd className="small">{profileText(e)}</dd>
         <dt>资源</dt><dd className="small">{roleName(e.resources.model_role ?? undefined)} · 输出 {fmt.n(e.resources.output_tokens)} token · {fmt.s(e.resources.latency_s)}{e.resources.cost_usd ? ` · ${fmt.usd(e.resources.cost_usd)}` : ''}</dd>
         <dt>来源</dt><dd className="small"><button className="link mono" onClick={() => onOpenRun(e.source.run_id)}>{e.source.run_id}</button> · 第 {e.source.step_seq} 步 · {e.source.candidate_id} · 评测 {e.source.evaluation_id}</dd>
       </dl>
@@ -91,4 +94,13 @@ function ExperienceCard({ e, isNew, focused, onOpenRun }: { e: Experience; isNew
       </div>
     </div>
   )
+}
+
+function profileText(e: Experience): string {
+  if (!['groupagg', 'logstats', 'intervals'].includes(e.conditions.family)) return e.conditions.workload
+  const p = e.conditions.profile as Record<string, number>
+  const rows = `${fmt.rows(p.rows)} 行`
+  if (e.conditions.family === 'logstats') return `${rows} · ${fmt.rows(p.groups)} 组 · ${p.endpoints} 个接口 · 时间有序度 ${p.time_sortedness} · 错误率 ${p.error_rate}`
+  if (e.conditions.family === 'intervals') return `${rows} · 合并后 ${fmt.rows(p.merged_intervals)} 段 · 起点有序度 ${p.start_sortedness} · 最大绝对值 ${p.max_abs_value?.toExponential(1)}`
+  return `${rows} · ${fmt.rows(p.distinct_keys)} key · 有序度 ${p.sortedness}`
 }

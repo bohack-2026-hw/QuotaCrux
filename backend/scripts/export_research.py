@@ -57,6 +57,26 @@ def pick_cases() -> list[tuple[str, str, str]]:
         if reused:
             cases.append((reused["run_id"], "复验已验证程序直接达标（第二版留出）",
                           f"{held['tasks'][0][0]} 批留出任务、读取 {new}：程序复验经验中条件最接近的已验证程序，不调用任何模型即达标并交付。"))
+    # version 3: in the S stream's memory arm, the first task of a new family is routed to the large model, and the next
+    # similar task is served from what it published without any model request
+    stream = comparison_runs("S online stream")
+    if stream and stream.get("kind") == "stream":
+        first = next((x for p in stream["positions"] if p["first_of_family"] and p["family"] != "groupagg"
+                      for x in p["arms"]["memory"] if x["route"] == "new_family" and x["goal_met"] and x["repeat"] == 1), None)
+        if first:
+            rep = report.build(first["run_id"])
+            fam = rep["task"]["family"]
+            later = next((x for p in stream["positions"] if p["family"] == fam and not p["first_of_family"]
+                          for x in p["arms"]["memory"] if x["repeat"] == 1 and x["route"] == "reuse" and x["goal_met"]), None)
+            cases.append((first["run_id"], "全新问题：分流器直接交给大模型（第三版）",
+                          f"{rep['task']['task_id']}（{rep['task']['workload']}）：读取的快照里没有这个任务族的任何经验，分流器按全新问题直接交给 GPT；"
+                          f"{rep['iterations']['model_requests']} 次请求、{rep['usage']['total']['cost_usd']:.3f} 美元，最终测试 {rep['outcome']['final_speedup']:.2f}×；"
+                          f"在线模式把验证过的程序写入 {rep['experience']['published_snapshot_id']}。"))
+            if later:
+                lr = report.build(later["run_id"])
+                cases.append((later["run_id"], "相似问题：复用刚学到的程序（第三版）",
+                              f"{lr['task']['task_id']}（{lr['task']['workload']}）：读取 {lr['snapshot_id']}，程序复验上一个同族任务写入的程序，"
+                              f"不调用模型，{lr['timing']['agent_loop_s']:.0f} 秒交付，最终测试 {lr['outcome']['final_speedup']:.2f}×。"))
     # a run that met the goal on dev data but whose frozen candidate failed the final test's strict rule
     for c in (held, comparison_runs("C final held-out")):
         if not c:

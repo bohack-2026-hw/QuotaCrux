@@ -88,6 +88,8 @@ def build(run_id: str) -> dict:
     passed = [cid for cid in passed_all if cid in model_ids]
     improved = [cid for cid in improved_all if cid in model_ids]
     raised = next((s for s in steps if s["action"] == "set_target"), None)
+    routed = next((s for s in steps if s["action"] == "route_model"), None)
+    route = json.loads(routed["result_json"]) if routed else None
 
     final_out = None
     if final:
@@ -115,6 +117,7 @@ def build(run_id: str) -> dict:
         "run_id": run_id,
         "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
                  "objective": {"metric": "speedup", "direction": "maximize", **manifest["target"]},
+                 "workload": benchmark(manifest["family"]).presentation(manifest)["workload"],
                  "family": manifest["family"], "presentation": benchmark(manifest["family"]).presentation(manifest),
                  "dev_params": manifest["dev_params"], "final_params": manifest["final_params"],
                  "source": manifest.get("source"), "selection": manifest.get("selection")},
@@ -152,6 +155,8 @@ def build(run_id: str) -> dict:
         "best_rule": ("highest valid dev score within the research budget; else initial c0" if target is None else
                       "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0"),
         "run_target_speedup": json.loads(raised["result_json"])["run_target_speedup"] if raised else target,
+        # Which model the requests started on, and why (None: the run ended before any model request was routed).
+        "route": route,
         "final_evaluation": final_out,
         "candidates": cand_out,
         "iterations": {
@@ -168,6 +173,8 @@ def build(run_id: str) -> dict:
             "api_errors": sum(1 for s in steps if s["status"] == "api_error"),
             "evidence_calls": len(tools),
             "upgrades": len(upgrade_steps),
+            "large_model_requests": sum(1 for c in calls if c["role"] == "large"),
+            "small_model_requests": sum(1 for c in calls if c["role"] == "small"),
             "upgrade_at_step": upgrade_steps[0]["seq"] if upgrade_steps else None,
         },
         "usage": {
@@ -230,6 +237,8 @@ def _measure_args(cfg: dict) -> list[str]:
 
 def _run_command(run, cfg: dict) -> str:
     argv = ["uv", "run", "routeevo", "run", run["task_id"], "--mode", run["mode"], "--snapshot", run["snapshot_id"]]
+    if cfg.get("router", {}).get("version") == "off":
+        argv += ["--no-router"]
     protocol = cfg.get("research_protocol", {})
     if protocol.get("mode"):
         argv += ["--research-mode", protocol["mode"]]

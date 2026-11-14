@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import config, db
+from . import families
 
 TARGET_MIN_SPEEDUP = 1.10
 LOCK_PATH = config.TASK_SPEC_DIR / "lock.json"
@@ -83,16 +84,28 @@ class Task:
     def objective(self) -> dict:
         return {"metric": "speedup", "direction": "maximize", **self.manifest["target"]}
 
+    @property
+    def family(self) -> str:
+        return self.manifest["family"]
+
+    @property
+    def fam(self):
+        return families.get(self.manifest["family"])
+
 
 def _write(path: Path, data: bytes) -> dict:
     path.write_bytes(data)
     return {"file": path.name, "sha256": sha256_bytes(data), "bytes": len(data)}
 
 
+SPLITS = ("A", "B", "C", "D", "S", "T", "smoke")
+
+
 def build_task(family: str, entry: dict, out_root: Path = config.TASK_DATA_DIR) -> Task:
     from .benchmarks import get
 
     out_root.mkdir(parents=True, exist_ok=True)
+    family = entry.get("family", family)
     adapter = get(family)
     if not hasattr(adapter, "build"):
         raise ValueError(f"{family} uses `routeevo tasks import-effibench`, not a generator spec")
@@ -126,8 +139,13 @@ def register_package(tmp: Path, manifest: dict, out_root: Path) -> Task:
 
 
 def build_spec(spec_path: Path) -> list[Task]:
+    """A spec names a default family; an entry may name its own (mixed-family batches)."""
     spec = json.loads(spec_path.read_text())
-    return [build_task(spec["family"], entry) for entry in spec["tasks"]]
+    return [build_task(spec.get("family", ""), entry) for entry in spec["tasks"]]
+
+
+def spec_paths() -> list[Path]:
+    return sorted(config.TASK_SPEC_DIR.glob("spec*.json"))
 
 
 def load(task_id: str, verify: bool = True) -> Task:
@@ -158,8 +176,8 @@ def write_lock(task_ids: list[str] | None = None) -> dict:
 def rebuild_command(task_id: str) -> str:
     import shlex
     task = load(task_id)
-    if task.manifest["family"] == "groupagg":
-        return "uv run routeevo tasks build >/dev/null  # verify frozen groupagg packages"
+    if task.family in families.REGISTRY:
+        return "uv run routeevo tasks build >/dev/null  # verify frozen generated task packages"
     m = task.manifest
     if task.is_native:
         args = ["uv", "run", "routeevo", "tasks", "import-" + m["family"], m["problem"]["key"],

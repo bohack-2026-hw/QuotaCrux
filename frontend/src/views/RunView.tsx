@@ -4,7 +4,7 @@ import type { Report, Research, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
-import { ACTION, OUTCOME, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
+import { ACTION, MODE, OUTCOME, ROUTE, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
 
 export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   runId: string | null
@@ -16,7 +16,7 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   const runs = usePoll(() => api.runs(), [], 3000)
   const snaps = usePoll(api.snapshots, [], 5000)
   const [taskId, setTaskId] = useState('B-01')
-  const [mode, setMode] = useState<'eval' | 'learn'>('eval')
+  const [mode, setMode] = useState<'eval' | 'learn' | 'online'>('eval')
   const [snapshot, setSnapshot] = useState('')
   const [err, setErr] = useState<string | null>(null)
 
@@ -27,7 +27,7 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
 
   const task = tasks.data?.find((t) => t.task_id === taskId)
   const native = task ? ['ale-bench', 'algotune', 'kernelbench'].includes(task.family) : false
-  const learnable = task ? !native && ['A', 'smoke'].includes(task.split) : false
+  const learnable = task ? !native && ['A', 'S', 'T', 'smoke'].includes(task.split) : false
   const effMode = learnable ? mode : 'eval'
 
   const start = async () => {
@@ -52,21 +52,23 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
             <select value={taskId} onChange={(e) => setTaskId(e.target.value)}>
               {groupTasks(tasks.data ?? []).map(([split, ts]) => (
                 <optgroup key={split} label={SPLIT[split] ?? split}>
-                  {ts.map((t) => <option key={t.task_id} value={t.task_id}>{t.task_id} · {t.presentation.workload}</option>)}
+                  {ts.map((t) => <option key={t.task_id} value={t.task_id}>{t.task_id} · {t.presentation?.workload ?? t.workload}</option>)}
                 </optgroup>
               ))}
             </select>
           </label>
           {task && (
             <p className="small muted" style={{ margin: '-6px 0 14px' }}>
-              {task.presentation.workload} · {task.target.metric === 'score' ? '目标：最大化原始得分' : `目标 ${task.target.min_speedup}×`}
+              {task.presentation?.workload ?? task.workload} · {task.target.metric === 'score' ? '目标：最大化原始得分' : `目标 ${task.target.min_speedup}×`}
             </p>
           )}
           <div className="field"><span>运行模式</span>
             <div className="seg">
               <button className={effMode === 'eval' ? 'on' : ''} onClick={() => setMode('eval')}>评测 · 冻结经验</button>
+              <button className={effMode === 'online' ? 'on' : ''} disabled={!learnable} onClick={() => setMode('online')}
+                title={learnable ? '交付后把验证过的结果写入经验' : '此任务使用评测模式'}>在线 · 交付并记住</button>
               <button className={effMode === 'learn' ? 'on' : ''} disabled={!learnable} onClick={() => setMode('learn')}
-                title={learnable ? '' : '此任务使用评测模式'}>学习 · 发布新版本</button>
+                title={learnable ? '在已知最佳之上继续超越' : '此任务使用评测模式'}>学习 · 超越已知</button>
             </div>
           </div>
           <label className="field"><span>读取的经验快照</span>
@@ -100,7 +102,7 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
 }
 
 function groupTasks(ts: TaskSummary[]): [string, TaskSummary[]][] {
-  const order = ['A', 'B', 'C', 'smoke']
+  const order = ['S', 'T', 'A', 'B', 'C', 'D', 'smoke']
   return order.map((s) => [s, ts.filter((t) => t.split === s)] as [string, TaskSummary[]]).filter(([, v]) => v.length)
 }
 
@@ -108,7 +110,7 @@ function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) 
   return (
     <button className={on ? 'on' : ''} onClick={pick}>
       <div className="spread">
-        <b>{r.task_id} · {r.mode === 'learn' ? '学习' : '评测'} · 读 {r.snapshot_id}</b>
+        <b>{r.task_id} · {MODE[r.mode] ?? r.mode} · 读 {r.snapshot_id}</b>
         <span>{r.status === 'running' ? '运行中'
           : r.final_score != null ? <span>得分 {fmt.n(r.final_score)}</span>
           : r.final_goal_met ? <span style={{ color: 'var(--good-ink)' }}>达标 {fmt.x(r.final_speedup)}</span>
@@ -127,6 +129,8 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
   const o = rep.outcome
   const live = rep.status === 'running'
   const upgraded = (rep.iterations.upgrades ?? 0) > 0
+  const routedLarge = rep.route?.route === 'large'
+  const routeKey = rep.route?.reason ?? ((rep.iterations.model_requests ?? 0) === 0 && rep.outcome.best_from_reuse ? 'reuse' : null)
   const loopS = rep.timing.agent_loop_elapsed_s ?? 0
 
   useEffect(() => {
@@ -145,8 +149,9 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
     <>
       <div className="card">
         <div className="spread">
-          <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} 批 · {rep.mode === 'learn' ? '学习模式' : '评测模式'} · 读取 {rep.snapshot_id}</div>
+          <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} 批 · {MODE[rep.mode] ?? rep.mode}模式 · 读取 {rep.snapshot_id}</div>
           <div className="row">
+            {routeKey && <Chip tone={ROUTE[routeKey]?.[1] ?? 'neutral'} icon="⇢">{ROUTE[routeKey]?.[0] ?? routeKey}</Chip>}
             {rep.scripted_model.length > 0 && <Chip tone="warn" icon="!">脚本模型：仅功能检查</Chip>}
             <StatusChip value={rep.status} />
             {rep.stop_reason && <Chip tone={rep.stop_reason === 'goal_reached' ? 'good' : 'neutral'}>{STOP[rep.stop_reason] ?? rep.stop_reason}</Chip>}
@@ -174,7 +179,9 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         </div>
         <hr className="rule" />
         <div className="stats">
-          <Stat k="当前模型" v={upgraded ? 'GPT' : 'Qwen'} s={upgraded ? `第 ${rep.iterations.upgrade_at_step} 步按规则升级` : '本地 · 未升级'} />
+          <Stat k="当前模型" v={(rep.iterations.model_requests ?? 0) === 0 && !live ? '未调用' : upgraded || routedLarge ? 'GPT' : 'Qwen'}
+            s={routedLarge ? `分流：${ROUTE[rep.route!.reason]?.[0] ?? rep.route!.reason}` : upgraded ? `第 ${rep.iterations.upgrade_at_step} 步按规则升级`
+              : (rep.iterations.model_requests ?? 0) === 0 && !live ? '复用经验中的程序直接交付' : '本地 · 未升级'} />
           <Stat k="Token 输入 / 输出" v={`${fmt.n(u.input_tokens)} / ${fmt.n(u.output_tokens)}`}
             s={u.reasoning_tokens != null ? `其中推理 ${fmt.n(u.reasoning_tokens)}` : u.input_tokens_unknown_calls ? `${u.input_tokens_unknown_calls} 次调用用量未知` : '推理 token 未单列'} />
           <Stat k="模型费用" v={fmt.usd(u.cost_usd)} s={costNote(u.cost_status)} />
@@ -332,6 +339,7 @@ function StepRow({ s, rep }: { s: Step; rep: Report }) {
 }
 
 function modelOf(rep: Report, s: Step): string {
+  if (rep.route?.route === 'large') return roleName('large')
   const upgradeAt = rep.iterations.upgrade_at_step
   const role = upgradeAt != null && s.seq > upgradeAt ? 'large' : 'small'
   return roleName(role)

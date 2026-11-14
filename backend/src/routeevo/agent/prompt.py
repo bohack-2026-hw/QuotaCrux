@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v5"
+PROMPT_VERSION = "agent-prompt-v6"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -44,9 +44,10 @@ current workload before relying on them, and mind their sample counts.
 
 Before your first request the program re-validates up to three verified programs from the experience snapshot whose
 conditions are closest to this workload; they appear as candidates with origin "experience" and their results are real
-measurements on this task. You are only asked when none of them reached the target, or in a learning run, where the
-target in Budget (`target_speedup`) is raised above the best of them: then a candidate must beat that program, so
-build on it (set it as parent) rather than on c0, and do not resubmit a program that is already in the list.
+measurements on this task. To keep requests short, only the code of the best of them is shown; the others are listed
+with their results. You are only asked when none of them reached the target, or in a learning run, where the target in
+Budget (`target_speedup`) is raised above the best of them: then a candidate must beat that program, so build on it
+(set it as parent) rather than on c0, and do not resubmit a program that is already in the list.
 """
 
 SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()
@@ -88,6 +89,7 @@ def build_state(
     *,
     task,
     candidates: list[dict],
+    hide_code: set[str] | None = None,
     evidence: list[dict],
     history: list[dict],
     experiences: list[dict] | None,
@@ -101,7 +103,7 @@ def build_state(
         for i, ex in enumerate(task.examples)
     )
     parts = [
-        _block("Task", f"task_id: {task.task_id}\nobjective: {json.dumps(task.objective)}\n\n{task.contract}"),
+        _block("Task", f"task_id: {task.task_id}\nfamily: {task.family}\nobjective: {json.dumps(task.objective)}\n\n{task.contract}"),
         _block("Evaluation protocol", task.presentation["agent_notes"]),
         _block("Visible examples", examples),
         _block("Dev data profile (the timed input; computed by the program)", json.dumps(task.dev_profile, indent=2)),
@@ -109,8 +111,12 @@ def build_state(
 
     cand_lines = []
     for c in candidates:
-        head = {k: c[k] for k in ("candidate_id", "origin", "parent_candidate_id", "latest_evaluation") if k in c}
-        cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
+        head = {k: c[k] for k in ("candidate_id", "origin", "experience_id", "parent_candidate_id", "latest_evaluation") if k in c}
+        if c["candidate_id"] in (hide_code or set()):
+            cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n"
+                              "(code omitted: a re-validated program from experience that is not the best of them)")
+        else:
+            cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
     parts.append(_block("Candidates (c0 is the initial program; best so far is marked in budget)", "\n".join(cand_lines)))
 
     if evidence:

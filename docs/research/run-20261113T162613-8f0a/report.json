@@ -3,7 +3,9 @@
  "task": {
   "task_id": "A-05",
   "split": "A",
+  "family": "groupagg",
   "target_min_speedup": 1.1,
+  "workload": "分组聚合 · 随机 · 1,000,000 行 · 600,000 个 key · 偏斜 0.0",
   "dev_params": {
    "disorder": 0.0,
    "key_len_max": 12,
@@ -133,6 +135,7 @@
  },
  "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
  "run_target_speedup": 1.1,
+ "route": null,
  "final_evaluation": {
   "evaluation_id": "ca1f92f35745",
   "candidate_id": "c0",
@@ -234,6 +237,8 @@
   "api_errors": 1,
   "evidence_calls": 1,
   "upgrades": 1,
+  "large_model_requests": 2,
+  "small_model_requests": 4,
   "upgrade_at_step": 8
  },
  "usage": {
@@ -747,7 +752,7 @@
   "definition": {
    "question": "在输出完全正确的前提下，能否让这段分组聚合程序在该工作负载上至少快 1.1×？",
    "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
-   "workload": "1,000,000 行 · 600,000 个 key · random · 偏斜 0.0",
+   "workload": "分组聚合 · 随机 · 1,000,000 行 · 600,000 个 key · 偏斜 0.0",
    "baseline": {
     "program": "c0：csv + 两个 dict + sorted（初始程序，正确）",
     "dev_median_s": 1.2100026248954237,
@@ -755,6 +760,10 @@
    },
    "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
    "tools": [
+    {
+     "action": "route_model",
+     "label": "分流（程序执行）：按经验快照对本任务的覆盖情况，决定模型请求先交给本地小模型还是大模型"
+    },
     {
      "action": "reuse_candidate",
      "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"

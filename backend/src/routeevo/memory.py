@@ -12,12 +12,14 @@ import difflib
 import json
 from pathlib import Path
 
-from . import config, db
+from . import config, db, families
 from .benchmarks import get as benchmark
 
 RETRIEVAL = {
     "version": "retrieval-v2",
-    "features": "benchmark adapter workload features; compatible task semantics required",
+    "scope": "records of the same task family only",
+    "features": {name: fam.BUCKET_FEATURES for name, fam in families.REGISTRY.items()},
+    "compatibility": "benchmark adapter task semantics and minimum matching features",
     "max_per_outcome": {"success": 3, "failure": 2, "no_gain": 1},
     "rank": "matching features desc, then newest first",
 }
@@ -33,13 +35,31 @@ REUSE = {
     "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
     "learn_target_margin": 0.05,
 }
-LEARNABLE_SPLITS = {"A", "smoke"}
+# Before the first model request the router picks which model starts, from what the snapshot covers. Familiar work
+# (a verified success under similar conditions) starts on the local small model; work the snapshot has no similar
+# success for (a new task family, or conditions none of its successes share) goes straight to the large model, and
+# what that run verifies becomes experience for the next similar task.
+ROUTER = {
+    "version": "router-v1",
+    "order": "re-validate verified programs first (no model); then route the model requests",
+    "small_if": "the snapshot holds a success record of the same task family matching the workload on >= min_matches "
+                "features",
+    "large_otherwise": ["new_family: no record of this task family", "new_conditions: records of the family exist but no "
+                        "success matches the workload on >= min_matches features"],
+    "min_matches": "per benchmark adapter; recorded in the run retrieval summary",
+    "after_start": "a run that starts small still switches to large by the upgrade rule",
+}
+# Splits whose runs may write experience: A (learning), S (the sealed online stream), T (tuning tasks for new families).
+LEARNABLE_SPLITS = {"A", "S", "T", "smoke"}
+WRITING_MODES = {"learn", "online"}
 EXTRACTOR_VERSION = "extractor-v3"
 NON_EVIDENCE_STATUSES = {"sandbox_error", "baseline_failed", "checker_error"}
 _NOTABLE_CALLS = {
     "reader", "writer", "DictReader", "read", "readline", "readlines", "splitlines", "split", "rsplit", "partition",
     "rpartition", "find", "index", "groupby", "Counter", "defaultdict", "sorted", "sort", "map", "zip", "join",
     "write", "writelines", "decode", "encode", "int", "get", "setdefault", "update", "accumulate", "compile",
+    "strptime", "strftime", "fromisoformat", "match", "fullmatch", "search", "findall", "itemgetter", "max", "min",
+    "append", "extend", "array", "bisect",
 }
 
 
@@ -50,8 +70,11 @@ class PointerLocked(RuntimeError):
 # ---------- conditions ----------
 
 def _conditions(task_row, profile: dict) -> dict:
-    return {"family": task_row["family"], "task_id": task_row["task_id"], "split": task_row["split"],
-            "buckets": benchmark(task_row["family"]).buckets(profile), "profile": profile}
+    family = task_row["family"]
+    visible = ({k: profile.get(k) for k in families.get(family).CONDITION_PROFILE_KEYS}
+               if family in families.REGISTRY else profile)
+    return {"family": family, "task_id": task_row["task_id"], "split": task_row["split"],
+            "buckets": benchmark(family).buckets(profile), "profile": visible}
 
 
 # ---------- extraction ----------
@@ -192,8 +215,8 @@ def publish(run_id: str) -> str | None:
     Returns the new snapshot id, or None when the run produced no qualifying records (no empty versions).
     """
     run = db.one("SELECT * FROM runs WHERE run_id = ?", (run_id,))
-    if run["mode"] != "learn":
-        raise ValueError("only learn-mode runs publish experience")
+    if run["mode"] not in WRITING_MODES:
+        raise ValueError("only learn- and online-mode runs publish experience")
     records = extract(run_id)
     if not records:
         db.add_event(run_id, "learning_no_new_version", {"reason": "no qualifying experience records"})
@@ -238,9 +261,9 @@ def activate(snapshot_id: str, reason: str, actor: str = "user") -> dict:
     """Switch the snapshot future runs read. History and running runs are untouched."""
     if not db.one("SELECT 1 FROM snapshots WHERE snapshot_id = ?", (snapshot_id,)):
         raise KeyError(f"snapshot {snapshot_id} does not exist")
-    learning = db.one("SELECT run_id FROM runs WHERE mode = 'learn' AND status = 'running'")
+    learning = db.one("SELECT run_id, mode FROM runs WHERE mode IN ('learn', 'online') AND status = 'running'")
     if learning:
-        raise PointerLocked(f"learn run {learning['run_id']} is in progress; switch after it publishes")
+        raise PointerLocked(f"{learning['mode']} run {learning['run_id']} is in progress; switch after it publishes")
     prev = active_snapshot()
     db.update("settings", "key", "active_snapshot_id", {"value": snapshot_id})
     db.insert("pointer_history", {"ts": db.now(), "from_snapshot_id": prev, "to_snapshot_id": snapshot_id,
@@ -285,11 +308,13 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
     adapter = benchmark(family)
     current = adapter.buckets(profile)
     features = list(current)
+    family_records = 0
     scored = []
     for eid in snapshot_experience_ids(snapshot_id):
         e = experience(eid)
         if e["conditions"]["family"] != family:
             continue
+        family_records += 1
         theirs = e["conditions"]["buckets"]
         if not adapter.compatible(current, theirs):
             continue
@@ -327,6 +352,7 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
             "source": {"run_id": e["source"]["run_id"], "step_seq": e["source"]["step_seq"], "candidate_id": e["source"]["candidate_id"]},
         })
     summary = {"retrieval": RETRIEVAL["version"], "min_matches": adapter.MIN_MATCHES, "current_buckets": current, "feature_count": len(features),
+               "family": family, "family_records": family_records,
                "snapshot_size": len(snapshot_experience_ids(snapshot_id)),
                "matched_by_outcome": matched_counts, "selected": [r["experience_id"] for r in records],
                "scores": {r["experience_id"]: r["match"]["matching_features"] for r in records}}

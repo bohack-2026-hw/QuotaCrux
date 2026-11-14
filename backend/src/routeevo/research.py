@@ -6,10 +6,11 @@ from __future__ import annotations
 
 from . import db
 
-QUESTION = "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 {target}×？"
+QUESTION = "在输出完全正确的前提下，能否让这段{title}程序在该工作负载上至少快 {target}×？"
 SCOPE = ("只能整体替换程序文件；仅 Python 标准库；代码不超过 {max_code_bytes} 字节；输入经 stdin、输出到 stdout；"
          "评测器、参考输出和最终测试数据不可见、不可改")
 TOOLS = [
+    ("route_model", "分流（程序执行）：按经验快照对本任务的覆盖情况，决定模型请求先交给本地小模型还是大模型"),
     ("reuse_candidate", "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"),
     ("analyze", "分析：写下推理与计划，不执行"),
     ("get_evidence", "取证：在沙箱中对某个候选做 cProfile，返回热点"),
@@ -35,8 +36,10 @@ def definition(rep: dict) -> dict:
     final = rep["final_evaluation"]
     native = rep["task"]["family"] in ("ale-bench", "algotune", "kernelbench")
     score = rep["task"].get("objective", {}).get("metric") == "score"
+    protocol = rep["config"].get("research_protocol", {})
+    research_mode = protocol.get("mode", "legacy")
     return {
-        "question": "在可行性约束下，能否通过本次研究持续提高目标分数？" if score else QUESTION.format(target=rep["task"]["target_min_speedup"]),
+        "question": "在可行性约束下，能否通过本次研究持续提高目标分数？" if score else QUESTION.format(title=presentation["title"], target=rep["task"]["target_min_speedup"]),
         "goal": "全部用例可行，最大化原始得分之和" if score else f"输出全对；全部样本快于基线；加速比 ≥ {rep['task']['target_min_speedup']}×",
         "workload": presentation["workload"],
         "baseline": {
@@ -46,8 +49,10 @@ def definition(rep: dict) -> dict:
         },
         "scope": presentation["agent_notes"] if native else SCOPE.format(max_code_bytes=lim["max_code_bytes"]),
         "tools": [{"action": a, "label": t} for a, t in TOOLS
-                  if (not native or a not in ("reuse_candidate", "get_evidence")) and
-                  (rep["config"].get("research_protocol", {}).get("mode") != "independent" or a in ("propose_candidate", "finish"))],
+                  if (not native or a != "get_evidence") and
+                  (research_mode == "legacy" or a not in ("reuse_candidate", "route_model")) and
+                  (not protocol.get("fixed_model") or a != "route_model") and
+                  (research_mode != "independent" or a in ("propose_candidate", "finish"))],
         "verification": presentation["validation"] if native else (f"{presentation['validation']}；基线与候选各预热一次、交替计时 "
                          f"{rep['config']['measure']['repeats']} 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善"),
         "budget": {"model_requests": lim["max_model_requests"], "candidates": lim["max_candidates"],

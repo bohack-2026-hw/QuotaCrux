@@ -50,7 +50,7 @@ class RunBusy(RuntimeError):
 @dataclass
 class RunOptions:
     task_id: str
-    mode: str = "eval"  # learn | eval
+    mode: str = "eval"  # eval: frozen snapshot | learn: beat the best known, publish | online: deliver like eval, publish
     snapshot_id: str | None = None  # default: active snapshot
     limits: config.RunLimits = field(default_factory=config.RunLimits)
     measure: config.MeasureConfig = field(default_factory=config.MeasureConfig)
@@ -59,6 +59,7 @@ class RunOptions:
     research_mode: str | None = None  # legacy | feedback | independent
     fixed_model: str | None = None  # small | large; research comparisons default to small
     final_evaluation: bool = True
+    router: bool = True  # False: every run starts on the small model (ablation; changes the fingerprint)
 
 
 def _make_clients(opts: RunOptions) -> tuple[dict, dict[str, config.ModelConfig]]:
@@ -80,8 +81,8 @@ def _make_clients(opts: RunOptions) -> tuple[dict, dict[str, config.ModelConfig]
 
 class Runner:
     def __init__(self, opts: RunOptions):
-        if opts.mode not in ("learn", "eval"):
-            raise ValueError("mode must be learn or eval")
+        if opts.mode not in ("learn", "eval", "online"):
+            raise ValueError("mode must be learn, eval or online")
         self.opts = opts
         self.task = taskpkg.load(opts.task_id)
         opts.research_mode = opts.research_mode or ("feedback" if self.task.is_native else "legacy")
@@ -94,13 +95,15 @@ class Runner:
                 raise ValueError("research comparisons require eval mode and empty snapshot v0")
             opts.snapshot_id = "v0"
             opts.fixed_model = opts.fixed_model or "small"
+        if opts.fixed_model:
+            opts.router = False
         if self.task.is_native and opts.mode != "eval":
             raise ValueError("native research benchmarks currently support eval mode only")
         self.system_prompt = prompt.system_prompt(self.task, opts.research_mode)
         self.system_prompt_sha = hashlib.sha256(self.system_prompt.encode()).hexdigest()
-        if opts.mode == "learn" and self.task.split not in memory.LEARNABLE_SPLITS:
+        if opts.mode in memory.WRITING_MODES and self.task.split not in memory.LEARNABLE_SPLITS:
             raise ValueError(f"task {self.task.task_id} is in split {self.task.split}; only {sorted(memory.LEARNABLE_SPLITS)} "
-                             "tasks may write experience (B/C run in eval mode with a frozen snapshot)")
+                             "tasks may write experience (held-out splits run in eval mode with a frozen snapshot)")
         self.limits, self.measure = opts.limits, opts.measure
         self.clients, self.model_cfgs = _make_clients(opts)
         active = db.one("SELECT value FROM settings WHERE key = 'active_snapshot_id'")["value"]
@@ -130,6 +133,7 @@ class Runner:
         self.stop_reason: str | None = None
         self.stop_detail: str | None = None
         self.run_target = self.task.target_min_speedup
+        self.route: dict | None = None
         self.t0 = 0.0
 
     # ---------- setup ----------
@@ -180,6 +184,8 @@ class Runner:
             "sandbox_image_id": self.env["image_id"],
             "retrieval": memory.RETRIEVAL,
             "reuse": memory.REUSE,
+            "router": memory.ROUTER if self.opts.router else {
+                "version": "off", "start": f"fixed {self.opts.fixed_model} model" if self.opts.fixed_model else "always the small model"},
             "experience_extractor": memory.EXTRACTOR_VERSION,
         }
         fingerprint = hashlib.sha256(json.dumps(comparable, sort_keys=True).encode()).hexdigest()[:16]
@@ -210,6 +216,8 @@ class Runner:
             self._check_initial()
             if not self.stop_reason:
                 self._reuse()
+            if not self.stop_reason:
+                self._route()
             while not self.stop_reason:
                 self._iterate()
         except Exception as exc:  # noqa: BLE001 - recorded, never swallowed silently
@@ -223,7 +231,7 @@ class Runner:
             self._final_evaluation()
         except Exception as exc:  # noqa: BLE001
             db.add_event(self.run_id, "final_eval_error", {"error": f"{type(exc).__name__}: {exc}"})
-        if self.opts.mode == "learn":
+        if self.opts.mode in memory.WRITING_MODES:
             self._publish()
         status = {"user_stopped": "stopped", "environment_error": "failed", "internal_error": "failed",
                   "model_api_error": "failed"}.get(self.stop_reason, "completed")
@@ -294,7 +302,8 @@ class Runner:
             remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)
             if remaining < self.limits.min_request_window_s:
                 break
-            cid = self._add_candidate(prog["code"], origin="experience", parent="c0", model_call_id=None)
+            cid = self._add_candidate(prog["code"], origin="experience", parent="c0", model_call_id=None,
+                                      experience_id=prog["experience_id"])
             differs = "、".join(f"{f}（经验 {d['experience']}，本任务 {d['current']}）" for f, d in prog["differs"].items()) or "无"
             self._step("program", "reuse_candidate", "submitted", candidate_id=cid,
                        purpose=f"复用经验 {prog['experience_id']} 中已验证的程序，不调用模型（第 {i + 1}/{len(programs)} 个）",
@@ -328,7 +337,7 @@ class Runner:
                                             "(origin 'experience' in Candidates); none reached the target",
                                   "best_candidate_id": self.best_id}
             return
-        if self.opts.mode == "eval":
+        if self.opts.mode in ("eval", "online"):
             return self._stop("goal_reached", f"re-used {self.best_id} dev speedup {best['speedup']} >= {target}; no model request needed")
         self.run_target = round(max(target, best["speedup"] * (1 + memory.REUSE["learn_target_margin"])), 4)
         self._step("program", "set_target", "done", candidate_id=self.best_id,
@@ -341,6 +350,35 @@ class Runner:
         self.last_feedback = {"re_use": f"re-validated program {self.best_id} already meets the task target; this learning run "
                                         f"only counts a candidate as on target at speedup >= {self.run_target}",
                               "best_candidate_id": self.best_id}
+
+    def _route(self) -> None:
+        """Pick the model the requests start on (memory.ROUTER), from what the snapshot covers for this workload."""
+        if self.opts.fixed_model:
+            return
+        summary = self.experience_summary or {}
+        family_records = summary.get("family_records", 0)
+        similar = (summary.get("matched_by_outcome") or {}).get("success", 0)
+        m, n = summary["min_matches"], summary["feature_count"]
+        writes = self.opts.mode in memory.WRITING_MODES
+        keep = "本次验证过的结果会写入经验，供之后相似的任务复用" if writes else "评测模式不写入经验"
+        if not self.opts.router:
+            role, reason, why = "small", "router_off", "分流器关闭（对照配置）：一律先用本地小模型，按升级规则切换"
+        elif similar:
+            role, reason, why = "small", "familiar", (f"分流：快照中有 {similar} 条同族成功经验与本任务至少 {m}/{n} 项条件相同，"
+                                                      "先用本地小模型；按升级规则可切换到大模型")
+        elif family_records == 0:
+            role, reason, why = "large", "new_family", (f"分流：快照中没有任务族 {self.task.family} 的任何经验，按全新问题直接交给"
+                                                        f"大模型；{keep}")
+        else:
+            role, reason, why = "large", "new_conditions", (f"分流：快照中有 {family_records} 条同族经验，但没有成功经验与本任务至少 "
+                                                            f"{m}/{n} 项条件相同，按新条件直接交给大模型；{keep}")
+        self.role = role
+        self.route = {"router": memory.ROUTER["version"] if self.opts.router else "off", "route": role, "reason": reason,
+                      "family": self.task.family, "family_records": family_records, "similar_successes": similar,
+                      "min_matches": m, "model": self.model_cfgs[role].model}
+        self._step("program", "route_model", "done", purpose=why, result=self.route,
+                   next_decision=f"start model requests on the {role} model")
+        db.add_event(self.run_id, "model_routed", self.route)
 
     def _on_target(self, ev: evaluator.Evaluation) -> bool:
         if self.task.objective["metric"] == "score":
@@ -399,9 +437,10 @@ class Runner:
             "model_requests_used": self.requests_used, "model_requests_max": self.limits.max_model_requests,
             "candidates_used": self.model_candidates, "candidates_max": self.limits.max_candidates,
             "wall_clock_elapsed_s": round(elapsed, 1), "wall_clock_limit_s": self.limits.wall_clock_s,
-            "current_model_role": self.role, "upgraded_to_large_model": self.role == "large",
+            "current_model_role": self.role, "upgraded_to_large_model": self.role == "large" and not self.opts.fixed_model and (self.route or {}).get("route") != "large",
             "best_candidate_id": visible_best, "best_dev_speedup": best.get("speedup"),
             "best_objective": best.get("objective"), "research_mode": self.opts.research_mode,
+            "routed_to": (self.route or {}).get("route"),
             "target_speedup": self.run_target, "task_target_speedup": self.task.target_min_speedup,
         }
 
@@ -413,6 +452,7 @@ class Runner:
             candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items() if not independent or cid == "c0"],
             evidence=[] if independent else self.evidence, history=[] if independent else self.history,
             experiences=self.experiences, snapshot_id=self.snapshot_id,
+            hide_code=set() if independent else self._hidden_reused(),
             experience_summary=self.experience_summary,
             budget=self._budget_view(), last_feedback=None if independent else self.last_feedback,
         )
@@ -639,6 +679,15 @@ class Runner:
         self._step("program", "upgrade_model", "done", result=detail, next_decision="continue with large model", purpose=reason)
         db.add_event(self.run_id, "model_upgraded", detail)
 
+    def _hidden_reused(self) -> set[str]:
+        """Re-validated programs whose code is left out of the prompt: all but the best of them (by dev speedup among
+        correct ones) and any a model candidate builds on. Keeps the request short when re-use did not suffice."""
+        reused = [cid for cid, c in self.candidates.items() if c["origin"] == "experience"]
+        passed = [cid for cid in reused if (self.candidates[cid].get("latest_evaluation") or {}).get("status") == "passed"]
+        keep = {max(passed, key=lambda c: self.candidates[c]["latest_evaluation"].get("speedup") or 0)} if passed else set()
+        keep |= {c["parent_candidate_id"] for c in self.candidates.values() if c["origin"] == "model"}
+        return {cid for cid in reused if cid not in keep}
+
     def _existing_candidate(self, cid: str | None, require_runnable: bool) -> str:
         if not cid or cid not in self.candidates:
             raise actions.InvalidAction("unknown_candidate", f"candidate {cid!r} does not exist; known: {list(self.candidates)}")
@@ -646,7 +695,8 @@ class Runner:
             raise actions.InvalidAction("candidate_not_runnable", f"candidate {cid} failed static checks")
         return cid
 
-    def _add_candidate(self, code: str, origin: str, parent: str | None, model_call_id: str | None) -> str:
+    def _add_candidate(self, code: str, origin: str, parent: str | None, model_call_id: str | None,
+                       experience_id: str | None = None) -> str:
         cid = f"c{len(self.candidates)}"
         path = self.dir / "candidates" / f"{cid}.py"
         path.write_text(code)
@@ -656,6 +706,8 @@ class Runner:
             "code_sha256": taskpkg.sha256_bytes(code.encode()), "created_at": db.now(),
         })
         self.candidates[cid] = {"origin": origin, "parent_candidate_id": parent, "code": code}
+        if experience_id:
+            self.candidates[cid]["experience_id"] = experience_id
         db.add_event(self.run_id, "candidate_created", {"candidate_id": cid, "origin": origin, "parent_candidate_id": parent})
         return cid
 

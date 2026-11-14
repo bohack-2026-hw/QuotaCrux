@@ -266,6 +266,7 @@ def get() -> sqlite3.Connection:
 
 MIGRATIONS = {
     "runs": {"retrieval_json": "TEXT", "published_snapshot_id": "TEXT"},
+    "comparison_runs": {"arm": "TEXT", "position": "INTEGER"},
 }
 
 

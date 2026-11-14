@@ -18,13 +18,15 @@ def _print(obj) -> None:
 
 
 def cmd_tasks_build(args) -> None:
-    for t in taskpkg.build_spec(Path(args.spec)):
-        files = t.manifest["files"]
-        print(f"{t.task_id} [{t.split}] dev {files['dev_input']['bytes'] / 1e6:.1f} MB, final {files['final_input']['bytes'] / 1e6:.1f} MB")
+    for spec in [Path(args.spec)] if args.spec else taskpkg.spec_paths():
+        for t in taskpkg.build_spec(spec):
+            files = t.manifest["files"]
+            print(f"{t.task_id} [{t.split}] {t.family} dev {files['dev_input']['bytes'] / 1e6:.1f} MB, "
+                  f"final {files['final_input']['bytes'] / 1e6:.1f} MB")
 
 
 def cmd_tasks_list(args) -> None:
-    for r in db.all_rows("SELECT task_id, split, manifest_sha256, manifest_json FROM tasks ORDER BY task_id"):
+    for r in db.all_rows("SELECT task_id, split, family, manifest_sha256, manifest_json FROM tasks ORDER BY task_id"):
         m = json.loads(r["manifest_json"])
         from .benchmarks import get
         desc = get(m["family"]).presentation(m)
@@ -70,7 +72,7 @@ def cmd_run(args) -> None:
     opts = RunOptions(task_id=args.task_id, mode=args.mode, snapshot_id=args.snapshot, limits=_limits(args),
                       measure=config.MeasureConfig(cpuset_cpus=args.cpuset_cpus, function_warmups=args.function_warmups),
                       script=Path(args.script).resolve() if args.script else None, label=args.label,
-                      research_mode=args.research_mode, fixed_model=args.fixed_model, final_evaluation=not args.dev_only)
+                      research_mode=args.research_mode, fixed_model=args.fixed_model, final_evaluation=not args.dev_only, router=not args.no_router)
     runner = Runner(opts)
     run_id = runner.create()
     print(f"run {run_id} started (task {args.task_id}, mode {args.mode}, snapshot {runner.snapshot_id})", file=sys.stderr)
@@ -199,7 +201,38 @@ def cmd_compare(args) -> None:
     _print_comparison(compare.execute(cid))
 
 
+def cmd_stream(args) -> None:
+    script = str(Path(args.script).resolve()) if args.script else None
+    cid = compare.create_stream(args.task_ids, args.start, args.repeats, args.label, script, router=not args.no_router)
+    print(f"stream {cid}: {len(args.task_ids)} tasks x 2 arms (memory, fresh) x {args.repeats} repeats from {args.start}, serial",
+          file=sys.stderr)
+    _print_comparison(compare.execute(cid))
+
+
+def _print_stream(s: dict) -> None:
+    print(f"stream {s['comparison_id']} [{s['status']}] {s['finished_runs']}/{s['planned_runs']} runs from {s['start_snapshot']}, "
+          f"fair={s['fair']}{'  [scripted model: functional check only]' if s['scripted_model'] else ''}")
+    cols = ("runs", "goal_met", "final_speedup_median", "model_requests_total", "large_model_requests_total",
+            "runs_without_model_request", "cost_usd_total", "wall_clock_s_total", "agent_loop_s_median", "routes")
+    for title, group in (("all", s["sides"]), ("first of family", s["first_of_family"]), ("later tasks", s["repeats_of_family"])):
+        print(f"  {title}")
+        for arm, side in group.items():
+            print(f"    {arm:<6} " + "  ".join(f"{c}={side[c]}" for c in cols))
+    for pos in s["positions"]:
+        cells = []
+        for arm in ("memory", "fresh"):
+            cells.append(f"{arm}: " + " ".join(f"{x['route']}/{x['model_requests']}req/${x['cost_usd'] or 0:.3f}/"
+                                               f"{x['final_speedup']}{'' if x['goal_met'] else '!'}" for x in pos["arms"][arm]))
+        print(f"  {pos['position']:>2} {pos['task_id']:<6} {pos['family']:<9} " + " | ".join(cells))
+    for g in s["growth"]:
+        print(f"  repeat {g['repeat']}: {g['start']} -> {g['end']} ({g['experiences_start']} -> {g['experiences_end']} experiences)")
+    for e in s["errors"]:
+        print(f"  error #{e['seq']} {e['task_id']} {e['arm']}: {e['error']}")
+
+
 def _print_comparison(s: dict) -> None:
+    if s.get("kind") == "stream":
+        return _print_stream(s)
     print(f"comparison {s['comparison_id']} [{s['status']}] {s['finished_runs']}/{s['planned_runs']} runs, fair={s['fair']}"
           f"{'  [scripted model: functional check only]' if s['scripted_model'] else ''}")
     cols = ("runs", "goal_met", "success_rate", "final_speedup_median", "no_improvement_runs", "model_requests_median",
@@ -316,6 +349,21 @@ def cmd_probe(args) -> None:
             "within_request_timeout": res.latency_s <= config.RunLimits().model_request_timeout_s})
 
 
+def cmd_progress(args) -> None:
+    from . import live
+
+    if args.pcmd == "plan":
+        steps = [tuple(x.split("=", 1)) if "=" in x else (x, x) for x in args.steps]
+        live.plan(args.title, steps)
+    elif args.pcmd == "step":
+        live.step(args.step_id, args.status, args.note)
+    elif args.pcmd == "log":
+        live.log(" ".join(args.text))
+    p = live.load_progress()
+    for st in p["steps"]:
+        print(f"  [{st['status']:<7}] {st['id']:<12} {st['title']}{' · ' + st['note'] if st['note'] else ''}")
+
+
 def cmd_serve(args) -> None:
     import uvicorn
 
@@ -330,7 +378,7 @@ def main(argv: list[str] | None = None) -> None:
     t = sub.add_parser("tasks", help="build, list and pin task packages")
     tsub = t.add_subparsers(dest="tcmd", required=True)
     b = tsub.add_parser("build")
-    b.add_argument("--spec", default=str(config.TASK_SPEC_DIR / "spec.json"))
+    b.add_argument("--spec", help="one spec file (default: every tasks/spec*.json)")
     b.set_defaults(fn=cmd_tasks_build)
     tsub.add_parser("list").set_defaults(fn=cmd_tasks_list)
     eb = tsub.add_parser("import-effibench", help="import a pinned EffiBench-X Python problem (downloads its shard)")
@@ -363,7 +411,8 @@ def main(argv: list[str] | None = None) -> None:
 
     r = sub.add_parser("run", help="run the agent on one task")
     r.add_argument("task_id")
-    r.add_argument("--mode", choices=["learn", "eval"], default="eval")
+    r.add_argument("--mode", choices=["learn", "eval", "online"], default="eval")
+    r.add_argument("--no-router", action="store_true", help="ablation: always start on the small model")
     r.add_argument("--snapshot", help="experience snapshot id (default: active)")
     r.add_argument("--script", help="scripted model JSON (functional checks only)")
     r.add_argument("--label")
@@ -438,6 +487,14 @@ def main(argv: list[str] | None = None) -> None:
     cp.add_argument("--label")
     cp.add_argument("--script", help="scripted model JSON (functional checks only)")
     cp.set_defaults(fn=cmd_compare)
+    sm = sub.add_parser("stream", help="online stream: the same task sequence with and without accumulating experience")
+    sm.add_argument("task_ids", nargs="+")
+    sm.add_argument("--start", required=True, help="snapshot both arms start from")
+    sm.add_argument("--repeats", type=int, default=3)
+    sm.add_argument("--label")
+    sm.add_argument("--script", help="scripted model JSON (functional checks only)")
+    sm.add_argument("--no-router", action="store_true", help="ablation: always start on the small model")
+    sm.set_defaults(fn=cmd_stream)
     cs = sub.add_parser("comparison")
     cs.add_argument("comparison_id")
     cs.add_argument("--json", action="store_true")
@@ -471,6 +528,20 @@ def main(argv: list[str] | None = None) -> None:
     pr.add_argument("--task-id", default="A-01")
     pr.add_argument("--timeout", type=float, default=300.0)
     pr.set_defaults(fn=cmd_probe)
+
+    pg = sub.add_parser("progress", help="operator work plan and log shown on the live dashboard page")
+    pgsub = pg.add_subparsers(dest="pcmd", required=True)
+    pp = pgsub.add_parser("plan")
+    pp.add_argument("title")
+    pp.add_argument("steps", nargs="+", help="id=title")
+    ps_ = pgsub.add_parser("step")
+    ps_.add_argument("step_id")
+    ps_.add_argument("status", choices=["pending", "running", "done", "skipped", "failed"])
+    ps_.add_argument("--note")
+    pl = pgsub.add_parser("log")
+    pl.add_argument("text", nargs="+")
+    pgsub.add_parser("show")
+    pg.set_defaults(fn=cmd_progress)
 
     s = sub.add_parser("serve")
     s.add_argument("--host", default="127.0.0.1")

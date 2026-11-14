@@ -114,6 +114,8 @@ CONTRACT_CASES = {
     "nearly_sorted_trap": "key,value\na,1\nb,1\nc,1\na,1\nd,1\nd,2\n",
     "long_keys": "key,value\n" + "x" * 32 + ",1\n" + "x" * 31 + ",2\n" + "x" * 32 + ",3\n",
 }
+CONTRACT_CASES_NOTE = ("empty input, a single row, interleaved repeated keys, ASCII ordering of digits/upper/underscore/lower "
+                       "case, very large and negative integers, an almost-sorted input and 32-character keys")
 
 
 def reference_output(data: bytes) -> bytes:
@@ -240,3 +242,58 @@ def check_output(stdout: bytes, expected: bytes, max_examples: int = 3) -> dict:
             "examples": examples,
         },
     }
+
+
+TITLE_ZH = "分组聚合"
+BASELINE_ZH = "c0：csv + 两个 dict + sorted（初始程序，正确）"
+
+# ---------- family hooks used by task packages, experience retrieval and the UI ----------
+
+BUCKET_FEATURES = ["rows", "distinct_keys", "rows_per_key", "order", "skew"]
+CONDITION_PROFILE_KEYS = ("rows", "distinct_keys", "avg_rows_per_key", "duplicate_rate", "top10_key_share", "sortedness",
+                          "key_runs_per_key")
+ORDER_ZH = {"random": "随机", "sorted": "有序", "nearly_sorted": "近似有序", "clustered": "成簇"}
+
+
+def buckets(profile: dict) -> dict:
+    """Coarse workload conditions an experience record is filed under (retrieval-v1 for this family)."""
+    rows, dk = profile.get("rows", 0), profile.get("distinct_keys", 0)
+    if rows == 0:
+        return {"rows": "empty", "distinct_keys": "none", "rows_per_key": "none", "order": "none", "skew": "none"}
+    rpk = profile.get("avg_rows_per_key", 0)
+    sortedness = profile.get("sortedness", 0)
+    if sortedness >= 0.999:
+        order = "sorted"
+    elif profile.get("key_runs_per_key", 99) <= 1.01:
+        order = "clustered"
+    elif sortedness >= 0.9:
+        order = "nearly_sorted"
+    else:
+        order = "unsorted"
+    return {
+        "rows": "<100k" if rows < 100_000 else ("<1M" if rows < 1_000_000 else ">=1M"),
+        "distinct_keys": "<1k" if dk < 1_000 else ("<100k" if dk < 100_000 else ">=100k"),
+        "rows_per_key": "<=2" if rpk <= 2 else ("<=20" if rpk <= 20 else ">20"),
+        "order": order,
+        "skew": "high" if profile.get("top10_key_share", 0) >= 0.3 else "low",
+    }
+
+
+def examples(seed: int, params: dict) -> list[dict]:
+    """Small visible input/output pairs, generated from seeds unrelated to dev/final data."""
+    order = params.get("order", "random")
+    cases = [
+        GenParams(rows=0, keys=1, seed=seed),
+        GenParams(rows=10, keys=4, seed=seed + 1, key_len_min=1, key_len_max=3, order=order, value_min=-20, value_max=20),
+        GenParams(rows=8, keys=8, seed=seed + 2, key_len_min=1, key_len_max=4, value_min=-5, value_max=5),
+    ]
+    out = []
+    for p in cases:
+        data = generate(p)
+        out.append({"input": data.decode(), "output": reference_output(data).decode()})
+    return out
+
+
+def describe(params: dict) -> str:
+    return (f"分组聚合 · {ORDER_ZH.get(params['order'], params['order'])} · {params['rows']:,} 行 · {params['keys']:,} 个 key"
+            f" · 偏斜 {params['skew']}")

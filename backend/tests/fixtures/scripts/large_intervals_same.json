@@ -1,0 +1,20 @@
+{
+  "large": [
+    {
+      "action": "propose_candidate",
+      "purpose": "改写为整块读取并按切片取小时",
+      "expected_result": "正确且明显更快",
+      "verification": "外部评测器",
+      "hypothesis": "排序已是最优，换写法无收益",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/intervals_same.py"
+    },
+    {
+      "action": "finish",
+      "purpose": "无改进空间",
+      "expected_result": "结束",
+      "verification": "无",
+      "finish_reason": "no gain"
+    }
+  ]
+}

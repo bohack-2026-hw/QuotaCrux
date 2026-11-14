@@ -23,7 +23,8 @@ export function SpeedupBars({ candidates, target, bestId, onPick }: {
   const H = top + rows.length * rowH + 26
   const x = (v: number) => left + (v / maxX) * (W - left - right)
   const ticks = score ? [0, 1, 2, 3, 4].map((n) => Math.round(n * maxX / 4))
-    : [0, 0.5, 1, 1.5, 2, 2.5, 3].filter((t) => t <= maxX)
+    : maxX <= 3.2 ? [0, 0.5, 1, 1.5, 2, 2.5, 3].filter((t) => t <= maxX)
+      : Array.from({ length: Math.floor(maxX) + 1 }, (_, i) => i)
 
   return (
     <div className="chart" ref={box} onMouseLeave={() => setTip(null)}>
@@ -87,7 +88,8 @@ export function PairedDots({ tasks, perTask, a, b, target }: {
   const x0 = left + failCol
   const x = (v: number) => x0 + ((v - lo) / (hi - lo)) * (W - x0 - right)
   const ticks: number[] = []
-  for (let t = Math.ceil(lo * 4) / 4; t <= hi; t += 0.25) ticks.push(Math.round(t * 100) / 100)
+  const step = hi - lo > 4 ? 1 : 0.25
+  for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) ticks.push(Math.round(t * 100) / 100)
 
   const show = (e: React.MouseEvent<SVGGElement>, text: string) => {
     const box = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect()
@@ -137,6 +139,76 @@ export function PairedDots({ tasks, perTask, a, b, target }: {
             </g>
           )
         })}
+      </svg>
+      {tip && <div className="tip" style={{ left: tip.x, top: tip.y }}>{tip.text}</div>}
+    </div>
+  )
+}
+
+/* Online stream: cumulative large-model (GPT) cost along the task sequence, one line per arm and repeat. Markers show
+   where a run used the large model; a flat stretch means the tasks there were served without it. */
+export function StreamLadder({ positions, series, repeats, metric }: {
+  positions: { position: number; task_id: string; family: string; first_of_family: boolean }[]
+  series: Record<'memory' | 'fresh', Record<string, { cost_usd: number[]; agent_loop_s: number[]; large_model_requests: number[] }>>
+  repeats: number
+  metric: 'cost_usd' | 'agent_loop_s' | 'large_model_requests'
+}) {
+  const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null)
+  const [box, W] = useWidth<HTMLDivElement>(760)
+  const arms = ['fresh', 'memory'] as const
+  const vals = arms.flatMap((a) => Array.from({ length: repeats }, (_, r) => series[a]?.[String(r + 1)]?.[metric] ?? []).flat())
+  const hi = Math.max(metric === 'cost_usd' ? 0.05 : 1, ...vals) * 1.08
+  const left = 64, right = 20, top = 18, bottom = 64, H = 330
+  const n = positions.length
+  const x = (i: number) => left + (n <= 1 ? 0 : (i / (n - 1)) * (W - left - right))
+  const y = (v: number) => top + (1 - v / hi) * (H - top - bottom)
+  const fmtV = (v: number) => (metric === 'cost_usd' ? fmt.usd(v) : metric === 'agent_loop_s' ? fmt.s(v) : String(v))
+  const ticks = Array.from({ length: 5 }, (_, i) => (hi / 1.08) * (i / 4))
+  const color = { fresh: 'var(--series-old)', memory: 'var(--series-new)' }
+  const name = { fresh: '不带记忆（每个任务都从起点出发）', memory: '带记忆（在线写入，下一个任务读取）' }
+  const famMark: Record<string, string> = { groupagg: 'G', logstats: 'L', intervals: 'I' }
+  return (
+    <div className="chart" ref={box} onMouseLeave={() => setTip(null)}>
+      <div className="legend">
+        {arms.map((a) => <span key={a}><i style={{ background: color[a] }} />{name[a]}</span>)}
+        <span><i style={{ background: 'transparent', border: '2px solid var(--ink-3)' }} />圆点 = 该任务用了大模型</span>
+      </div>
+      <svg width={W} height={H} role="img" aria-label="沿任务流累计的大模型成本">
+        <g className="grid">{ticks.map((t) => <line key={t} x1={left} x2={W - right} y1={y(t)} y2={y(t)} />)}</g>
+        <g className="axis">{ticks.map((t) => <text key={t} x={left - 8} y={y(t) + 4} textAnchor="end">{fmtV(t)}</text>)}</g>
+        {positions.map((p, i) => (
+          <g key={p.task_id} className="axis">
+            <text x={x(i)} y={H - bottom + 18} textAnchor="middle" style={{ fontWeight: p.first_of_family ? 700 : 400 }}>{p.task_id.replace('S-', '')}</text>
+            <text x={x(i)} y={H - bottom + 34} textAnchor="middle" style={{ fill: p.first_of_family ? 'var(--accent-ink)' : undefined }}>
+              {famMark[p.family] ?? p.family}{p.first_of_family ? '*' : ''}
+            </text>
+          </g>
+        ))}
+        <text x={left} y={H - 8} className="axis" style={{ fontSize: 12 }}>G 分组聚合 · L 访问日志 · I 区间合并 · * 该任务族在任务流中首次出现</text>
+        {arms.map((a) => Array.from({ length: repeats }, (_, r) => {
+          const s = series[a]?.[String(r + 1)]
+          const v = s?.[metric] ?? []
+          if (!v.length) return null
+          const pts = v.map((val, i) => `${x(i)},${y(val)}`).join(' ')
+          return (
+            <g key={`${a}-${r}`}>
+              <polyline points={pts} fill="none" stroke={color[a]} strokeWidth={2} strokeOpacity={0.85} strokeLinejoin="round" />
+              {v.map((val, i) => {
+                const used = (s!.large_model_requests[i] ?? 0) > (i ? s!.large_model_requests[i - 1] : 0)
+                const text = `第 ${r + 1} 次重放 · ${positions[i].task_id} · ${name[a].split('（')[0]}：累计 ${fmtV(val)}${used ? '；本任务用了大模型' : '；本任务没用大模型'}`
+                return (
+                  <g key={i} onMouseMove={(e) => {
+                    const b = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect()
+                    setTip({ x: e.clientX - b.left, y: e.clientY - b.top, text })
+                  }}>
+                    <circle cx={x(i)} cy={y(val)} r={10} fill="transparent" />
+                    {used && <circle cx={x(i)} cy={y(val)} r={4.5} fill={color[a]} stroke="var(--card)" strokeWidth={2} />}
+                  </g>
+                )
+              })}
+            </g>
+          )
+        }))}
       </svg>
       {tip && <div className="tip" style={{ left: tip.x, top: tip.y }}>{tip.text}</div>}
     </div>

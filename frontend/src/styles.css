@@ -269,3 +269,28 @@ table.tbl td { border-bottom: 1px solid var(--rule); padding: 7px 8px; font-vari
 .exp-table td:nth-child(2) { min-width: 240px; }
 .exp-table td:nth-child(3) { min-width: 160px; }
 .nowrap { white-space: nowrap; }
+
+/* ---------- live progress ---------- */
+.bar { height: 10px; background: var(--paper-deep); border-radius: 999px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.6s ease; }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.checklist li { display: grid; grid-template-columns: 22px 1fr auto; align-items: baseline; gap: 8px; font-size: 15px; }
+.checklist li .ic { font-weight: 700; text-align: center; }
+.checklist li.running .t { font-weight: 700; }
+.checklist li.pending .t, .checklist li.skipped .t { color: var(--ink-3); }
+.checklist li.running .ic { animation: livepulse 1.4s ease-in-out infinite; }
+.log { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; max-height: 420px; overflow-y: auto; }
+.log li { display: grid; grid-template-columns: 72px 1fr; gap: 10px; font-size: 14px; line-height: 1.5; border-bottom: 1px dashed var(--rule); padding-bottom: 6px; }
+.live-grid td, .live-grid th { text-align: center; padding: 4px 6px; }
+.live-grid td:first-child, .live-grid th:first-child { text-align: left; }
+.cell { display: inline-flex; align-items: center; gap: 4px; min-width: 54px; justify-content: center; padding: 3px 6px; border-radius: 4px;
+  border: 1px solid var(--rule); background: var(--card); font: inherit; font-size: 13px; cursor: pointer; }
+.cell.planned { color: var(--ink-3); border-color: transparent; background: transparent; cursor: default; }
+.cell.ok { background: var(--good-wash); border-color: #b9dcb0; }
+.cell.ok .m { color: var(--good-ink); font-weight: 700; }
+.cell.miss { background: var(--critical-wash); border-color: #e6b9b2; color: #8e2424; }
+.cell.running { background: var(--card); border: 2px dashed var(--accent); color: var(--accent-ink); animation: livepulse 1.4s ease-in-out infinite; }
+.cell .x { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); }
+.mini-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.mini-steps li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 14px; }
+@keyframes livepulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }

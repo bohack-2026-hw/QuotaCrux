@@ -10,9 +10,11 @@ class Case:
 
 
 def get(family: str):
-    if family == "groupagg":
-        from . import groupagg
-        return groupagg
+    from .. import families
+
+    if family in families.REGISTRY:
+        from .generated import GeneratedBenchmark
+        return GeneratedBenchmark(families.get(family))
     if family == "effibench-x":
         from . import effibench
         return effibench

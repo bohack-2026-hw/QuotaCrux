@@ -206,8 +206,22 @@ export function ModeLegend({ modes, repeats }: { modes: string[]; repeats: numbe
 
 /* ---------- scoreboard: the numbers a room can read ---------- */
 
+/** What a mode spent on this task, as bare numbers. */
+function ModeUsage({ runs }: { runs: RRun[] }) {
+  const sum = (f: (r: RRun) => number | null) => runs.reduce<number | null>((a, r) => (f(r) == null ? a : (a ?? 0) + f(r)!), null)
+  const req = sum((r) => r.requests), prop = sum((r) => r.proposed), pass = sum((r) => r.passed), wall = sum((r) => r.wallS)
+  return (
+    <dl className="usage">
+      <div><dt>请求</dt><dd>{req ?? '—'}</dd></div>
+      <div><dt>候选</dt><dd>{pass ?? '?'}/{prop ?? '?'}</dd></div>
+      <div><dt>耗时</dt><dd>{wall == null ? '—' : fmt.s(wall)}</dd></div>
+      <div><dt>费用</dt><dd><CostTotal costs={runs.map((r) => r.cost)} /></dd></div>
+    </dl>
+  )
+}
+
 /** One tile per mode: the median development result, its change against the baseline, and nothing else. */
-export function Scoreboard({ task, lead, planned }: { task: RTask; lead: string | null; planned: string[] }) {
+export function Scoreboard({ task, lead, planned, usage = false }: { task: RTask; lead: string | null; planned: string[]; usage?: boolean }) {
   return (
     <div className="scores">
       {task.modes.map((m) => {
@@ -222,6 +236,7 @@ export function Scoreboard({ task, lead, planned }: { task: RTask; lead: string 
             {s.pending ? <div className="sub">研究中</div>
               : g ? <span className="gain-pill">▲ {task.metric === 'score' ? `${g.detail} · ${g.big}${g.unit}` : g.detail}</span>
               : <div className="sub">{s.value == null ? '无有效结果' : '与基线持平'}</div>}
+            {usage && <ModeUsage runs={task.runs.filter((r) => r.mode === m)} />}
           </div>
         )
       })}

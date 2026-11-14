@@ -1,0 +1,314 @@
+{
+  "protocol": "within-task-feedback-v2",
+  "model": "Qwen3.8-27B",
+  "entries": [
+    {
+      "slot": 1,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 2,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 1,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 3,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 2,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 4,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 5,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 6,
+      "task_key": "ale-bench/ahc024",
+      "repeat": 3,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 7,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 8,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 1,
+      "mode": "no_feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 9,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 1,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 10,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 2,
+      "mode": "no_feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 11,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 2,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 12,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 13,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 3,
+      "mode": "independent",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 14,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 15,
+      "task_key": "ale-bench/ahc026",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "host": "desktop",
+      "binding_status": "ready",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 16,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 17,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 1,
+      "mode": "no_feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 18,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 1,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 19,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 2,
+      "mode": "no_feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 20,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 2,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 21,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 22,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 3,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 23,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 24,
+      "task_key": "algotune/convolve_1d",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 25,
+      "task_key": "algotune/pagerank",
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 26,
+      "task_key": "algotune/pagerank",
+      "repeat": 1,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 27,
+      "task_key": "algotune/pagerank",
+      "repeat": 2,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 28,
+      "task_key": "algotune/pagerank",
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 29,
+      "task_key": "algotune/pagerank",
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    {
+      "slot": 30,
+      "task_key": "algotune/pagerank",
+      "repeat": 3,
+      "mode": "independent",
+      "host": "snowball-mac",
+      "binding_status": "awaiting-issue-4",
+      "dev_cases": 5,
+      "final_cases": 15
+    }
+  ],
+  "algotune_generation": {
+    "size": 1000,
+    "seed": 1729,
+    "function_warmups": 3,
+    "repeats": 5
+  },
+  "additional_routing_issue": 6,
+  "routing_experiments_in_this_plan": false
+}

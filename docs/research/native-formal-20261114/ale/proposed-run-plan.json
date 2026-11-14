@@ -1,0 +1,162 @@
+{
+  "status": "proposal-awaiting-issue-2-freeze",
+  "experiment_sha": null,
+  "prompt_hashes": null,
+  "price_snapshot": null,
+  "model": "Qwen3.8-27B",
+  "mode": "eval",
+  "snapshot": "v0",
+  "limits": {
+    "wall_clock_s": 900,
+    "max_model_requests": 20,
+    "max_candidates": 10
+  },
+  "task_manifests": {
+    "ale-bench-ahc024-formal-20261114-d052b16d54": "1be26f2a809875d8fee65fc5ca8aa3a46955a467516c0946cc6d938802b8e6ef",
+    "ale-bench-ahc026-formal-20261114-66cd5cc2e0": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0"
+  },
+  "parallel_policy": "start both workers in each of waves 1-6; wait for both to finish before next wave; waves 7-9 use worker b only; inter-wave wait is outside episode budgets",
+  "judge_affinity": "unset in a67850f; public owner must explicitly freeze this condition or provide a revision and request matching calibration",
+  "api_in_flight": {
+    "desktop_max": 2,
+    "per_worker_max": 1,
+    "requires_issue_2_freeze": true
+  },
+  "runs": [
+    {
+      "wave": 1,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 1,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 1,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 2,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 1,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 2,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 3,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 2,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 3,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 4,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 4,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 5,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 5,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 6,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 6,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2
+    },
+    {
+      "wave": 7,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1
+    },
+    {
+      "wave": 8,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1
+    },
+    {
+      "wave": 9,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1
+    }
+  ]
+}

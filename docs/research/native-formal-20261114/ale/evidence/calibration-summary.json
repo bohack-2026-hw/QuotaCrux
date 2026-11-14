@@ -1,0 +1,121 @@
+{
+  "source_sha": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "groups": [
+    {
+      "worker": "a",
+      "program": "c0",
+      "serial": {
+        "scores": [
+          5,
+          5,
+          5
+        ],
+        "sample_median_s": 0.03462646500156552,
+        "sample_max_s": 0.04660462900028506,
+        "evaluation_median_s": 1.345,
+        "timeouts": 0
+      },
+      "parallel": {
+        "scores": [
+          5,
+          5,
+          5
+        ],
+        "sample_median_s": 0.04236773299999186,
+        "sample_max_s": 0.04592958799912594,
+        "evaluation_median_s": 1.244,
+        "timeouts": 0
+      },
+      "sample_median_ratio_parallel_over_serial": 1.2235650678773113
+    },
+    {
+      "worker": "a",
+      "program": "cpu_control",
+      "serial": {
+        "scores": [
+          5,
+          5,
+          5
+        ],
+        "sample_median_s": 1.2644923719999497,
+        "sample_max_s": 1.286596706000637,
+        "evaluation_median_s": 8.658,
+        "timeouts": 0
+      },
+      "parallel": {
+        "scores": [
+          5,
+          5,
+          5
+        ],
+        "sample_median_s": 1.270168482000372,
+        "sample_max_s": 1.2839031189996604,
+        "evaluation_median_s": 8.453,
+        "timeouts": 0
+      },
+      "sample_median_ratio_parallel_over_serial": 1.0044888447934603
+    },
+    {
+      "worker": "b",
+      "program": "c0",
+      "serial": {
+        "scores": [
+          44120,
+          44120,
+          44120
+        ],
+        "sample_median_s": 0.03503513900068356,
+        "sample_max_s": 0.036662153999714064,
+        "evaluation_median_s": 1.227,
+        "timeouts": 0
+      },
+      "parallel": {
+        "scores": [
+          44120,
+          44120,
+          44120
+        ],
+        "sample_median_s": 0.042745647000629106,
+        "sample_max_s": 0.04734084899973823,
+        "evaluation_median_s": 1.166,
+        "timeouts": 0
+      },
+      "sample_median_ratio_parallel_over_serial": 1.2200792752611918
+    },
+    {
+      "worker": "b",
+      "program": "cpu_control",
+      "serial": {
+        "scores": [
+          44120,
+          44120,
+          44120
+        ],
+        "sample_median_s": 1.263331066000319,
+        "sample_max_s": 1.2795548690010037,
+        "evaluation_median_s": 8.556,
+        "timeouts": 0
+      },
+      "parallel": {
+        "scores": [
+          44120,
+          44120,
+          44120
+        ],
+        "sample_median_s": 1.2672927130006428,
+        "sample_max_s": 1.3379826769996725,
+        "evaluation_median_s": 8.338,
+        "timeouts": 0
+      },
+      "sample_median_ratio_parallel_over_serial": 1.0031358739660114
+    }
+  ],
+  "wall_clock_s": 90.40906243500103,
+  "evaluations": 24,
+  "model_calls": 0,
+  "final_evaluations": 0,
+  "candidate_cpu_isolation": true,
+  "judge_cpu_isolation": false,
+  "control_prefix": "_work = 0\nfor _i in range(12000000):\n    _work = (_work + _i) & 65535\n",
+  "repeats_per_condition": 3
+}

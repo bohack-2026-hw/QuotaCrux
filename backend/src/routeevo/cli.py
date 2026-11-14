@@ -267,9 +267,16 @@ def cmd_comparison(args) -> None:
 
 def cmd_research_compare(args) -> None:
     from . import research_compare
-    _print(research_compare.execute(args.task_ids, repeats=args.repeats, limits=_limits(args),
+    plan = json.loads(Path(args.plan).read_text()) if args.plan else None
+    if isinstance(plan, dict):
+        plan = plan["runs"]
+    task_ids = args.task_ids or list(dict.fromkeys(row["task_id"] for row in (plan or [])))
+    modes = {task_id: args.modes for task_id in task_ids} if args.modes else None
+    pricing = json.loads(Path(args.pricing).read_text()) if args.pricing else None
+    _print(research_compare.execute(task_ids, repeats=args.repeats, limits=_limits(args),
         measure=config.MeasureConfig(cpuset_cpus=args.cpuset_cpus, function_warmups=args.function_warmups),
-        fixed_model=args.fixed_model, final_evaluation=not args.dev_only, label=args.label))
+        fixed_model=args.fixed_model, final_evaluation=not args.dev_only, label=args.label,
+        modes_by_task=modes, plan=plan, pricing=pricing, plan_id=args.plan_id))
 
 
 def cmd_export_run(args) -> None:
@@ -438,8 +445,8 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--max-candidates", type=int)
     r.add_argument("--wall-clock", type=float)
     r.add_argument("--request-timeout", type=float)
-    r.add_argument("--research-mode", choices=["legacy", "feedback", "independent"],
-                   help="native tasks default to feedback; feedback/independent require llm+rule routing")
+    r.add_argument("--research-mode", choices=["legacy", "feedback", "independent", "no_feedback"],
+                   help="native tasks default to feedback; research modes require llm+rule routing")
     r.add_argument("--fixed-model", choices=["small", "large"], help="pin the generation role and skip model-router requests and upgrades")
     r.add_argument("--dev-only", action="store_true", help="pilot: do not open the private final suite")
     r.add_argument("--cpuset-cpus", help="pin measurement containers to Docker CPU ids, e.g. 2 or 2-3")
@@ -532,9 +539,14 @@ def main(argv: list[str] | None = None) -> None:
     cs.add_argument("--json", action="store_true")
     cs.set_defaults(fn=cmd_comparison)
 
-    rc = sub.add_parser("research-compare", help="within-task feedback vs independent attempts; serial equal budgets")
-    rc.add_argument("task_ids", nargs="+")
+    rc = sub.add_parser("research-compare", help="frozen within-task research modes; serial per VAR_DIR")
+    rc.add_argument("task_ids", nargs="*")
     rc.add_argument("--repeats", type=int, default=1)
+    rc.add_argument("--modes", nargs="+", choices=["feedback", "independent", "no_feedback"],
+                    help="use feedback/independent or all three modes for every listed task")
+    rc.add_argument("--plan", help="pre-registered JSON list (or runs array); preserves central seq/repeat/mode")
+    rc.add_argument("--plan-id", help="central frozen plan identifier for worker or wave subsets")
+    rc.add_argument("--pricing", help="frozen per-million-token price snapshot JSON")
     rc.add_argument("--label")
     rc.add_argument("--fixed-model", choices=["small", "large"], default="small")
     rc.add_argument("--wall-clock", type=float, default=900)
@@ -542,7 +554,7 @@ def main(argv: list[str] | None = None) -> None:
     rc.add_argument("--max-candidates", type=int, default=10)
     rc.add_argument("--request-timeout", type=float)
     rc.add_argument("--dev-only", action="store_true")
-    rc.add_argument("--cpuset-cpus", help="pin both arms to the same Docker CPU ids")
+    rc.add_argument("--cpuset-cpus", help="pin all research modes to the same Docker CPU ids")
     rc.add_argument("--function-warmups", type=int, choices=range(1, 21), default=1, help="AlgoTune solve warm-ups per case")
     rc.set_defaults(fn=cmd_research_compare)
 

@@ -1,14 +1,10 @@
 # 演示文稿源文件
 
-`index.html`（版式与内容）、`deck.css`、`deck.js`（页眉页脚与全部 SVG 图表）共同组成 29 页技术演示，1920×1080。每页页脚写明数据来源。
+`build.py` 用 python-pptx 直接生成 23 页技术演示：所有文字、形状、连线、图表都是 PowerPoint 原生元素，按 1920×1080 像素网格排版（`pptkit.py` 提供像素坐标、字体与转场辅助）；`assets/` 里只有回放截图、控制台截图和二维码。每页讲稿与数据来源写在备注里。
 
 ```sh
-./build.sh      # 需要 Chrome、node（playwright-core）、uv
+./build.sh      # -> ../QuotaCrux.pptx 和 ../QuotaCrux.pdf（PDF 为 LibreOffice 对同一文件的渲染）
+./preview.sh    # -> preview/m*.jpg，检查版式用
 ```
 
-输出到上一级目录：
-
-- `QuotaCrux.pdf`：浏览器直接打印的矢量 PDF，任何电脑上显示一致；
-- `QuotaCrux.pptx`：每页底图是渲染好的图表、截图与背景，所有文字是 PowerPoint 原生文本框，可直接修改；讲稿写在备注里。
-
-字体为 PingFang SC、Avenir Next、Menlo（macOS 自带）；在没有这些字体的电脑上，PPTX 文字会由软件替换字体，展示时以 PDF 为准。`assets/` 中的仓库截图由 `video/` 的回放页面导出，控制台截图直接引用 `frontend/docs/screenshots/`。
+需要 uv、LibreOffice（`soffice`）和 Homebrew fontconfig（`/opt/homebrew/etc/fonts/fonts.conf`，让 LibreOffice 用上本机字体）。字体：中文 PingFang SC，英文与数字 Arial，代码 Menlo；在 Windows 上中文会替换为系统自带黑体。`assets/` 中的仓库截图由 `video/` 的回放页面导出，控制台截图裁自 `frontend/docs/screenshots/`。

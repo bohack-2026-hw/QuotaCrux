@@ -190,7 +190,8 @@ def test_scripted_run_report_profile_and_export(tmp_path):
         {**base, "action": "propose_candidate", "code": task.initial_code, "parent_candidate_id": "c0"},
         {**base, "action": "finish", "finish_reason": "流程已验证"},
     ]}))
-    cpuset = str(min(os.sched_getaffinity(0)))
+    get_affinity = getattr(os, "sched_getaffinity", None)
+    cpuset = str(min(get_affinity(0))) if get_affinity is not None else "0"
     runner = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=script, router=False,
                                measure=config.MeasureConfig(repeats=1, cpuset_cpus=cpuset, function_warmups=3)))
     runner.create()

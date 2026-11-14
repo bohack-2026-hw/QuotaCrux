@@ -1,0 +1,85 @@
+{
+  "affinity_scope": {
+    "observed": [
+      2
+    ],
+    "physical_apple_core_mapping": null,
+    "physical_core_exclusive": false,
+    "requested": "Docker VM vCPU 2"
+  },
+  "captured_at": "2026-11-14T15:54:24.621806+08:00",
+  "docker": {
+    "client_version": "29.8.2",
+    "driver": "overlay2",
+    "name": "orbstack",
+    "native_architecture": true,
+    "server_architecture": "aarch64",
+    "server_cpus": 16,
+    "server_memory_bytes": 16818020352,
+    "server_os": "linux",
+    "server_version": "29.8.2"
+  },
+  "formal_model": {
+    "credentials_recorded": false,
+    "model": "Qwen3.8-27B",
+    "model_requests": 0,
+    "preferred_provider": "hosted",
+    "price_snapshot": null,
+    "status": "awaiting issue #2 freeze"
+  },
+  "host": {
+    "chip": "Apple M4 Max",
+    "efficiency_cores": 4,
+    "filesystem_available_bytes": 218164752384,
+    "logical_cpus": 16,
+    "machine": "arm64",
+    "macos_build": "25G83",
+    "macos_version": "26.6.2",
+    "memory_bytes": 137438953472,
+    "performance_cores": 12,
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "local_qwen": {
+    "api_fee": 0,
+    "architecture": "qwen3_5",
+    "capabilities": [
+      "completion",
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "context_length": "262144",
+    "embedding_length": "5120",
+    "formal_batch_compatibility": "separate model/quantization; do not combine with hosted Qwen3.8-27B",
+    "loaded_during_capture": false,
+    "machine_running_cost": "not measured",
+    "model": "qwen3.8:27b-mlx",
+    "model_id": "5642e97495e1",
+    "model_requests": 0,
+    "parameters": "27.8B",
+    "purpose": "feasibility record only; not the hosted formal batch",
+    "quantization": "nvfp4",
+    "requires": "0.32.12",
+    "runtime": "ollama version is 0.33.3",
+    "stored_size": "18 GB"
+  },
+  "orbstack": {
+    "config": {
+      "cpu": 16,
+      "k8s.enable": false,
+      "machine.docker.cpu": 0,
+      "machine.docker.isolated": false,
+      "machine.docker.memory_mib": 0,
+      "memory_mib": 16384,
+      "rosetta": true
+    },
+    "version": "Version: 2.2.5 (2020500)\nCommit: bf842321f95fc3ca7cda3227bf0cd41cb188c471 (v2.2.5)"
+  },
+  "source_branch": "bench/algotune-formal-v1",
+  "source_git_head": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "toolchain": {
+    "python": "3.12.11",
+    "uv": "uv 0.8.19 (Homebrew 2025-09-19)",
+    "uv_lock_sha256": "b91e771f5eb0ce21af362e14dc5b7f241c22198d53758e9349b2d9bbcf9ddd35"
+  }
+}

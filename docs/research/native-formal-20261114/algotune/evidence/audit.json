@@ -1,0 +1,141 @@
+{
+  "all_image_architectures": [
+    "arm64"
+  ],
+  "api_cost": 0,
+  "attempts_retained": [
+    {
+      "accepted": false,
+      "file": "evidence/calibration-convolve_1d-attempt1-failed.json",
+      "reason": "relative VAR_DIR was rejected before the affinity probe"
+    },
+    {
+      "accepted": false,
+      "file": "evidence/calibration-pagerank-attempt1-insufficient-control.json",
+      "reason": "3 ms positive-control timing intervals overlapped"
+    }
+  ],
+  "blocking_dependencies": [
+    "issue #2 must freeze the timing-harness treatment and publish the experiment SHA",
+    "accepted calibration must be rerun in a quiet measurement window",
+    "issue #2 must publish prompts, pricing and the full run plan"
+  ],
+  "calibrations": {
+    "convolve_1d": {
+      "all_expected_outcomes_observed": true,
+      "all_results_passed": true,
+      "control_delay_ms": 3.0,
+      "controls": [
+        {
+          "expected_outcome_observed": true,
+          "kind": "positive_control",
+          "speedup": 11.892033206537423
+        },
+        {
+          "expected_outcome_observed": true,
+          "kind": "negative_control",
+          "speedup": 0.0838395316321821
+        }
+      ],
+      "default": {
+        "median_first_vs_rest": 0.029444898242951156,
+        "median_range_over_median": 0.07392607362674218,
+        "passed": 3,
+        "self_comparisons": 3,
+        "speedups": [
+          1.0202371066765998,
+          0.9993276899155773,
+          1.0028657449095288
+        ],
+        "strict_false_improvements": 0
+      },
+      "duration_s": 51.231,
+      "file": "evidence/calibration-convolve_1d.json",
+      "pinned": {
+        "median_first_vs_rest": -0.0037311833903215796,
+        "median_range_over_median": 0.08855186660422015,
+        "passed": 3,
+        "self_comparisons": 3,
+        "speedups": [
+          1.050146600360332,
+          1.0032595293216613,
+          1.1160904844264727
+        ],
+        "strict_false_improvements": 0
+      },
+      "status": "completed",
+      "task_id": "algotune-convolve_1d-formal-20261114-82a6fac682"
+    },
+    "pagerank": {
+      "all_expected_outcomes_observed": true,
+      "all_results_passed": true,
+      "control_delay_ms": 20.0,
+      "controls": [
+        {
+          "expected_outcome_observed": true,
+          "kind": "positive_control",
+          "speedup": 5.638760974608864
+        },
+        {
+          "expected_outcome_observed": true,
+          "kind": "negative_control",
+          "speedup": 0.16825612104765714
+        }
+      ],
+      "default": {
+        "median_first_vs_rest": -0.021167867310022737,
+        "median_range_over_median": 0.8578630398033864,
+        "passed": 3,
+        "self_comparisons": 3,
+        "speedups": [
+          0.9897864312758754,
+          1.0264772589162892,
+          1.0126354268054176
+        ],
+        "strict_false_improvements": 0
+      },
+      "duration_s": 40.711,
+      "file": "evidence/calibration-pagerank.json",
+      "pinned": {
+        "median_first_vs_rest": -0.00601825067730577,
+        "median_range_over_median": 0.8652020795339517,
+        "passed": 3,
+        "self_comparisons": 3,
+        "speedups": [
+          1.0305939436797185,
+          0.9332619653043025,
+          1.0129294118404086
+        ],
+        "strict_false_improvements": 0
+      },
+      "status": "completed",
+      "task_id": "algotune-pagerank-formal-20261114-b2ad8ba1c8"
+    }
+  },
+  "final_inputs_executed": false,
+  "final_inputs_generated_and_hashed": true,
+  "formal_progress": {
+    "completed": 0,
+    "total": 15
+  },
+  "model_requests": 0,
+  "native_architecture": true,
+  "recommendation": {
+    "accepted_for_freeze": false,
+    "docker_vm_cpuset_cpu": "2",
+    "formal_episode_concurrency": 1,
+    "function_warmups": 3,
+    "physical_core_exclusive": false,
+    "reason": "AlgoTune function timing is noise-sensitive; keep measurement windows serial",
+    "recalibration_required": true,
+    "timing_repeats": 5
+  },
+  "schema": "algotune-mac-preflight-v1",
+  "selection_rule": "correct and max(candidate_samples) < min(baseline_samples)",
+  "source_git_head": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "status": "environment-ready-calibration-provisional",
+  "task_manifest_hashes": {
+    "convolve_1d": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",
+    "pagerank": "61ab8297dfa51ccce5c79a77bc7dafe074bb6fa41936f7065b4ccbbe024994f4"
+  }
+}

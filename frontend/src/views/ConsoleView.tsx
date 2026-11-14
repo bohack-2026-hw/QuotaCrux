@@ -82,6 +82,7 @@ export function ConsoleView({ selected, onSelect, onOpenRun }: { selected: strin
 const FAIRNESS: Record<string, string> = {
   tasks_with_mixed_configurations: '配置不一致的题', plan_matches: '计划一致', complete_variant_matrix: '变体矩阵完整',
   all_planned_runs_recorded: '全部已记录', all_planned_runs_completed: '全部完成', all_final_evaluations_completed: 'final 全部完成',
+  all_configurations_recorded: '配置全部记录',
 }
 
 /** Totals over the runs that actually ran; a slot that never ran is not an unknown amount. */

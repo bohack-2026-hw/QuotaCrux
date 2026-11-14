@@ -21,9 +21,22 @@ const put = <T>(path: string, body: unknown) => call<T>(path, { method: 'PUT', b
 export interface TaskSummary {
   task_id: string
   split: string
+  family: string
+  family_title: string
+  workload: string
   notes: string
   target: { min_speedup: number }
-  dev_params: { rows: number; keys: number; order: string; skew: number }
+  dev_params: Json & { rows: number; order: string }
+}
+
+export interface Route {
+  route: 'small' | 'large'
+  reason: 'familiar' | 'new_family' | 'new_conditions' | 'router_off'
+  family: string
+  family_records: number
+  similar_successes: number
+  min_matches: number
+  model: string
 }
 
 export interface RunRow {
@@ -104,7 +117,8 @@ export interface Research {
 export interface Report {
   run_id: string
   research: Research
-  task: { task_id: string; split: string; target_min_speedup: number; dev_params: Json }
+  task: { task_id: string; split: string; family?: string; workload?: string; target_min_speedup: number; dev_params: Json }
+  route?: Route | null
   mode: string
   snapshot_id: string
   label: string | null
@@ -119,6 +133,7 @@ export interface Report {
     dev_validation_passed: boolean
     dev_improved: boolean
     best_is_initial: boolean
+    best_from_reuse?: boolean
     final_evaluated: boolean
     final_correct: boolean | null
     final_speedup: number | null
@@ -146,7 +161,7 @@ export interface Report {
 export interface Experience {
   experience_id: string
   outcome: 'success' | 'no_gain' | 'failure'
-  conditions: { task_id: string; split: string; buckets: Record<string, string>; profile: Record<string, number> }
+  conditions: { family: string; task_id: string; split: string; buckets: Record<string, string>; profile: Record<string, number> }
   action: { parent_candidate_id: string | null; code_features: { calls?: string[]; imports?: string[] }; diff_vs_initial: string; model_stated_purpose: string | null }
   hypothesis: string | null
   result: { status: string; speedup: number | null; improved: boolean | null; failure_category: string | null; failure_kinds: string[] | null; failure_example: unknown }
@@ -190,6 +205,9 @@ export interface SideSummary {
   runs_without_model_request?: number
   goal_met_from_reuse?: number
   model_requests_total?: number
+  large_model_requests_total?: number
+  runs_using_large_model?: number
+  routes?: Record<string, number>
 }
 
 export interface TaskRun { run_id: string; goal_met: boolean; final_speedup: number | null; stop_reason: string; model_requests: number; output_tokens: number | null; cost_usd: number | null; wall_clock_s: number | null; experiences_read: number; best_from_reuse?: boolean; programs_reused?: number; agent_loop_s?: number | null }
@@ -211,6 +229,33 @@ export interface Comparison {
   sides: Record<string, SideSummary>
   per_task: Record<string, Record<string, { runs: TaskRun[]; goal_met: number; final_speedup_median: number | null }>>
   learning_cost: { in_lineage: boolean; cost_usd?: number | null; output_tokens?: number; input_tokens?: number; wall_clock_s?: number; learn_runs?: string[]; note?: string }
+  notes: string[]
+}
+
+export interface StreamRun {
+  run_id: string; repeat: number; snapshot_id: string; route: string; goal_met: boolean; final_speedup: number | null
+  best_from_reuse: boolean; model_requests: number; large_model_requests: number; upgrades: number; cost_usd: number | null
+  output_tokens: number | null; input_tokens: number | null; agent_loop_s: number | null; wall_clock_s: number | null
+  published_snapshot_id: string | null; experiences_published: number; stop_reason: string
+}
+
+export interface StreamPosition {
+  position: number; task_id: string; family: string; workload: string; first_of_family: boolean; notes: string
+  arms: { memory: StreamRun[]; fresh: StreamRun[] }
+}
+
+export interface Stream {
+  comparison_id: string; kind: 'stream'; status: string; label: string | null; tasks: string[]; start_snapshot: string
+  repeats: number; router: boolean; scripted_model: boolean; planned_runs: number; finished_runs: number
+  errors: { seq: number; task_id: string; arm: string; error: string }[]
+  fair: boolean; config_fingerprints: string[]
+  sides: { memory: SideSummary; fresh: SideSummary }
+  first_of_family: { memory: SideSummary; fresh: SideSummary }
+  repeats_of_family: { memory: SideSummary; fresh: SideSummary }
+  by_family: Record<string, { memory: SideSummary; fresh: SideSummary }>
+  positions: StreamPosition[]
+  series: Record<'memory' | 'fresh', Record<string, { cost_usd: number[]; agent_loop_s: number[]; large_model_requests: number[] }>>
+  growth: { repeat: number; start: string; end: string; published_versions: number; experiences_start: number; experiences_end: number }[]
   notes: string[]
 }
 
@@ -241,8 +286,10 @@ export const api = {
   diff: (a: string, b: string) => call<{ added: string[]; removed: string[]; common: number }>(`/snapshots/${a}/diff/${b}`),
   activate: (snapshot_id: string, reason: string) => put<{ from: string; to: string }>('/snapshots/active', { snapshot_id, reason }),
   experience: (id: string) => call<Experience>(`/experiences/${id}`),
-  comparisons: () => call<{ comparison_id: string; status: string; label: string | null; tasks: string[]; snapshot_a: string; snapshot_b: string; repeats: number; created_at: string }[]>('/comparisons'),
+  comparisons: () => call<{ comparison_id: string; kind: 'snapshots' | 'stream'; status: string; label: string | null; tasks: string[]; snapshot_a: string; snapshot_b: string; repeats: number; created_at: string }[]>('/comparisons'),
   comparison: (id: string) => call<Comparison>(`/comparisons/${id}`),
+  stream: (id: string) => call<Stream>(`/comparisons/${id}`),
+  startStream: (body: { task_ids: string[]; start_snapshot: string; repeats: number; label?: string }) => post<{ comparison_id: string }>('/streams', body),
   startComparison: (body: { task_ids: string[]; snapshot_a: string; snapshot_b: string; repeats: number; label?: string }) => post<{ comparison_id: string }>('/comparisons', body),
   stopComparison: (id: string) => post(`/comparisons/${id}/stop`),
   note: (id: string) => call<{ lines: string[]; fair: boolean; scripted_model: boolean }>(`/comparisons/${id}/note`),

@@ -1,27 +1,38 @@
 import { useState } from 'react'
 import { api } from '../api'
-import type { Comparison, SideSummary } from '../api'
+import type { Comparison, SideSummary, Stream } from '../api'
 import { BehaviorPair } from '../components/BehaviorPair'
 import { PairedDots } from '../components/charts'
 import { Chip, Empty, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
 import { STOP, fmt } from '../labels'
+import { StreamDetail } from './StreamDetail'
 
 /* `selected` comes from the URL (#cmp/<id>) so a comparison can be linked directly; otherwise the newest is shown. */
 export function CompareView({ selected, onSelect, onOpenRun }: { selected: string | null; onSelect: (id: string) => void; onOpenRun: (id: string) => void }) {
   const list = usePoll(api.comparisons, [], 4000)
   const snaps = usePoll(api.snapshots, [], 5000)
   const current = selected ?? list.data?.[0]?.comparison_id ?? null
-  const live = list.data?.find((c) => c.comparison_id === current)?.status === 'running'
-  const cmp = usePoll(() => (current ? api.comparison(current) : Promise.resolve(null)), [current], 4000, live)
+  const item = list.data?.find((c) => c.comparison_id === current)
+  const live = item?.status === 'running'
+  const isStream = item?.kind === 'stream' || (current ?? '').startsWith('str-')
+  const cmp = usePoll(() => (current && !isStream ? api.comparison(current) : Promise.resolve(null)), [current, isStream], 4000, live)
+  const stream = usePoll(() => (current && isStream ? api.stream(current) : Promise.resolve(null)), [current, isStream], 5000, live)
 
   const latest = snaps.data?.active_snapshot_id ?? 'v0'
-  const [split, setSplit] = useState<'B' | 'C' | 'D'>('B')
+  const [split, setSplit] = useState<'B' | 'C' | 'D' | 'S'>('B')
   const [repeats, setRepeats] = useState(3)
   const [err, setErr] = useState<string | null>(null)
   const start = async () => {
     setErr(null)
     try {
+      if (split === 'S') {
+        const tasks = Array.from({ length: 12 }, (_, i) => `S-${String(i + 1).padStart(2, '0')}`)
+        const r = await api.startStream({ task_ids: tasks, start_snapshot: latest, repeats, label: 'S stream dashboard' })
+        onSelect(r.comparison_id)
+        list.refresh()
+        return
+      }
       const tasks = [1, 2, 3, 4, 5, 6].map((i) => `${split}-0${i}`)
       const r = await api.startComparison({ task_ids: tasks, snapshot_a: 'v0', snapshot_b: latest, repeats, label: `${split} dashboard` })
       onSelect(r.comparison_id)
@@ -40,12 +51,15 @@ export function CompareView({ selected, onSelect, onOpenRun }: { selected: strin
               <button className={split === 'B' ? 'on' : ''} onClick={() => setSplit('B')}>B · 开发对照</button>
               <button className={split === 'C' ? 'on' : ''} onClick={() => setSplit('C')}>C · 第一版留出</button>
               <button className={split === 'D' ? 'on' : ''} onClick={() => setSplit('D')}>D · 封存留出</button>
+              <button className={split === 'S' ? 'on' : ''} onClick={() => setSplit('S')}>S · 任务流</button>
             </div>
           </div>
           <label className="field"><span>重复次数（每任务每版本）</span>
             <input type="number" min={1} max={5} value={repeats} onChange={(e) => setRepeats(Number(e.target.value))} />
           </label>
-          <p className="small">v0（无经验） 对比 <b>{latest}</b>，共 {6 * 2 * repeats} 次运行</p>
+          <p className="small">{split === 'S'
+            ? <>从 <b>{latest}</b> 出发：12 个任务 × 带记忆 / 不带记忆 × {repeats} 次，共 {24 * repeats} 次运行</>
+            : <>v0（无经验） 对比 <b>{latest}</b>，共 {6 * 2 * repeats} 次运行</>}</p>
           <button className="btn primary block" onClick={start}>开始对照</button>
           {err && <div className="error small" style={{ marginTop: 12 }}>{err}</div>}
         </div>
@@ -55,7 +69,7 @@ export function CompareView({ selected, onSelect, onOpenRun }: { selected: strin
             {(list.data ?? []).map((c) => (
               <button key={c.comparison_id} className={c.comparison_id === current ? 'on' : ''} onClick={() => onSelect(c.comparison_id)}>
                 <div className="spread"><b>{c.label ?? c.tasks.join(' ')}</b><span>{c.status === 'running' ? '运行中' : c.status === 'completed' ? '完成' : c.status}</span></div>
-                <div className="rid">{c.snapshot_a} vs {c.snapshot_b} · ×{c.repeats} · {c.comparison_id}</div>
+                <div className="rid">{c.kind === 'stream' ? `任务流 · 从 ${c.snapshot_a} · 带记忆 vs 不带` : `${c.snapshot_a} vs ${c.snapshot_b}`} · ×{c.repeats} · {c.comparison_id}</div>
               </button>
             ))}
             {list.data?.length === 0 && <p className="muted small">还没有对照。</p>}
@@ -63,7 +77,9 @@ export function CompareView({ selected, onSelect, onOpenRun }: { selected: strin
         </div>
       </div>
       <div className="stack" style={{ minWidth: 0 }}>
-        {cmp.data ? <ComparisonDetail c={cmp.data} onOpenRun={onOpenRun} /> : <div className="card"><Empty title="选择或发起一次对照" /></div>}
+        {isStream && stream.data ? <StreamDetail c={stream.data as Stream} onOpenRun={onOpenRun} />
+          : !isStream && cmp.data ? <ComparisonDetail c={cmp.data} onOpenRun={onOpenRun} />
+          : <div className="card"><Empty title="选择或发起一次对照" /></div>}
       </div>
     </div>
   )

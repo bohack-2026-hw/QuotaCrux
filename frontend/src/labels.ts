@@ -5,7 +5,21 @@ export type Tone = 'good' | 'bad' | 'warn' | 'neutral' | 'accent'
 export const ACTION: Record<string, string> = {
   analyze: '分析', get_evidence: '取证', propose_candidate: '提出候选', run_validation: '验证',
   finish: '结束', upgrade_model: '升级模型', model_request: '模型请求', invalid: '无效回复',
-  reuse_candidate: '复用已验证程序', set_target: '提高本次目标',
+  reuse_candidate: '复用已验证程序', set_target: '提高本次目标', route_model: '分流',
+}
+
+export const MODE: Record<string, string> = { eval: '评测', learn: '学习', online: '在线' }
+
+export const FAMILY: Record<string, string> = { groupagg: '分组聚合', logstats: '访问日志统计', intervals: '区间合并' }
+
+/** How a run got its model: re-use delivered before any request, or the router's reason for the starting model. */
+export const ROUTE: Record<string, [string, Tone]> = {
+  reuse: ['复用直接交付', 'good'],
+  familiar: ['相近经验 → 本地小模型', 'neutral'],
+  new_family: ['全新任务族 → 大模型', 'accent'],
+  new_conditions: ['新条件 → 大模型', 'warn'],
+  router_off: ['分流关闭 → 小模型', 'neutral'],
+  no_model_request: ['未请求模型', 'neutral'],
 }
 
 const STATUS: Record<string, [string, Tone]> = {
@@ -34,10 +48,13 @@ export const OUTCOME: Record<string, [string, Tone, string]> = {
 
 export const BUCKET: Record<string, string> = {
   rows: '行数', distinct_keys: 'key 数', rows_per_key: '每 key 行数', order: '顺序', skew: '偏斜',
+  groups: '分组数', rows_per_group: '每组行数', errors: '错误率',
+  intervals_per_merged: '每段合并数', magnitude: '数值大小', sign: '符号',
 }
 
 export const ORDER: Record<string, string> = {
   random: '随机', unsorted: '乱序', sorted: '有序', nearly_sorted: '几乎有序', clustered: '成簇', none: '无',
+  time_sorted: '按时间有序', has_negative: '含负数', non_negative: '非负', empty: '空',
 }
 
 export const BUCKET_VALUE: Record<string, string> = { low: '低', high: '高', none: '无', ...ORDER }
@@ -49,6 +66,7 @@ const DECISION: [RegExp, string][] = [
   [/^upgrade rule met but no model requests left$/, '满足升级条件，但模型请求已用完'],
   [/^validate re-used program$/, '复验'], [/^validate next re-used program$/, '复验下一个'], [/^re-use finished$/, '复用复验结束'],
   [/^continue with the model to beat the best known program$/, '交给模型，尝试超越已知最佳'],
+  [/^start model requests on the small model$/, '先用本地小模型'], [/^start model requests on the large model$/, '直接用大模型'],
   [/^stop: (\w+)$/, '停止：$1'], [/^stop$/, '停止'],
 ]
 export function decision(d: string): string {
@@ -58,7 +76,9 @@ export function decision(d: string): string {
   return d
 }
 
-export const SPLIT: Record<string, string> = { A: 'A · 学习', B: 'B · 开发对照', C: 'C · 最终留出', D: 'D · 封存留出', smoke: '冒烟' }
+export const SPLIT: Record<string, string> = {
+  A: 'A · 学习', B: 'B · 开发对照', C: 'C · 最终留出', D: 'D · 封存留出', S: 'S · 封存任务流', T: 'T · 新任务族调优', smoke: '冒烟',
+}
 
 export const fmt = {
   x: (v: number | null | undefined) => (v == null ? '—' : `${v.toFixed(2)}×`),

@@ -1,0 +1,146 @@
+{
+  "format": "routeevo-mac-exploratory-export-v1",
+  "execution_code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "formal_results_eligible": false,
+  "batches": [
+    {
+      "batch": "openai",
+      "source_directory_name": "exploratory-short-20261114",
+      "comparison_id": "research-20261114T085753-86f4",
+      "run_ids": [
+        "run-20261114T085753-a6bb",
+        "run-20261114T090029-3c04",
+        "run-20261114T090218-2120",
+        "run-20261114T090451-aeec"
+      ],
+      "task_ids": [
+        "algotune-convolve_1d-exploratory-short-20261114",
+        "algotune-pagerank-exploratory-short-20261114"
+      ],
+      "included": [
+        "comparison",
+        "all evidence files including the captured CLI log",
+        "all run reports",
+        "all model call request/response JSON",
+        "all candidate programs",
+        "portable JSON snapshot of every SQLite table",
+        "task manifests, public task metadata and dataset hashes"
+      ],
+      "excluded": {
+        "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+        "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+        "locks": "empty runtime coordination files are not result evidence"
+      }
+    },
+    {
+      "batch": "remote-preload",
+      "source_directory_name": "remote-lmstudio-short-20261114",
+      "comparison_id": "research-20261114T090917-d7d3",
+      "run_ids": [
+        "run-20261114T090917-c2a9",
+        "run-20261114T090921-d4b4",
+        "run-20261114T090923-482f",
+        "run-20261114T090926-632f"
+      ],
+      "task_ids": [
+        "algotune-convolve_1d-remote-lmstudio-short-20261114",
+        "algotune-pagerank-remote-lmstudio-short-20261114"
+      ],
+      "included": [
+        "comparison",
+        "all evidence files including the captured CLI log",
+        "all run reports",
+        "all model call request/response JSON",
+        "all candidate programs",
+        "portable JSON snapshot of every SQLite table",
+        "task manifests, public task metadata and dataset hashes"
+      ],
+      "excluded": {
+        "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+        "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+        "locks": "empty runtime coordination files are not result evidence"
+      }
+    },
+    {
+      "batch": "remote-loaded",
+      "source_directory_name": "remote-lmstudio-retry-20261114",
+      "comparison_id": "research-20261114T091202-fa2b",
+      "run_ids": [
+        "run-20261114T091202-9870",
+        "run-20261114T091205-4bfc"
+      ],
+      "task_ids": [
+        "algotune-convolve_1d-remote-lmstudio-retry-20261114",
+        "algotune-pagerank-remote-lmstudio-retry-20261114"
+      ],
+      "included": [
+        "comparison",
+        "all evidence files including the captured CLI log",
+        "all run reports",
+        "all model call request/response JSON",
+        "all candidate programs",
+        "portable JSON snapshot of every SQLite table",
+        "task manifests, public task metadata and dataset hashes"
+      ],
+      "excluded": {
+        "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+        "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+        "locks": "empty runtime coordination files are not result evidence"
+      }
+    },
+    {
+      "batch": "remote-bounded",
+      "source_directory_name": "remote-lmstudio-finaltry-20261114",
+      "comparison_id": "research-20261114T091639-a966",
+      "run_ids": [
+        "run-20261114T091639-dd63"
+      ],
+      "task_ids": [
+        "algotune-convolve_1d-remote-lmstudio-finaltry-20261114"
+      ],
+      "included": [
+        "comparison",
+        "all evidence files including the captured CLI log",
+        "all run reports",
+        "all model call request/response JSON",
+        "all candidate programs",
+        "portable JSON snapshot of every SQLite table",
+        "task manifests, public task metadata and dataset hashes"
+      ],
+      "excluded": {
+        "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+        "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+        "locks": "empty runtime coordination files are not result evidence"
+      }
+    },
+    {
+      "batch": "remote-direct",
+      "source_directory_name": "remote-lmstudio-direct-20261114",
+      "comparison_id": "research-20261114T091800-0fe2",
+      "run_ids": [
+        "run-20261114T091800-a13b"
+      ],
+      "task_ids": [
+        "algotune-convolve_1d-remote-lmstudio-direct-20261114"
+      ],
+      "included": [
+        "comparison",
+        "all evidence files including the captured CLI log",
+        "all run reports",
+        "all model call request/response JSON",
+        "all candidate programs",
+        "portable JSON snapshot of every SQLite table",
+        "task manifests, public task metadata and dataset hashes"
+      ],
+      "excluded": {
+        "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+        "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+        "locks": "empty runtime coordination files are not result evidence"
+      }
+    }
+  ],
+  "diagnostics": [
+    "remote/diagnostics/routeevo-lms-full-response.json",
+    "remote/diagnostics/routeevo-lms-nothink-response.json"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "forbidden_scan_files": 191,
+  "json_files": 112,
+  "checksum_files": 189,
+  "privacy_files": 188,
+  "export": {
+    "format": "routeevo-mac-exploratory-export-v1",
+    "batches": 5
+  },
+  "program_integrity": {
+    "candidates": 24,
+    "best_files": 12,
+    "task_programs": 16,
+    "syntax_checked": 53
+  },
+  "openai": {
+    "runs": 4,
+    "calls": 12,
+    "evaluations": 16,
+    "best_dev_speedups": [
+      {
+        "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+        "mode": "feedback",
+        "speedup": 1.2985780320905493
+      },
+      {
+        "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+        "mode": "independent",
+        "speedup": 2.669287533650096
+      },
+      {
+        "task_id": "algotune-pagerank-exploratory-short-20261114",
+        "mode": "feedback",
+        "speedup": 25.041934744449737
+      },
+      {
+        "task_id": "algotune-pagerank-exploratory-short-20261114",
+        "mode": "independent",
+        "speedup": 23.051414599425694
+      }
+    ]
+  },
+  "remote": {
+    "proxy_503_calls": 19,
+    "direct_incomplete_calls": 1,
+    "assisted_speedup": 1.225486477902775
+  },
+  "formal_results_eligible": false,
+  "final_evaluations": 0
+}

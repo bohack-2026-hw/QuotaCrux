@@ -1,0 +1,59 @@
+{
+  "evaluation_id": "5a0af294e328",
+  "status": "passed",
+  "executed": true,
+  "format_ok": true,
+  "correct": true,
+  "speedup": 1.225486477902775,
+  "improved": true,
+  "goal_met": true,
+  "candidate_median_s": 0.0007729509998171125,
+  "baseline_median_s": 0.0009472409983573016,
+  "case_count": 2,
+  "passed_cases": 2,
+  "timing_spread": {
+    "candidate_min_max_s": [
+      0.0007503680008085212,
+      0.0008568250013922807
+    ],
+    "baseline_min_max_s": [
+      0.0008811160005279817,
+      0.0010962390006170608
+    ]
+  },
+  "detail": {
+    "case_count": 2,
+    "passed_cases": 2,
+    "timing": {
+      "candidate_s": [
+        0.0008568250013922807,
+        0.0007503680008085212,
+        0.0007729509998171125,
+        0.00077174300167826,
+        0.000822367999717244
+      ],
+      "baseline_s": [
+        0.0010962390006170608,
+        0.0009245739984180545,
+        0.0009766990006028209,
+        0.0008811160005279817,
+        0.0009472409983573016
+      ],
+      "candidate_min_max_s": [
+        0.0007503680008085212,
+        0.0008568250013922807
+      ],
+      "baseline_min_max_s": [
+        0.0008811160005279817,
+        0.0010962390006170608
+      ],
+      "warmup_count": 1,
+      "gc_policy": "automatic_gc_disabled_during_solve",
+      "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports, serialization and automatic cyclic GC excluded"
+    },
+    "container_ready_latency_s": 0.5478813329991681,
+    "duration_s": 2.626,
+    "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+    "candidate_sha256": "0a4d055e781259c494f33fd91ae9bd663b125a3cab8f489dd0847e28f784d099"
+  }
+}

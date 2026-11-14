@@ -1,0 +1,56 @@
+{
+  "problem": "pagerank",
+  "cases": 2,
+  "memory_key": "f743c0884f",
+  "settings": {
+    "candidate_image": {
+      "image_tag": "routeevo-scientific:9df8e32a4952",
+      "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
+    },
+    "judge_image": {
+      "image_tag": "routeevo-algotune-pagerank:ee2973687637",
+      "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f"
+    },
+    "size": 1000,
+    "seed": 1729,
+    "allowed_imports": [
+      "numpy",
+      "scipy",
+      "networkx"
+    ],
+    "candidate_interface": "solve"
+  },
+  "input_profile": {
+    "source": "frozen_dev_inputs",
+    "generator_scale": 1000,
+    "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+    "cases": [
+      {
+        "id": "0",
+        "nodes": 1000,
+        "directed_edges": 7950,
+        "node_id_type": "int",
+        "dangling_nodes": 1,
+        "out_degree": {
+          "min": 0,
+          "max": 18,
+          "mean": 7.95
+        },
+        "output_scores": 1000
+      },
+      {
+        "id": "1",
+        "nodes": 1000,
+        "directed_edges": 7878,
+        "node_id_type": "int",
+        "dangling_nodes": 0,
+        "out_degree": {
+          "min": 1,
+          "max": 18,
+          "mean": 7.878
+        },
+        "output_scores": 1000
+      }
+    ]
+  }
+}

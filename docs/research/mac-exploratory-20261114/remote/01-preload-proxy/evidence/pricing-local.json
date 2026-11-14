@@ -1,0 +1,10 @@
+{
+  "model": "qwen3.8-27b-uncensored-mlx",
+  "currency": "USD",
+  "unit": "per_1m_tokens",
+  "input_per_1m": 0,
+  "output_per_1m": 0,
+  "source": "local://lmstudio/thunderbolt-bridge",
+  "retrieved_at": "2026-11-14T09:09:00+00:00",
+  "cache_policy": "Local inference; API token price recorded as zero. Electricity is excluded."
+}

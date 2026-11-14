@@ -1,0 +1,950 @@
+{
+  "run_id": "run-20261114T090451-aeec",
+  "task": {
+    "task_id": "algotune-pagerank-exploratory-short-20261114",
+    "split": "exploratory-short-20261114",
+    "target_min_speedup": 1.1,
+    "objective": {
+      "metric": "speedup",
+      "direction": "maximize",
+      "min_speedup": 1.1
+    },
+    "workload": "pagerank · generator scale=1000 · 2 dev cases",
+    "family": "algotune",
+    "presentation": {
+      "title": "AlgoTune · pagerank",
+      "workload": "pagerank · generator scale=1000 · 2 dev cases",
+      "baseline": "上游 solve 方法；独立函数计时",
+      "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+    },
+    "dev_params": {
+      "cases": 2
+    },
+    "final_params": {
+      "cases": 1
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf"
+    },
+    "selection": {
+      "dev_cases": 2,
+      "final_cases": 1
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "exploratory-short-20261114-openai-large #4 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "recorded_status": "completed",
+  "research_mode": "feedback",
+  "dev_only": true,
+  "stop_reason": "budget_exhausted",
+  "stop_detail": "candidates: used 3/3",
+  "config_fingerprint": "fb027fa2264f9a6e",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": true,
+    "best_from_reuse": false,
+    "best_is_initial": false,
+    "final_evaluated": false,
+    "final_status": "disabled",
+    "final_error": null,
+    "final_correct": null,
+    "final_speedup": null,
+    "final_objective": null,
+    "goal_met": false,
+    "valid_artifact": null,
+    "summary": "开发集运行，未启用最终测试；最佳候选 c1 仅有开发验证结果"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "f743c0884f"
+      },
+      "family": "algotune",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c1",
+    "origin": "model",
+    "parent_candidate_id": "c0",
+    "code_path": "<VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c1.py",
+    "code_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+    "model_call_id": "m1",
+    "dev_evaluations": [
+      {
+        "evaluation_id": "d3ccdb615b55",
+        "status": "passed",
+        "correct": 1,
+        "speedup": 25.041934744449737,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": null,
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0",
+  "run_target_speedup": 1.1,
+  "route": null,
+  "final_evaluation": null,
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "<VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c0.py",
+      "code_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "37440a3caa6b",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c1.py",
+      "code_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+      "model_call_id": "m1",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "d3ccdb615b55",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 25.041934744449737,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c1",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c2.py",
+      "code_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "0194187abf2a",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 24.91958561833868,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c2",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c3.py",
+      "code_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
+      "model_call_id": "m3",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "bd3bd037f5d1",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 23.649573790758815,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 3,
+    "routing_requests": 0,
+    "generation_requests": 3,
+    "candidates_proposed": 3,
+    "candidates_passed": 3,
+    "candidates_improved": 3,
+    "candidates_no_gain": 0,
+    "candidates_failed": 0,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "large_model_requests": 3,
+    "small_model_requests": 0,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 3,
+      "ok": 3,
+      "errors": {},
+      "latency_s": 141.784,
+      "input_tokens": 11295,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 0,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 7036,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": 4904,
+      "reasoning_tokens_unknown_calls": 0,
+      "cost_usd": 0.098593,
+      "cost_status": "estimated",
+      "cost_unknown_calls": 0,
+      "price_versions": [
+        "openai/gpt-6.1-sol/standard/2026-11-13"
+      ]
+    },
+    "by_model": {
+      "large:openai_responses:gpt-6.1-sol": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 141.784,
+        "input_tokens": 11295,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 7036,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 4904,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.098593,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 0,
+        "ok": 0,
+        "errors": {},
+        "latency_s": 0,
+        "input_tokens": 0,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.0,
+        "cost_status": "no_model_calls",
+        "cost_unknown_calls": 0,
+        "price_versions": []
+      },
+      "generation": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 141.784,
+        "input_tokens": 11295,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 7036,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 4904,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.098593,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 149.326,
+    "agent_loop_s": 149.326,
+    "agent_loop_elapsed_s": 149.326,
+    "agent_loop_limit_s": 180.0,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": null,
+    "model_wait_s": 141.784,
+    "dev_evaluation_s": 7.506,
+    "evidence_tool_s": 0,
+    "container_startup_s": 2.075
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 2,
+        "correct": true,
+        "evaluation_id": "37440a3caa6b",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": null,
+        "improved": null,
+        "passed_cases": 2,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "37440a3caa6b",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:04:51.740+00:00",
+      "ended_at": "2026-11-14T09:04:52.703+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "绕过 NetworkX 图构建，直接用稀疏矩阵实现与参考相同停止条件的 PageRank。",
+      "expected_result": "在保持重复边、悬挂节点和输出类型语义的同时，显著降低建图及迭代开销。",
+      "verification": "使用开发数据核验数值结果，并比较候选与基线的全部计时样本区间。",
+      "hypothesis": "开发图较稀疏，直接构造 CSR 并执行稀疏矩阵向量乘法，能够消除 NetworkX 对象分配的主要开销。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090451-aeec/m1",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:04:52.704+00:00",
+      "ended_at": "2026-11-14T09:05:24.525+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.011147867999170558,
+        "best_candidate_id": "c1",
+        "best_replaced": true,
+        "candidate_median_s": 0.00044516799971461296,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "d3ccdb615b55",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 34.958,
+          "metric": "speedup",
+          "model_requests": 1,
+          "tokens": 4222,
+          "value": 25.041934744449737
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 25.041934744449737,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.00994669800002157,
+            0.011152701999890269
+          ],
+          "candidate_min_max_s": [
+            0.0004134170003453619,
+            0.00048241799959214404
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "d3ccdb615b55",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:05:26.698+00:00",
+      "ended_at": "2026-11-14T09:05:26.698+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "进一步消除稀疏矩阵对象构造和每轮矩阵乘法包装开销，保留参考算法的去重与停止语义。",
+      "expected_result": "在保持全部数值检查通过的前提下，降低当前约四百微秒的求解时间。",
+      "verification": "在开发数据上验证输出正确性，并比较新候选的时间及其全部样本区间与基线和现有候选的反馈。",
+      "hypothesis": "直接使用 SciPy 的稀疏底层内核，并将阻尼系数预先并入边权，可减少对象分配、整数类型转换及迭代中的数组运算。",
+      "params": {
+        "parent_candidate_id": "c1"
+      },
+      "result": {
+        "parent_candidate_id": "c1"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090451-aeec/m2",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:05:26.699+00:00",
+      "ended_at": "2026-11-14T09:06:10.165+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.009748815999955696,
+        "best_candidate_id": "c1",
+        "best_replaced": false,
+        "candidate_median_s": 0.0003912109996235813,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "0194187abf2a",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 80.614,
+          "metric": "speedup",
+          "model_requests": 2,
+          "tokens": 10194,
+          "value": 25.041934744449737
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 24.91958561833868,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.009697939999568916,
+            0.010323526999854948
+          ],
+          "candidate_min_max_s": [
+            0.0003700440001921379,
+            0.0004339200004324084
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c2",
+      "evaluation_id": "0194187abf2a",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:06:12.354+00:00",
+      "ended_at": "2026-11-14T09:06:12.354+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "尝试用线性时间的稀疏转置替代逐行排序，并采用入边 CSR 内核进一步降低构图和迭代成本。",
+      "expected_result": "在保持重复边去重、悬挂节点处理和参考停止条件的前提下，争取超过现有候选约二十五倍的实测速比。",
+      "verification": "通过开发数据的数值检查验证正确性，并检查全部候选计时样本是否均快于全部基线样本，同时比较反馈中的实际速比。",
+      "hypothesis": "前两次反馈显示主要开销已降至数百微秒；直接转置能在获得按源节点排序的入边时避免逐行排序，而较窄的安全索引类型和直接 CSR 乘法可能进一步减少开销。",
+      "params": {
+        "parent_candidate_id": "c2"
+      },
+      "result": {
+        "parent_candidate_id": "c2"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090451-aeec/m3",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:06:12.355+00:00",
+      "ended_at": "2026-11-14T09:07:18.866+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.010003817000324489,
+        "best_candidate_id": "c1",
+        "best_replaced": false,
+        "candidate_median_s": 0.00042300199947931105,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "bd3bd037f5d1",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 149.324,
+          "metric": "speedup",
+          "model_requests": 3,
+          "tokens": 18331,
+          "value": 25.041934744449737
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 23.649573790758815,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.009870482999758678,
+            0.010638738000125159
+          ],
+          "candidate_min_max_s": [
+            0.0004080029993929202,
+            0.0005300869997881819
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "bd3bd037f5d1",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:07:21.065+00:00",
+      "ended_at": "2026-11-14T09:07:21.065+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "fb027fa2264f9a6e",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "exploratory-short-20261114-openai-large #4 r1",
+    "limits": {
+      "max_candidates": 3,
+      "max_code_bytes": 20000,
+      "max_model_requests": 5,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 100.0,
+      "token_budget": null,
+      "wall_clock_s": 180.0
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "http://system-proxy.invalid/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "qwen3.8:27b-mlx",
+        "provider": "chat_compat",
+        "reasoning_effort": "none",
+        "response_format": "none",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "74d658afa1124a6d3a2c0af44a291d08bea7d6d95b9828ba6bcc0a037647b9df",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": false,
+      "fixed_model": "large",
+      "mode": "feedback",
+      "model_policy": "fixed"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "fixed large model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "llm",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v2"
+    },
+    "sandbox_image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "scripted": [],
+    "task_manifest_sha256": "7116a949399dad3f3d8b7a52d77538bc236caa5ad8f429634fb5b7f4bcfb17f0",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "gc_policy": "automatic_gc_disabled_during_solve",
+    "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "image_tag": "routeevo-scientific:9df8e32a4952",
+    "judge": {
+      "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f",
+      "image_tag": "routeevo-algotune-pagerank:ee2973687637"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "protocol": "isolated-function-timing-v2",
+    "threads": 1
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run algotune-pagerank-exploratory-short-20261114 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode feedback --fixed-model large --dev-only --cpuset-cpus 2 --wall-clock 180.0 --max-requests 5 --max-candidates 3 --request-timeout 100.0",
+    "recheck_best": "uv run routeevo check algotune-pagerank-exploratory-short-20261114 <VAR_DIR>/runs/run-20261114T090451-aeec/candidates/c1.py --dataset final --cpuset-cpus 2",
+    "report": "uv run routeevo report run-20261114T090451-aeec"
+  },
+  "started_at": "2026-11-14T09:04:51.739+00:00",
+  "loop_ended_at": "2026-11-14T09:07:21.065+00:00",
+  "ended_at": "2026-11-14T09:07:21.065+00:00",
+  "research": {
+    "definition": {
+      "question": "在输出完全正确的前提下，能否让这段AlgoTune · pagerank程序在该工作负载上至少快 1.1×？",
+      "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+      "workload": "pagerank · generator scale=1000 · 2 dev cases",
+      "baseline": {
+        "program": "上游 solve 方法；独立函数计时",
+        "dev_median_s": 0.011147867999170558,
+        "final_median_s": null
+      },
+      "scope": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden.",
+      "tools": [
+        {
+          "action": "analyze",
+          "label": "分析：写下推理与计划，不执行"
+        },
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "run_validation",
+          "label": "运行验证：重新评测已有候选"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "budget": {
+        "model_requests": 5,
+        "candidates": 3,
+        "loop_s": 180.0,
+        "request_timeout_s": 100.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "本轮为开发集预实验，未打开最终数据"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 2,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "开发图较稀疏，直接构造 CSR 并执行稀疏矩阵向量乘法，能够消除 NetworkX 对象分配的主要开销。",
+        "purpose": "绕过 NetworkX 图构建，直接用稀疏矩阵实现与参考相同停止条件的 PageRank。",
+        "expected": "在保持重复边、悬挂节点和输出类型语义的同时，显著降低建图及迭代开销。",
+        "verification": "使用开发数据核验数值结果，并比较候选与基线的全部计时样本区间。",
+        "result": {
+          "status": "passed",
+          "speedup": 25.041934744449737,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "d3ccdb615b55"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 4,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "直接使用 SciPy 的稀疏底层内核，并将阻尼系数预先并入边权，可减少对象分配、整数类型转换及迭代中的数组运算。",
+        "purpose": "进一步消除稀疏矩阵对象构造和每轮矩阵乘法包装开销，保留参考算法的去重与停止语义。",
+        "expected": "在保持全部数值检查通过的前提下，降低当前约四百微秒的求解时间。",
+        "verification": "在开发数据上验证输出正确性，并比较新候选的时间及其全部样本区间与基线和现有候选的反馈。",
+        "result": {
+          "status": "passed",
+          "speedup": 24.91958561833868,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "0194187abf2a"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 6,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "前两次反馈显示主要开销已降至数百微秒；直接转置能在获得按源节点排序的入边时避免逐行排序，而较窄的安全索引类型和直接 CSR 乘法可能进一步减少开销。",
+        "purpose": "尝试用线性时间的稀疏转置替代逐行排序，并采用入边 CSR 内核进一步降低构图和迭代成本。",
+        "expected": "在保持重复边去重、悬挂节点处理和参考停止条件的前提下，争取超过现有候选约二十五倍的实测速比。",
+        "verification": "通过开发数据的数值检查验证正确性，并检查全部候选计时样本是否均快于全部基线样本，同时比较反馈中的实际速比。",
+        "result": {
+          "status": "passed",
+          "speedup": 23.649573790758815,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "bd3bd037f5d1"
+      }
+    ],
+    "verdicts": {
+      "supported": 3,
+      "partial": 0,
+      "refuted": 0,
+      "untestable": 0,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 34.958,
+      "metric": "speedup",
+      "model_requests": 1,
+      "tokens": 4222,
+      "value": 25.041934744449737,
+      "usage": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 31.815,
+        "input_tokens": 2671,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 1551,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 956,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.022186,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 80.614,
+      "metric": "speedup",
+      "model_requests": 2,
+      "tokens": 10194,
+      "value": 25.041934744449737,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 75.277,
+        "input_tokens": 6493,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 3701,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 2422,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.05324,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 149.324,
+      "metric": "speedup",
+      "model_requests": 3,
+      "tokens": 18331,
+      "value": 25.041934744449737,
+      "usage": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 141.784,
+        "input_tokens": 11295,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 7036,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 4904,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.098593,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    }
+  ]
+}

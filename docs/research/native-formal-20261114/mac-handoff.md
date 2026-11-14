@@ -1,16 +1,16 @@
 # Mac AlgoTune：v2 计时协议交接
 
-2026-11-14。负责人 SnowballXueQiu，公共协调 #2。**原固定Qwen正式进度仍为0/15；等待新执行源码上的镜像、任务manifest和安静窗口校准回传。** 用户已明确授权：v2校准与各批冻结核验通过后，直接启动原15轮F/I/N及卷积额外12轮真实Decisions routing，无需再次确认。
+2026-11-14。负责人 SnowballXueQiu，公共协调 #2。**固定Qwen正式评测0/15，路由实验0/12；等待新版本的任务、镜像和校准记录。** 用户已授权：校准和配置检查通过后直接运行。
 
-## 已接受的依据与版本边界
+## 机器、计时方法和代码版本
 
-- [bdd78b8](https://github.com/bohack-2026-hw/RouteEvo/commit/bdd78b85e448f591dab13babdc279ec7cd6cefe5) 已交付 M4 Max（12P+4E）/128 GiB、macOS 26.6.2、OrbStack 2.2.5 / Docker 29.8.2、原生 arm64 VM（16 vCPU、约15.66 GiB）及两题5 dev/15 final材料。候选绑定 **Docker VM vCPU 2**，不将它解释为 Apple 物理核心或核心独占。
+- [bdd78b8](https://github.com/bohack-2026-hw/RouteEvo/commit/bdd78b85e448f591dab13babdc279ec7cd6cefe5) 已交付 M4 Max（12P+4E）/128 GiB、macOS 26.6.2、OrbStack 2.2.5 / Docker 29.8.2、原生 arm64 VM（16 vCPU、约15.66 GiB）及两题5 dev/15 final材料。候选固定使用 **Docker VM vCPU 2**，实际运行在哪个 Apple 核心由虚拟机调度。
 - [64c64b0 的交替 GC 对照](https://github.com/bohack-2026-hw/RouteEvo/blob/64c64b0/docs/research/native-formal-20261114/algotune/evidence/pagerank-gc-probe.json) 保留原始与 gc-disabled 各3次自比：PageRank第3样本/其余样本中位数从1.84418降至0.99752，组内极差/中位数从84.52%降至3.17%，均无误入选。该诊断已完成，无需重复。
-- #2 已在[接受记录](https://github.com/bohack-2026-hw/RouteEvo/issues/4#issuecomment-6874329133)接受 [e28ce9d](https://github.com/bohack-2026-hw/RouteEvo/commit/e28ce9dbadec01bc855345c40a2a9014a87ac022)：`isolated-function-timing-v2`，`gc_policy=automatic_gc_disabled_during_solve`。仅在solve计时内关闭自动循环GC，finally恢复；正常和异常恢复路径已有检查。基线/候选、预热/正式计时使用同一口径，严格选优门槛不变。
+- #2 已在[接受记录](https://github.com/bohack-2026-hw/RouteEvo/issues/4#issuecomment-6874329133)接受 [e28ce9d](https://github.com/bohack-2026-hw/RouteEvo/commit/e28ce9dbadec01bc855345c40a2a9014a87ac022)：`isolated-function-timing-v2`，`gc_policy=automatic_gc_disabled_during_solve`。仅在solve计时内关闭自动循环GC，finally恢复；正常和异常恢复路径已有检查。基线/候选、预热/正式计时使用同一方法，候选选择标准不变。
 - **Mac 执行 SHA：`912b20a4cfeb51af9c36d0679b23f0990abe862f`**，已由[PR #11](https://github.com/bohack-2026-hw/RouteEvo/pull/11)合入main并核对远端ref。以此公共 checkout 内的原生导入器、计时器和 Mac 便携校准脚本准备；执行目录保持干净，正式期间不再更新。
 - ALE 已实际使用 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`，不改写其来源。原“统一执行 SHA”在本次计时修订后改为分别记录 ALE 与 Mac 的实际 SHA；仍按题、同机、同源码/镜像比较各模式。Mac旧v1预检只作为修复证据，不进入v2正式计时汇总。
 
-## 保留的研究设置与待回传绑定
+## 评测设置与待填信息
 
 [原30项逻辑计划](central-plan.json)、[研究协议](protocol.md)和[价格快照](price-snapshot.json)继续适用：convolve_1d 的F/N/I各3次，pagerank的F/I各3次；5 dev/15 final，`size=1000`、`seed=1729`。托管Qwen3.8-27B，`eval/v0`、固定small、thinking=false、max_output_tokens=8192、response_format=json_object；每轮900秒/20请求/10候选，请求超时120秒，允许主动finish。输入¥3/百万Token、输出¥12/百万Token，缓存按普通输入价估算，未知用量为null。本地MLX模型不进入该主批次。
 
@@ -29,7 +29,7 @@ Mac保持 **concurrency=1、VM vCPU 2、3次预热/5次函数计时**。重新�
 | 主机/VM测量快照 | 实际CPU/内存、容器affinity及安静窗口负载；记录资源变化 |
 | 正式账本初始状态 | 独立绝对VAR_DIR，runs/model_calls/final evaluations均为0，run.lock/compare.lock保留 |
 
-旧任务和旧证据目录保持不变。新物理绑定完成前，prepared文件中的任务/镜像/hash为null，不用旧值填充。
+旧任务和证据保留。新任务、镜像和机器登记完成前，prepared文件中的对应值保持null。
 
 ## 准备与一次最小启动核对
 
@@ -93,7 +93,7 @@ ROUTEEVO_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/routeevo ablate-routing "$CONVOLVE
 
 ## Mac执行序号与中央身份
 
-沿用 #4 在`bdd78b8`事前发布的交错顺序。`seq`是Mac执行顺序，`central_slot`仅按`task_key + repeat + mode`映射[中央逻辑计划](central-plan.json)，**不按central_slot重新排序**。新任务ID替换占位时，模式、repeat和顺序保持不变。
+沿用 #4 在`bdd78b8`事前发布的交错顺序。`seq`是Mac执行顺序，`central_slot`仅按`task_key + repeat + mode`映射[总运行计划](central-plan.json)，**不按central_slot重新排序**。新任务ID替换占位时，模式、repeat和顺序保持不变。
 
 | seq | central_slot | 任务 | repeat | mode |
 | ---: | ---: | --- | ---: | --- |
@@ -113,4 +113,4 @@ ROUTEEVO_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/routeevo ablate-routing "$CONVOLVE
 | 14 | 23 | convolve_1d | 3 | feedback |
 | 15 | 24 | convolve_1d | 3 | no_feedback |
 
-本交接截至[#4最终源码与27轮启动授权](https://github.com/bohack-2026-hw/RouteEvo/issues/4#issuecomment-6874435562)：新物理绑定及重校准尚未回传，原正式0/15、路由0/12；未将准备结果记为正式验收。
+交接依据：[#4最终代码版本与27轮启动授权](https://github.com/bohack-2026-hw/RouteEvo/issues/4#issuecomment-6874435562)。

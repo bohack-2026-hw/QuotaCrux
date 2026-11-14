@@ -217,7 +217,7 @@ def section_tuning(lines: list[str]) -> None:
         return
     lines += ["### 2.1 调优：T 批（新任务族，在线模式，从 v19 依次写入）", "",
               "T 批的条件与 S 批的“首次出现”和“新条件”任务对应，只用于检查新任务族和分流器能否工作；S 批在任何第三版运行之前封存。", "",
-              "| 任务 | 任务族 · 工作负载 | 读取 → 发布 | 路线 | 模型请求 | 费用 | 最终加速比 | 循环时长 |", "|---|---|---|---|---|---|---|---|"]
+              "| 任务 | 任务族 · 输入规模和特点 | 读取 → 发布 | 路线 | 模型请求 | 费用 | 最终加速比 | 循环时长 |", "|---|---|---|---|---|---|---|---|"]
     for i in ids:
         r = report.build(i)
         route = (r["route"] or {}).get("reason") or ("reuse" if r["outcome"].get("best_from_reuse") else "—")
@@ -277,7 +277,7 @@ def section_stream(lines: list[str], s: dict) -> None:
                      f"{x(a['final_speedup_median'])} → {x(b['final_speedup_median'])} | {a['agent_loop_s_median']:.1f}s → {b['agent_loop_s_median']:.1f}s |")
     lines += ["", "逐任务（每格三个符号是三次重放的路线：↺ 复用直接交付，★ 全新任务族 → 大模型，◆ 新条件 → 大模型，○ 相近经验 → 小模型；"
               "随后是最终加速比，未达标标“!”）：", "",
-              "| # | 任务 | 工作负载 | 带记忆 | 不带记忆 |", "|---|---|---|---|---|"]
+              "| # | 任务 | 输入规模和特点 | 带记忆 | 不带记忆 |", "|---|---|---|---|---|"]
 
     def cell(runs):
         return " ".join(ROUTE_MARK.get(r["route"], "?") for r in runs) + " · " + " ".join(
@@ -431,7 +431,7 @@ def section_summary(lines: list[str], cs: dict) -> None:
 
 def main() -> None:
     lines = ["# RouteEvo 实验结果", "",
-             "本文由 `backend/scripts/write_results.py` 从运行记录生成，不含手工填写的数字。口径见[项目说明](../presentation/project-description.md)。", ""]
+             "数据由 `backend/scripts/write_results.py` 从运行记录生成。方法见[项目说明](../presentation/project-description.md)。", ""]
     cs = comparisons()
     section_summary(lines, cs)
     if "S" in cs:
@@ -462,7 +462,7 @@ def main() -> None:
     section_research(lines, cs)
     lines += ["## 6. 说明", "",
               "- 三版的配置指纹不同（提示词版本、复用策略、分流器），各自内部对照的两侧使用同一配置；跨版本的数字只用于说明改动前后，不当作同一对照。",
-              "- S 任务流是前序评估（prequential）：每个任务都在从它学到任何东西之前运行，没有任务读到自己的经验。",
+              "- S 任务流先评测、再学习：每个任务完成测试后才写入经验。",
               "- 第一版 C 批的结果是第二版修改的依据，因此第二版的最终验收改用新封存的 D 批；B 批两版都作开发对照。",
               "- B、C、D 的 3 次重复衡量固定快照下的运行波动；S 任务流的 3 次重放每次都从起点重新学习，重复的是学习过程本身。",
               "- 所有运行都计入，包括失败、无收益和预算耗尽的运行；没有挑选任务或样本。",

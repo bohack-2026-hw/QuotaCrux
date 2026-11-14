@@ -1,22 +1,22 @@
 # Native routing study：代码交接与冻结模板
 
-> 历史方案：本文保留最初 24 轮计划。后续 desktop 已缩减并完成四组各一次的短批；当前范围与结果见[路由研究入口](../research/native-routing/README.md)。下文的“当前”“没有结果”和待执行数量均属于原计划时点。
+> 这是最初的24轮计划。后续范围和结果见[路由研究入口](../research/native-routing/README.md)。
 
 对应 [issue #6](https://github.com/bohack-2026-hw/RouteEvo/issues/6)。本目录交付实现说明与
 [freeze-template.json](../research/native-routing/freeze-template.json)，当前没有真实路由实验结果。
-ALE ahc026 / AlgoTune convolve_1d 各四组 × 三次，新增 24 轮；#2 的 30 轮反馈消融继续独立。
+ALE ahc026 / AlgoTune convolve_1d 各四组 × 三次，新增 24 轮；#2 的 30 轮反馈对照继续独立。
 旧实验固定 Qwen，本实验允许升级，不能复用旧结果当 baseline。
 
 ## 已接入的执行链
 
-两层 adaptor 沿用现有 `agent/routing.py`。ActionRouter 选择动作，ModelRouter 选择生成角色；
+两层适配器沿用现有 `agent/routing.py`。ActionRouter 选择动作，ModelRouter 选择生成角色；
 代码和分析仍由 small/large 生成。四组固定为 baseline=`llm/rule`、action_decisions=`decisions/rule`、
 model_decisions=`llm/decisions`、both_decisions=`decisions/decisions`。
 
 研究入口显式使用 `feedback + adaptive + eval/v0`；`fixed_model=None`，初始经验分流关闭。
 初始角色为 small，ModelRouter 可以在第一次生成前升级；升到 large 后保持 large。
 默认 fixed、independent、no_feedback 的入口保持原有行为。所有路由/生成 HTTP 尝试共用请求、
-Token、墙钟预算，包含错误和超时；固定 20 次总请求会让 Decisions 组有更少生成机会。
+Token、实际耗时预算，包含错误和超时；固定 20 次总请求会让 Decisions 组有更少生成机会。
 
 RoutingState 携带任务 objective、可用工具、可复验候选和研究模式。native 不提供 cProfile；
 ALE 原始 score 使用目标方向，AlgoTune 使用 speedup。动作选择、生成内容、dev 判断均不读取 final。
@@ -75,7 +75,7 @@ Python 入口同时支持完整 `RunLimits` / `MeasureConfig`、`final_evaluatio
   `cost.by_currency` 逐币种汇总。缺少用量时 amount=null，已知部分只写 known_amount；没有价格保持 unknown。
   费用是标准 Token 价格估算，缓存按冻结 input 单价，折扣和额度不在估算内；不进行汇率换算。
 - `summary.tasks[].variants[]` 包含 final 正确数/值/中位数、c0、候选有效率、升级率、生成角色、动作频率、
-  用途账本与模型/裁判/总墙钟。升级率分母是有用量账本的已执行轮；未跑项另计数。
+  用途账本与模型/裁判/总耗时。升级率分母是有用量记录的已执行轮；未跑项另计数。
   `pairs` 提供同题同 repeat 的六种配对差值，缺失或失败保留 null；
   `interactions` 为 both − action − model + baseline。ALE 分数与 AlgoTune speedup 分别解释，不跨题平均。
 
@@ -105,7 +105,7 @@ Python 入口同时支持完整 `RunLimits` / `MeasureConfig`、`final_evaluatio
 已通过 19 项路由检查、7 项执行器/portable 费用与公平性检查、6 项新增 native 集成检查，
 以及 28 项 fixed / independent / no_feedback 交叉回归。native 集成使用 fake providers 和 fake judges，
 覆盖 ALE score、AlgoTune speedup 四组的实际调用角色、升级、预算、工具菜单、dev 选择和 final 隔离。
-这证明接线与记录契约，不构成质量或性能结论。没有新付费调用或正式 24 轮结果。
+这些检查覆盖调用流程和记录格式，质量与性能等待正式 24 轮实验验证。
 
-#2 维护公共 Runner/CLI/report/API；本分支负责 adaptor/ablation；#3/#4 在冻结后执行各 12 轮；
+#2 维护公共 Runner/CLI/report/API；本分支负责适配器和对照实验；#3/#4 在冻结后执行各 12 轮；
 #5 按 study + variant 展示。issue #6 继续保持开放，直到完整 24 轮证据和逐题分析交付。

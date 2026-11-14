@@ -48,7 +48,7 @@ def pick_cases() -> list[tuple[str, str, str]]:
                       f"{raised['result']['best_dev_speedup']:.2f}×；学习运行把目标提高到 {raised['result']['run_target_speedup']:g}×，"
                       f"模型以它为起点提出 {won[-1]['candidate_id']}，开发数据 {won[-1]['result']['speedup']:.2f}×，假设得到支持。"))
     cases.append((learn_run("A-05"), "没有验证出改进（第一版）",
-                   "高基数工作负载上 Qwen 两个、GPT 一个候选都正确但更慢（0.80—0.83×），三个假设均被反驳；预算耗尽后交付初始程序，结论是“没有验证出改进”。"))
+                   "分组数多的任务上 Qwen 两个、GPT 一个候选都正确但更慢（0.80—0.83×），三个假设均被反驳；预算耗尽后交付初始程序，结论是“没有验证出改进”。"))
     held = comparison_runs("D final held-out · reuse") or comparison_runs("B dev comparison · reuse")
     if held:
         new = held["snapshot_b"]

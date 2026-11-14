@@ -1,6 +1,6 @@
 # 历史方案与决策归档
 
-保留选题和开发过程中的原始背景。文档中的版本号、默认参数、“当前”和“待实现”均属于其记录时点；实际实验请读取[相应批次](../research/README.md)。
+这里保存早期方案和开发记录，按文内日期阅读。后续实验见[批次索引](../research/README.md)。
 
 | 文档 | 历史范围 |
 | --- | --- |
@@ -13,7 +13,7 @@
 | [2026-11-14 集成记录](integration-20261114.md) | 并行开发线合并时的提交与验证记录 |
 | [早期双组评测方案](research-evaluation-plan.md) | 已被正式 v2 三模式协议替代的评测设计 |
 | [经验学习第一至三版结果](results.md) · [PDF](results.pdf) | groupagg、D 留出和 S 任务流历史汇总；由 `backend/scripts/write_results.py` 生成到本目录 |
-| [Decisions 接口探索](decision-model/README.md) | 早期回放、输入消融及 legacy 冒烟数据；原始 JSON 保留原字节 |
+| [Decisions 接口探索](decision-model/README.md) | 早期回放、删减输入信息的对照及 legacy 功能检查数据；原始 JSON 保留原字节 |
 | [原 Native 路由研究计划](native-routing-plan.md) | 缩减为探索性短批之前的 24 轮计划与交接；[当前入口](../research/native-routing/README.md) |
 
 [返回文档导航](../README.md)。

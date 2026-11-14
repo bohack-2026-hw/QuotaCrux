@@ -13,6 +13,6 @@
 
 幻灯片图表与截图在 [deck/](deck/)。`backend/scripts/build_deck.py` 默认输出本目录的 `RouteEvo.pptx`，截图默认取 `deck/shots/`。海报由 `backend/scripts/build_poster.py` 生成，保留 `docs/poster/` 路径。
 
-原 `RouteEvo-technical.pdf` 与 `RouteEvo.pdf` 的 SHA256 相同，现只保留后者。两个 PPTX 内容不同，分别保留；本次没有重建 PDF 与 PPTX 的对应关系。
+幻灯片 PDF 统一保存在 `RouteEvo.pdf`，两个 PPTX 分别保留。
 
-这些材料保留各自生成时的实验范围与数字；后续结果见[实验批次索引](../research/README.md)。Markdown 路径整理后，PDF/PPTX 未重新生成。[返回文档导航](../README.md)。
+后续实验见[批次索引](../research/README.md)。PDF/PPTX 保留原导出版本。[返回文档导航](../README.md)。

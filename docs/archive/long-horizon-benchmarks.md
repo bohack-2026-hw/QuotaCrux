@@ -6,7 +6,7 @@
 
 **研究主线优先 ALE-Bench，性能优化备选 AlgoTune；有 RTX 2080 Ti 后，KernelBench 也值得做小规模预检。** 这是基于任务结构、当前架构与可用资源的接入判断，尚无 RouteEvo 在这些 benchmark 上的效果结果。
 
-| Benchmark | 核实规模 | 一项任务的研究内容与时长口径 | 资源与本项目适配 |
+| Benchmark | 核实规模 | 一项任务的研究内容与时长计算方式 | 资源与本项目适配 |
 | --- | --- | --- | --- |
 | [ALE-Bench](https://github.com/SakanaAI/ALE-Bench) | 当前发布数据 40 题，Lite 10 题；40 个压缩题目包合计约 99.3 MB | 在同一启发式优化问题上持续提高分数；源比赛为数小时至数周，研究预算可自行设定 | CPU + Docker + 原生裁判；最贴合持续优化，需把 speedup 单指标扩展到质量分数 |
 | [AlgoTune](https://github.com/oripress/AlgoTune) | 当前固定代码版本 154 个任务目录 | 数学/科学计算函数保持数值正确并加速；配套 AlgoTuner 反复编辑、评测；当前配置以费用额度控制，非统一小时制 | 科学计算 Python 环境，选定任务可用 CPU；运行时间目标接近现有实现，但需改函数计时与依赖 |
@@ -14,7 +14,7 @@
 | [MLE-bench](https://github.com/openai/mle-bench) | 75 个 Kaggle 竞赛；Lite 22 个；上游标注全量 3.3 TB、Lite 158 GB | 数据探索、特征、训练、验证、生成提交；推荐标准预算每项 24 小时 | 标准配置 36 vCPU、440 GB RAM、24 GB A10；单个小数据任务可缩减，但当前需新增完整训练工作区与产物管理 |
 | [RE-Bench](https://github.com/METR/RE-Bench) | 7 个研究工程环境 | ML 调参与训练优化、GPU kernel、scaling law 等，评测研究能力随时间预算变化 | 多项涉及 GPU/训练环境；当前仓库已归档、README 标记 DEPRECATED，优先借鉴方法，降低新接入优先级 |
 
-“长时”指 Agent 持续做研究的预算，不要求一次被测程序就运行很久。例如 2 秒的裁判时限可以支持数小时算法设计。给现有 4 候选的流程单纯增加等待时间不能形成长时研究评测。
+“长时”指整轮研究的时间。例如，每次测试限时 2 秒，算法改进过程仍可持续数小时。
 
 ## 2. ALE-Bench：优先接入的优化研究任务
 
@@ -43,7 +43,7 @@
 
 [上游评测代码](https://github.com/SakanaAI/ALE-Bench/blob/8ba16e6baf743aa8736516c45d1c52afdbd4de99/docs/evaluation.md)已有 repeated sampling 与 self-refinement，并提供 public/private evaluation；这与我们要验证的“利用反馈是否优于独立尝试”直接对应。上游按采样次数组织的对照，仍需改为 RouteEvo 统一预算后才能回答我们的成本问题。
 
-RouteEvo 可复用任务冻结、候选记录、资源账本和结果导出。必须新增原生裁判调用、可行性/分数/优化方向、最佳候选规则和预算内持续优化；不能把得分装入 `speedup` 字段。最终种子、参考结果、排名映射与私有裁判状态留在可信评测侧，不把完整 session 对象暴露给候选或模型。
+RouteEvo 可复用任务冻结、候选记录、资源用量记录和结果导出。必须新增原生裁判调用、可行性/分数/优化方向、最佳候选规则和预算内持续优化；不能把得分装入 `speedup` 字段。最终种子、参考结果、排名映射与私有裁判状态留在可信评测侧，不把完整 session 对象暴露给候选或模型。
 
 CPU 串行小规模运行即可预检；上游建议统一机器来比较性能。本地试验应报告实际机器与裁判版本，不直接套用另一台硬件的时间或排名结论。
 
@@ -51,7 +51,7 @@ CPU 串行小规模运行即可预检；上游建议统一机器来比较性能�
 
 核查提交：[`dff9914c10800c7a031c9e8c3d4d1c8cd1b38906`](https://github.com/oripress/AlgoTune/tree/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906)。该版本 `AlgoTuneTasks/` 实际包含 **154 个任务目录**，README 同样写 154；不同论文版本的数量不混用。
 
-[项目网站](https://algotune.io/)提供完整迭代轨迹和隐藏输入上的函数加速评价；[当前配置](https://github.com/oripress/AlgoTune/blob/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuner/config/config.yaml)为 `spend_limit: 1.0` 美元、train/test 各 100、开发计时 2 次、正式计时 10 次。这里的 1 美元是该版本默认配置，不代表所有论文实验或我们使用服务的实际支出。
+[项目网站](https://algotune.io/)提供完整迭代轨迹和隐藏输入上的函数加速评价；[当前配置](https://github.com/oripress/AlgoTune/blob/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuner/config/config.yaml)为 `spend_limit: 1.0` 美元、train/test 各 100、开发计时 2 次、正式计时 10 次。1 美元是该版本的默认预算。
 
 首批 CPU 候选：
 
@@ -80,7 +80,7 @@ CPU 串行小规模运行即可预检；上游建议统一机器来比较性能�
 
 [MLE-bench README](https://github.com/openai/mle-bench#benchmarking)给出 75 题、24 小时和上述 A10 配置，Lite 为 22 题、158 GB。它与补充说明中的“围绕数据集反复改进分类方案”很贴近；小型任务例如 detecting-insults-in-social-commentary，上游数据表约 0.002 GB，可单独考虑。完整接入涉及训练目录、数据划分、模型文件和最终提交，不只是替换正确性 checker。2080 Ti 的存在不等于达到标准 24 GB A10 配置；缩减预算应单独报告。
 
-[RE-Bench README](https://github.com/METR/RE-Bench)列出 7 项研究工程任务，并明确标为 DEPRECATED；GitHub 仓库 `archived=true`。其[研究报告介绍](https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/)强调专家与 Agent 的时间预算比较，可借鉴预算曲线和成果评分。多次独立运行后取最好成绩的总算力，不能当成单个 episode 内持续学习的证据。
+[RE-Bench README](https://github.com/METR/RE-Bench)列出 7 项研究工程任务，并明确标为 DEPRECATED；GitHub 仓库 `archived=true`。其[研究报告介绍](https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/)强调专家与 Agent 的时间预算比较，可借鉴预算曲线和成果评分。多次独立运行后取最好成绩的总算力，不能当成一轮研究 内持续学习的证据。
 
 ## 5. 本次完成范围
 

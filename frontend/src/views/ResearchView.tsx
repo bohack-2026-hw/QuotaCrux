@@ -6,7 +6,7 @@ import { Empty } from '../components/ui'
 import { fmt, rmode } from '../labels'
 import type { RBatch, RRun, RTask } from '../research'
 import { MODES } from '../research'
-import { deltaText, familyName, metricName, metricText, stopText, sumText, taskVerdict } from '../researchFormat'
+import { deltaText, metricName, metricText, stopText, sumText, taskVerdict } from '../researchFormat'
 import { useResearchBatch, useResearchList } from '../researchData'
 import type { ApiState, BatchEntry } from '../researchData'
 
@@ -25,7 +25,6 @@ export function ResearchView({ selected, onSelect, onOpenRun }: { selected: stri
           <div className="card">
             <div className="spread wrap">
               <div style={{ minWidth: 0 }}>
-                <div className="eyebrow">批次 · {batch.id}</div>
                 <h2 style={{ marginBottom: 10 }}>{batch.label ?? batch.id}</h2>
                 <BatchBadges b={batch} />
               </div>
@@ -40,11 +39,11 @@ export function ResearchView({ selected, onSelect, onOpenRun }: { selected: stri
               <span>模型 <b>{batch.model?.name ?? '未记录'}</b></span>
               <span>请求 <b>{sumText(batch.runs.map((r) => r.requests), String)}</b></span>
               <span>Token <b>{sumText(batch.runs.map((r) => r.tokens), fmt.n)}</b></span>
-              <span>墙钟 <b>{sumText(batch.runs.map((r) => r.wallS), (v) => fmt.s(v))}</b></span>
               <span>费用 <b><CostTotal costs={batch.runs.map((r) => r.cost)} /></b></span>
             </div>
             <details className="fold">
               <summary>实验配置与数据来源</summary>
+              <p className="small muted mono" style={{ margin: 0 }}>{batch.id}</p>
               <BatchFacts b={batch} />
               <SourceNote state={apiState} error={apiError} entry={entry} />
             </details>
@@ -53,9 +52,9 @@ export function ResearchView({ selected, onSelect, onOpenRun }: { selected: stri
           {batch.tasks.map((t) => <TaskCard key={t.id} t={t} b={batch} axis={axis} setAxis={setAxis} archive={entry.source === 'archive'} onOpenRun={onOpenRun} />)}
 
           <p className="footnote">
-            {batch.finalEnabled === false && '本批只有开发集结果，未测最终集不算失败。'}
-            {batch.tasks.some((t) => t.repeats.length < 2) && '每组只跑了 1 次，只能说明这一次，不能说明稳定性。'}
-            得分与加速比分开报告，不跨题比较。费用为调用前价格快照下的标价估算，缺失记为“未知”，不换算币种。
+            {batch.finalEnabled === false ? '开发集结果，最终集待验证。' : ''}
+            {batch.tasks.some((t) => t.repeats.length < 2) ? '每组 1 次，尚不说明稳定性。' : ''}
+            费用为标价估算。
           </p>
         </>
       )}
@@ -74,19 +73,16 @@ function TaskCard({ t, b, axis, setAxis, archive, onOpenRun }: { t: RTask; b: RB
   const v = taskVerdict(t, (m) => `${rmode(m).label}组`)
   return (
     <div className="card">
-      <div className="spread wrap">
-        <div style={{ minWidth: 0 }}>
-          <div className="eyebrow">{familyName(t.family)} · {metricName(t.metric)}{t.minSpeedup != null ? ` · 目标 ≥ ${t.minSpeedup}×` : ''}</div>
-          <h2 style={{ margin: 0 }}>{t.title}</h2>
-          <p className="small" style={{ margin: '4px 0 0', color: 'var(--fg-2)' }}>{v.text}</p>
-        </div>
-        <span className="mono small muted">基线 {t.metric === 'score' ? fmt.n(t.baseline) : '1×'}{t.devCases != null ? ` · 开发 ${t.devCases} 例` : ''}</span>
+      <div className="head-row">
+        <h2 style={{ margin: 0 }}>{t.title}</h2>
+        <span className="metric-pill">{metricName(t.metric)} ↑</span>
+        <span className="mono small muted" style={{ marginLeft: 'auto' }}>基线 {t.metric === 'score' ? fmt.n(t.baseline) : '1×'}</span>
       </div>
 
       <Scoreboard task={t} lead={v.lead} planned={b.modes} />
 
       <div className="spread wrap" style={{ marginBottom: 4 }}>
-        <ModeLegend modes={t.modes} repeats={t.repeats} />
+        {t.repeats.length > 1 ? <ModeLegend modes={t.modes} repeats={t.repeats} /> : <span />}
         <AxisSwitch axis={axis} setAxis={setAxis} costOk={t.runs.some((r) => r.progress.some((p) => p.cost != null))} />
       </div>
       <ProgressChart task={t} axis={axis} currency={b.pricing?.currency ?? null} />

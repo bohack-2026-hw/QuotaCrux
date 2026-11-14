@@ -77,14 +77,19 @@ export default function App() {
           {TABS.filter((t) => !t.minor).map((t) => (
             <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>{t.lbl}</button>
           ))}
-          <span className="sep" aria-hidden />
-          {TABS.filter((t) => t.minor).map((t) => (
-            <button key={t.id} className={`minor ${tab === t.id ? 'on' : ''}`} onClick={() => go(t.id)}>{t.lbl}</button>
-          ))}
         </nav>
+        <details className={`more ${meta.minor ? 'on' : ''}`} key={tab}>
+          <summary>{meta.minor ? meta.lbl : '更多'} ▾</summary>
+          <div className="menu">
+            <div className="menu-cap">经验复用阶段</div>
+            {TABS.filter((t) => t.minor).map((t) => (
+              <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>{t.lbl}</button>
+            ))}
+          </div>
+        </details>
         <div className="status">
           {latest?.model?.name && <span className="model" title="最近研究批次使用的固定模型"><b>{latest.model.name}</b>{latest.model.hosted == null ? '' : latest.model.hosted ? ' · 托管' : ' · 本地'}</span>}
-          <span title={health.error ? '后端未连接：研究页显示仓库存档的真实记录' : undefined}><span className={`pulse ${health.error ? 'off' : running ? '' : 'idle'}`} />{health.error ? '离线 · 存档数据' : running ? '运行中' : '空闲'}</span>
+          {running && <span><span className="pulse" />运行中</span>}
           <button className="theme-btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? '切换到浅色' : '切换到深色'} title={theme === 'dark' ? '浅色（投影仪）' : '深色'}>{theme === 'dark' ? '☀' : '☾'}</button>
         </div>
       </header>

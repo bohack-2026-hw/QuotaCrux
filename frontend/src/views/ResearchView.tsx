@@ -101,7 +101,7 @@ function TaskCard({ t, b, axis, setAxis, archive, onOpenRun }: { t: RTask; b: RB
                 <td className="nowrap"><ModeTag mode={r.mode} repeat={r.repeat} /></td>
                 <td className="nowrap"><RunStateChip run={r} /><div className="small muted">{stopText(r)}</div></td>
                 <td className="nowrap"><DevCell t={t} r={r} /></td>
-                <td className="nowrap"><FinalChip run={r} />{r.final.value != null && <div className="small">{metricText(t.metric, r.final.value)}</div>}</td>
+                <td className="nowrap"><FinalChip run={r} />{r.final.value != null && <div className="small">{metricText(t.metric, r.final.value)}{r.final.normalized ? <span className="muted">（c0 归一化，未重测）</span> : null}</div>}</td>
                 <td className="nowrap mono">{r.requests ?? '?'}<span className="muted">/{b.limits?.max_model_requests ?? '?'}</span></td>
                 <td className="nowrap mono">{fmt.n(r.inputTokens)} / {fmt.n(r.outputTokens)}</td>
                 <td className="nowrap mono">{fmt.s(r.wallS)}</td>

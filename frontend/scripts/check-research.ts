@@ -41,6 +41,8 @@ check('archived batch: costs stay CNY estimates and sum to the report total', ()
   // every progress point gets a cost from the batch price snapshot and its own token counts
   const run = b.runs[0]
   assert.ok(run.progress.every((p) => p.cost != null && p.tokens != null))
+  assert.equal(b.model?.name, 'Qwen3.8-27B')
+  assert.equal(b.contract, 'research-comparison-v1')
 })
 
 check('running batch: fair null is "pending", planned and running runs have no final verdict', () => {
@@ -48,9 +50,10 @@ check('running batch: fair null is "pending", planned and running runs have no f
   raw.status = 'running'
   raw.fair = null
   raw.final_evaluation = true
-  const running: RawRun = { ...raw.runs[1], status: 'running', outcome: null, final: null, best_dev: null, progress: [], usage: null, estimated_cost: null, timing: null }
-  const planned: RawRun = { seq: 5, task_id: raw.runs[0].task_id, repeat: 2, mode: 'no_feedback' }
-  raw.runs = [raw.runs[0], running, planned].map((r, i) => (i === 0 ? { ...r, final: null } : r))
+  raw.dev_only = false
+  const running: RawRun = { ...raw.runs[1], status: 'running', final_status: 'pending', outcome: null, best_dev: null, progress: [], usage: null, cost: { amount: null, currency: 'CNY', status: 'unknown' }, timing: null }
+  const planned: RawRun = { seq: 5, task_id: raw.runs[0].task_id, repeat: 2, mode: 'no_feedback', status: 'not_run', final_status: 'not_run' }
+  raw.runs = [raw.runs[0], running, planned].map((r, i) => (i === 0 ? { ...r, final_status: 'not_run' } : r))
   const b = normalize(raw)
   assert.deepEqual(b.runs.map((r) => r.state), ['completed', 'running', 'planned'])
   assert.deepEqual(b.runs.map((r) => r.final.state), ['missing', 'pending', 'pending'])
@@ -59,6 +62,17 @@ check('running batch: fair null is "pending", planned and running runs have no f
   assert.equal(fairLabel(b.fair, b.running).tone, 'warn')
   assert.equal(fairLabel(false, false).tone, 'bad')
   assert.equal(b.finished, 1)
+})
+
+check('v1 final_status: completed/failed/not_run/disabled, final_error stays an error', () => {
+  const base: RawRun = { seq: 1, task_id: 't', repeat: 1, mode: 'feedback', run_id: 'r', status: 'completed' }
+  assert.equal(finalState({ ...base, final_status: 'completed', final_evaluation: { status: 'passed', correct: true } }, true, 'completed'), 'passed')
+  assert.equal(finalState({ ...base, final_status: 'failed' }, true, 'completed'), 'failed')
+  assert.equal(finalState({ ...base, final_status: 'failed', outcome: { final_error: 'judge crashed' } }, true, 'completed'), 'error')
+  assert.equal(finalState({ ...base, final_status: 'not_run' }, true, 'completed'), 'missing')
+  assert.equal(finalState({ ...base, status: 'not_run', final_status: 'not_run' }, true, 'planned'), 'pending')
+  assert.equal(finalState({ ...base, final_status: 'disabled' }, false, 'completed'), 'disabled')
+  assert.equal(runState({ ...base, status: 'not_run' }), 'planned')
 })
 
 check('final states: passed, failed, error and an exception inside a completed batch', () => {
@@ -81,8 +95,8 @@ check('run states: interrupted, stopped and failed runs are not "completed"', ()
 
 check('current JSON without proposed fields: estimated_cny, no tasks, no pricing', () => {
   const raw = clone()
-  delete raw.tasks; delete raw.pricing; delete raw.model
-  raw.runs = raw.runs.map((r) => ({ ...r, final: undefined, estimated_cost: undefined, estimated_cny: r.estimated_cost?.amount ?? null }))
+  delete raw.price_snapshot; delete raw.model; delete raw.dev_only; delete raw.api_contract
+  raw.runs = raw.runs.map((r) => ({ ...r, task: undefined, final_status: undefined, dev_status: undefined, cost: undefined, estimated_cny: r.cost?.amount ?? null }))
   const b = normalize(raw)
   assert.ok(b.runs.every((r) => r.final.state === 'disabled'))
   assert.ok(b.runs.every((r) => r.cost.kind === 'estimate' && r.cost.currency === 'CNY'))
@@ -90,13 +104,14 @@ check('current JSON without proposed fields: estimated_cny, no tasks, no pricing
   assert.equal(b.tasks.find((t) => t.metric === 'score')!.baseline, 17753)
   assert.equal(b.tasks.find((t) => t.metric === 'speedup')!.baseline, 1)
   assert.equal(b.model?.name, null)
+  assert.equal(b.tasks[0].title, 'ALE-Bench · ahc026')
 })
 
 check('unknown usage cost is never zero and currencies are never merged', () => {
   const raw = clone()
-  delete raw.pricing
-  raw.runs = raw.runs.map((r, i) => ({ ...r, estimated_cost: i === 0 ? { amount: 0.02, currency: 'USD' } : null, usage: { ...r.usage, cost_usd: null, cost_status: 'unknown' } }))
-  raw.runs[1] = { ...raw.runs[1], estimated_cost: { amount: 0.3, currency: 'CNY' } }
+  delete raw.price_snapshot
+  raw.runs = raw.runs.map((r, i) => ({ ...r, cost: i === 0 ? { amount: 0.02, currency: 'USD', status: 'estimated' } : { amount: null, currency: 'CNY', status: 'unknown' }, usage: { ...r.usage, cost_usd: null, cost_status: 'unknown' } }))
+  raw.runs[1] = { ...raw.runs[1], cost: { amount: 0.3, currency: 'CNY', status: 'estimated' } }
   const t = costTotals(normalize(raw).runs.map((r) => r.cost))
   assert.deepEqual(t.byCurrency, { USD: 0.02, CNY: 0.3 })
   assert.equal(t.unknown, 2)

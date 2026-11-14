@@ -1,12 +1,13 @@
-// Within-task research comparisons: the draft read-only contract with #2 and the one place its states are decided.
-// The raw shape is the existing research_compare JSON (comparison.json) plus optional fields proposed in #2; every
-// optional field has a fallback derived from what the current JSON already records, so both shapes render the same.
+// Within-task research comparisons: the read-only contract from #2 and the one place its states are decided.
+// Primary shape: research-comparison-v1 (GET /api/research-comparisons[/{id}], backend research_views.py): the
+// comparison JSON plus api_contract, dev_only, price_snapshot and per-run task / final_status / dev_status / cost.
+// Older comparison.json files (no v1 fields) still render: every v1 field has a fallback from what they record.
 // No runtime imports: scripts/check-research.ts runs this file directly under Node.
 
 export type ResearchMode = 'feedback' | 'independent' | 'no_feedback'
 export const MODES: ResearchMode[] = ['feedback', 'independent', 'no_feedback']
 
-/* ---------- raw contract (draft research-comparison/v0) ---------- */
+/* ---------- raw contract (research-comparison-v1, with fallbacks for older JSON) ---------- */
 
 export interface RawObjective { metric?: string; direction?: string; value?: number | null; baseline?: number | null; min_speedup?: number | null }
 export interface RawUsage {
@@ -22,12 +23,21 @@ export interface RawPricing {
   currency: string; unit?: string; input: number; output: number; cached_input?: number | null
   source?: string; method?: string; fetched_at?: string | null
 }
+export interface RawPriceSnapshot {
+  model?: string; currency: string; unit?: string; input_per_1m: number; output_per_1m: number; source?: string; retrieved_at?: string
+}
+export interface RawCost { amount: number | null; currency: string | null; status?: string; source?: string | null; note?: string }
 export interface RawRun {
   seq: number; task_id: string; repeat: number; mode: string; run_id?: string | null
+  task?: RawTask | null
+  final_status?: string | null; dev_status?: string | null
+  final_evaluation?: { status?: string; correct?: boolean | null; speedup?: number | null; objective?: RawObjective | null; normalized?: boolean; measured?: boolean } | null
+  cost?: RawCost | null
   status?: string | null; stop_reason?: string | null; started_at?: string | null; ended_at?: string | null
   outcome?: {
     dev_improved?: boolean; best_is_initial?: boolean; final_evaluated?: boolean; final_correct?: boolean | null
     final_speedup?: number | null; final_objective?: RawObjective | null; goal_met?: boolean
+    final_status?: string | null; final_error?: string | null
   } | null
   final?: { enabled?: boolean | null; state?: string | null; correct?: boolean | null; value?: number | null; error?: string | null } | null
   best_candidate_id?: string | null
@@ -43,10 +53,10 @@ export interface RawRun {
   error?: string | null
 }
 export interface RawTask {
-  task_id: string; family?: string; title?: string; objective?: RawObjective; dev_cases?: number | null; final_cases?: number | null
+  task_id: string; family?: string | null; title?: string; workload?: string; objective?: RawObjective; dev_cases?: number | null; final_cases?: number | null
 }
 export interface RawBatch {
-  contract?: string; comparison_id: string; status: string; label?: string | null; protocol?: string | null; scope?: string | null
+  contract?: string; api_contract?: string; dev_only?: boolean; price_snapshot?: RawPriceSnapshot | null; comparison_id: string; status: string; label?: string | null; protocol?: string | null; scope?: string | null
   fair?: boolean | null; created_at?: string | null; ended_at?: string | null; code_commit?: string | null; prompt_version?: string | null
   fixed_model?: string | null; model?: { role?: string; name?: string; provider?: string; host?: string; hosted?: boolean | null } | null
   final_evaluation?: boolean | null; modes?: string[]; repeats?: number
@@ -60,7 +70,8 @@ export interface RawBatch {
 }
 export interface RawBatchRow {
   comparison_id: string; status: string; label?: string | null; protocol?: string | null; created_at?: string | null
-  fair?: boolean | null; final_evaluation?: boolean | null; tasks?: string[]; modes?: string[]; planned?: number; finished?: number
+  fair?: boolean | null; final_evaluation?: boolean | null; dev_only?: boolean; task_ids?: string[]; modes?: string[]
+  runs_total?: number; runs_finished?: number; final_status_counts?: Record<string, number>; cost?: RawCost | null
 }
 
 /* ---------- view model ---------- */
@@ -76,7 +87,7 @@ export interface RRun {
   seq: number; taskId: string; repeat: number; mode: string; runId: string | null; state: RunState; stopReason: string | null
   metric: Metric
   dev: { value: number | null; improved: boolean | null; candidate: string | null; initial: boolean; status: string | null }
-  final: { state: FinalState; correct: boolean | null; value: number | null; error: string | null }
+  final: { state: FinalState; correct: boolean | null; value: number | null; error: string | null; normalized: boolean }
   requests: number | null; inputTokens: number | null; outputTokens: number | null; tokens: number | null
   wallS: number | null; modelWaitS: number | null; devEvalS: number | null
   proposed: number | null; passed: number | null
@@ -102,6 +113,7 @@ const ENDED_BAD = new Set(['failed', 'stopped', 'interrupted'])
 
 export function runState(r: RawRun): RunState {
   if (!r.run_id && !r.status) return 'planned'
+  if (r.status === 'not_run' || r.status === 'pending' || r.status === 'planned') return 'planned'
   const s = r.status ?? 'running'
   if (RUNNING_RUN.has(s)) return 'running'
   if (ENDED_BAD.has(s)) return s as RunState
@@ -114,7 +126,18 @@ export function finalState(r: RawRun, batchFinal: boolean | null | undefined, st
   const f = r.final
   const enabled = f?.enabled ?? batchFinal ?? null
   const evaluated = r.outcome?.final_evaluated ?? null
-  const correct = f?.correct ?? r.outcome?.final_correct ?? null
+  const correct = f?.correct ?? r.final_evaluation?.correct ?? r.outcome?.final_correct ?? null
+  // v1: final_status is decided by the backend; a recorded final_error stays an error, not a plain failure.
+  if (r.final_status && !f?.state) {
+    if (r.outcome?.final_error) return 'error'
+    switch (r.final_status) {
+      case 'disabled': return 'disabled'
+      case 'pending': return 'pending'
+      case 'completed': return correct === false ? 'failed' : 'passed'
+      case 'failed': return 'failed'
+      case 'not_run': return state === 'planned' || state === 'running' ? 'pending' : 'missing'
+    }
+  }
   if (f?.state) {
     switch (f.state) {
       case 'disabled': return 'disabled'
@@ -137,7 +160,7 @@ const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFi
 const sumKnown = (...vs: (number | null | undefined)[]) => (vs.every((v) => v == null) ? null : vs.reduce<number>((a, v) => a + (v ?? 0), 0))
 
 function metricOf(r: RawRun, task?: RawTask): Metric {
-  const m = task?.objective?.metric ?? r.best_dev?.objective?.metric ?? r.progress?.find((p) => p.metric)?.metric
+  const m = task?.objective?.metric ?? r.task?.objective?.metric ?? r.best_dev?.objective?.metric ?? r.progress?.find((p) => p.metric)?.metric
   return m === 'score' ? 'score' : 'speedup'
 }
 
@@ -158,6 +181,12 @@ export function priceOf(p: RawPricing | null | undefined, input: number | null |
 }
 
 export function costOf(r: RawRun, pricing: RawPricing | null | undefined): Cost {
+  const c = r.cost
+  if (c) {
+    if (c.status === 'no_model_calls') return { kind: 'none', amount: c.amount ?? 0, currency: c.currency, note: null }
+    if (c.amount != null && c.currency) return { kind: c.status === 'billed' ? 'billed' : 'estimate', amount: c.amount, currency: c.currency, note: c.note ?? null }
+    return { kind: 'unknown', amount: null, currency: c.currency, note: c.note ?? null }
+  }
   const e = r.estimated_cost
   if (e && e.amount != null) return { kind: 'estimate', amount: e.amount, currency: e.currency, note: e.note ?? null }
   if (r.estimated_cny != null) return { kind: 'estimate', amount: r.estimated_cny, currency: 'CNY', note: null }
@@ -184,8 +213,29 @@ function progressOf(r: RawRun, pricing: RawPricing | null | undefined): Point[] 
   })
 }
 
+/** v1 carries the frozen price snapshot; older JSON may carry the draft `pricing` object. */
+export function pricingOf(raw: RawBatch): RawPricing | null {
+  if (raw.pricing) return raw.pricing
+  const p = raw.price_snapshot
+  if (!p) return null
+  return { currency: p.currency, unit: p.unit, input: p.input_per_1m, output: p.output_per_1m, cached_input: p.input_per_1m,
+    source: p.source, fetched_at: p.retrieved_at ?? null, method: 'list price; cached input at the input rate' }
+}
+
+const FAMILY_TITLE: Record<string, string> = { 'ale-bench': 'ALE-Bench', algotune: 'AlgoTune', kernelbench: 'KernelBench', effibench: 'EffiBench-X' }
+
+/** "algotune-convolve_1d-smoke-eeb3cd9d83" -> "AlgoTune · convolve_1d" when no title is recorded. */
+export function titleOf(taskId: string, family: string): string {
+  if (!taskId.startsWith(`${family}-`)) return taskId
+  const name = taskId.slice(family.length + 1).split('-')[0]
+  return name ? `${FAMILY_TITLE[family] ?? family} · ${name}` : taskId
+}
+
 export function normalize(raw: RawBatch): RBatch {
-  const taskMeta = new Map((raw.tasks ?? []).map((t) => [t.task_id, t]))
+  const pricing = pricingOf(raw)
+  const taskMeta = new Map<string, RawTask>((raw.tasks ?? []).map((t) => [t.task_id, t]))
+  for (const r of raw.runs) if (r.task && !taskMeta.has(r.task_id)) taskMeta.set(r.task_id, r.task)
+  const finalEnabled = raw.dev_only != null ? !raw.dev_only : raw.final_evaluation ?? null
   const runs: RRun[] = raw.runs.map((r) => {
     const meta = taskMeta.get(r.task_id)
     const metric = metricOf(r, meta)
@@ -197,18 +247,20 @@ export function normalize(raw: RawBatch): RBatch {
       seq: r.seq, taskId: r.task_id, repeat: r.repeat, mode: r.mode, runId: r.run_id ?? null, state, stopReason: r.stop_reason ?? null,
       metric, dev: devOf(r, metric),
       final: {
-        state: finalState(r, raw.final_evaluation, state),
-        correct: r.final?.correct ?? r.outcome?.final_correct ?? null,
-        value: r.final?.value ?? num(r.outcome?.final_objective?.value) ?? num(r.outcome?.final_speedup),
-        error: r.final?.error ?? null,
+        state: finalState(r, finalEnabled, state),
+        correct: r.final?.correct ?? r.final_evaluation?.correct ?? r.outcome?.final_correct ?? null,
+        value: r.final?.value ?? num(r.final_evaluation?.objective?.value) ?? num(r.final_evaluation?.speedup)
+          ?? num(r.outcome?.final_objective?.value) ?? num(r.outcome?.final_speedup),
+        error: r.final?.error ?? r.outcome?.final_error ?? null,
+        normalized: !!r.final_evaluation?.normalized,
       },
       requests: num(u.requests) ?? num(it.model_requests),
       inputTokens: num(u.input_tokens), outputTokens: num(u.output_tokens),
       tokens: u.input_tokens == null && u.output_tokens == null ? null : (u.input_tokens ?? 0) + (u.output_tokens ?? 0),
       wallS: num(t.wall_clock_total_s) ?? num(t.agent_loop_s), modelWaitS: num(t.model_wait_s), devEvalS: num(t.dev_evaluation_s),
       proposed: r.candidates?.proposed ?? num(it.candidates_proposed), passed: r.candidates?.passed ?? num(it.candidates_passed),
-      cost: costOf(r, raw.pricing),
-      progress: progressOf(r, raw.pricing),
+      cost: costOf(r, pricing),
+      progress: progressOf(r, pricing),
       record: r.record ?? null, error: r.error ?? null,
     }
   })
@@ -219,8 +271,9 @@ export function normalize(raw: RawBatch): RBatch {
     const own = runs.filter((r) => r.taskId === id)
     const metric = own[0]?.metric ?? 'speedup'
     const scoreBaseline = raw.runs.find((r) => r.task_id === id && r.best_dev?.objective?.baseline != null)?.best_dev?.objective?.baseline ?? null
+    const family = meta?.family ?? familyOf(id)
     return {
-      id, family: meta?.family ?? familyOf(id), title: meta?.title ?? id, metric,
+      id, family, title: meta?.title ?? titleOf(id, family), metric,
       direction: meta?.objective?.direction ?? 'maximize',
       baseline: meta?.objective?.baseline ?? (metric === 'speedup' ? 1 : scoreBaseline),
       minSpeedup: meta?.objective?.min_speedup ?? null,
@@ -233,10 +286,10 @@ export function normalize(raw: RawBatch): RBatch {
   const modes = raw.modes?.length ? raw.modes : MODES.filter((m) => runs.some((r) => r.mode === m))
   return {
     id: raw.comparison_id, label: raw.label ?? null, status: raw.status, running: raw.status === 'running', protocol: raw.protocol ?? null,
-    scope: raw.scope ?? null, fair: raw.fair ?? null, finalEnabled: raw.final_evaluation ?? null, contract: raw.contract ?? null,
+    scope: raw.scope ?? null, fair: raw.fair ?? null, finalEnabled, contract: raw.api_contract ?? raw.contract ?? null,
     model: raw.model ? { role: raw.model.role ?? raw.fixed_model ?? null, name: raw.model.name ?? null, hosted: raw.model.hosted ?? null, provider: raw.model.provider ?? null }
-      : raw.fixed_model ? { role: raw.fixed_model, name: null, hosted: null, provider: null } : null,
-    modes, limits: raw.limits ?? null, measure: raw.measure ?? null, pricing: raw.pricing ?? null,
+      : raw.fixed_model || raw.price_snapshot?.model ? { role: raw.fixed_model ?? null, name: raw.price_snapshot?.model ?? null, hosted: null, provider: null } : null,
+    modes, limits: raw.limits ?? null, measure: raw.measure ?? null, pricing,
     codeCommit: raw.code_commit ?? null, promptVersion: raw.prompt_version ?? null, createdAt: raw.created_at ?? null, endedAt: raw.ended_at ?? null,
     tasks, runs, planned: runs.length, finished: runs.filter((r) => r.state !== 'planned' && r.state !== 'running').length, error: raw.error ?? null,
   }

@@ -1,6 +1,7 @@
 // Builds the archived research batch the dashboard shows until the read-only research API (#2) is wired in.
 // Input: the committed second native pilot under docs/research/native-r2-20261114 (real runs, dev-only).
-// Output: src/samples/research-native-r2.json in the draft contract shape (src/research.ts).
+// Output: src/samples/research-native-r2.json in the research-comparison-v1 shape served by
+// GET /api/research-comparisons/{id} (#2), plus a few display extras the archive records (model, code, prompt, title).
 // Only fields already in the archive are copied; nothing is estimated here except what the archive states.
 //   node scripts/research-sample.mjs
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
@@ -32,6 +33,7 @@ for (const r of cmp.runs) {
     task_id: t.task_id,
     family: t.family,
     title: t.presentation?.title ?? t.task_id,
+    workload: t.presentation?.workload ?? null,
     objective: {
       metric: t.objective.metric,
       direction: t.objective.direction,
@@ -56,18 +58,20 @@ const runs = cmp.runs.map((r) => {
   return {
     seq: r.seq, task_id: r.task_id, repeat: r.repeat, mode: r.mode, run_id: r.run_id,
     status: r.status, stop_reason: r.stop_reason, started_at: rep.started_at, ended_at: rep.ended_at,
+    task: tasks.find((t) => t.task_id === r.task_id),
     outcome: r.outcome,
-    // Proposed for #2: final state as its own field so "not enabled" never reads as "failed".
-    final: { enabled: cmp.final_evaluation, state: cmp.final_evaluation ? (r.outcome.final_evaluated ? 'completed' : 'missing') : 'disabled',
-      correct: r.outcome.final_correct, value: r.outcome.final_objective?.value ?? r.outcome.final_speedup ?? null },
+    final_status: cmp.final_evaluation ? (r.outcome.final_evaluated ? (r.outcome.final_correct ? 'completed' : 'failed') : 'not_run') : 'disabled',
+    dev_status: r.best_dev?.status ?? 'not_run',
+    final_evaluation: null,
     best_candidate_id: r.best_candidate_id,
     best_dev: r.best_dev ? { ...r.best_dev, objective: r.best_dev.objective ? objective : null } : null,
     candidates: { proposed: s.candidates_proposed, passed: s.candidates_passed, unique_ast: s.unique_ast_candidates },
     iterations: r.iterations,
     timing: r.timing,
     usage: trimUsage(r.usage),
-    estimated_cost: r.estimated_cny == null ? null
-      : { amount: r.estimated_cny, currency: summary.pricing.currency, basis: 'list_price', note: r.cost_note },
+    cost: r.estimated_cny == null
+      ? { amount: null, currency: summary.pricing.currency, status: 'unknown', source: summary.pricing.source }
+      : { amount: r.estimated_cny, currency: summary.pricing.currency, status: 'estimated', source: summary.pricing.source, note: r.cost_note },
     progress: r.progress.map((p) => ({
       elapsed_s: p.elapsed_s, model_requests: p.model_requests, tokens: p.tokens,
       input_tokens: p.usage.input_tokens, cached_input_tokens: p.usage.cached_input_tokens, output_tokens: p.usage.output_tokens,
@@ -78,7 +82,7 @@ const runs = cmp.runs.map((r) => {
 })
 
 const sample = {
-  contract: 'research-comparison/v0-draft',
+  api_contract: 'research-comparison-v1',
   comparison_id: cmp.comparison_id,
   status: cmp.status,
   label: cmp.label,
@@ -92,12 +96,14 @@ const sample = {
   fixed_model: role,
   model: { role, name: m.model, provider: m.provider, host, hosted },
   final_evaluation: cmp.final_evaluation,
+  dev_only: cmp.final_evaluation === false,
   modes: [...new Set(cmp.runs.map((r) => r.mode))],
   repeats: Math.max(...cmp.runs.map((r) => r.repeat)),
   limits: cmp.limits,
   measure: cmp.measure,
-  pricing: { ...summary.pricing, cached_input: summary.pricing.input, fetched_at: null },
-  tasks,
+  // The archive does not record when the price was retrieved, so retrieved_at is left out rather than guessed.
+  price_snapshot: { model: m.model, currency: summary.pricing.currency, unit: 'per_1m_tokens',
+    input_per_1m: summary.pricing.input, output_per_1m: summary.pricing.output, source: summary.pricing.source },
   runs,
   source: { kind: 'archive', path: dir },
 }

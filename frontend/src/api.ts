@@ -55,9 +55,9 @@ export interface RunRow {
   final_goal_met: number | null
   final_speedup: number | null
   final_score: number | null
-  // Proposed in #2 for the run list; absent on the current API, where a missing final row means "final not run".
+  // From #2 (research-comparison-v1 run list); absent on older APIs, where a missing final row means "final not run".
   research_mode?: string | null
-  final_evaluation?: boolean | null
+  dev_only?: boolean | null
 }
 
 export interface Step {
@@ -343,8 +343,8 @@ export const api = {
   note: (id: string) => call<{ lines: string[]; fair: boolean; scripted_model: boolean }>(`/comparisons/${id}/note`),
   markdownUrl: (runId: string) => `/api/runs/${runId}/markdown`,
   sessions: () => call<Session[]>('/sessions'),
-  // Read-only within-task research comparisons (draft contract with #2, see src/research.ts).
-  researchComparisons: () => call<RawBatchRow[]>('/research/comparisons'),
-  researchComparison: (id: string) => call<RawBatch>(`/research/comparisons/${id}`),
+  // Read-only within-task research comparisons (research-comparison-v1 from #2, see src/research.ts).
+  researchComparisons: () => call<RawBatchRow[]>('/research-comparisons'),
+  researchComparison: (id: string) => call<RawBatch>(`/research-comparisons/${id}`),
   startSession: (body: { learn_task: string; eval_task: string; base_snapshot_id: string }) => post<{ session_id: string }>('/sessions', body),
 }

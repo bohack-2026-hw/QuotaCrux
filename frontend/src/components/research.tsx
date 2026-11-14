@@ -4,7 +4,7 @@ import { useWidth } from '../hooks'
 import { FINAL, RUN_STATE, fmt, money, rmode } from '../labels'
 import type { Cost, RBatch, RRun, RTask } from '../research'
 import { costTotals, fairLabel } from '../research'
-import { metricName, metricText } from '../researchFormat'
+import { bigNumber, deltaText, metricName, metricText, modeSummary } from '../researchFormat'
 import { REPO_BLOB } from '../researchData'
 import { Chip } from './ui'
 
@@ -86,7 +86,7 @@ const AXIS: Record<Axis, string> = { time: '墙钟', tokens: 'Token', cost: '估
 
 /** Best development result so far, one step line per run, against wall clock, tokens or estimated cost. The value only
     changes when the selector keeps a new candidate; the line ends where the run ended. */
-export function ProgressChart({ task, axis, currency }: { task: RTask; axis: Axis; currency: string | null }) {
+export function ProgressChart({ task, axis, currency, height = 240 }: { task: RTask; axis: Axis; currency: string | null; height?: number }) {
   const [box, W] = useWidth<HTMLDivElement>(640)
   const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null)
   const xOf = (p: { t: number; tokens: number | null; cost: number | null }) => (axis === 'time' ? p.t : axis === 'tokens' ? p.tokens : p.cost)
@@ -105,7 +105,7 @@ export function ProgressChart({ task, axis, currency }: { task: RTask; axis: Axi
   lo -= pad; hi += pad
   const xMax = Math.max(...xs) * 1.02 || 1
   const left = task.metric === 'score' ? 62 : 50, right = 64, top = 14, bottom = 30
-  const H = 240
+  const H = height
   const x = (v: number) => left + (v / xMax) * (W - left - right)
   const y = (v: number) => top + (1 - (v - lo) / (hi - lo)) * (H - top - bottom)
   const yTicks = niceTicks(lo, hi, 4)
@@ -197,6 +197,56 @@ export function ModeLegend({ modes, repeats }: { modes: string[]; repeats: numbe
       {modes.map((m) => <span key={m} className="row" style={{ gap: 6 }}><ModeMark mode={m} size={11} />{rmode(m).label}（{rmode(m).short}）</span>)}
       {repeats.length > 1 && <span className="muted">实线 r1 · 长虚线 r2 · 短虚线 r3</span>}
       <span className="muted">标记 = 保留结果更新；竖线 = 运行结束</span>
+    </div>
+  )
+}
+
+/* ---------- scoreboard: the numbers a room can read ---------- */
+
+/** One tile per mode: the median development result, its change against the baseline, and nothing else. */
+export function Scoreboard({ task, lead, planned }: { task: RTask; lead: string | null; planned: string[] }) {
+  return (
+    <div className="scores">
+      {task.modes.map((m) => {
+        const s = modeSummary(task, m)
+        const [n, unit] = bigNumber(task.metric, s.value)
+        const d = deltaText(task, s.value)
+        const sub = s.pending ? '研究中' : s.value == null ? '无有效结果'
+          : s.improved > 0 ? (task.metric === 'score' ? `比基线 ${d ?? ''}` : '快于初始程序')
+          : '未超过基线'
+        return (
+          <div key={m} className={`score ${lead === m ? 'lead' : ''}`}>
+            <div className="who"><ModeMark mode={m} size={10} />{rmode(m).label}{s.runs > 1 && <span className="mono muted">· {s.runs} 次中位</span>}</div>
+            <div className="num">{n}{unit && <small>{unit}</small>}</div>
+            <div className={`sub ${s.improved > 0 ? 'up' : ''}`}>{sub}</div>
+          </div>
+        )
+      })}
+      {planned.filter((m) => !task.modes.includes(m)).map((m) => (
+        <div key={m} className="score off">
+          <div className="who"><ModeMark mode={m} size={10} />{rmode(m).label}</div>
+          <div className="num">—</div>
+          <div className="sub">此题不设该组</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/** The whole batch state in four badges: which data, final, fairness, repeats. */
+export function BatchBadges({ b }: { b: RBatch }) {
+  const reps = Math.max(1, ...b.tasks.map((t) => t.repeats.length))
+  const counts = b.runs.reduce<Record<string, number>>((a, r) => ({ ...a, [r.final.state]: (a[r.final.state] ?? 0) + 1 }), {})
+  const finalChip = b.finalEnabled === false ? <Chip tone="warn" icon="!">最终集未验证</Chip>
+    : counts.passed === b.runs.length ? <Chip tone="good" icon="✓">最终集全部通过</Chip>
+    : (counts.failed || counts.error || counts.missing) ? <Chip tone="bad" icon="✕">最终集 {counts.passed ?? 0}/{b.runs.length} 通过</Chip>
+    : <Chip icon="…">最终集 {counts.passed ?? 0}/{b.runs.length} 已通过</Chip>
+  return (
+    <div className="row">
+      <Chip tone={b.running ? 'accent' : 'neutral'} icon={b.running ? '●' : undefined}>{b.running ? `进行中 ${b.finished}/${b.planned}` : b.finalEnabled === false ? '开发预实验' : '正式对照'}</Chip>
+      {finalChip}
+      <FairChip b={b} />
+      <Chip>每组 {reps} 次</Chip>
     </div>
   )
 }

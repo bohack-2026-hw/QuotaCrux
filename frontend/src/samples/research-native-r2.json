@@ -1,5 +1,5 @@
 {
-  "contract": "research-comparison/v0-draft",
+  "api_contract": "research-comparison-v1",
   "comparison_id": "research-20261114T053410-bfde",
   "status": "completed",
   "label": "ALE-Bench and AlgoTune second native pilot 2026-11-14",
@@ -19,6 +19,7 @@
     "hosted": true
   },
   "final_evaluation": false,
+  "dev_only": true,
   "modes": [
     "feedback",
     "independent"
@@ -44,44 +45,14 @@
     "max_output_bytes": 67108864,
     "ready_timeout_s": 30
   },
-  "pricing": {
-    "source": "https://aiping.cn/api/v1/models",
+  "price_snapshot": {
+    "model": "Qwen3.8-27B",
     "currency": "CNY",
-    "unit": "per 1M tokens",
-    "input": 3,
-    "output": 12,
-    "method": "standard input/output rates; cached input charged at standard input rate; estimate, not invoice",
-    "cached_input": 3,
-    "fetched_at": null
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models"
   },
-  "tasks": [
-    {
-      "task_id": "ale-bench-ahc026-smoke-2960ce864b",
-      "family": "ale-bench",
-      "title": "ALE-Bench · ahc026",
-      "objective": {
-        "metric": "score",
-        "direction": "maximize",
-        "baseline": 17753,
-        "min_speedup": null
-      },
-      "dev_cases": 2,
-      "final_cases": null
-    },
-    {
-      "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
-      "family": "algotune",
-      "title": "AlgoTune · convolve_1d",
-      "objective": {
-        "metric": "speedup",
-        "direction": "maximize",
-        "baseline": 1,
-        "min_speedup": 1.1
-      },
-      "dev_cases": 2,
-      "final_cases": null
-    }
-  ],
   "runs": [
     {
       "seq": 1,
@@ -93,6 +64,20 @@
       "stop_reason": "agent_finished",
       "started_at": "2026-11-14T05:34:10.467+00:00",
       "ended_at": "2026-11-14T05:38:42.077+00:00",
+      "task": {
+        "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+        "family": "ale-bench",
+        "title": "ALE-Bench · ahc026",
+        "workload": "ahc026 · 2 public cases",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "baseline": 17753,
+          "min_speedup": null
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
       "outcome": {
         "run_completed": true,
         "candidate_ran": true,
@@ -108,12 +93,9 @@
         "valid_artifact": null,
         "summary": "未执行最终测试（agent_finished）；最佳候选 c0 仅有开发验证结果"
       },
-      "final": {
-        "enabled": false,
-        "state": "disabled",
-        "correct": null,
-        "value": null
-      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
       "best_candidate_id": "c0",
       "best_dev": {
         "evaluation_id": "0cfdb0bee9ef",
@@ -175,10 +157,11 @@
         "cost_usd": null,
         "cost_status": "unknown"
       },
-      "estimated_cost": {
+      "cost": {
         "amount": 0.556437,
         "currency": "CNY",
-        "basis": "list_price",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
         "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
       },
       "progress": [
@@ -239,6 +222,20 @@
       "stop_reason": "agent_finished",
       "started_at": "2026-11-14T05:38:42.101+00:00",
       "ended_at": "2026-11-14T05:42:45.871+00:00",
+      "task": {
+        "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+        "family": "ale-bench",
+        "title": "ALE-Bench · ahc026",
+        "workload": "ahc026 · 2 public cases",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "baseline": 17753,
+          "min_speedup": null
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
       "outcome": {
         "run_completed": true,
         "candidate_ran": true,
@@ -254,12 +251,9 @@
         "valid_artifact": null,
         "summary": "未执行最终测试（agent_finished）；最佳候选 c7 仅有开发验证结果"
       },
-      "final": {
-        "enabled": false,
-        "state": "disabled",
-        "correct": null,
-        "value": null
-      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
       "best_candidate_id": "c7",
       "best_dev": {
         "evaluation_id": "f7dcb6431d0c",
@@ -321,10 +315,11 @@
         "cost_usd": null,
         "cost_status": "unknown"
       },
-      "estimated_cost": {
+      "cost": {
         "amount": 0.257919,
         "currency": "CNY",
-        "basis": "list_price",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
         "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
       },
       "progress": [
@@ -440,6 +435,20 @@
       "stop_reason": "agent_finished",
       "started_at": "2026-11-14T05:42:45.881+00:00",
       "ended_at": "2026-11-14T05:44:07.281+00:00",
+      "task": {
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+        "family": "algotune",
+        "title": "AlgoTune · convolve_1d",
+        "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize",
+          "baseline": 1,
+          "min_speedup": 1.1
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
       "outcome": {
         "run_completed": true,
         "candidate_ran": true,
@@ -455,12 +464,9 @@
         "valid_artifact": null,
         "summary": "未执行最终测试（agent_finished）；最佳候选 c5 仅有开发验证结果"
       },
-      "final": {
-        "enabled": false,
-        "state": "disabled",
-        "correct": null,
-        "value": null
-      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
       "best_candidate_id": "c5",
       "best_dev": {
         "evaluation_id": "10758ba75c8d",
@@ -516,10 +522,11 @@
         "cost_usd": null,
         "cost_status": "unknown"
       },
-      "estimated_cost": {
+      "cost": {
         "amount": 0.086445,
         "currency": "CNY",
-        "basis": "list_price",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
         "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
       },
       "progress": [
@@ -624,6 +631,20 @@
       "stop_reason": "agent_finished",
       "started_at": "2026-11-14T05:44:07.291+00:00",
       "ended_at": "2026-11-14T05:46:29.124+00:00",
+      "task": {
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+        "family": "algotune",
+        "title": "AlgoTune · convolve_1d",
+        "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize",
+          "baseline": 1,
+          "min_speedup": 1.1
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
       "outcome": {
         "run_completed": true,
         "candidate_ran": true,
@@ -639,12 +660,9 @@
         "valid_artifact": null,
         "summary": "未执行最终测试（agent_finished）；最佳候选 c3 仅有开发验证结果"
       },
-      "final": {
-        "enabled": false,
-        "state": "disabled",
-        "correct": null,
-        "value": null
-      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
       "best_candidate_id": "c3",
       "best_dev": {
         "evaluation_id": "9779fb4e30ae",
@@ -700,10 +718,11 @@
         "cost_usd": null,
         "cost_status": "unknown"
       },
-      "estimated_cost": {
+      "cost": {
         "amount": 0.294297,
         "currency": "CNY",
-        "basis": "list_price",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
         "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
       },
       "progress": [

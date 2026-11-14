@@ -112,7 +112,7 @@ function runOutcome(r: RunRow): { text: string; tone: 'good' | 'bad' | 'muted' |
   if (r.status === 'running') return { text: '运行中', tone: null }
   const stop = STOP[r.stop_reason ?? ''] ?? r.stop_reason ?? r.status
   const finalRan = r.final_goal_met != null || r.final_speedup != null || r.final_score != null
-  if (!finalRan) return { text: `${r.final_evaluation === false ? '仅开发' : 'final 未运行'} · ${stop}`, tone: 'muted' }
+  if (!finalRan) return { text: `${r.dev_only ? '仅开发' : 'final 未运行'} · ${stop}`, tone: 'muted' }
   if (r.final_score != null) return { text: `最终得分 ${fmt.n(r.final_score)}`, tone: null }
   if (r.final_goal_met) return { text: `达标 ${fmt.x(r.final_speedup)}`, tone: 'good' }
   return { text: `最终未达标${r.final_speedup != null ? ` ${fmt.x(r.final_speedup)}` : ''} · ${stop}`, tone: 'bad' }
@@ -124,7 +124,7 @@ function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) 
     <button className={on ? 'on' : ''} onClick={pick}>
       <b className="id-wrap" style={{ display: 'block' }}>{r.task_id}</b>
       <div className="spread" style={{ flexWrap: 'wrap', gap: '2px 10px' }}>
-        <span>{r.research_mode ? `研究 · ${rmode(r.research_mode).label}` : `${MODE[r.mode] ?? r.mode} · 读 ${r.snapshot_id}`}</span>
+        <span>{r.research_mode && r.research_mode !== 'legacy' ? `研究 · ${rmode(r.research_mode).label}` : `${MODE[r.mode] ?? r.mode} · 读 ${r.snapshot_id}`}</span>
         <span style={o.tone === 'good' ? { color: on ? undefined : 'var(--good-ink)' } : o.tone === 'muted' ? { opacity: 0.75 } : undefined}>{o.text}</span>
       </div>
       <div className="rid">{r.run_id}</div>

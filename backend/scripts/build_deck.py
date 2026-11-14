@@ -392,16 +392,16 @@ def build(out: Path, shots: Path) -> None:
     st0 = find_comparison("S online stream")
     if st0 and st0["finished_runs"]:
         F0, M0 = st0["sides"]["fresh"], st0["sides"]["memory"]
-        d.text(s, (f"S 任务流（3 个任务族 × {st0['repeats']} 次重放）：带记忆 vs 不带记忆 · 大模型请求 {F0['large_model_requests_total']} → {M0['large_model_requests_total']} · "
-                   f"费用 {usd(F0['cost_usd_total'])} → {usd(M0['cost_usd_total'])} · 总耗时 {F0['wall_clock_s_total']:.0f}s → {M0['wall_clock_s_total']:.0f}s · "
+        d.text(s, (f"S 任务流（3 个任务族）不带 → 带记忆：GPT 请求 {F0['large_model_requests_total']} → {M0['large_model_requests_total']} · "
+                   f"费用 {usd(F0['cost_usd_total'])} → {usd(M0['cost_usd_total'])} · 循环时长中位数 {F0['agent_loop_s_median']:.0f}s → {M0['agent_loop_s_median']:.0f}s · "
                    f"达标 {F0['goal_met']}/{F0['runs']} → {M0['goal_met']}/{M0['runs']}"),
-               0.95, 4.85, 11.5, 0.5, size=14, color=PAPER)
+               0.95, 4.85, 11.8, 0.45, size=14, color=PAPER)
     if headline and headline["finished_runs"]:
         A, B = headline["sides"][headline["snapshot_a"]], headline["sides"][headline["snapshot_b"]]
-        d.text(s, (f"{'D 封存留出' if headline is cmp_d else 'B 开发对照'}：最终加速比中位数 {x(A['final_speedup_median'])} → {x(B['final_speedup_median'])} · "
+        d.text(s, (f"{'D 封存留出（分组聚合）' if headline is cmp_d else 'B 开发对照'}：最终加速比中位数 {x(A['final_speedup_median'])} → {x(B['final_speedup_median'])} · "
                    f"模型请求中位数 {g(A['model_requests_median'])} → {g(B['model_requests_median'])} · GPT 费用 {usd(A['cost_usd_total'])} → {usd(B['cost_usd_total'])} · "
                    f"循环时长中位数 {A['agent_loop_s_median']:.0f}s → {B['agent_loop_s_median']:.0f}s"),
-               0.95, 5.3, 11.5, 0.5, size=14, color=PAPER)
+               0.95, 5.35, 11.8, 0.45, size=14, color=PAPER)
     d.text(s, "BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
 
     # 2 questions
@@ -758,7 +758,7 @@ def build(out: Path, shots: Path) -> None:
     if st and st["finished_runs"]:
         F, M = st["sides"]["fresh"], st["sides"]["memory"]
         lf, lm = st["repeats_of_family"]["fresh"], st["repeats_of_family"]["memory"]
-        s = d.slide(f"S 任务流：同一串任务，带记忆 vs 不带记忆（{len(st['tasks'])} 任务 × {st['repeats']} 次重放）", "第三版 · 封存任务流")
+        s = d.slide("S 任务流：带记忆 vs 不带记忆", f"第三版 · 封存任务流 · {len(st['tasks'])} 任务 × {st['repeats']} 次重放 · 3 个任务族")
         d.image(s, stream_chart(st, charts / "S-stream.png"), 0.5, 1.65, 7.7)
         rows = [["", "不带记忆", "带记忆"],
                 ["达标", f"{F['goal_met']}/{F['runs']}", f"{M['goal_met']}/{M['runs']}"],
@@ -771,7 +771,7 @@ def build(out: Path, shots: Path) -> None:
         d.table(s, rows, 8.4, 1.75, 4.3, [1.7, 1.3, 1.3], size=12)
         g0 = st["growth"][0]
         d.text(s, (f"从 {st['start_snapshot']} 出发（只有分组聚合的经验）；每次重放都从起点重新学起，重复的是学习过程本身；"
-                   f"每个任务都在从它学到东西之前运行。任务族首次出现时两侧条件相同；之后的任务带记忆时 "
+                   f"每个任务都在从它学到东西之前运行。新任务族首次出现时两侧条件相同，都直接交给大模型；其余任务带记忆时 "
                    f"{lm['runs_without_model_request']}/{lm['runs']} 次没有调用模型（不带记忆 {lf['runs_without_model_request']}/{lf['runs']}）。"
                    f"经验 {g0['experiences_start']} → {'/'.join(str(x_['experiences_end']) for x_ in st['growth'])} 条。配置指纹{'一致' if st['fair'] else '不一致'}。"),
                0.6, 5.75, 12.1, 1.2, size=12.5, color=INK2)
@@ -854,7 +854,7 @@ def build(out: Path, shots: Path) -> None:
             ["RA-AC-04", "错误、退化、证据不足如实记录", f"反驳 {rtotal['refuted']}、未能检验 {rtotal['untestable']}；无改进的运行交付初始程序"],
             ["RA-AC-05", "独立最终评价，通过与未通过都报告", "开发达标但最终未达标的运行如实记为未达标"],
             ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；复验时间计入循环；学习成本单列"],
-            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 A-01 1.44×、D-01 1.4473×，与记录一致；scripts/experiment.sh 重跑全流程"],
+            ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 A-01 1.44×、D-01 1.4473×、S-01 6.69×（记录 6.35×），结果正确；scripts/experiment.sh 重跑全流程"],
             ["RA-AC-08", "有无经验的完整对照", "第三版 S 任务流带 / 不带记忆各 36 次（重放 3 次学习过程）；第二版 B、D 与第一版 B、C 各 36 次；配置一致，全部计入"]]
     d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.0, 6.7], size=12)
 
@@ -872,7 +872,7 @@ def build(out: Path, shots: Path) -> None:
     s = d.slide("复现与界面", "交付")
     d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
                   "scripts/experiment.sh   # 重建任务包 → A 学习两轮 → B、D 对照 → S 任务流",
-                  "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理",
+                  "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理 · 实时进度",
                   "uv run routeevo export-run <run_id> --bundle <目录>   # 研究成果交付包",
                   "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
     shot = shots / "home.png"

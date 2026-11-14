@@ -355,6 +355,12 @@ def section_ablation(lines: list[str]) -> None:
             return "；".join(f"{'✓' if r['outcome']['goal_met'] else '✕'} {x(r['outcome']['final_speedup'])} · {r['iterations']['model_requests']} 次 · "
                             f"{r['timing']['agent_loop_s']:.0f}s" for r in rs)
         lines.append(f"| {t} | {cell(ab['off'])} | {cell(ab['on'])} |")
+    extra = ((on["cost_usd_total"] or 0) - (off["cost_usd_total"] or 0)) / max(1, on["runs"])
+    lines += ["", f"观察：两侧都全部达标。直接用大模型时单次研究循环时长中位数 {off['agent_loop_s_median']:.0f}s → {on['agent_loop_s_median']:.0f}s，"
+              f"总耗时 {off['wall_clock_s_total']:.0f}s → {on['wall_clock_s_total']:.0f}s，最终加速比中位数 {x(off['final_speedup_median'])} → "
+              f"{x(on['final_speedup_median'])}，没有失败候选和升级；先用本地小模型时有 {off['candidates_failed_total']} 个候选失败、"
+              f"{off['upgrades_total']} 次按规则升级。代价是费用 {usd(off['cost_usd_total'])} → {usd(on['cost_usd_total'])}，"
+              f"平均每个新任务多 ${extra:.3f}。新问题的第一个答案会成为之后同类任务复用的起点（见 2.2 节），所以分流器把这笔钱花在第一次。"]
     lines.append("")
 
 

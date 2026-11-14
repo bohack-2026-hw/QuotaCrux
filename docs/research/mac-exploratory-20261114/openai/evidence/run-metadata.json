@@ -1,0 +1,22 @@
+{
+  "status": "prepared",
+  "scope": "exploratory-dev-subset",
+  "formal_results_eligible": false,
+  "code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "model_role": "large",
+  "model": "gpt-6.1-sol",
+  "tasks": [
+    "algotune-convolve_1d-exploratory-short-20261114",
+    "algotune-pagerank-exploratory-short-20261114"
+  ],
+  "dev_cases_per_task": 2,
+  "final_evaluation": false,
+  "planned_slots": 4,
+  "wall_clock_s_per_slot": 180,
+  "max_requests_per_slot": 5,
+  "max_candidates_per_slot": 3,
+  "function_warmups": 1,
+  "cpuset_cpus": "2",
+  "host_load_gate_waived_by_user": true,
+  "notes": "High host load is recorded as a warning. These results must not be merged into formal 15+12 studies."
+}

@@ -1,0 +1,20 @@
+{
+  "status": "prepared-after-request-compatibility-test",
+  "scope": "exploratory-remote-lmstudio-single-slot",
+  "formal_results_eligible": false,
+  "code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "model": "qwen3.8-27b-uncensored-mlx",
+  "model_loaded": true,
+  "full_prompt_max_tokens_768_http_status": 200,
+  "remote_compute": "LM Studio inference only",
+  "local_compute": "RouteEvo orchestration and Docker evaluation",
+  "dev_cases": 2,
+  "final_evaluation": false,
+  "planned_slots": 1,
+  "wall_clock_s": 240,
+  "request_timeout_s": 190,
+  "max_requests": 1,
+  "max_candidates": 1,
+  "max_output_tokens": 2048,
+  "notes": "Final bounded compatibility attempt after 4096-token requests returned 503 and a 768-token full-prompt request returned 200."
+}

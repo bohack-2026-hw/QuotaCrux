@@ -1,0 +1,268 @@
+{
+  "format": "routeevo-sqlite-json-v1",
+  "source_binary_committed": false,
+  "schemas": {
+    "candidates": "CREATE TABLE candidates (\n    run_id TEXT NOT NULL REFERENCES runs(run_id),\n    candidate_id TEXT NOT NULL,\n    seq INTEGER NOT NULL,\n    parent_candidate_id TEXT,\n    origin TEXT NOT NULL,\n    model_call_id TEXT,\n    code_path TEXT NOT NULL,\n    code_sha256 TEXT NOT NULL,\n    created_at TEXT NOT NULL,\n    PRIMARY KEY (run_id, candidate_id)\n)",
+    "comparison_runs": "CREATE TABLE comparison_runs (\n    comparison_id TEXT NOT NULL REFERENCES comparisons(comparison_id),\n    seq INTEGER NOT NULL,\n    task_id TEXT NOT NULL,\n    snapshot_id TEXT NOT NULL,\n    repeat INTEGER NOT NULL,\n    run_id TEXT,\n    error TEXT, arm TEXT, position INTEGER,\n    PRIMARY KEY (comparison_id, seq)\n)",
+    "comparisons": "CREATE TABLE comparisons (\n    comparison_id TEXT PRIMARY KEY,\n    status TEXT NOT NULL,\n    label TEXT,\n    plan_json TEXT NOT NULL,\n    summary_json TEXT,\n    stop_requested INTEGER NOT NULL DEFAULT 0,\n    created_at TEXT NOT NULL,\n    ended_at TEXT\n)",
+    "evaluations": "CREATE TABLE evaluations (\n    evaluation_id TEXT PRIMARY KEY,\n    run_id TEXT,\n    candidate_id TEXT,\n    task_id TEXT NOT NULL,\n    dataset TEXT NOT NULL,\n    dataset_sha256 TEXT NOT NULL,\n    status TEXT NOT NULL,\n    executed INTEGER NOT NULL,\n    format_ok INTEGER,\n    correct INTEGER,\n    improved INTEGER,\n    goal_met INTEGER,\n    speedup REAL,\n    candidate_median_s REAL,\n    baseline_median_s REAL,\n    detail_json TEXT NOT NULL,\n    evaluator_version TEXT NOT NULL,\n    started_at TEXT NOT NULL,\n    ended_at TEXT NOT NULL\n)",
+    "events": "CREATE TABLE events (\n    event_id INTEGER PRIMARY KEY AUTOINCREMENT,\n    run_id TEXT NOT NULL,\n    ts TEXT NOT NULL,\n    type TEXT NOT NULL,\n    payload_json TEXT NOT NULL\n)",
+    "experiences": "CREATE TABLE experiences (\n    experience_id TEXT PRIMARY KEY,\n    family TEXT NOT NULL,\n    task_id TEXT NOT NULL,\n    split TEXT NOT NULL,\n    outcome TEXT NOT NULL,\n    conditions_json TEXT NOT NULL,\n    action_json TEXT NOT NULL,\n    hypothesis TEXT,\n    result_json TEXT NOT NULL,\n    resources_json TEXT NOT NULL,\n    source_json TEXT NOT NULL,\n    created_at TEXT NOT NULL\n)",
+    "model_calls": "CREATE TABLE model_calls (\n    call_id TEXT PRIMARY KEY,\n    run_id TEXT NOT NULL REFERENCES runs(run_id),\n    provider TEXT NOT NULL,\n    role TEXT NOT NULL,\n    model_requested TEXT NOT NULL,\n    model_returned TEXT,\n    reasoning_effort TEXT,\n    max_output_tokens INTEGER,\n    status TEXT NOT NULL,\n    error_kind TEXT,\n    error_message TEXT,\n    request_id TEXT,\n    input_tokens INTEGER,\n    cached_input_tokens INTEGER,\n    output_tokens INTEGER,\n    reasoning_tokens INTEGER,\n    usage_source TEXT NOT NULL,\n    estimated_input_tokens INTEGER,\n    cost_usd REAL,\n    cost_status TEXT NOT NULL,\n    price_version TEXT,\n    latency_s REAL,\n    request_path TEXT,\n    response_path TEXT,\n    started_at TEXT NOT NULL,\n    ended_at TEXT\n)",
+    "pointer_history": "CREATE TABLE pointer_history (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    ts TEXT NOT NULL,\n    from_snapshot_id TEXT,\n    to_snapshot_id TEXT NOT NULL,\n    reason TEXT,\n    actor TEXT NOT NULL\n)",
+    "run_experiences": "CREATE TABLE run_experiences (\n    run_id TEXT NOT NULL REFERENCES runs(run_id),\n    experience_id TEXT NOT NULL REFERENCES experiences(experience_id),\n    rank INTEGER NOT NULL,\n    matching_features INTEGER NOT NULL,\n    PRIMARY KEY (run_id, experience_id)\n)",
+    "runs": "CREATE TABLE runs (\n    run_id TEXT PRIMARY KEY,\n    task_id TEXT NOT NULL REFERENCES tasks(task_id),\n    mode TEXT NOT NULL,\n    snapshot_id TEXT NOT NULL,\n    config_json TEXT NOT NULL,\n    config_fingerprint TEXT NOT NULL,\n    status TEXT NOT NULL,\n    stop_reason TEXT,\n    stop_detail TEXT,\n    best_candidate_id TEXT,\n    final_evaluation_id TEXT,\n    stop_requested INTEGER NOT NULL DEFAULT 0,\n    started_at TEXT NOT NULL,\n    loop_ended_at TEXT,\n    ended_at TEXT\n, retrieval_json TEXT, published_snapshot_id TEXT)",
+    "sessions": "CREATE TABLE sessions (\n    session_id TEXT PRIMARY KEY,\n    learn_task TEXT NOT NULL,\n    eval_task TEXT NOT NULL,\n    base_snapshot_id TEXT NOT NULL,\n    phase TEXT NOT NULL,\n    status TEXT NOT NULL,\n    learn_run_id TEXT,\n    new_snapshot_id TEXT,\n    comparison_id TEXT,\n    detail TEXT,\n    created_at TEXT NOT NULL,\n    ended_at TEXT\n)",
+    "settings": "CREATE TABLE settings (\n    key TEXT PRIMARY KEY,\n    value TEXT NOT NULL\n)",
+    "snapshot_items": "CREATE TABLE snapshot_items (\n    snapshot_id TEXT NOT NULL REFERENCES snapshots(snapshot_id),\n    experience_id TEXT NOT NULL REFERENCES experiences(experience_id),\n    PRIMARY KEY (snapshot_id, experience_id)\n)",
+    "snapshots": "CREATE TABLE snapshots (\n    snapshot_id TEXT PRIMARY KEY,\n    version INTEGER NOT NULL UNIQUE,\n    parent_snapshot_id TEXT,\n    source_run_id TEXT,\n    created_at TEXT NOT NULL,\n    diff_json TEXT NOT NULL DEFAULT '{}'\n)",
+    "steps": "CREATE TABLE steps (\n    step_id TEXT PRIMARY KEY,\n    run_id TEXT NOT NULL REFERENCES runs(run_id),\n    seq INTEGER NOT NULL,\n    actor TEXT NOT NULL,\n    action TEXT NOT NULL,\n    status TEXT NOT NULL,\n    purpose TEXT,\n    expected_result TEXT,\n    verification TEXT,\n    hypothesis TEXT,\n    params_json TEXT NOT NULL DEFAULT '{}',\n    result_json TEXT NOT NULL DEFAULT '{}',\n    next_decision TEXT,\n    model_call_id TEXT,\n    tool_call_id TEXT,\n    candidate_id TEXT,\n    evaluation_id TEXT,\n    started_at TEXT NOT NULL,\n    ended_at TEXT,\n    UNIQUE (run_id, seq)\n)",
+    "tasks": "CREATE TABLE tasks (\n    task_id TEXT PRIMARY KEY,\n    family TEXT NOT NULL,\n    split TEXT NOT NULL,\n    manifest_json TEXT NOT NULL,\n    manifest_sha256 TEXT NOT NULL,\n    registered_at TEXT NOT NULL\n)",
+    "tool_calls": "CREATE TABLE tool_calls (\n    call_id TEXT PRIMARY KEY,\n    run_id TEXT NOT NULL REFERENCES runs(run_id),\n    tool TEXT NOT NULL,\n    params_json TEXT NOT NULL DEFAULT '{}',\n    status TEXT NOT NULL,\n    error_kind TEXT,\n    error_message TEXT,\n    duration_s REAL,\n    output_path TEXT,\n    started_at TEXT NOT NULL,\n    ended_at TEXT\n)"
+  },
+  "tables": {
+    "candidates": [
+      {
+        "run_id": "run-20261114T091639-dd63",
+        "candidate_id": "c0",
+        "seq": 0,
+        "parent_candidate_id": null,
+        "origin": "initial",
+        "model_call_id": null,
+        "code_path": "<VAR_DIR>/runs/run-20261114T091639-dd63/candidates/c0.py",
+        "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+        "created_at": "2026-11-14T09:16:39.403+00:00"
+      }
+    ],
+    "comparison_runs": [],
+    "comparisons": [],
+    "evaluations": [
+      {
+        "evaluation_id": "90c85c9eba93",
+        "run_id": "run-20261114T091639-dd63",
+        "candidate_id": "c0",
+        "task_id": "algotune-convolve_1d-remote-lmstudio-finaltry-20261114",
+        "dataset": "dev",
+        "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+        "status": "passed",
+        "executed": 1,
+        "format_ok": 1,
+        "correct": 1,
+        "improved": null,
+        "goal_met": null,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "detail_json": "{\"candidate_sha256\": \"aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5\", \"case_count\": 2, \"container_ready_latency_s\": 0.3215103750007984, \"dataset_sha256\": \"04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125\", \"duration_s\": 1.663, \"passed_cases\": 2, \"samples\": [{\"case\": \"0\", \"elapsed_s\": 0.41428808300042874, \"exit_code\": 0, \"gc_policy\": \"automatic_gc_disabled_during_solve\", \"initialization_s\": [0.33509781300017494, 0.0003803629997491953], \"ready_latency_s\": 0.18980037500023172, \"status\": \"ok\", \"stderr_tail\": \"\", \"stdout_bytes\": 810970, \"times_s\": 0.0007817249997970066, \"warmup_count\": 1, \"who\": \"candidate\"}, {\"case\": \"1\", \"elapsed_s\": 0.4007384999995338, \"exit_code\": 0, \"gc_policy\": \"automatic_gc_disabled_during_solve\", \"initialization_s\": [0.32647004399950674, 0.0003552799998942646], \"ready_latency_s\": 0.13171000000056665, \"status\": \"ok\", \"stderr_tail\": \"\", \"stdout_bytes\": 810970, \"times_s\": 0.0006297720001384732, \"warmup_count\": 1, \"who\": \"candidate\"}]}",
+        "evaluator_version": "research-benchmarks-v1",
+        "started_at": "2026-11-14T09:16:39.403+00:00",
+        "ended_at": "2026-11-14T09:16:41.066+00:00"
+      }
+    ],
+    "events": [
+      {
+        "event_id": 1,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:39.402+00:00",
+        "type": "run_created",
+        "payload_json": "{\"fingerprint\": \"8fd70a2d2960b166\", \"mode\": \"eval\", \"snapshot_id\": \"v0\", \"task_id\": \"algotune-convolve_1d-remote-lmstudio-finaltry-20261114\"}"
+      },
+      {
+        "event_id": 2,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:39.402+00:00",
+        "type": "run_started",
+        "payload_json": "{}"
+      },
+      {
+        "event_id": 3,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:39.403+00:00",
+        "type": "experiences_loaded",
+        "payload_json": "{\"current_buckets\": {\"problem\": \"fb78be9195\"}, \"family\": \"algotune\", \"family_records\": 0, \"feature_count\": 1, \"matched_by_outcome\": {}, \"min_matches\": 1, \"retrieval\": \"retrieval-v2\", \"scores\": {}, \"selected\": [], \"snapshot_id\": \"v0\", \"snapshot_size\": 0}"
+      },
+      {
+        "event_id": 4,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:39.403+00:00",
+        "type": "candidate_created",
+        "payload_json": "{\"candidate_id\": \"c0\", \"origin\": \"initial\", \"parent_candidate_id\": null}"
+      },
+      {
+        "event_id": 5,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.067+00:00",
+        "type": "step",
+        "payload_json": "{\"action\": \"run_validation\", \"actor\": \"program\", \"candidate_id\": \"c0\", \"next_decision\": \"continue\", \"purpose\": \"验证初始程序在开发数据上正确，作为基线候选\", \"result\": {\"correct\": true, \"goal_met\": null, \"speedup\": null, \"status\": \"passed\"}, \"status\": \"passed\", \"step\": 1}"
+      },
+      {
+        "event_id": 6,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.069+00:00",
+        "type": "model_started",
+        "payload_json": "{\"call_id\": \"m1\", \"model\": \"qwen3.8-27b-uncensored-mlx\", \"role\": \"small\", \"timeout_s\": 190.0}"
+      },
+      {
+        "event_id": 7,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.459+00:00",
+        "type": "model_finished",
+        "payload_json": "{\"call_id\": \"m1\", \"cost_status\": \"unknown\", \"cost_usd\": null, \"error_kind\": \"bad_response\", \"input_tokens\": null, \"latency_s\": 0.39, \"ok\": false, \"output_tokens\": null, \"reasoning_tokens\": null, \"role\": \"small\"}"
+      },
+      {
+        "event_id": 8,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.460+00:00",
+        "type": "step",
+        "payload_json": "{\"action\": \"model_request\", \"actor\": \"model\", \"expected_result\": null, \"hypothesis\": null, \"next_decision\": \"retry with a new request if budget allows\", \"params\": {}, \"status\": \"unusable_reply\", \"step\": 2, \"verification\": null}"
+      },
+      {
+        "event_id": 9,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.460+00:00",
+        "type": "loop_ended",
+        "payload_json": "{\"best_candidate_id\": \"c0\", \"detail\": \"model_requests: used 1/1\", \"loop_elapsed_s\": 2.058, \"stop_reason\": \"budget_exhausted\"}"
+      },
+      {
+        "event_id": 10,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.460+00:00",
+        "type": "final_eval_skipped",
+        "payload_json": "{\"reason\": \"development_only_protocol\"}"
+      },
+      {
+        "event_id": 11,
+        "run_id": "run-20261114T091639-dd63",
+        "ts": "2026-11-14T09:16:41.462+00:00",
+        "type": "run_finished",
+        "payload_json": "{\"goal_met\": false, \"status\": \"completed\", \"stop_reason\": \"budget_exhausted\"}"
+      }
+    ],
+    "experiences": [],
+    "model_calls": [
+      {
+        "call_id": "run-20261114T091639-dd63/m1",
+        "run_id": "run-20261114T091639-dd63",
+        "provider": "chat_compat",
+        "role": "small",
+        "model_requested": "qwen3.8-27b-uncensored-mlx",
+        "model_returned": null,
+        "reasoning_effort": "none",
+        "max_output_tokens": 2048,
+        "status": "error",
+        "error_kind": "bad_response",
+        "error_message": "HTTP 503, non-JSON body",
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "reasoning_tokens": null,
+        "usage_source": "unknown",
+        "estimated_input_tokens": 2113,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "price_version": null,
+        "latency_s": 0.389,
+        "request_path": "<VAR_DIR>/runs/run-20261114T091639-dd63/calls/m1.json",
+        "response_path": "<VAR_DIR>/runs/run-20261114T091639-dd63/calls/m1.json",
+        "started_at": "2026-11-14T09:16:41.069+00:00",
+        "ended_at": "2026-11-14T09:16:41.458+00:00"
+      }
+    ],
+    "pointer_history": [],
+    "run_experiences": [],
+    "runs": [
+      {
+        "run_id": "run-20261114T091639-dd63",
+        "task_id": "algotune-convolve_1d-remote-lmstudio-finaltry-20261114",
+        "mode": "eval",
+        "snapshot_id": "v0",
+        "config_json": "{\"action_schema_sha256\": \"e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409\", \"environment\": {\"gc_policy\": \"automatic_gc_disabled_during_solve\", \"image_id\": \"sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d\", \"image_tag\": \"routeevo-scientific:9df8e32a4952\", \"judge\": {\"image_id\": \"sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a\", \"image_tag\": \"routeevo-algotune-convolve_1d:230b3ab275ba\"}, \"limits\": {\"cpus\": 1.0, \"cpuset_cpus\": \"2\", \"function_warmups\": 1, \"max_output_bytes\": 67108864, \"memory\": \"1g\", \"pids_limit\": 64, \"ready_timeout_s\": 30.0, \"repeats\": 5}, \"protocol\": \"isolated-function-timing-v2\", \"threads\": 1}, \"evaluator_version\": \"runtime-suite-eval-3\", \"experience_extractor\": \"extractor-v3\", \"fingerprint\": \"8fd70a2d2960b166\", \"fingerprint_excludes\": [\"mode\", \"snapshot_id\", \"label\", \"environment details beyond image id\"], \"label\": \"exploratory-remote-lmstudio-finaltry-20261114 #1 r1\", \"limits\": {\"max_candidates\": 1, \"max_code_bytes\": 20000, \"max_model_requests\": 1, \"measurement_timeout_s\": 10.0, \"min_request_window_s\": 15.0, \"model_request_timeout_s\": 190.0, \"token_budget\": null, \"wall_clock_s\": 240.0}, \"measure\": {\"cpus\": 1.0, \"cpuset_cpus\": \"2\", \"function_warmups\": 1, \"max_output_bytes\": 67108864, \"memory\": \"1g\", \"pids_limit\": 64, \"ready_timeout_s\": 30.0, \"repeats\": 5}, \"models\": {\"large\": {\"base_url\": \"https://api.openai.com/v1\", \"enable_thinking\": null, \"extra\": {}, \"max_output_tokens\": 32000, \"model\": \"gpt-6.1-sol\", \"provider\": \"openai_responses\", \"reasoning_effort\": \"xhigh\", \"response_format\": \"json_schema\", \"role\": \"large\", \"temperature\": null}, \"small\": {\"base_url\": \"http://remote-lmstudio.invalid/v1\", \"enable_thinking\": false, \"extra\": {}, \"max_output_tokens\": 2048, \"model\": \"qwen3.8-27b-uncensored-mlx\", \"provider\": \"chat_compat\", \"reasoning_effort\": \"none\", \"response_format\": \"none\", \"role\": \"small\", \"temperature\": null}}, \"prompt\": {\"system_sha256\": \"74d658afa1124a6d3a2c0af44a291d08bea7d6d95b9828ba6bcc0a037647b9df\", \"version\": \"agent-prompt-v7\"}, \"research_protocol\": {\"final_evaluation\": false, \"fixed_model\": \"small\", \"mode\": \"feedback\", \"model_policy\": \"fixed\"}, \"retrieval\": {\"compatibility\": \"benchmark adapter task semantics and minimum matching features\", \"features\": {\"groupagg\": [\"rows\", \"distinct_keys\", \"rows_per_key\", \"order\", \"skew\"], \"intervals\": [\"rows\", \"order\", \"intervals_per_merged\", \"magnitude\", \"sign\"], \"logstats\": [\"rows\", \"groups\", \"rows_per_group\", \"order\", \"errors\"]}, \"max_per_outcome\": {\"failure\": 2, \"no_gain\": 1, \"success\": 3}, \"rank\": \"matching features desc, then newest first\", \"scope\": \"records of the same task family only\", \"version\": \"retrieval-v2\"}, \"reuse\": {\"dedupe\": \"programs equal after stripping blank lines and trailing whitespace count once\", \"learn_target_margin\": 0.05, \"max_programs\": 3, \"rank\": \"best matching features among the program's success records desc, then its best measured speedup desc\", \"requires\": \"a success record (passed, every sample faster than the baseline) that stores the full program\", \"skip\": \"a program with a no-gain or failure record that matches the current workload on more features than any of its successes\", \"version\": \"reuse-v2\"}, \"router\": {\"start\": \"fixed small model\", \"version\": \"off\"}, \"routing\": {\"action\": \"llm\", \"action_prompt_sha256\": \"afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e\", \"budget_counts\": \"all routing and generation requests\", \"decision_model\": \"gpt-6-luna\", \"model\": \"rule\", \"model_prompt_sha256\": \"45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a\", \"upgrade_is_irreversible\": true, \"version\": \"routing-adapters-v2\"}, \"sandbox_image_id\": \"sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d\", \"scripted\": [], \"task_manifest_sha256\": \"03aaf780c905b3f5b67a7330e5031a7008887a5752570bc1c3a0d1316ef4ac48\", \"upgrade_rule\": {\"consecutive_misses\": 2, \"description\": \"start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate\", \"id\": \"upgrade-rule-v2\", \"max_small_requests_without_goal\": 3}}",
+        "config_fingerprint": "8fd70a2d2960b166",
+        "status": "completed",
+        "stop_reason": "budget_exhausted",
+        "stop_detail": "model_requests: used 1/1",
+        "best_candidate_id": "c0",
+        "final_evaluation_id": null,
+        "stop_requested": 0,
+        "started_at": "2026-11-14T09:16:39.402+00:00",
+        "loop_ended_at": "2026-11-14T09:16:41.460+00:00",
+        "ended_at": "2026-11-14T09:16:41.460+00:00",
+        "retrieval_json": "{\"current_buckets\": {\"problem\": \"fb78be9195\"}, \"family\": \"algotune\", \"family_records\": 0, \"feature_count\": 1, \"matched_by_outcome\": {}, \"min_matches\": 1, \"retrieval\": \"retrieval-v2\", \"scores\": {}, \"selected\": [], \"snapshot_size\": 0}",
+        "published_snapshot_id": null
+      }
+    ],
+    "sessions": [],
+    "settings": [
+      {
+        "key": "active_snapshot_id",
+        "value": "v0"
+      }
+    ],
+    "snapshot_items": [],
+    "snapshots": [
+      {
+        "snapshot_id": "v0",
+        "version": 0,
+        "parent_snapshot_id": null,
+        "source_run_id": null,
+        "created_at": "2026-11-14T09:16:04.723+00:00",
+        "diff_json": "{}"
+      }
+    ],
+    "steps": [
+      {
+        "step_id": "run-20261114T091639-dd63/s1",
+        "run_id": "run-20261114T091639-dd63",
+        "seq": 1,
+        "actor": "program",
+        "action": "run_validation",
+        "status": "passed",
+        "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+        "expected_result": null,
+        "verification": null,
+        "hypothesis": null,
+        "params_json": "{}",
+        "result_json": "{\"baseline_median_s\": null, \"candidate_median_s\": null, \"case_count\": 2, \"correct\": true, \"evaluation_id\": \"90c85c9eba93\", \"executed\": true, \"format_ok\": true, \"goal_met\": null, \"improved\": null, \"passed_cases\": 2, \"speedup\": null, \"status\": \"passed\"}",
+        "next_decision": "continue",
+        "model_call_id": null,
+        "tool_call_id": null,
+        "candidate_id": "c0",
+        "evaluation_id": "90c85c9eba93",
+        "started_at": "2026-11-14T09:16:39.403+00:00",
+        "ended_at": "2026-11-14T09:16:41.067+00:00"
+      },
+      {
+        "step_id": "run-20261114T091639-dd63/s2",
+        "run_id": "run-20261114T091639-dd63",
+        "seq": 2,
+        "actor": "model",
+        "action": "model_request",
+        "status": "unusable_reply",
+        "purpose": null,
+        "expected_result": null,
+        "verification": null,
+        "hypothesis": null,
+        "params_json": "{}",
+        "result_json": "{\"error_kind\": \"bad_response\", \"message\": \"HTTP 503, non-JSON body\", \"role\": \"small\"}",
+        "next_decision": "retry with a new request if budget allows",
+        "model_call_id": "run-20261114T091639-dd63/m1",
+        "tool_call_id": null,
+        "candidate_id": null,
+        "evaluation_id": null,
+        "started_at": "2026-11-14T09:16:41.067+00:00",
+        "ended_at": "2026-11-14T09:16:41.459+00:00"
+      }
+    ],
+    "tasks": [
+      {
+        "task_id": "algotune-convolve_1d-remote-lmstudio-finaltry-20261114",
+        "family": "algotune",
+        "split": "remote-lmstudio-finaltry-20261114",
+        "manifest_json": "{\"adapter_version\": \"research-benchmarks-v1\", \"dev_params\": {\"cases\": 2}, \"family\": \"algotune\", \"files\": {\"UPSTREAM_LICENSE.txt\": {\"bytes\": 1096, \"file\": \"UPSTREAM_LICENSE.txt\", \"sha256\": \"06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d\"}, \"contract\": {\"bytes\": 880, \"file\": \"contract.txt\", \"sha256\": \"e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce\"}, \"dev_expected\": {\"bytes\": 2, \"file\": \"dev-expected.json\", \"sha256\": \"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}, \"dev_input\": {\"bytes\": 811020, \"file\": \"dev.json\", \"sha256\": \"04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125\"}, \"dev_profile\": {\"bytes\": 1104, \"file\": \"dev_profile.json\", \"sha256\": \"1cb041c0db318e904a9524c65675524df7757c88a60c798f87f1935093da6db5\"}, \"examples\": {\"bytes\": 2, \"file\": \"examples.json\", \"sha256\": \"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}, \"final_expected\": {\"bytes\": 2, \"file\": \"final-expected.json\", \"sha256\": \"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}, \"final_input\": {\"bytes\": 405510, \"file\": \"final.json\", \"sha256\": \"b66eb8fdc2ceb424e77f073d2de63c516ff7ae8a541ad3b97a4bed9063ccf283\"}, \"initial\": {\"bytes\": 533, \"file\": \"initial.py\", \"sha256\": \"aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5\"}, \"upstream_task.py\": {\"bytes\": 1550, \"file\": \"upstream_task.py\", \"sha256\": \"bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e\"}}, \"final_params\": {\"cases\": 1}, \"native\": {\"allowed_imports\": [\"numpy\", \"scipy\", \"networkx\"], \"candidate_image\": {\"image_id\": \"sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d\", \"image_tag\": \"routeevo-scientific:9df8e32a4952\"}, \"candidate_interface\": \"solve\", \"judge_image\": {\"image_id\": \"sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a\", \"image_tag\": \"routeevo-algotune-convolve_1d:230b3ab275ba\"}, \"seed\": 1729, \"size\": 1000}, \"notes\": \"RouteEvo research subset\", \"problem\": {\"key\": \"convolve_1d\", \"title\": \"convolve_1d\"}, \"selection\": {\"dev_cases\": 2, \"final_cases\": 1}, \"source\": {\"license\": \"MIT\", \"repository\": \"oripress/AlgoTune\", \"revision\": \"dff9914c10800c7a031c9e8c3d4d1c8cd1b38906\", \"task_sha256\": \"bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e\"}, \"split\": \"remote-lmstudio-finaltry-20261114\", \"target\": {\"direction\": \"maximize\", \"metric\": \"speedup\", \"min_speedup\": 1.1}, \"task_id\": \"algotune-convolve_1d-remote-lmstudio-finaltry-20261114\"}",
+        "manifest_sha256": "03aaf780c905b3f5b67a7330e5031a7008887a5752570bc1c3a0d1316ef4ac48",
+        "registered_at": "2026-11-14T09:16:04.724+00:00"
+      }
+    ],
+    "tool_calls": []
+  }
+}

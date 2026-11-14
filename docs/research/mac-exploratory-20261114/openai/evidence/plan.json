@@ -1,0 +1,26 @@
+[
+  {
+    "seq": 1,
+    "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+    "repeat": 1,
+    "mode": "feedback"
+  },
+  {
+    "seq": 2,
+    "task_id": "algotune-pagerank-exploratory-short-20261114",
+    "repeat": 1,
+    "mode": "independent"
+  },
+  {
+    "seq": 3,
+    "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+    "repeat": 1,
+    "mode": "independent"
+  },
+  {
+    "seq": 4,
+    "task_id": "algotune-pagerank-exploratory-short-20261114",
+    "repeat": 1,
+    "mode": "feedback"
+  }
+]

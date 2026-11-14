@@ -1,0 +1,450 @@
+{
+  "comparison_id": "research-20261114T091800-0fe2",
+  "status": "completed",
+  "label": "Exploratory remote LM Studio Qwen direct Thunderbolt path",
+  "limits": {
+    "max_model_requests": 1,
+    "max_candidates": 1,
+    "wall_clock_s": 240.0,
+    "model_request_timeout_s": 190.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 1,
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30.0
+  },
+  "created_at": "2026-11-14T09:18:00.482510+00:00",
+  "fixed_model": "small",
+  "final_evaluation": false,
+  "dev_only": true,
+  "plan_id": "exploratory-remote-lmstudio-direct-20261114",
+  "plan": [
+    {
+      "seq": 1,
+      "task_id": "algotune-convolve_1d-remote-lmstudio-direct-20261114",
+      "repeat": 1,
+      "mode": "feedback"
+    }
+  ],
+  "plan_sha256": "abf2ccc1896ecd347567ef181e9ae7b234a365cfb505c4ec75ccbec317462fd0",
+  "price_snapshot": {
+    "model": "qwen3.8-27b-uncensored-mlx",
+    "currency": "USD",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 0,
+    "output_per_1m": 0,
+    "source": "local://lmstudio/thunderbolt-bridge",
+    "retrieved_at": "2026-11-14T09:18:00+00:00",
+    "cache_policy": "Local inference; API token price recorded as zero. Electricity is excluded."
+  },
+  "runs": [
+    {
+      "seq": 1,
+      "task_id": "algotune-convolve_1d-remote-lmstudio-direct-20261114",
+      "repeat": 1,
+      "mode": "feedback",
+      "status": "completed",
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "algotune-convolve_1d-remote-lmstudio-direct-20261114",
+        "split": "remote-lmstudio-direct-20261114",
+        "target_min_speedup": 1.1,
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize",
+          "min_speedup": 1.1
+        },
+        "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+        "family": "algotune",
+        "presentation": {
+          "title": "AlgoTune · convolve_1d",
+          "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+          "baseline": "上游 solve 方法；独立函数计时",
+          "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+          "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+        },
+        "dev_params": {
+          "cases": 2
+        },
+        "final_params": {
+          "cases": 1
+        },
+        "source": {
+          "license": "MIT",
+          "repository": "oripress/AlgoTune",
+          "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+          "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+        },
+        "selection": {
+          "dev_cases": 2,
+          "final_cases": 1
+        }
+      },
+      "run_id": "run-20261114T091800-a13b",
+      "stop_reason": "budget_exhausted",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": false,
+        "dev_validation_passed": false,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": false,
+        "final_status": "disabled",
+        "final_error": null,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "开发集运行，未启用最终测试；最佳候选 c0 仅有开发验证结果"
+      },
+      "best_candidate_id": "c0",
+      "best_dev": {
+        "evaluation_id": "2cb445ce3036",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": null,
+        "goal_met": null,
+        "objective": null,
+        "eligible_for_selection": true
+      },
+      "final_evaluation": null,
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 1,
+            "max_code_bytes": 20000,
+            "max_model_requests": 1,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 190.0,
+            "token_budget": null,
+            "wall_clock_s": 240.0
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "2",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "http://remote-lmstudio.invalid/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 2048,
+              "model": "qwen3.8-27b-uncensored-mlx",
+              "provider": "chat_compat",
+              "reasoning_effort": "none",
+              "response_format": "none",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": false,
+            "fixed_model": "small",
+            "model_policy": "fixed"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v2"
+          },
+          "sandbox_image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "bd92e9ff9bb2d1859676d848b92abd7a56cf70ea334208bdfb4c74dd6e24d9c4",
+        "environment": {
+          "gc_policy": "automatic_gc_disabled_during_solve",
+          "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+          "image_tag": "routeevo-scientific:9df8e32a4952",
+          "judge": {
+            "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a",
+            "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "2",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "protocol": "isolated-function-timing-v2",
+          "threads": 1
+        }
+      },
+      "iterations": {
+        "model_requests": 1,
+        "routing_requests": 0,
+        "generation_requests": 1,
+        "candidates_proposed": 0,
+        "candidates_passed": 0,
+        "candidates_improved": 0,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 1,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 1,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 121.796,
+        "agent_loop_s": 121.794,
+        "agent_loop_elapsed_s": 121.794,
+        "agent_loop_limit_s": 240.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 120.193,
+        "dev_evaluation_s": 1.597,
+        "evidence_tool_s": 0,
+        "container_startup_s": 0.324
+      },
+      "usage": {
+        "requests": 1,
+        "ok": 0,
+        "errors": {
+          "incomplete": 1
+        },
+        "latency_s": 120.193,
+        "input_tokens": 2327,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": null,
+        "cached_input_tokens_unknown_calls": 1,
+        "output_tokens": 2047,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 1707,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 1,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.0,
+        "currency": "USD",
+        "status": "estimated",
+        "source": "local://lmstudio/thunderbolt-bridge",
+        "price_snapshot": {
+          "model": "qwen3.8-27b-uncensored-mlx",
+          "currency": "USD",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 0,
+          "output_per_1m": 0,
+          "source": "local://lmstudio/thunderbolt-bridge",
+          "retrieved_at": "2026-11-14T09:18:00+00:00",
+          "cache_policy": "Local inference; API token price recorded as zero. Electricity is excluded."
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [],
+      "report_path": "<VAR_DIR>/runs/run-20261114T091800-a13b/report.json"
+    }
+  ],
+  "fair": null,
+  "path": "<VAR_DIR>/comparisons/research-20261114T091800-0fe2.json",
+  "protocol": "within-task-feedback-v2",
+  "fairness": {
+    "tasks_with_mixed_configurations": [],
+    "all_planned_runs_completed": true,
+    "all_planned_runs_recorded": true,
+    "all_configurations_recorded": true
+  },
+  "summary": {
+    "tasks": [
+      {
+        "task": {
+          "task_id": "algotune-convolve_1d-remote-lmstudio-direct-20261114",
+          "split": "remote-lmstudio-direct-20261114",
+          "target_min_speedup": 1.1,
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize",
+            "min_speedup": 1.1
+          },
+          "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+          "family": "algotune",
+          "presentation": {
+            "title": "AlgoTune · convolve_1d",
+            "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+            "baseline": "上游 solve 方法；独立函数计时",
+            "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+            "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+          },
+          "dev_params": {
+            "cases": 2
+          },
+          "final_params": {
+            "cases": 1
+          },
+          "source": {
+            "license": "MIT",
+            "repository": "oripress/AlgoTune",
+            "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+            "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+          },
+          "selection": {
+            "dev_cases": 2,
+            "final_cases": 1
+          }
+        },
+        "modes": [
+          {
+            "mode": "feedback",
+            "planned": 1,
+            "started": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "disabled": 1
+            },
+            "final_correct": 0,
+            "final_metric_observations": 0,
+            "final_values": [
+              null
+            ],
+            "final_metric_median": null,
+            "c0_deliveries": 1,
+            "candidates_proposed": 0,
+            "candidates_passed": 0,
+            "usage": {
+              "requests": 1,
+              "latency_s": 120.193,
+              "errors": {
+                "incomplete": 1
+              },
+              "input_tokens": 2327,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 2047,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.0,
+              "currency": "USD",
+              "status": "estimated",
+              "source": "local://lmstudio/thunderbolt-bridge",
+              "price_snapshot": {
+                "model": "qwen3.8-27b-uncensored-mlx",
+                "currency": "USD",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 0,
+                "output_per_1m": 0,
+                "source": "local://lmstudio/thunderbolt-bridge",
+                "retrieved_at": "2026-11-14T09:18:00+00:00",
+                "cache_policy": "Local inference; API token price recorded as zero. Electricity is excluded."
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            },
+            "cost_scope": "recorded calls only; unexecuted slots remain in planned count",
+            "wall_clock_s": 121.796
+          }
+        ]
+      }
+    ],
+    "pairs": [],
+    "planned": 1,
+    "not_run": 0
+  },
+  "ended_at": "2026-11-14T09:20:02.285966+00:00"
+}

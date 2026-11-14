@@ -1,0 +1,937 @@
+{
+  "run_id": "run-20261114T090218-2120",
+  "task": {
+    "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+    "split": "exploratory-short-20261114",
+    "target_min_speedup": 1.1,
+    "objective": {
+      "metric": "speedup",
+      "direction": "maximize",
+      "min_speedup": 1.1
+    },
+    "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+    "family": "algotune",
+    "presentation": {
+      "title": "AlgoTune · convolve_1d",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": "上游 solve 方法；独立函数计时",
+      "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+    },
+    "dev_params": {
+      "cases": 2
+    },
+    "final_params": {
+      "cases": 1
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+    },
+    "selection": {
+      "dev_cases": 2,
+      "final_cases": 1
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "exploratory-short-20261114-openai-large #3 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "recorded_status": "completed",
+  "research_mode": "independent",
+  "dev_only": true,
+  "stop_reason": "budget_exhausted",
+  "stop_detail": "candidates: used 3/3",
+  "config_fingerprint": "e88beb579fb92188",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": true,
+    "best_from_reuse": false,
+    "best_is_initial": false,
+    "final_evaluated": false,
+    "final_status": "disabled",
+    "final_error": null,
+    "final_correct": null,
+    "final_speedup": null,
+    "final_objective": null,
+    "goal_met": false,
+    "valid_artifact": null,
+    "summary": "开发集运行，未启用最终测试；最佳候选 c1 仅有开发验证结果"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "fb78be9195"
+      },
+      "family": "algotune",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c1",
+    "origin": "model",
+    "parent_candidate_id": "c0",
+    "code_path": "<VAR_DIR>/runs/run-20261114T090218-2120/candidates/c1.py",
+    "code_sha256": "bf31e6b70e7228b8fef9e1da732148bc50d627614223077ec5b8629cdc327741",
+    "model_call_id": "m1",
+    "dev_evaluations": [
+      {
+        "evaluation_id": "28504c84dd26",
+        "status": "passed",
+        "correct": 1,
+        "speedup": 2.669287533650096,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": null,
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0",
+  "run_target_speedup": 1.1,
+  "route": null,
+  "final_evaluation": null,
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "<VAR_DIR>/runs/run-20261114T090218-2120/candidates/c0.py",
+      "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "c571709f4118",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090218-2120/candidates/c1.py",
+      "code_sha256": "bf31e6b70e7228b8fef9e1da732148bc50d627614223077ec5b8629cdc327741",
+      "model_call_id": "m1",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "28504c84dd26",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 2.669287533650096,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090218-2120/candidates/c2.py",
+      "code_sha256": "a5ecc4a17ef776e741327fd9ffb606990a7755a51d8ca5cebe9d247688f20acb",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "9fbec95b34ef",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 2.4317323975614205,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "<VAR_DIR>/runs/run-20261114T090218-2120/candidates/c3.py",
+      "code_sha256": "da06135f728793e664700179f50258d0f96b4c125f3e1df807339c2b523df2de",
+      "model_call_id": "m3",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "7f9c24d38993",
+          "status": "runtime_error",
+          "correct": 0,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 3,
+    "routing_requests": 0,
+    "generation_requests": 3,
+    "candidates_proposed": 3,
+    "candidates_passed": 2,
+    "candidates_improved": 2,
+    "candidates_no_gain": 0,
+    "candidates_failed": 1,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "large_model_requests": 3,
+    "small_model_requests": 0,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 3,
+      "ok": 3,
+      "errors": {},
+      "latency_s": 144.323,
+      "input_tokens": 6147,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 0,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 6989,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": 5149,
+      "reasoning_tokens_unknown_calls": 0,
+      "cost_usd": 0.085253,
+      "cost_status": "estimated",
+      "cost_unknown_calls": 0,
+      "price_versions": [
+        "openai/gpt-6.1-sol/standard/2026-11-13"
+      ]
+    },
+    "by_model": {
+      "large:openai_responses:gpt-6.1-sol": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 144.323,
+        "input_tokens": 6147,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 6989,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 5149,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.085253,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 0,
+        "ok": 0,
+        "errors": {},
+        "latency_s": 0,
+        "input_tokens": 0,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.0,
+        "cost_status": "no_model_calls",
+        "cost_unknown_calls": 0,
+        "price_versions": []
+      },
+      "generation": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 144.323,
+        "input_tokens": 6147,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 6989,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 5149,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.085253,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 152.859,
+    "agent_loop_s": 152.859,
+    "agent_loop_elapsed_s": 152.859,
+    "agent_loop_limit_s": 180.0,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": null,
+    "model_wait_s": 144.323,
+    "dev_evaluation_s": 8.512,
+    "evidence_tool_s": 0,
+    "container_startup_s": 1.893
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 2,
+        "correct": true,
+        "evaluation_id": "c571709f4118",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": null,
+        "improved": null,
+        "passed_cases": 2,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "c571709f4118",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:02:18.876+00:00",
+      "ended_at": "2026-11-14T09:02:20.645+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "用直接实数快速傅里叶变换替代通用卷积分派，并在数值条件良好时使用单精度变换以降低计算和内存开销。",
+      "expected_result": "在给定的两组长数组上显著降低耗时，同时通过幅度检查、消去检查和双精度回退保持数值误差要求。",
+      "verification": "由原生评估器核验输出形状、相对二范数误差，以及所有候选计时是否均低于基线计时。",
+      "hypothesis": "给定长度下，单精度实数变换的误差通常远小于容差，其速度收益足以覆盖额外的安全检查。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090218-2120/m1",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:02:20.646+00:00",
+      "ended_at": "2026-11-14T09:03:11.204+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001117264999265899,
+        "best_candidate_id": "c1",
+        "best_replaced": true,
+        "candidate_median_s": 0.00041856300049403217,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "28504c84dd26",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 55.295,
+          "metric": "speedup",
+          "model_requests": 1,
+          "tokens": 4590,
+          "value": 2.669287533650096
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 2.669287533650096,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0010641779999787104,
+            0.001284982000470336
+          ],
+          "candidate_min_max_s": [
+            0.00037872699977015145,
+            0.0004248549994372297
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "28504c84dd26",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:03:14.171+00:00",
+      "ended_at": "2026-11-14T09:03:14.171+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "用直接实数快速傅里叶变换和受保护的单精度计算降低长序列全卷积的运行时间。",
+      "expected_result": "在开发规模上显著减少变换与内存访问成本，同时对动态范围异常或卷积严重相消的输入退回双精度计算。",
+      "verification": "由原生评估器检查输出形状、相对二范数误差以及全部计时样本相对基线的严格优势。",
+      "hypothesis": "开发输入的卷积条件通常足以支持单精度快速傅里叶变换达到百万分之一的相对误差；能量检查可识别需要双精度的明显病态输入。",
+      "params": {
+        "analysis": "基线包含卷积方法选择和通用封装开销。直接调用实数变换并使用原位频域乘法可减少这些开销；单精度变换还可降低计算量。对较短输入使用直接卷积，对不适合单精度的输入使用双精度变换。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090218-2120/m2",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:03:14.172+00:00",
+      "ended_at": "2026-11-14T09:04:01.428+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001030753000122786,
+        "best_candidate_id": "c1",
+        "best_replaced": false,
+        "candidate_median_s": 0.0004238759993313579,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "9fbec95b34ef",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 105.425,
+          "metric": "speedup",
+          "model_requests": 2,
+          "tokens": 8966,
+          "value": 2.669287533650096
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 2.4317323975614205,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0009405849996255711,
+            0.0011236279997319798
+          ],
+          "candidate_min_max_s": [
+            0.0003945420003219624,
+            0.00046583400035160594
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c2",
+      "evaluation_id": "9fbec95b34ef",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:04:04.301+00:00",
+      "ended_at": "2026-11-14T09:04:04.301+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "使用底层双精度实数 FFT，并复用填充与逆变换缓冲区，减少通用卷积接口的调度、分配和复制开销。",
+      "expected_result": "保持双精度数值正确性，并使给定长度的完整卷积比基线更快。",
+      "verification": "由原生评估器检查全部样例的输出形状、相对二范数误差及计时范围；仅当候选全部计时均低于基线全部计时时认定改进。",
+      "hypothesis": "基线的自动算法选择、FFT 包装层和结果复制占有可消除的开销；直接调用同源底层 FFT 并复用缓冲区能够降低总耗时，而无需使用低精度计算。",
+      "params": {
+        "analysis": "输入为实数双精度数组，采用实数快速长度完成零填充线性卷积。两个正变换共享一个实数工作区，频域乘法原位执行，逆变换写回工作区并返回有效区间；短核则使用直接卷积。所有工作区仅在当前调用内使用。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090218-2120/m3",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:04:04.302+00:00",
+      "ended_at": "2026-11-14T09:04:50.826+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "runtime_error",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c1",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "correct": false,
+        "eligible_for_selection": true,
+        "evaluation_id": "7f9c24d38993",
+        "executed": false,
+        "failure": {
+          "case": "0",
+          "category": "runtime_error",
+          "stderr_tail": "Traceback (most recent call last):\n  File \"/opt/routeevo/scientific_harness.py\", line 23, in <module>\n    exec(source, namespace)\n  File \"candidate.py\", line 3, in <module>\n    from scipy.fft._pocketfft import pypocketfft as _pfft\nModuleNotFoundError: No module named 'scipy.fft._pocketfft'\n"
+        },
+        "format_ok": null,
+        "goal_met": null,
+        "improved": null,
+        "progress": {
+          "best_candidate_id": "c1",
+          "elapsed_s": 152.857,
+          "metric": "speedup",
+          "model_requests": 3,
+          "tokens": 13136,
+          "value": 2.669287533650096
+        },
+        "run_target_speedup": 1.1,
+        "speedup": null,
+        "status": "runtime_error"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "7f9c24d38993",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:04:51.734+00:00",
+      "ended_at": "2026-11-14T09:04:51.734+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "e88beb579fb92188",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "exploratory-short-20261114-openai-large #3 r1",
+    "limits": {
+      "max_candidates": 3,
+      "max_code_bytes": 20000,
+      "max_model_requests": 5,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 100.0,
+      "token_budget": null,
+      "wall_clock_s": 180.0
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "http://system-proxy.invalid/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "qwen3.8:27b-mlx",
+        "provider": "chat_compat",
+        "reasoning_effort": "none",
+        "response_format": "none",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "8b4195bffad2049e8d02f2535c9760e2a953685aeebdd9aee7a63f17f6eaa36c",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": false,
+      "fixed_model": "large",
+      "mode": "independent",
+      "model_policy": "fixed"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "fixed large model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "llm",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v2"
+    },
+    "sandbox_image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "scripted": [],
+    "task_manifest_sha256": "09538133d392ee06b122dc0e6bf82ebca35b1a92ad9ab225b86b0a026d010b1a",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "gc_policy": "automatic_gc_disabled_during_solve",
+    "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "image_tag": "routeevo-scientific:9df8e32a4952",
+    "judge": {
+      "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a",
+      "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "protocol": "isolated-function-timing-v2",
+    "threads": 1
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run algotune-convolve_1d-exploratory-short-20261114 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode independent --fixed-model large --dev-only --cpuset-cpus 2 --wall-clock 180.0 --max-requests 5 --max-candidates 3 --request-timeout 100.0",
+    "recheck_best": "uv run routeevo check algotune-convolve_1d-exploratory-short-20261114 <VAR_DIR>/runs/run-20261114T090218-2120/candidates/c1.py --dataset final --cpuset-cpus 2",
+    "report": "uv run routeevo report run-20261114T090218-2120"
+  },
+  "started_at": "2026-11-14T09:02:18.876+00:00",
+  "loop_ended_at": "2026-11-14T09:04:51.735+00:00",
+  "ended_at": "2026-11-14T09:04:51.735+00:00",
+  "research": {
+    "definition": {
+      "question": "在输出完全正确的前提下，能否让这段AlgoTune · convolve_1d程序在该工作负载上至少快 1.1×？",
+      "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": {
+        "program": "上游 solve 方法；独立函数计时",
+        "dev_median_s": 0.001117264999265899,
+        "final_median_s": null
+      },
+      "scope": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden.",
+      "tools": [
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "budget": {
+        "model_requests": 5,
+        "candidates": 3,
+        "loop_s": 180.0,
+        "request_timeout_s": 100.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "本轮为开发集预实验，未打开最终数据"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 2,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "给定长度下，单精度实数变换的误差通常远小于容差，其速度收益足以覆盖额外的安全检查。",
+        "purpose": "用直接实数快速傅里叶变换替代通用卷积分派，并在数值条件良好时使用单精度变换以降低计算和内存开销。",
+        "expected": "在给定的两组长数组上显著降低耗时，同时通过幅度检查、消去检查和双精度回退保持数值误差要求。",
+        "verification": "由原生评估器核验输出形状、相对二范数误差，以及所有候选计时是否均低于基线计时。",
+        "result": {
+          "status": "passed",
+          "speedup": 2.669287533650096,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "28504c84dd26"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 4,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "开发输入的卷积条件通常足以支持单精度快速傅里叶变换达到百万分之一的相对误差；能量检查可识别需要双精度的明显病态输入。",
+        "purpose": "用直接实数快速傅里叶变换和受保护的单精度计算降低长序列全卷积的运行时间。",
+        "expected": "在开发规模上显著减少变换与内存访问成本，同时对动态范围异常或卷积严重相消的输入退回双精度计算。",
+        "verification": "由原生评估器检查输出形状、相对二范数误差以及全部计时样本相对基线的严格优势。",
+        "result": {
+          "status": "passed",
+          "speedup": 2.4317323975614205,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "9fbec95b34ef"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 6,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "基线的自动算法选择、FFT 包装层和结果复制占有可消除的开销；直接调用同源底层 FFT 并复用缓冲区能够降低总耗时，而无需使用低精度计算。",
+        "purpose": "使用底层双精度实数 FFT，并复用填充与逆变换缓冲区，减少通用卷积接口的调度、分配和复制开销。",
+        "expected": "保持双精度数值正确性，并使给定长度的完整卷积比基线更快。",
+        "verification": "由原生评估器检查全部样例的输出形状、相对二范数误差及计时范围；仅当候选全部计时均低于基线全部计时时认定改进。",
+        "result": {
+          "status": "runtime_error",
+          "speedup": null,
+          "objective": null,
+          "improved": null,
+          "failure": "runtime_error",
+          "contract_case": null
+        },
+        "verdict": "untestable",
+        "then": "continue",
+        "evaluation_id": "7f9c24d38993"
+      }
+    ],
+    "verdicts": {
+      "supported": 2,
+      "partial": 0,
+      "refuted": 0,
+      "untestable": 1,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 55.295,
+      "metric": "speedup",
+      "model_requests": 1,
+      "tokens": 4590,
+      "value": 2.669287533650096,
+      "usage": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 50.554,
+        "input_tokens": 2049,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 2541,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 1937,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.030531,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 105.425,
+      "metric": "speedup",
+      "model_requests": 2,
+      "tokens": 8966,
+      "value": 2.669287533650096,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 97.805,
+        "input_tokens": 4098,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4868,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 3597,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.058922,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c1",
+      "elapsed_s": 152.857,
+      "metric": "speedup",
+      "model_requests": 3,
+      "tokens": 13136,
+      "value": 2.669287533650096,
+      "usage": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 144.323,
+        "input_tokens": 6147,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 6989,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 5149,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.085253,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    }
+  ]
+}

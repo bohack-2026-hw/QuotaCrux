@@ -17,3 +17,5 @@
 [EffiBench-X 四题真实模型评测（2026-11-14）](effibench-x-20261114/README.md)：Qwen3.8-27B 与 GPT-6.1 Sol，60/60 final 用例通过，2/4 题达到加速目标；完整计时、逐调用用量、人民币/美元费用和复现产物一并归档。
 
 [原生 CPU 第一轮](native-20261114/README.md)与[校准后的第二轮](native-r2-20261114/README.md)：ALE-Bench / AlgoTune 的任务内 feedback 与 independent 对照。第二轮固定 Qwen，AlgoTune 保留开发加速为 1.8343× / 1.2101×；ALE independent 得分 18,230。两批原始记录和失败结果均保留，最终集未评测。
+
+[Mac dev-only 探索结果包（2026-11-14）](mac-exploratory-20261114/README.md)：固定 `gpt-6.1-sol` 的四项 2-case dev 探索、远端 LM Studio 失败/截断证据及单列的人工语义重建。该包 final disabled、运行时主机高负载且 `formal_results_eligible=false`，不属于上方正式成果样例，也不并入已取消的 formal 15+12 计划。

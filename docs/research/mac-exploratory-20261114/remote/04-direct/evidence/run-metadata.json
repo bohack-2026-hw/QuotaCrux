@@ -1,0 +1,41 @@
+{
+  "status": "completed-with-incomplete-model-action-and-verified-assisted-reconstruction",
+  "scope": "exploratory-remote-lmstudio-single-slot",
+  "formal_results_eligible": false,
+  "code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "model": "qwen3.8-27b-uncensored-mlx",
+  "model_loaded": true,
+  "network_fix": "NO_PROXY for the Thunderbolt link-local peer",
+  "remote_compute": "LM Studio inference only",
+  "local_compute": "RouteEvo orchestration and Docker evaluation",
+  "dev_cases": 2,
+  "final_evaluation": false,
+  "planned_slots": 1,
+  "wall_clock_s": 240,
+  "request_timeout_s": 190,
+  "max_requests": 1,
+  "max_candidates": 1,
+  "max_output_tokens": 2048,
+  "model_call": {
+    "status": "incomplete",
+    "finish_reason": "length",
+    "input_tokens": 2327,
+    "output_tokens": 2047,
+    "reasoning_tokens": 1707,
+    "latency_s": 120.19,
+    "protocol_candidates": 0
+  },
+  "assisted_reconstruction": {
+    "eligible_as_model_generated_candidate": false,
+    "manual_change": "Semantically reconstructed the truncated tail from the model's complete reasoning, with unused-import cleanup and variable renaming.",
+    "evaluation_id": "5a0af294e328",
+    "dataset": "dev",
+    "case_count": 2,
+    "passed_cases": 2,
+    "correct": true,
+    "speedup": 1.225486477902775,
+    "goal_met": true,
+    "strict_timing_separation": true
+  },
+  "notes": "The prior 503 ledgers remain immutable. This ledger bypassed the macOS system proxy. The assisted reconstruction is exploratory evidence, not a protocol model candidate or formal result."
+}

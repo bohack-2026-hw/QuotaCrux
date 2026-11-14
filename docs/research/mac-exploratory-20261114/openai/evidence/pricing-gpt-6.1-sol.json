@@ -1,0 +1,11 @@
+{
+  "model": "gpt-6.1-sol",
+  "currency": "USD",
+  "unit": "per_1m_tokens",
+  "input_per_1m": 2,
+  "output_per_1m": 10,
+  "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+  "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+  "cache_policy": "Standard uncached token estimate; discounts and credits are not modeled.",
+  "context": "Exploratory dev-only subset; reasoning tokens are included in output."
+}

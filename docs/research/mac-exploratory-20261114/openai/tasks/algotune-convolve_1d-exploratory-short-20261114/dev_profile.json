@@ -1,0 +1,74 @@
+{
+  "problem": "convolve_1d",
+  "cases": 2,
+  "memory_key": "fb78be9195",
+  "settings": {
+    "candidate_image": {
+      "image_tag": "routeevo-scientific:9df8e32a4952",
+      "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
+    },
+    "judge_image": {
+      "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba",
+      "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a"
+    },
+    "size": 1000,
+    "seed": 1729,
+    "allowed_imports": [
+      "numpy",
+      "scipy",
+      "networkx"
+    ],
+    "candidate_interface": "solve"
+  },
+  "input_profile": {
+    "source": "frozen_dev_inputs",
+    "generator_scale": 1000,
+    "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+    "cases": [
+      {
+        "id": "0",
+        "a": {
+          "shape": [
+            30000
+          ],
+          "dtype": "float64",
+          "wire_dtype": "<f8",
+          "nbytes": 240000
+        },
+        "b": {
+          "shape": [
+            8000
+          ],
+          "dtype": "float64",
+          "wire_dtype": "<f8",
+          "nbytes": 64000
+        },
+        "output_shape": [
+          37999
+        ]
+      },
+      {
+        "id": "1",
+        "a": {
+          "shape": [
+            30000
+          ],
+          "dtype": "float64",
+          "wire_dtype": "<f8",
+          "nbytes": 240000
+        },
+        "b": {
+          "shape": [
+            8000
+          ],
+          "dtype": "float64",
+          "wire_dtype": "<f8",
+          "nbytes": 64000
+        },
+        "output_shape": [
+          37999
+        ]
+      }
+    ]
+  }
+}

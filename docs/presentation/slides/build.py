@@ -691,6 +691,26 @@ for i, (x, f, cap) in enumerate([(L, "console-home.png", "总览：批次、轮�
     c_ = T(s, x, 320 + h + 24, w, 44, cap, size=18, bold=True, align="c")
     tl.fade(c_, 800 + i * 400, 500)
 
+# ============================================================== 20b DeepSeek Harness plugin
+s, tl = new(3, hi("已接入 ", ("DeepSeek Harness",), " 插件"), "生态 · DSH 插件",
+            notes="QuotaCrux 已经做成 DeepSeek Harness（DSH）的插件：在 DSH 的 Plugins 页面安装后打开开关即可使用。普通请求交给本地 Qwen3.8 直接回答；需要远程协助时，通过显式的 remote_llm 工具调用云端模型——和 QuotaCrux 本地优先、关键节点才请大模型的思路一致。\n\n来源：DSH Plugins 页面截图")
+iw = 1040
+ih = iw * 1640 / 2560
+pic(s, A("dsh-plugin.png"), L, 290, iw, ih)
+x = L + iw + 60
+w = R - x
+for i, (k_, v) in enumerate([("安装即用", ["Plugins 页面打开开关", "直接在会话里使用"]),
+                             ("本地优先", ["普通请求交给本地 Qwen3.8", "直接回答"]),
+                             ("按需请大模型", ["需要远程协助时", "显式调用 remote_llm 工具"])]):
+    y = 310 + i * 210
+    g = [T(s, x, y, 70, 50, f"0{i + 1}", size=24, bold=True, color=ORANGE, latin=NUM, anchor="m"),
+         T(s, x + 80, y, w - 80, 50, k_, size=22, bold=True, color=BLUE, anchor="m"),
+         T(s, x + 80, y + 62, w - 80, 90, v, size=16, color=INK2, spacing=1.3, wrap=False)]
+    tl.pop(g[0], 400 + i * 250, 400)
+    each(tl, g[1:], "rise", 450 + i * 250, 500, 80, off=0.02)
+    if i < 2:
+        tl.wipe(line(s, x, y + 180, R, y + 180, RULE, 1), 500 + i * 250, 400)
+
 # ============================================================== 21 advantages
 s, tl = new(3, hi("同一个系统里的", ("受控对比",)), "优势对比",
             notes="对比的每一列都来自我们自己的受控实验：固定小模型、固定大模型、小模型加文字经验，以及 QuotaCrux。各列口径不同（ahc026 得分提升 / 自建任务加速比），只在各自实验内比较。\n\n来源：双机补充实验、v1 文字经验消融、S 任务流、D 留出")

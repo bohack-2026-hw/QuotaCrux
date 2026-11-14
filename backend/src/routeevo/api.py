@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
-from . import compare, config, db, memory, report, taskpkg
+from . import compare, config, db, memory, report, research_views, taskpkg
 from .agent.runner import RunBusy, RunOptions, Runner
 
 config.load_dotenv()
@@ -77,12 +77,51 @@ def list_runs(task_id: str | None = None, limit: int = 50) -> list[dict]:
     # The final-test outcome travels with each row: a run can stop on "goal reached" (dev data) and still miss the final test.
     sql = ("SELECT r.run_id, r.task_id, r.mode, r.snapshot_id, r.status, r.stop_reason, r.best_candidate_id, r.config_fingerprint,"
            " r.started_at, r.ended_at, e.goal_met AS final_goal_met, e.speedup AS final_speedup,"
-           " json_extract(e.detail_json, '$.objective.value') AS final_score"
-           " FROM runs r LEFT JOIN evaluations e ON e.evaluation_id = r.final_evaluation_id")
+           " json_extract(e.detail_json, '$.objective.value') AS final_score, r.config_json AS _config,"
+           " e.status AS _final_status, e.correct AS _final_correct, e.candidate_id AS _final_candidate,"
+           " json_extract(t.manifest_json, '$.target.min_speedup') AS _target"
+           " FROM runs r LEFT JOIN evaluations e ON e.evaluation_id = r.final_evaluation_id"
+           " JOIN tasks t ON t.task_id=r.task_id")
     params: tuple = ()
     if task_id:
         sql, params = sql + " WHERE r.task_id = ?", (task_id,)
-    return [dict(r) for r in db.all_rows(sql + " ORDER BY r.started_at DESC LIMIT ?", (*params, limit))]
+    out = []
+    for row in db.all_rows(sql + " ORDER BY r.started_at DESC LIMIT ?", (*params, limit)):
+        item = dict(row)
+        protocol = json.loads(item.pop("_config")).get("research_protocol", {})
+        status, correct = item.pop("_final_status"), item.pop("_final_correct")
+        target, candidate = item.pop("_target"), item.pop("_final_candidate")
+        normalized = (target is not None and candidate == "c0"
+                      and status == "passed" and bool(correct))
+        item.update(research_mode=protocol.get("mode", "legacy"), dev_only=protocol.get("final_evaluation") is False)
+        item["final_status"], item["final_error"] = report.final_state(
+            item["run_id"], item["status"], not item["dev_only"],
+            {"status": status, "correct": correct} if status is not None else None)
+        if normalized:
+            item["final_speedup"] = 1.0
+        item["final_normalized"] = normalized
+        if item["final_status"] == "failed" and item["status"] == "completed":
+            item["recorded_status"], item["status"] = item["status"], "failed"
+        out.append(item)
+    return out
+
+
+@app.get("/api/research-comparisons")
+def list_research_comparisons() -> list[dict]:
+    try:
+        return research_views.list_comparisons()
+    except (ValueError, KeyError) as exc:
+        raise HTTPException(500, f"invalid research comparison artifact: {exc}") from None
+
+
+@app.get("/api/research-comparisons/{comparison_id}")
+def get_research_comparison(comparison_id: str) -> dict:
+    try:
+        return research_views.load(comparison_id)
+    except KeyError:
+        raise HTTPException(404, "research comparison not found") from None
+    except ValueError as exc:
+        raise HTTPException(500, f"invalid research comparison artifact: {exc}") from None
 
 
 @app.post("/api/runs", status_code=202)

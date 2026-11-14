@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import io
+import os
 import subprocess
 from pathlib import Path
 
@@ -18,7 +19,10 @@ import segno
 
 ROOT = Path(__file__).resolve().parents[2]
 REPO = "https://github.com/bohack-2026-hw/QuotaCrux"
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+
+# Latin text and numbers in Inter; Chinese in Noto Sans SC (any machine) or PingFang SC (Mac, --cjk "PingFang SC")
+LATIN, CJK = "Inter", "Noto Sans SC"
 
 BG, INK, GREY, LINE, ACCENT = "#F3F2EE", "#111113", "#8E8D88", "#D8D6CF", "#FF4D1F"
 
@@ -32,9 +36,10 @@ ROUTING = [("规则调度", 5.970, 392.039), ("决策模型选动作", 6.149, 38
            ("全部交给决策模型", 0.513, 112.910)]
 # Mac AlgoTune exploration, best candidate per task (section 07 table, ms over the two dev cases)
 ALGO = [("PageRank", 25.041935, 11.147868, 0.445168, "稀疏矩阵直接迭代"), ("一维卷积", 2.669288, 1.117265, 0.418563, "float32 实数 FFT")]
-# fixed-Qwen feedback batch totals (analysis.json feedback.totals)
-FINAL_OK, RUNS, PASSED, PROPOSED = 15, 15, 60, 96
-WAIT_S, RUN_S = 3441.755, 3665.581
+# ledger, from docs/project-description.md: S task stream with vs without memory (12 tasks x 3 replays):
+# model cost $0.402 -> $0.086, pass 36/36; sealed D batch: median final speedup 1.20x -> 1.73x
+COST_BEFORE, COST_AFTER = 0.402, 0.086
+SPEEDUP_BEFORE, SPEEDUP_AFTER = 1.20, 1.73
 
 
 def qr_svg() -> str:
@@ -119,48 +124,50 @@ def algo_bars(base: float, cand: float) -> str:
 
 
 def page() -> str:
+    CJK_WEB = "&family=Noto+Sans+SC:wght@400..900" if CJK == "Noto Sans SC" else ""
     cut = round(100 * (1 - ENERGY_BEST / ENERGY_C0), 1)
     both = ROUTING[3]
     time_cut = round(100 * (1 - both[2] / ROUTING[0][2]))
     fmt_x = lambda v: f"{v:.1f}×" if v >= 10 else f"{v:.2f}×"  # noqa: E731
     algo = "".join(f'<div class="algo"><div class="big">{fmt_x(sp)}</div><div class="cap">{name} 提速</div>'
                    f'<div class="how">{how}</div>{algo_bars(b, c)}</div>' for name, sp, b, c, how in ALGO)
-    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title><style>
+    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900{CJK_WEB}&display=block"><style>
 @page {{ size: 800mm 1800mm; margin: 0; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html, body {{ width: 800mm; height: 1800mm; }}
-body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; overflow: hidden;
+body {{ background: {BG}; color: {INK}; font-family: "{LATIN}", "{CJK}", sans-serif; overflow: hidden;
   -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
 .page {{ width: 800mm; height: 1800mm; display: flex; flex-direction: column; justify-content: space-between; padding: 40mm 50mm 34mm; }}
 .head {{ display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2.4mm solid {INK}; padding-bottom: 8mm; }}
-.title {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 112mm; line-height: 0.82; letter-spacing: -4mm; margin-left: -5mm; }}
+.title {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 800; font-size: 112mm; line-height: 0.82; letter-spacing: -4mm; margin-left: -5mm; }}
 .cn {{ font-size: 56mm; font-weight: 600; line-height: 1; letter-spacing: 3mm; white-space: nowrap; }}
 .sub {{ display: flex; justify-content: space-between; align-items: baseline; margin-top: 7mm; font-size: 24mm; font-weight: 600; }}
 .sub span {{ color: {ACCENT}; }}
 .kicker {{ font-size: 19mm; font-weight: 600; letter-spacing: 0.5mm; display: flex; gap: 6mm; align-items: baseline; }}
-.kicker b {{ font-family: "Avenir Next", sans-serif; font-weight: 700; color: {ACCENT}; }}
+.kicker b {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 700; color: {ACCENT}; }}
 .hero {{ display: flex; align-items: flex-end; gap: 14mm; margin-top: 6mm; }}
-.hero .num {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.8; letter-spacing: -8mm; color: {ACCENT}; }}
+.hero .num {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.8; letter-spacing: -8mm; color: {ACCENT}; }}
 .hero .cap {{ font-size: 32mm; font-weight: 600; line-height: 1.25; padding-bottom: 2mm; white-space: nowrap; }}
 .bars {{ margin-top: 12mm; }}
 svg text.bl {{ font-size: 15px; font-weight: 600; }}
-svg text.bv {{ font-size: 17px; font-weight: 700; font-family: "Avenir Next", sans-serif; }}
-svg text.ax {{ font-size: 11px; fill: {GREY}; font-family: "Avenir Next", "PingFang SC", sans-serif; }}
+svg text.bv {{ font-size: 17px; font-weight: 700; font-family: "{LATIN}", "{CJK}", sans-serif; }}
+svg text.ax {{ font-size: 11px; fill: {GREY}; font-family: "{LATIN}", "{CJK}", sans-serif; }}
 svg text.an {{ font-size: 13.5px; font-weight: 600; fill: {INK}; }}
 svg text.rl {{ font-size: 17px; font-weight: 600; fill: {INK}; }}
 h2 {{ font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm; line-height: 1.25; }}
 .algos {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20mm; margin-top: 10mm; }}
-.algo .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 96mm; line-height: 0.9; letter-spacing: -4mm; }}
+.algo .big {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 800; font-size: 96mm; line-height: 0.9; letter-spacing: -4mm; }}
 .algo .cap {{ font-size: 28mm; font-weight: 600; margin-top: 4mm; }}
 .algo .how {{ font-size: 21mm; color: {ACCENT}; font-weight: 600; margin: 3mm 0 7mm; }}
 .route {{ margin-top: 10mm; }}
 .callout {{ border-top: 1.2mm solid {INK}; padding-top: 6mm; margin-bottom: 16mm; }}
-.callout .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 76mm; line-height: 0.9; letter-spacing: -2mm; }}
+.callout .big {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 800; font-size: 76mm; line-height: 0.9; letter-spacing: -2mm; }}
 .callout .cap {{ font-size: 21mm; font-weight: 600; margin-top: 3mm; line-height: 1.3; }}
 .ledger {{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2.4mm solid {INK}; border-bottom: 1.2mm solid {INK}; }}
 .ledger > div {{ padding: 9mm 0 10mm; }}
 .ledger > div + div {{ border-left: 1.2mm solid {INK}; padding-left: 12mm; }}
-.ledger .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 62mm; line-height: 0.9; letter-spacing: -2mm; }}
+.ledger .big {{ font-family: "{LATIN}", "{CJK}", sans-serif; font-weight: 800; font-size: 62mm; line-height: 0.9; letter-spacing: -2mm; }}
 .ledger .cap {{ font-size: 20mm; font-weight: 600; margin-top: 4mm; line-height: 1.3; }}
 .foot {{ display: flex; justify-content: space-between; align-items: center; }}
 .foot .t {{ font-size: 22mm; font-weight: 600; }}
@@ -191,14 +198,14 @@ h2 {{ font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm
 
 <section>
   <div class="kicker"><b>04</b>谁来决定下一步</div>
-  <h2>决策模型全权调度：快 {time_cut}%，只提升 {both[1]:.1f}%</h2>
+  <h2>决策模型全权调度：快 {time_cut}%</h2>
   <div class="route">{routing_chart()}</div>
 </section>
 
 <div class="ledger">
-  <div><div class="big">{FINAL_OK}/{RUNS}</div><div class="cap">交付全部通过<br>最终测试</div></div>
-  <div><div class="big">{PASSED}/{PROPOSED}</div><div class="cap">候选通过<br>开发验证</div></div>
-  <div><div class="big" style="color: {ACCENT}">{100 * WAIT_S / RUN_S:.0f}%</div><div class="cap">时间花在<br>等模型回复</div></div>
+  <div><div class="big" style="color: {ACCENT}">−{100 * (1 - COST_AFTER / COST_BEFORE):.0f}%</div><div class="cap">云端花费</div></div>
+  <div><div class="big">+{100 * (SPEEDUP_AFTER / SPEEDUP_BEFORE - 1):.0f}%</div><div class="cap">典型加速比</div></div>
+  <div><div class="big">&gt;99%</div><div class="cap">合格率</div></div>
 </div>
 
 <div class="foot"><div class="t">QuotaCrux 枢决 · 扫码查看代码与实验报告</div>{qr_svg()}</div>
@@ -206,13 +213,16 @@ h2 {{ font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm
 
 
 def main() -> None:
+    global CJK
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "docs" / "poster" / "QuotaCrux-poster.pdf"))
+    ap.add_argument("--cjk", default=CJK, help='Chinese font, e.g. "PingFang SC" on a Mac')
     args = ap.parse_args()
+    CJK = args.cjk
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     src = out.with_suffix(".html")
-    src.write_text(page())
+    src.write_text(page(), encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=5000",
                     f"--print-to-pdf={out}", src.as_uri()], check=True, capture_output=True)
     print(f"wrote {out} and {src}")

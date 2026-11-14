@@ -110,38 +110,35 @@ def _badge(x: float, y: float, text: str, color: str) -> str:
 
 
 def route_map() -> str:
-    W, H = 700, 452
-    ox, oy = 24, 212          # origin: a new research task
-    ya, yt, yv = 64, 212, 360   # amber / teal / violet rows
-    mx = 600                  # merge: frozen best, hidden test, delivery
+    W, H = 700, 440
+    ox, oy = 72, 200          # origin: a new research task
+    ya, yt, yv = 60, 200, 340   # amber / teal / violet rows
+    mx = 612                  # merge: acceptance and delivery
     curve = lambda yr: (f"M{ox},{oy} C{ox + 50},{oy} {ox + 44},{yr} {ox + 98},{yr} L{mx - 98},{yr} "  # noqa: E731
                         f"C{mx - 44},{yr} {mx - 50},{oy} {mx},{oy}")
-    teal = [(140, "规划", []), (215, "取证", []), (290, "假设", []), (365, "实验", []), (440, "验证", []), (515, "修正", [])]
+    teal = [(178, "规划"), (250, "取证"), (322, "假设"), (394, "实验"), (466, "验证"), (538, "修正")]
     p = [f'<svg viewBox="0 0 {W} {H}" width="{W}mm" height="{H}mm" xmlns="http://www.w3.org/2000/svg">']
     for path, color in ((curve(ya), AMBER), (curve(yv), VIOLET), (f"M{ox},{oy} L{mx},{oy}", TEAL)):
         p.append(f'<path d="{path}" fill="none" stroke="{color}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>')
-    # transfer from the local line to the cloud line (rules 1 and 2)
-    p.append(f'<path d="M440,{yt + 12} L440,{yv - 12}" stroke="{VIOLET}" stroke-width="4" stroke-dasharray="6 6" fill="none"/>')
-    mid = (yt + yv) / 2 + 4
-    p.append(_badge(440, mid - 12, "①", VIOLET) + _badge(440, mid + 12, "②", VIOLET))
-    p.append(f'<text x="456" y="{mid + 4}" class="tr" fill="{VIOLET_T}">换乘大模型</text>')
-    # line names
-    p.append(f'<text x="{ox + 106}" y="{ya + 32}" class="hd" fill="{AMBER_T}">经验直达 · 0 次模型调用</text>')
-    p.append(f'<text x="{ox + 106}" y="{yt + 32}" class="hd" fill="{TEAL_T}">本地小模型 · 免费 · 主力</text>')
-    p.append(f'<text x="{ox + 106}" y="{yv - 22}" class="hd" fill="{VIOLET_T}">云端大模型 · 按次付费 · 只在关键节点</text>')
-    # entry badges on the branch curves
-    p.append(_badge(ox + 40, (oy + ya) / 2 + 4, "★", AMBER))
-    p.append(_badge(ox + 40, (oy + yv) / 2 - 4, "③", VIOLET))
-    for x, name, desc in teal:
-        p.append(_station(x, yt, TEAL) + _label(x, yt, name, desc))
-    for x, name, desc in ((260, "复验已验证的程序", []), (440, "达标直接交付", [])):
-        p.append(_station(x, ya, AMBER) + _label(x, ya, name, desc))
-    for x, name, desc in ((260, "大模型接手研究", []), (480, "做对后写入经验", [])):
-        p.append(_station(x, yv, VIOLET) + _label(x, yv, name, desc, below=True))
-    p.append(_station(ox, oy, INK, big=True) + f'<text x="{ox - 6}" y="{oy - 26}" class="nm" fill="{INK}">新任务</text>')
+    # transfer from the local line to the cloud line, with its conditions written next to it
+    p.append(f'<path d="M466,{yt + 12} L466,{yv - 12}" stroke="{VIOLET}" stroke-width="4" stroke-dasharray="6 6" fill="none"/>')
+    mid = (yt + yv) / 2
+    p.append(f'<text x="452" y="{mid - 14}" class="cd" fill="{INK}" text-anchor="end">连续 2 次没达标</text>')
+    p.append(f'<text x="452" y="{mid + 3}" class="cd" fill="{INK}" text-anchor="end">或 3 次请求没达标</text>')
+    p.append(f'<text x="452" y="{mid + 22}" class="tr" fill="{VIOLET_T}" text-anchor="end">↓ 换乘大模型</text>')
+    # which tasks take the two branches, written where the branch starts
+    p.append(f'<text x="{ox + 40}" y="{ya - 18}" class="cd" fill="{AMBER_T}">做过同类题 →</text>')
+    p.append(f'<text x="{ox + 40}" y="{yv + 32}" class="cd" fill="{VIOLET_T}">全新问题 →</text>')
+    for x, name in teal:
+        p.append(_station(x, yt, TEAL) + _label(x, yt, name, []))
+    for x, name in ((330, "复验已验证的程序"), (488, "达标直接交付")):
+        p.append(_station(x, ya, AMBER) + _label(x, ya, name, []))
+    for x, name in ((330, "大模型接手研究"), (500, "做对后写入经验")):
+        p.append(_station(x, yv, VIOLET) + _label(x, yv, name, [], below=True))
+    p.append(_station(ox, oy, INK, big=True) + f'<text x="{ox - 22}" y="{oy + 5}" class="nm" fill="{INK}" text-anchor="end">新任务</text>')
     p.append(_station(mx, oy, INK, big=True))
-    p.append(f'<text x="{mx + 20}" y="{oy - 4}" class="nm" fill="{INK}">验收</text>')
-    p.append(f'<text x="{mx + 20}" y="{oy + 14}" class="nm" fill="{INK}">交付</text>')
+    p.append(f'<text x="{mx + 22}" y="{oy - 4}" class="nm" fill="{INK}">验收</text>')
+    p.append(f'<text x="{mx + 22}" y="{oy + 14}" class="nm" fill="{INK}">交付</text>')
     p.append("</svg>")
     return "".join(p)
 
@@ -212,7 +209,11 @@ body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; 
 .map svg text.nm {{ font-size: 15px; font-weight: 600; }}
 .map svg text.ds {{ font-size: 10px; }}
 .map svg text.hd {{ font-size: 14px; font-weight: 600; }}
-.map svg text.tr {{ font-size: 13px; font-weight: 600; }}
+.map svg text.tr {{ font-size: 14px; font-weight: 700; }}
+.map svg text.cd {{ font-size: 14px; font-weight: 600; }}
+.legend {{ display: flex; gap: 16mm; margin-top: 8mm; font-size: 15mm; font-weight: 600; }}
+.legend span {{ display: flex; align-items: center; gap: 4mm; }}
+.legend i {{ width: 22mm; height: 5mm; border-radius: 3mm; display: block; }}
 .map svg text.bd {{ font-size: 11px; font-weight: 700; font-family: "Avenir Next", sans-serif; }}
 .rules {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8mm; margin-top: 2mm; }}
 .rule {{ background: #fff; border-radius: 5mm; padding: 8mm 9mm; display: flex; gap: 5mm; align-items: flex-start; font-size: 14mm; line-height: 1.4; font-weight: 600; }}
@@ -249,12 +250,10 @@ body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; 
 
 <section>
   <div class="sh"><b>01</b><h2>三条路线，由程序分流</h2></div>
+  <div class="legend"><span style="color: {AMBER_T}"><i style="background: {AMBER}"></i>经验直达 · 不调用模型</span>
+    <span style="color: {TEAL_T}"><i style="background: {TEAL}"></i>本地小模型 · 免费主力</span>
+    <span style="color: {VIOLET_T}"><i style="background: {VIOLET}"></i>云端大模型 · 关键时刻</span></div>
   <div class="map">{route_map()}</div>
-  <div class="rules">
-    <div class="rule"><i style="background: {VIOLET}">①</i><span>小模型连续 2 个方案没达标</span></div>
-    <div class="rule"><i style="background: {VIOLET}">②</i><span>小模型用了 3 次请求仍没达标</span></div>
-    <div class="rule"><i style="background: {VIOLET}">③</i><span>全新问题：没有相近的成功</span></div>
-  </div>
 </section>
 
 <section>

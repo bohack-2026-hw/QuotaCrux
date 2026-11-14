@@ -277,6 +277,16 @@ export interface Stream {
   notes: string[]
 }
 
+export interface SystemSummary {
+  runs: number
+  split: { no_model: number; small_only: number; large_used: number }
+  calls: Record<string, { requests: number; cost_usd: number; unknown_cost: number }>
+  upgrades: { upgrade_two_misses: number; upgrade_small_cap: number; upgrade_decision_model: number }
+  routes: Record<string, number>
+  reuse_delivered: number
+  scope: string
+}
+
 export interface LiveCell {
   seq: number; task_id: string; arm: string; repeat: number; position: number | null; run_id: string | null
   state: 'planned' | 'running' | 'done'; status: string | null; stop_reason: string | null; route: string | null
@@ -325,6 +335,7 @@ export interface Session {
 export const api = {
   health: () => call<{ ok: boolean; running_run_id: string | null }>('/health'),
   live: () => call<LiveData>('/live'),
+  systemSummary: () => call<SystemSummary>('/system-summary'),
   tasks: () => call<TaskSummary[]>('/tasks'),
   runs: (taskId?: string) => call<RunRow[]>(`/runs?limit=300${taskId ? `&task_id=${taskId}` : ''}`),
   startRun: (body: { task_id: string; mode: string; snapshot_id?: string; label?: string;

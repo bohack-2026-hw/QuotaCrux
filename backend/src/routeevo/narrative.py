@@ -196,7 +196,7 @@ def evolution_note(comparison_id: str) -> dict:
                 if B.get("goal_met_from_reuse") else "")
              + f"；行动变化：模型请求中位数 {_g(A['model_requests_median'])} → {_g(B['model_requests_median'])}，"
              f"升级到 GPT {A['upgrades_total']} → {B['upgrades_total']} 次，失败候选 {A['candidates_failed_total']} → {B['candidates_failed_total']} 个。")
-    line3 = (f"如何回退：在界面「04 版本管理」或执行 `uv run routeevo snapshots activate {a} --reason 回退` 把生效快照切回 {a}；"
+    line3 = (f"如何回退：在界面「版本」页或执行 `uv run routeevo snapshots activate {a} --reason 回退` 把生效快照切回 {a}；"
              f"之后的运行读取 {a} 并从相同初始程序开始，{b} 及全部运行记录保留可查。")
     return {"comparison_id": comparison_id, "fair": c["fair"], "scripted_model": c["scripted_model"],
             "lines": [line1, line2, line3],
@@ -225,7 +225,7 @@ def stream_note(c: dict) -> dict:
              f"{later['runs_without_model_request']}/{later['runs']} 次没有调用模型（不带记忆 {lf['runs_without_model_request']}/{lf['runs']}），"
              f"大模型请求 {lf['large_model_requests_total']} → {later['large_model_requests_total']} 次；带记忆一侧的分流：{routes}。"
              f"新任务族首次出现时两侧条件相同（都没有该族经验），两侧都直接用大模型，带记忆 {first['goal_met']}/{first['runs']} 达标。")
-    line3 = (f"如何回退：任务流结束后生效版本已恢复为实验前的版本；任何一次重放产生的版本都可在「04 版本管理」查看或设为生效，"
+    line3 = (f"如何回退：任务流结束后生效版本已恢复为实验前的版本；任何一次重放产生的版本都可在「版本」页查看或设为生效，"
              f"`uv run routeevo snapshots activate {start} --reason 回退` 回到起点，全部运行记录保留可查。")
     return {"comparison_id": c["comparison_id"], "fair": c["fair"], "scripted_model": c["scripted_model"],
             "lines": [line1, line2, line3], "evidence": {"comparison": c["comparison_id"], "growth": g}}

@@ -83,13 +83,19 @@ function CurrentRun({ runId, elapsed, offline, onOpenRun }: { runId: string | nu
 
 /** A running report as a one-run task, so the best-so-far curve and metric units match the research page. */
 function taskFromReport(r: Report): RTask {
-  const best = r.best_candidate?.dev_evaluations.at(-1) ?? null
+  // While a run is going, best_candidate is written only when its loop ends; the progress log already names the
+  // candidate the selector keeps, so read the current best from there.
+  const kept = r.best_candidate?.candidate_id ?? (r.progress ?? []).at(-1)?.best_candidate_id ?? null
+  const bestCand = r.best_candidate ?? r.candidates.find((c) => c.candidate_id === kept) ?? null
+  const best = bestCand?.dev_evaluations.at(-1) ?? null
   const raw: RawBatch = {
     comparison_id: r.run_id, status: 'running',
     runs: [{
       seq: 1, task_id: r.task.task_id, repeat: 1, mode: r.config.research_protocol?.mode ?? r.mode, run_id: r.run_id, status: r.status,
       task: { task_id: r.task.task_id, family: r.task.family ?? null, objective: r.task.objective },
-      best_candidate_id: r.best_candidate?.candidate_id ?? null,
+      best_candidate_id: bestCand?.candidate_id ?? null,
+      // Extend the best-so-far step line to now while the run is going, so a single kept candidate still shows.
+      timing: { agent_loop_s: r.timing.agent_loop_s ?? r.timing.agent_loop_elapsed_s ?? null },
       best_dev: best ? { status: best.status, speedup: best.speedup, improved: best.improved, objective: best.objective ?? null } : null,
       progress: r.progress ?? [],
     } as RawRun],

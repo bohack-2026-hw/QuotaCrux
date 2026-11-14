@@ -1,0 +1,15 @@
+{
+  "launched_at": "2026-11-14T08:29:47.342453+00:00",
+  "pid": 121894,
+  "command": [
+    "/home/hycx233/routeevo-routing-formal-20261114/repo/backend/.venv/bin/python",
+    "/home/hycx233/routeevo-routing-formal-20261114/run_ale_routing.py",
+    "--freeze",
+    "/home/hycx233/routeevo-routing-formal-20261114/ale-freeze.json",
+    "--execute"
+  ],
+  "cwd": "/home/hycx233/routeevo-routing-formal-20261114/repo/backend",
+  "freeze_document_commit": "1cf1a4ef8b12628055dc84efbc45b1f83a88f1b6",
+  "experiment_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "freeze_sha256": "cdaa7f59e8deed2abbfc5fbac6b8ad4d43c03ca923fdf3d8ea513df9bd8030bc"
+}

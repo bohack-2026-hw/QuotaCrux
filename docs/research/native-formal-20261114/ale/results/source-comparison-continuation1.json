@@ -1,0 +1,4416 @@
+{
+  "comparison_id": "research-ale-formal-20261114-v2-continuation1",
+  "plan_id": "research-ale-formal-20261114-v2-continuation1",
+  "protocol": "within-task-feedback-v2",
+  "label": "ALE formal 15-slot feedback comparison",
+  "code_sha": "990f598b87f7c93bd27b6ceef5751bbc2d39dd79",
+  "status": "completed",
+  "fair": null,
+  "created_at": "2026-11-14T08:03:12.873759+00:00",
+  "final_evaluation": true,
+  "price_snapshot": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models",
+    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+    "unit_evidence": {
+      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+      "currency_symbol": "￥",
+      "text_model_price_denominator": "/M"
+    },
+    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+  },
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "plan": [
+    {
+      "wave": 6,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 11
+    },
+    {
+      "wave": 6,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 12
+    },
+    {
+      "wave": 7,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 13
+    },
+    {
+      "wave": 8,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 14
+    },
+    {
+      "wave": 9,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 15
+    }
+  ],
+  "runs": [
+    {
+      "wave": 6,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 11,
+      "status": "completed",
+      "final_status": "completed",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc024 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc024",
+          "workload": "ahc024 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "b4f02d3cbcea3200d3e7d29dcf27b1e0bcce1fb566ed249541683114f7986585",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T080312-9c97",
+      "stop_reason": "agent_finished",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 15,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 15
+        },
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "最终方案 c0 可行，原始得分 15（maximize；基线 15）"
+      },
+      "best_candidate_id": "c0",
+      "best_dev": {
+        "evaluation_id": "1fc1bd0db737",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 0,
+        "goal_met": 0,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "666b0f624f66",
+        "candidate_id": "c0",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 3.311,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 15,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 15
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": "initial program; native score measured"
+      },
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "2",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": "small"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v1"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "1be26f2a809875d8fee65fc5ca8aa3a46955a467516c0946cc6d938802b8e6ef",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:ee44715bc32a6abd30a73f69c850912f10aa07ec8a476b62cb745a8ce708805a",
+            "image_tag": "routeevo-ale-ahc024:440437e8b148"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "2",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "iterations": {
+        "model_requests": 10,
+        "routing_requests": 0,
+        "generation_requests": 10,
+        "candidates_proposed": 9,
+        "candidates_passed": 7,
+        "candidates_improved": 0,
+        "candidates_no_gain": 7,
+        "candidates_failed": 2,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 10,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 249.808,
+        "agent_loop_s": 246.488,
+        "agent_loop_elapsed_s": 246.488,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 3.311,
+        "model_wait_s": 233.461,
+        "dev_evaluation_s": 12.805,
+        "evidence_tool_s": 0,
+        "container_startup_s": 9.315
+      },
+      "usage": {
+        "requests": 10,
+        "ok": 10,
+        "errors": {},
+        "latency_s": 233.461,
+        "input_tokens": 31695,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 14976,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 10461,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 10,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 10,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.220617,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 26.962,
+          "metric": "score",
+          "model_requests": 1,
+          "tokens": 4218,
+          "value": 5,
+          "usage": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 24.399,
+            "input_tokens": 3168,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1050,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 1,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.022104,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 59.02,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 9143,
+          "value": 5,
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 56.265,
+            "input_tokens": 6337,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 1664,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2806,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 2,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.052683,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 64.453,
+          "metric": "score",
+          "model_requests": 3,
+          "tokens": 12495,
+          "value": 5,
+          "usage": {
+            "requests": 3,
+            "ok": 3,
+            "errors": {},
+            "latency_s": 60.25,
+            "input_tokens": 9506,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 3328,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2989,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 3,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.064386,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 104.136,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 17227,
+          "value": 5,
+          "usage": {
+            "requests": 4,
+            "ok": 4,
+            "errors": {},
+            "latency_s": 98.68,
+            "input_tokens": 12675,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4992,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 4552,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 4,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 4,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.092649,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 164.432,
+          "metric": "score",
+          "model_requests": 5,
+          "tokens": 22869,
+          "value": 5,
+          "usage": {
+            "requests": 5,
+            "ok": 5,
+            "errors": {},
+            "latency_s": 157.023,
+            "input_tokens": 15845,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 6656,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 7024,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 5,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 5,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.131823,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 172.822,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 26385,
+          "value": 5,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 163.94,
+            "input_tokens": 19015,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 8320,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 7370,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 6,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 6,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.145485,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 186.714,
+          "metric": "score",
+          "model_requests": 7,
+          "tokens": 30068,
+          "value": 5,
+          "usage": {
+            "requests": 7,
+            "ok": 7,
+            "errors": {},
+            "latency_s": 176.463,
+            "input_tokens": 22185,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 9984,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 7883,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 7,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 7,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.161151,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 210.237,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 34241,
+          "value": 5,
+          "usage": {
+            "requests": 8,
+            "ok": 8,
+            "errors": {},
+            "latency_s": 198.597,
+            "input_tokens": 25355,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 11648,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 8886,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 8,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 8,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.182697,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 235.208,
+          "metric": "score",
+          "model_requests": 9,
+          "tokens": 38800,
+          "value": 5,
+          "usage": {
+            "requests": 9,
+            "ok": 9,
+            "errors": {},
+            "latency_s": 222.195,
+            "input_tokens": 28525,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 13312,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 10275,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 9,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 9,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.208875,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        }
+      ],
+      "report_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T080312-9c97/report.json"
+    },
+    {
+      "wave": 6,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 12,
+      "status": "completed",
+      "final_status": "completed",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T080312-370b",
+      "stop_reason": "agent_finished",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8848
+            },
+            {
+              "correct": true,
+              "score": 8702
+            },
+            {
+              "correct": true,
+              "score": 8825
+            },
+            {
+              "correct": true,
+              "score": 8769
+            },
+            {
+              "correct": true,
+              "score": 8750
+            },
+            {
+              "correct": true,
+              "score": 8771
+            },
+            {
+              "correct": true,
+              "score": 8742
+            },
+            {
+              "correct": true,
+              "score": 8843
+            },
+            {
+              "correct": true,
+              "score": 8790
+            },
+            {
+              "correct": true,
+              "score": 8844
+            },
+            {
+              "correct": true,
+              "score": 8682
+            },
+            {
+              "correct": true,
+              "score": 8862
+            },
+            {
+              "correct": true,
+              "score": 8776
+            },
+            {
+              "correct": true,
+              "score": 8746
+            },
+            {
+              "correct": true,
+              "score": 8914
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 131864
+        },
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "最终方案 c0 可行，原始得分 131864（maximize；基线 131864）"
+      },
+      "best_candidate_id": "c0",
+      "best_dev": {
+        "evaluation_id": "65800e9b0335",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 0,
+        "goal_met": 0,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "d8edbafde80d",
+        "candidate_id": "c0",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 3.084,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8848
+            },
+            {
+              "correct": true,
+              "score": 8702
+            },
+            {
+              "correct": true,
+              "score": 8825
+            },
+            {
+              "correct": true,
+              "score": 8769
+            },
+            {
+              "correct": true,
+              "score": 8750
+            },
+            {
+              "correct": true,
+              "score": 8771
+            },
+            {
+              "correct": true,
+              "score": 8742
+            },
+            {
+              "correct": true,
+              "score": 8843
+            },
+            {
+              "correct": true,
+              "score": 8790
+            },
+            {
+              "correct": true,
+              "score": 8844
+            },
+            {
+              "correct": true,
+              "score": 8682
+            },
+            {
+              "correct": true,
+              "score": 8862
+            },
+            {
+              "correct": true,
+              "score": 8776
+            },
+            {
+              "correct": true,
+              "score": 8746
+            },
+            {
+              "correct": true,
+              "score": 8914
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 131864
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": "initial program; native score measured"
+      },
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": "small"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v1"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "iterations": {
+        "model_requests": 15,
+        "routing_requests": 0,
+        "generation_requests": 15,
+        "candidates_proposed": 8,
+        "candidates_passed": 2,
+        "candidates_improved": 0,
+        "candidates_no_gain": 2,
+        "candidates_failed": 6,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 15,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 148.441,
+        "agent_loop_s": 145.351,
+        "agent_loop_elapsed_s": 145.351,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 3.084,
+        "model_wait_s": 140.082,
+        "dev_evaluation_s": 5.02,
+        "evidence_tool_s": 0,
+        "container_startup_s": 5.64
+      },
+      "usage": {
+        "requests": 15,
+        "ok": 15,
+        "errors": {},
+        "latency_s": 140.082,
+        "input_tokens": 132374,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 21376,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 5804,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 15,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 15,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.46677,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 20.046,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 8589,
+          "value": 44120,
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 17.431,
+            "input_tokens": 7881,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 708,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 2,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.032139,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 39.223,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 20579,
+          "value": 44120,
+          "usage": {
+            "requests": 4,
+            "ok": 4,
+            "errors": {},
+            "latency_s": 35.383,
+            "input_tokens": 19054,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1525,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 4,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 4,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.075462,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 61.722,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 35610,
+          "value": 44120,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 57.625,
+            "input_tokens": 33271,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2339,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 6,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 6,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.127881,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 77.951,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 53309,
+          "value": 44120,
+          "usage": {
+            "requests": 8,
+            "ok": 8,
+            "errors": {},
+            "latency_s": 73.573,
+            "input_tokens": 50195,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 3114,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 8,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 8,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.187953,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 92.304,
+          "metric": "score",
+          "model_requests": 9,
+          "tokens": 63448,
+          "value": 44120,
+          "usage": {
+            "requests": 9,
+            "ok": 9,
+            "errors": {},
+            "latency_s": 87.703,
+            "input_tokens": 59903,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 3545,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 9,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 9,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.222249,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 115.322,
+          "metric": "score",
+          "model_requests": 12,
+          "tokens": 97238,
+          "value": 44120,
+          "usage": {
+            "requests": 12,
+            "ok": 12,
+            "errors": {},
+            "latency_s": 110.484,
+            "input_tokens": 92544,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 21376,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 4694,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 12,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 12,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.33396,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 124.53,
+          "metric": "score",
+          "model_requests": 13,
+          "tokens": 110135,
+          "value": 44120,
+          "usage": {
+            "requests": 13,
+            "ok": 13,
+            "errors": {},
+            "latency_s": 119.478,
+            "input_tokens": 105008,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 21376,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 5127,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 13,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 13,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.376548,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 133.852,
+          "metric": "score",
+          "model_requests": 14,
+          "tokens": 123844,
+          "value": 44120,
+          "usage": {
+            "requests": 14,
+            "ok": 14,
+            "errors": {},
+            "latency_s": 128.597,
+            "input_tokens": 118283,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 21376,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 5561,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 14,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 14,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.421581,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        }
+      ],
+      "report_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T080312-370b/report.json"
+    },
+    {
+      "wave": 7,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 13,
+      "status": "completed",
+      "final_status": "completed",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T080722-9c52",
+      "stop_reason": "agent_finished",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8848
+            },
+            {
+              "correct": true,
+              "score": 8702
+            },
+            {
+              "correct": true,
+              "score": 8825
+            },
+            {
+              "correct": true,
+              "score": 8769
+            },
+            {
+              "correct": true,
+              "score": 8750
+            },
+            {
+              "correct": true,
+              "score": 8771
+            },
+            {
+              "correct": true,
+              "score": 8742
+            },
+            {
+              "correct": true,
+              "score": 8843
+            },
+            {
+              "correct": true,
+              "score": 8790
+            },
+            {
+              "correct": true,
+              "score": 8844
+            },
+            {
+              "correct": true,
+              "score": 8682
+            },
+            {
+              "correct": true,
+              "score": 8862
+            },
+            {
+              "correct": true,
+              "score": 8776
+            },
+            {
+              "correct": true,
+              "score": 8746
+            },
+            {
+              "correct": true,
+              "score": 8914
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 131864
+        },
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "最终方案 c0 可行，原始得分 131864（maximize；基线 131864）"
+      },
+      "best_candidate_id": "c0",
+      "best_dev": {
+        "evaluation_id": "96fd20bf4e69",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 0,
+        "goal_met": 0,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "125e96b85458",
+        "candidate_id": "c0",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 3.037,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8848
+            },
+            {
+              "correct": true,
+              "score": 8702
+            },
+            {
+              "correct": true,
+              "score": 8825
+            },
+            {
+              "correct": true,
+              "score": 8769
+            },
+            {
+              "correct": true,
+              "score": 8750
+            },
+            {
+              "correct": true,
+              "score": 8771
+            },
+            {
+              "correct": true,
+              "score": 8742
+            },
+            {
+              "correct": true,
+              "score": 8843
+            },
+            {
+              "correct": true,
+              "score": 8790
+            },
+            {
+              "correct": true,
+              "score": 8844
+            },
+            {
+              "correct": true,
+              "score": 8682
+            },
+            {
+              "correct": true,
+              "score": 8862
+            },
+            {
+              "correct": true,
+              "score": 8776
+            },
+            {
+              "correct": true,
+              "score": 8746
+            },
+            {
+              "correct": true,
+              "score": 8914
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 131864
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": "initial program; native score measured"
+      },
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": "small"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v1"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "iterations": {
+        "model_requests": 2,
+        "routing_requests": 0,
+        "generation_requests": 2,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 0,
+        "candidates_no_gain": 1,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 2,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 22.947,
+        "agent_loop_s": 19.9,
+        "agent_loop_elapsed_s": 19.9,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 3.037,
+        "model_wait_s": 17.379,
+        "dev_evaluation_s": 2.485,
+        "evidence_tool_s": 0,
+        "container_startup_s": 3.714
+      },
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 17.379,
+        "input_tokens": 6493,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 1664,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 923,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 2,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.030555,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 15.743,
+          "metric": "score",
+          "model_requests": 1,
+          "tokens": 4007,
+          "value": 44120,
+          "usage": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 13.236,
+            "input_tokens": 3246,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 761,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 1,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.01887,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        }
+      ],
+      "report_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T080722-9c52/report.json"
+    },
+    {
+      "wave": 8,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 14,
+      "status": "completed",
+      "final_status": "completed",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T080746-c98c",
+      "stop_reason": "agent_finished",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8751
+            },
+            {
+              "correct": true,
+              "score": 8745
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8675
+            },
+            {
+              "correct": true,
+              "score": 8921
+            },
+            {
+              "correct": true,
+              "score": 8636
+            },
+            {
+              "correct": true,
+              "score": 8955
+            },
+            {
+              "correct": true,
+              "score": 8876
+            },
+            {
+              "correct": true,
+              "score": 8815
+            },
+            {
+              "correct": true,
+              "score": 8951
+            },
+            {
+              "correct": true,
+              "score": 8906
+            },
+            {
+              "correct": true,
+              "score": 8597
+            },
+            {
+              "correct": true,
+              "score": 8858
+            },
+            {
+              "correct": true,
+              "score": 8946
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 132273
+        },
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "最终方案 c2 可行，原始得分 132273（maximize；基线 131864）"
+      },
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "evaluation_id": "295bc136b9f0",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8915
+            },
+            {
+              "correct": true,
+              "score": 8920
+            },
+            {
+              "correct": true,
+              "score": 8758
+            },
+            {
+              "correct": true,
+              "score": 8810
+            },
+            {
+              "correct": true,
+              "score": 8867
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44270
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "38fe943c8f49",
+        "candidate_id": "c2",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 6.333,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8751
+            },
+            {
+              "correct": true,
+              "score": 8745
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8675
+            },
+            {
+              "correct": true,
+              "score": 8921
+            },
+            {
+              "correct": true,
+              "score": 8636
+            },
+            {
+              "correct": true,
+              "score": 8955
+            },
+            {
+              "correct": true,
+              "score": 8876
+            },
+            {
+              "correct": true,
+              "score": 8815
+            },
+            {
+              "correct": true,
+              "score": 8951
+            },
+            {
+              "correct": true,
+              "score": 8906
+            },
+            {
+              "correct": true,
+              "score": 8597
+            },
+            {
+              "correct": true,
+              "score": 8858
+            },
+            {
+              "correct": true,
+              "score": 8946
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 132273
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": null
+      },
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": "small"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v1"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "iterations": {
+        "model_requests": 15,
+        "routing_requests": 0,
+        "generation_requests": 15,
+        "candidates_proposed": 6,
+        "candidates_passed": 6,
+        "candidates_improved": 5,
+        "candidates_no_gain": 1,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 15,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 191.018,
+        "agent_loop_s": 184.68,
+        "agent_loop_elapsed_s": 184.68,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 6.333,
+        "model_wait_s": 175.473,
+        "dev_evaluation_s": 8.964,
+        "evidence_tool_s": 0,
+        "container_startup_s": 10.294
+      },
+      "usage": {
+        "requests": 15,
+        "ok": 15,
+        "errors": {},
+        "latency_s": 175.473,
+        "input_tokens": 151523,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 49536,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 7523,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 15,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 15,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.544845,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 16.293,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 8502,
+          "value": 44120,
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 13.697,
+            "input_tokens": 7793,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 709,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 2,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.031887,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 44.466,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 21349,
+          "value": 44270,
+          "usage": {
+            "requests": 4,
+            "ok": 4,
+            "errors": {},
+            "latency_s": 40.592,
+            "input_tokens": 19415,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1934,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 4,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 4,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.081453,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 81.518,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 38021,
+          "value": 44270,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 76.348,
+            "input_tokens": 35140,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 4864,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2881,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 6,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 6,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.139992,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 116.24,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 58541,
+          "value": 44270,
+          "usage": {
+            "requests": 8,
+            "ok": 8,
+            "errors": {},
+            "latency_s": 109.612,
+            "input_tokens": 54421,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 12288,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 4120,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 8,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 8,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.212703,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 146.657,
+          "metric": "score",
+          "model_requests": 11,
+          "tokens": 95818,
+          "value": 44270,
+          "usage": {
+            "requests": 11,
+            "ok": 11,
+            "errors": {},
+            "latency_s": 138.733,
+            "input_tokens": 90186,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 29696,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 5632,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 11,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 11,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.338142,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 168.942,
+          "metric": "score",
+          "model_requests": 13,
+          "tokens": 125686,
+          "value": 44270,
+          "usage": {
+            "requests": 13,
+            "ok": 13,
+            "errors": {},
+            "latency_s": 159.757,
+            "input_tokens": 118796,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 42112,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 6890,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 13,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 13,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.439068,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        }
+      ],
+      "report_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T080746-c98c/report.json"
+    },
+    {
+      "wave": 9,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 15,
+      "status": "completed",
+      "final_status": "completed",
+      "dev_status": "passed",
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T081057-be69",
+      "stop_reason": "agent_finished",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8751
+            },
+            {
+              "correct": true,
+              "score": 8810
+            },
+            {
+              "correct": true,
+              "score": 8804
+            },
+            {
+              "correct": true,
+              "score": 8799
+            },
+            {
+              "correct": true,
+              "score": 8973
+            },
+            {
+              "correct": true,
+              "score": 8636
+            },
+            {
+              "correct": true,
+              "score": 8946
+            },
+            {
+              "correct": true,
+              "score": 8868
+            },
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8892
+            },
+            {
+              "correct": true,
+              "score": 8903
+            },
+            {
+              "correct": true,
+              "score": 8651
+            },
+            {
+              "correct": true,
+              "score": 8818
+            },
+            {
+              "correct": true,
+              "score": 8933
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 132428
+        },
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "最终方案 c7 可行，原始得分 132428（maximize；基线 131864）"
+      },
+      "best_candidate_id": "c7",
+      "best_dev": {
+        "evaluation_id": "84c08e3879e6",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8915
+            },
+            {
+              "correct": true,
+              "score": 8919
+            },
+            {
+              "correct": true,
+              "score": 8758
+            },
+            {
+              "correct": true,
+              "score": 8808
+            },
+            {
+              "correct": true,
+              "score": 8872
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44272
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "c20111a48a71",
+        "candidate_id": "c7",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 6.239,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8751
+            },
+            {
+              "correct": true,
+              "score": 8810
+            },
+            {
+              "correct": true,
+              "score": 8804
+            },
+            {
+              "correct": true,
+              "score": 8799
+            },
+            {
+              "correct": true,
+              "score": 8973
+            },
+            {
+              "correct": true,
+              "score": 8636
+            },
+            {
+              "correct": true,
+              "score": 8946
+            },
+            {
+              "correct": true,
+              "score": 8868
+            },
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8892
+            },
+            {
+              "correct": true,
+              "score": 8903
+            },
+            {
+              "correct": true,
+              "score": 8651
+            },
+            {
+              "correct": true,
+              "score": 8818
+            },
+            {
+              "correct": true,
+              "score": 8933
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 132428
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": null
+      },
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": "small"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "fixed small model",
+            "version": "off"
+          },
+          "routing": {
+            "action": "llm",
+            "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model": "rule",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v1"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 0,
+        "generation_requests": 14,
+        "candidates_proposed": 7,
+        "candidates_passed": 7,
+        "candidates_improved": 1,
+        "candidates_no_gain": 6,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "large_model_requests": 0,
+        "small_model_requests": 14,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 378.931,
+        "agent_loop_s": 372.685,
+        "agent_loop_elapsed_s": 372.685,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 6.239,
+        "model_wait_s": 362.149,
+        "dev_evaluation_s": 10.301,
+        "evidence_tool_s": 0,
+        "container_startup_s": 10.998
+      },
+      "usage": {
+        "requests": 14,
+        "ok": 14,
+        "errors": {},
+        "latency_s": 362.149,
+        "input_tokens": 161395,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 51328,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 19654,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 14,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 14,
+        "price_versions": []
+      },
+      "cost": {
+        "amount": 0.720033,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 10.71,
+          "metric": "score",
+          "model_requests": 1,
+          "tokens": 3822,
+          "value": 44120,
+          "usage": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 8.148,
+            "input_tokens": 3431,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 391,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 1,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.014985,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 34.646,
+          "metric": "score",
+          "model_requests": 3,
+          "tokens": 13036,
+          "value": 44120,
+          "usage": {
+            "requests": 3,
+            "ok": 3,
+            "errors": {},
+            "latency_s": 30.744,
+            "input_tokens": 11675,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1361,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 3,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.051357,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 119.628,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 36521,
+          "value": 44120,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 114.398,
+            "input_tokens": 30710,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 12288,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 5811,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 6,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 6,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.161862,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 183.431,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 62472,
+          "value": 44120,
+          "usage": {
+            "requests": 8,
+            "ok": 8,
+            "errors": {},
+            "latency_s": 176.93,
+            "input_tokens": 52759,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 18048,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 9713,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 8,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 8,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.274833,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 246.711,
+          "metric": "score",
+          "model_requests": 10,
+          "tokens": 96249,
+          "value": 44120,
+          "usage": {
+            "requests": 10,
+            "ok": 10,
+            "errors": {},
+            "latency_s": 239.0,
+            "input_tokens": 82634,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 33024,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 13615,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 10,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 10,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.411282,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 259.309,
+          "metric": "score",
+          "model_requests": 11,
+          "tokens": 113855,
+          "value": 44120,
+          "usage": {
+            "requests": 11,
+            "ok": 11,
+            "errors": {},
+            "latency_s": 250.233,
+            "input_tokens": 99775,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 36352,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 14080,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 11,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 11,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.468285,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        },
+        {
+          "best_candidate_id": "c7",
+          "elapsed_s": 363.083,
+          "metric": "score",
+          "model_requests": 13,
+          "tokens": 157941,
+          "value": 44272,
+          "usage": {
+            "requests": 13,
+            "ok": 13,
+            "errors": {},
+            "latency_s": 352.56,
+            "input_tokens": 138463,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 51328,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 19478,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 13,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 13,
+            "price_versions": []
+          },
+          "cost": {
+            "amount": 0.649125,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+          }
+        }
+      ],
+      "report_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T081057-be69/report.json"
+    }
+  ],
+  "waves": [
+    {
+      "wave": 6,
+      "wall_clock_s": 249.98585523700058,
+      "slots": [
+        11,
+        12
+      ]
+    },
+    {
+      "wave": 7,
+      "wall_clock_s": 23.124256905000948,
+      "slots": [
+        13
+      ]
+    },
+    {
+      "wave": 8,
+      "wall_clock_s": 191.17798955199942,
+      "slots": [
+        14
+      ]
+    },
+    {
+      "wave": 9,
+      "wall_clock_s": 379.0879074610002,
+      "slots": [
+        15
+      ]
+    }
+  ],
+  "fairness": {
+    "tasks_with_mixed_configurations": [],
+    "all_planned_runs_completed": true,
+    "all_planned_runs_recorded": true,
+    "all_configurations_recorded": true
+  },
+  "summary": {
+    "tasks": [
+      {
+        "task": {
+          "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+          "split": "formal-20261114",
+          "target_min_speedup": null,
+          "objective": {
+            "metric": "score",
+            "direction": "maximize",
+            "min_speedup": null
+          },
+          "workload": "ahc024 · 5 public cases",
+          "family": "ale-bench",
+          "presentation": {
+            "title": "ALE-Bench · ahc024",
+            "workload": "ahc024 · 5 public cases",
+            "baseline": "可行起始程序（不代表上游竞争性解法）",
+            "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+            "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+          },
+          "dev_params": {
+            "cases": 5
+          },
+          "final_params": {
+            "cases": 15
+          },
+          "source": {
+            "archive_sha256": "b4f02d3cbcea3200d3e7d29dcf27b1e0bcce1fb566ed249541683114f7986585",
+            "dataset": "SakanaAI/ALE-Bench",
+            "license": "CC-BY-ND-4.0",
+            "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+          },
+          "selection": {
+            "dev_cases": 5,
+            "final_cases": 15
+          }
+        },
+        "modes": [
+          {
+            "mode": "independent",
+            "planned": 1,
+            "started": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_metric_observations": 1,
+            "final_values": [
+              15
+            ],
+            "final_metric_median": 15,
+            "c0_deliveries": 1,
+            "candidates_proposed": 9,
+            "candidates_passed": 7,
+            "usage": {
+              "requests": 10,
+              "latency_s": 233.461,
+              "errors": {},
+              "input_tokens": 31695,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 10461,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.220617,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://aiping.cn/api/v1/models",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://aiping.cn/api/v1/models",
+                "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                "unit_evidence": {
+                  "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                  "currency_symbol": "￥",
+                  "text_model_price_denominator": "/M"
+                },
+                "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            },
+            "cost_scope": "recorded calls only; unexecuted slots remain in planned count",
+            "wall_clock_s": 249.808
+          }
+        ]
+      },
+      {
+        "task": {
+          "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+          "split": "formal-20261114",
+          "target_min_speedup": null,
+          "objective": {
+            "metric": "score",
+            "direction": "maximize",
+            "min_speedup": null
+          },
+          "workload": "ahc026 · 5 public cases",
+          "family": "ale-bench",
+          "presentation": {
+            "title": "ALE-Bench · ahc026",
+            "workload": "ahc026 · 5 public cases",
+            "baseline": "可行起始程序（不代表上游竞争性解法）",
+            "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+            "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+          },
+          "dev_params": {
+            "cases": 5
+          },
+          "final_params": {
+            "cases": 15
+          },
+          "source": {
+            "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+            "dataset": "SakanaAI/ALE-Bench",
+            "license": "CC-BY-ND-4.0",
+            "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+          },
+          "selection": {
+            "dev_cases": 5,
+            "final_cases": 15
+          }
+        },
+        "modes": [
+          {
+            "mode": "feedback",
+            "planned": 2,
+            "started": 2,
+            "completed": 2,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 2
+            },
+            "final_correct": 2,
+            "final_metric_observations": 2,
+            "final_values": [
+              131864,
+              132273
+            ],
+            "final_metric_median": 132068.5,
+            "c0_deliveries": 1,
+            "candidates_proposed": 14,
+            "candidates_passed": 8,
+            "usage": {
+              "requests": 30,
+              "latency_s": 315.555,
+              "errors": {},
+              "input_tokens": 283897,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 13327,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 1.011615,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://aiping.cn/api/v1/models",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://aiping.cn/api/v1/models",
+                "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                "unit_evidence": {
+                  "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                  "currency_symbol": "￥",
+                  "text_model_price_denominator": "/M"
+                },
+                "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            },
+            "cost_scope": "recorded calls only; unexecuted slots remain in planned count",
+            "wall_clock_s": 339.459
+          },
+          {
+            "mode": "independent",
+            "planned": 1,
+            "started": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_metric_observations": 1,
+            "final_values": [
+              131864
+            ],
+            "final_metric_median": 131864,
+            "c0_deliveries": 1,
+            "candidates_proposed": 1,
+            "candidates_passed": 1,
+            "usage": {
+              "requests": 2,
+              "latency_s": 17.379,
+              "errors": {},
+              "input_tokens": 6493,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 923,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.030555,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://aiping.cn/api/v1/models",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://aiping.cn/api/v1/models",
+                "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                "unit_evidence": {
+                  "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                  "currency_symbol": "￥",
+                  "text_model_price_denominator": "/M"
+                },
+                "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            },
+            "cost_scope": "recorded calls only; unexecuted slots remain in planned count",
+            "wall_clock_s": 22.947
+          },
+          {
+            "mode": "no_feedback",
+            "planned": 1,
+            "started": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_metric_observations": 1,
+            "final_values": [
+              132428
+            ],
+            "final_metric_median": 132428,
+            "c0_deliveries": 0,
+            "candidates_proposed": 7,
+            "candidates_passed": 7,
+            "usage": {
+              "requests": 14,
+              "latency_s": 362.149,
+              "errors": {},
+              "input_tokens": 161395,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 19654,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.720033,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://aiping.cn/api/v1/models",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://aiping.cn/api/v1/models",
+                "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                "unit_evidence": {
+                  "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                  "currency_symbol": "￥",
+                  "text_model_price_denominator": "/M"
+                },
+                "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            },
+            "cost_scope": "recorded calls only; unexecuted slots remain in planned count",
+            "wall_clock_s": 378.931
+          }
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "mode_a": "feedback",
+        "mode_b": "independent",
+        "run_a": "run-20261114T080312-370b",
+        "run_b": null,
+        "metric": "score",
+        "value_a": 131864,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null,
+        "relative_difference_over_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "mode_a": "feedback",
+        "mode_b": "no_feedback",
+        "run_a": "run-20261114T080312-370b",
+        "run_b": null,
+        "metric": "score",
+        "value_a": 131864,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null,
+        "relative_difference_over_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "mode_a": "independent",
+        "mode_b": "no_feedback",
+        "run_a": null,
+        "run_b": null,
+        "metric": "score",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null,
+        "relative_difference_over_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "mode_a": "feedback",
+        "mode_b": "independent",
+        "run_a": "run-20261114T080746-c98c",
+        "run_b": "run-20261114T080722-9c52",
+        "metric": "score",
+        "value_a": 132273,
+        "value_b": 131864,
+        "status": "completed",
+        "difference_a_minus_b": 409,
+        "relative_difference_over_b": 0.0031016805193229387
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "mode_a": "feedback",
+        "mode_b": "no_feedback",
+        "run_a": "run-20261114T080746-c98c",
+        "run_b": "run-20261114T081057-be69",
+        "metric": "score",
+        "value_a": 132273,
+        "value_b": 132428,
+        "status": "completed",
+        "difference_a_minus_b": -155,
+        "relative_difference_over_b": -0.0011704473374210891
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "mode_a": "independent",
+        "mode_b": "no_feedback",
+        "run_a": "run-20261114T080722-9c52",
+        "run_b": "run-20261114T081057-be69",
+        "metric": "score",
+        "value_a": 131864,
+        "value_b": 132428,
+        "status": "completed",
+        "difference_a_minus_b": -564,
+        "relative_difference_over_b": -0.004258918053583834
+      }
+    ],
+    "planned": 5,
+    "not_run": 0
+  },
+  "ended_at": "2026-11-14T08:17:16.271043+00:00",
+  "batch_wall_clock_s": 843.3972793399989,
+  "cost": {
+    "amount": 1.98282,
+    "currency": "CNY",
+    "status": "estimated",
+    "source": "https://aiping.cn/api/v1/models",
+    "price_snapshot": {
+      "model": "Qwen3.8-27B",
+      "currency": "CNY",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 3,
+      "output_per_1m": 12,
+      "source": "https://aiping.cn/api/v1/models",
+      "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+      "unit_evidence": {
+        "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+        "currency_symbol": "￥",
+        "text_model_price_denominator": "/M"
+      },
+      "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+    }
+  }
+}

@@ -1,0 +1,2441 @@
+{
+  "run_id": "run-20261114T074330-f525",
+  "task": {
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "split": "formal-20261114",
+    "target_min_speedup": null,
+    "objective": {
+      "metric": "score",
+      "direction": "maximize",
+      "min_speedup": null
+    },
+    "workload": "ahc026 · 5 public cases",
+    "family": "ale-bench",
+    "presentation": {
+      "title": "ALE-Bench · ahc026",
+      "workload": "ahc026 · 5 public cases",
+      "baseline": "可行起始程序（不代表上游竞争性解法）",
+      "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+    },
+    "dev_params": {
+      "cases": 5
+    },
+    "final_params": {
+      "cases": 15
+    },
+    "source": {
+      "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+      "dataset": "SakanaAI/ALE-Bench",
+      "license": "CC-BY-ND-4.0",
+      "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+    },
+    "selection": {
+      "dev_cases": 5,
+      "final_cases": 15
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "research-ale-formal-20261114-v2 #6 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "recorded_status": "completed",
+  "research_mode": "independent",
+  "dev_only": false,
+  "stop_reason": "agent_finished",
+  "stop_detail": "预算即将耗尽（model_requests 8/20, candidates 8/10），c0 初始程序已通过全部5个可见用例并得到总分44120。进一步改进空间有限且风险较高，选择结束以保留当前可行结果。",
+  "config_fingerprint": "b753ef2cfce7b65a",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": true,
+    "best_from_reuse": false,
+    "best_is_initial": false,
+    "final_evaluated": true,
+    "final_status": "completed",
+    "final_error": null,
+    "final_correct": true,
+    "final_speedup": null,
+    "final_objective": {
+      "aggregation": "sum",
+      "baseline": 131864,
+      "cases": [
+        {
+          "correct": true,
+          "score": 8886
+        },
+        {
+          "correct": true,
+          "score": 8795
+        },
+        {
+          "correct": true,
+          "score": 8960
+        },
+        {
+          "correct": true,
+          "score": 8802
+        },
+        {
+          "correct": true,
+          "score": 8874
+        },
+        {
+          "correct": true,
+          "score": 8845
+        },
+        {
+          "correct": true,
+          "score": 8837
+        },
+        {
+          "correct": true,
+          "score": 8929
+        },
+        {
+          "correct": true,
+          "score": 8869
+        },
+        {
+          "correct": true,
+          "score": 8874
+        },
+        {
+          "correct": true,
+          "score": 8871
+        },
+        {
+          "correct": true,
+          "score": 8906
+        },
+        {
+          "correct": true,
+          "score": 8763
+        },
+        {
+          "correct": true,
+          "score": 8845
+        },
+        {
+          "correct": true,
+          "score": 8975
+        }
+      ],
+      "direction": "maximize",
+      "metric": "score",
+      "value": 133031
+    },
+    "goal_met": true,
+    "valid_artifact": true,
+    "summary": "最终方案 c5 可行，原始得分 133031（maximize；基线 131864）"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "66cd5cc2e0"
+      },
+      "family": "ale-bench",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c5",
+    "origin": "model",
+    "parent_candidate_id": "c0",
+    "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c5.py",
+    "code_sha256": "0250a8bb4f2631146d9b2bfc2be67efc65cb3f9414a191e74dda8d10bfbddd51",
+    "model_call_id": "m5",
+    "dev_evaluations": [
+      {
+        "evaluation_id": "dd65effc61cb",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8998
+            },
+            {
+              "correct": true,
+              "score": 8996
+            },
+            {
+              "correct": true,
+              "score": 8881
+            },
+            {
+              "correct": true,
+              "score": 8856
+            },
+            {
+              "correct": true,
+              "score": 8881
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44612
+        },
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest valid dev score within the research budget; else initial c0",
+  "run_target_speedup": null,
+  "route": null,
+  "final_evaluation": {
+    "evaluation_id": "297b3ca75f6f",
+    "candidate_id": "c5",
+    "status": "passed",
+    "correct": true,
+    "speedup": null,
+    "candidate_median_s": null,
+    "baseline_median_s": null,
+    "timing": null,
+    "failure": null,
+    "duration_s": 6.31,
+    "objective": {
+      "aggregation": "sum",
+      "baseline": 131864,
+      "cases": [
+        {
+          "correct": true,
+          "score": 8886
+        },
+        {
+          "correct": true,
+          "score": 8795
+        },
+        {
+          "correct": true,
+          "score": 8960
+        },
+        {
+          "correct": true,
+          "score": 8802
+        },
+        {
+          "correct": true,
+          "score": 8874
+        },
+        {
+          "correct": true,
+          "score": 8845
+        },
+        {
+          "correct": true,
+          "score": 8837
+        },
+        {
+          "correct": true,
+          "score": 8929
+        },
+        {
+          "correct": true,
+          "score": 8869
+        },
+        {
+          "correct": true,
+          "score": 8874
+        },
+        {
+          "correct": true,
+          "score": 8871
+        },
+        {
+          "correct": true,
+          "score": 8906
+        },
+        {
+          "correct": true,
+          "score": 8763
+        },
+        {
+          "correct": true,
+          "score": 8845
+        },
+        {
+          "correct": true,
+          "score": 8975
+        }
+      ],
+      "direction": "maximize",
+      "metric": "score",
+      "value": 133031
+    },
+    "case_count": 15,
+    "passed_cases": 15,
+    "normalized": false,
+    "measured": true,
+    "note": null
+  },
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c0.py",
+      "code_sha256": "d0f96678218cad87053ccf3bdcd3fecc0acfbf49ed0571279dc35f10f1ab06d6",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "4fdd703eecc3",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c1.py",
+      "code_sha256": "dcd4b904a3310cf47d3bcf6c248bc5c13260897d2f55bc40206e3f33e9daf270",
+      "model_call_id": "m1",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "3b88e74ac8de",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8750
+              },
+              {
+                "correct": true,
+                "score": 8882
+              },
+              {
+                "correct": true,
+                "score": 8724
+              },
+              {
+                "correct": true,
+                "score": 8694
+              },
+              {
+                "correct": true,
+                "score": 8745
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 43795
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c2.py",
+      "code_sha256": "8bebc0c3ebc9360bab5ab403432ddf94a89d771d32ff860690d111569c08aef6",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "5209f8178a30",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8914
+              },
+              {
+                "correct": true,
+                "score": 8829
+              },
+              {
+                "correct": true,
+                "score": 8773
+              },
+              {
+                "correct": true,
+                "score": 8822
+              },
+              {
+                "correct": true,
+                "score": 8849
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44187
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c3.py",
+      "code_sha256": "1ed813a6ad36f2148f8e05576791e4a638cfb429819a518cbdc37f19dc5f3f53",
+      "model_call_id": "m3",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "64c518faf48f",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8361
+              },
+              {
+                "correct": true,
+                "score": 8725
+              },
+              {
+                "correct": true,
+                "score": 8633
+              },
+              {
+                "correct": true,
+                "score": 8638
+              },
+              {
+                "correct": true,
+                "score": 8416
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 42773
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c4",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c4.py",
+      "code_sha256": "e4674fa98e8b26570755f450595f2b94b1c20880851f9cfcf4e485fcb9472d25",
+      "model_call_id": "m4",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "446b5ae82e19",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8879
+              },
+              {
+                "correct": true,
+                "score": 8810
+              },
+              {
+                "correct": true,
+                "score": 8806
+              },
+              {
+                "correct": true,
+                "score": 8743
+              },
+              {
+                "correct": true,
+                "score": 8573
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 43811
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c5",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c5.py",
+      "code_sha256": "0250a8bb4f2631146d9b2bfc2be67efc65cb3f9414a191e74dda8d10bfbddd51",
+      "model_call_id": "m5",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "dd65effc61cb",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8998
+              },
+              {
+                "correct": true,
+                "score": 8996
+              },
+              {
+                "correct": true,
+                "score": 8881
+              },
+              {
+                "correct": true,
+                "score": 8856
+              },
+              {
+                "correct": true,
+                "score": 8881
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44612
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c6",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c6.py",
+      "code_sha256": "df2fadd533eec566a0e2a3d3fd73e684f09db9f797b7e98f65aab52efef07e24",
+      "model_call_id": "m6",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "77a163f5dd4d",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8927
+              },
+              {
+                "correct": true,
+                "score": 8821
+              },
+              {
+                "correct": true,
+                "score": 8967
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44583
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c7",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c7.py",
+      "code_sha256": "e04faf86c1ac1a5c4ade47bbbfab2ae3283a7791f302ecf322a5a305e8db418e",
+      "model_call_id": "m7",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "0e66d7749156",
+          "status": "runtime_error",
+          "correct": 0,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c8",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c8.py",
+      "code_sha256": "8d1e07d4439a4ce8c342d5d028eca0d91ecb53154684023b296c73f424ff57a7",
+      "model_call_id": "m8",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "841e6eae7844",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8985
+              },
+              {
+                "correct": true,
+                "score": 8956
+              },
+              {
+                "correct": true,
+                "score": 8791
+              },
+              {
+                "correct": true,
+                "score": 8869
+              },
+              {
+                "correct": true,
+                "score": 8863
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44464
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 9,
+    "routing_requests": 0,
+    "generation_requests": 9,
+    "candidates_proposed": 8,
+    "candidates_passed": 7,
+    "candidates_improved": 4,
+    "candidates_no_gain": 3,
+    "candidates_failed": 1,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "large_model_requests": 0,
+    "small_model_requests": 9,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 9,
+      "ok": 9,
+      "errors": {},
+      "latency_s": 255.066,
+      "input_tokens": 29219,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 11648,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 11166,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": null,
+      "reasoning_tokens_unknown_calls": 9,
+      "cost_usd": null,
+      "cost_status": "unknown",
+      "cost_unknown_calls": 9,
+      "price_versions": []
+    },
+    "by_model": {
+      "small:chat_compat:Qwen3.8-27B": {
+        "requests": 9,
+        "ok": 9,
+        "errors": {},
+        "latency_s": 255.066,
+        "input_tokens": 29219,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 11648,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11166,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 9,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 9,
+        "price_versions": []
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 0,
+        "ok": 0,
+        "errors": {},
+        "latency_s": 0,
+        "input_tokens": 0,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.0,
+        "cost_status": "no_model_calls",
+        "cost_unknown_calls": 0,
+        "price_versions": []
+      },
+      "generation": {
+        "requests": 9,
+        "ok": 9,
+        "errors": {},
+        "latency_s": 255.066,
+        "input_tokens": 29219,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 11648,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11166,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 9,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 9,
+        "price_versions": []
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 271.83,
+    "agent_loop_s": 265.51,
+    "agent_loop_elapsed_s": 265.51,
+    "agent_loop_limit_s": 900,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": 6.31,
+    "model_wait_s": 255.066,
+    "dev_evaluation_s": 10.275,
+    "evidence_tool_s": 0,
+    "container_startup_s": 10.963
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "evaluation_id": "4fdd703eecc3",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "passed_cases": 5,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "4fdd703eecc3",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:43:30.723+00:00",
+      "ended_at": "2026-11-14T07:43:31.859+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始策略，通过更智能地选择移动目标堆来减少总能量消耗",
+      "expected_result": "在保持所有测试用例正确性的前提下，降低每个用例的能量消耗，从而提高总分",
+      "verification": "检查输出格式是否正确，验证操作序列合法性，确认所有箱子都被成功移出，统计总能量消耗并与基线对比",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m1",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:43:31.860+00:00",
+      "ended_at": "2026-11-14T07:43:51.493+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "3b88e74ac8de",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8750
+            },
+            {
+              "correct": true,
+              "score": 8882
+            },
+            {
+              "correct": true,
+              "score": 8724
+            },
+            {
+              "correct": true,
+              "score": 8694
+            },
+            {
+              "correct": true,
+              "score": 8745
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 43795
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 22.044,
+          "metric": "score",
+          "model_requests": 1,
+          "tokens": 4266,
+          "value": 44120
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "3b88e74ac8de",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:43:52.758+00:00",
+      "ended_at": "2026-11-14T07:43:52.758+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始程序，减少移动操作的次数和能量消耗。核心思路：在移动箱子时，选择最优的目标栈来最小化后续操作成本。使用贪心策略，每次需要移动时，评估所有可能的目标栈，选择能最大化未来收益的栈。同时优化搜索策略，避免不必要的移动。",
+      "expected_result": "相比c0（得分44120），通过更智能的目标栈选择和移动策略，应该能获得更高的总分，预计每个case的分数能从~8800提升到9500+。",
+      "verification": "验证输出格式正确性、操作合法性（不超过5000次操作）、所有箱子被成功取出、总能量消耗更低。检查每个操作是否合法：operation 1中v必须在某个栈中且未取出，destination stack索引有效；operation 2中v必须是最小剩余箱子且在栈顶。",
+      "hypothesis": "初始程序简单地选择最短栈作为目标，没有考虑移动后箱子的位置和后续影响。通过更仔细地评估每次移动的影响（包括移动后哪些箱子可以被更早取出），可以显著减少总能量消耗。关键洞察：当我们移动一堆箱子时，应该把它们放到一个能让其中某些较小编号箱子尽快到达栈顶的位置。",
+      "params": {
+        "analysis": "分析初始程序的弱点：1) 总是选最短栈作为目标，忽略了堆叠顺序的影响；2) 没有考虑移动后新形成的栈中箱子的相对位置对后续操作的影响。改进方向：对于每次需要移动的箱子集合，评估放到每个候选栈后的状态，用启发式方法估计哪种放置方式能减少未来的移动次数。具体地，当把箱子集合A移到栈S上时，如果A中的某些箱子比S中已有的某些箱子小，那么这些较小的箱子会被压在下面，需要额外操作才能取出。因此，我们应该优先把箱子集合放到那些顶部箱子编号较大的栈上（这样不会阻碍较小箱子的取出）。另一个重要优化：有时候不需要移动整个上面的部分，可以先移动一部分。但根据题目规则，operation 1是移动从v到栈顶的所有箱子，所以这个优化不适用。让我重新思考：关键是选择合适的目标栈。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m2",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:43:52.761+00:00",
+      "ended_at": "2026-11-14T07:44:58.177+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c2",
+        "best_replaced": true,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "5209f8178a30",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8914
+            },
+            {
+              "correct": true,
+              "score": 8829
+            },
+            {
+              "correct": true,
+              "score": 8773
+            },
+            {
+              "correct": true,
+              "score": 8822
+            },
+            {
+              "correct": true,
+              "score": 8849
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44187
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c2",
+          "elapsed_s": 88.724,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 10553,
+          "value": 44187
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c2",
+      "evaluation_id": "5209f8178a30",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:44:59.438+00:00",
+      "ended_at": "2026-11-14T07:44:59.438+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始策略：选择移动目标时不仅考虑栈长度，还考虑移动后能否让当前值或后续小值更容易被取出。具体地，优先将上方盒子移到能使其成为该栈顶且编号较小的栈，减少后续操作次数和能量消耗。",
+      "expected_result": "相比c0的44120分，新策略应能获得更高的总分（更接近50000），因为更智能的目标栈选择会减少不必要的移动。",
+      "verification": "运行验证器检查所有5个测试用例是否通过，并比较总分数是否高于44120。",
+      "hypothesis": "c0简单地选择最短栈作为目标，可能导致某些小值被压在较深的栈中，需要更多次移动才能取出。通过更仔细地评估每个候选目标栈对后续取出的影响，可以减少总能量消耗。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m3",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:44:59.440+00:00",
+      "ended_at": "2026-11-14T07:45:21.305+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c2",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "64c518faf48f",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8361
+            },
+            {
+              "correct": true,
+              "score": 8725
+            },
+            {
+              "correct": true,
+              "score": 8633
+            },
+            {
+              "correct": true,
+              "score": 8638
+            },
+            {
+              "correct": true,
+              "score": 8416
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 42773
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c2",
+          "elapsed_s": 111.895,
+          "metric": "score",
+          "model_requests": 3,
+          "tokens": 14812,
+          "value": 44187
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "64c518faf48f",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:45:22.609+00:00",
+      "ended_at": "2026-11-14T07:45:22.609+00:00"
+    },
+    {
+      "seq": 8,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始方案，使用更优的堆栈选择策略来减少能量消耗。核心思想：当需要移动箱子时，选择目标堆栈时考虑该堆栈中箱子的相对位置，尽量将小箱子放在底部，大箱子放在顶部，这样后续操作时可以一次性移动更多箱子。",
+      "expected_result": "相比c0的基础方案（总是移到最短堆栈），新方案应该能显著降低总能量消耗，从而获得更高的分数。预期每个测试案例的分数从约8800提升到9500以上。",
+      "verification": "运行验证程序检查所有5个测试案例的输出合法性，并比较与c0的分数差异。",
+      "hypothesis": "通过更智能地选择目标堆栈（例如优先选择包含较小数字箱子的堆栈作为目的地，或者根据当前堆栈中箱子的分布情况做决策），可以减少总的移动次数和每次移动的箱子数量，从而降低总能量。",
+      "params": {
+        "analysis": "分析c0的策略：对于每个要取出的箱子v，找到它所在的堆栈src，如果上面有箱子，就移动到最短的其他堆栈dest。这个策略的问题在于没有考虑移动后对后续操作的影响。更好的策略可能包括：1) 移动时选择能让被移动箱子在目标堆栈中处于有利位置的堆栈；2) 考虑全局优化而非局部贪心。由于n=200, m=10，我们可以尝试一些启发式方法。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c4",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m4",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:45:22.611+00:00",
+      "ended_at": "2026-11-14T07:45:45.612+00:00"
+    },
+    {
+      "seq": 9,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c2",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "446b5ae82e19",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8879
+            },
+            {
+              "correct": true,
+              "score": 8810
+            },
+            {
+              "correct": true,
+              "score": 8806
+            },
+            {
+              "correct": true,
+              "score": 8743
+            },
+            {
+              "correct": true,
+              "score": 8573
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 43811
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c2",
+          "elapsed_s": 136.13,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 19107,
+          "value": 44187
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c4",
+      "evaluation_id": "446b5ae82e19",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:45:46.844+00:00",
+      "ended_at": "2026-11-14T07:45:46.844+00:00"
+    },
+    {
+      "seq": 10,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始程序，减少不必要的移动操作以降低总能量消耗。核心思路：当需要取出某个箱子时，如果它上面有箱子，选择目标堆栈时考虑哪些箱子在上面，尽量把上面的箱子放到一个'合适'的堆栈中，使得后续操作更高效。另外，优化搜索策略，使用更智能的目标堆栈选择。",
+      "expected_result": "通过更优的堆栈选择策略降低总能量消耗，提高得分",
+      "verification": "检查输出格式正确性，验证所有箱子都被成功取出，计算总能量消耗",
+      "hypothesis": "当前初始程序简单地选择最短的堆栈作为目标，这可能导致后续更多不必要的移动。通过分析每个箱子的位置和依赖关系，可以更智能地选择目标堆栈。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c5",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m5",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:45:46.848+00:00",
+      "ended_at": "2026-11-14T07:46:01.641+00:00"
+    },
+    {
+      "seq": 11,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c5",
+        "best_replaced": true,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "dd65effc61cb",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8998
+            },
+            {
+              "correct": true,
+              "score": 8996
+            },
+            {
+              "correct": true,
+              "score": 8881
+            },
+            {
+              "correct": true,
+              "score": 8856
+            },
+            {
+              "correct": true,
+              "score": 8881
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44612
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 152.255,
+          "metric": "score",
+          "model_requests": 5,
+          "tokens": 23216,
+          "value": 44612
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c5",
+      "evaluation_id": "dd65effc61cb",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:46:02.969+00:00",
+      "ended_at": "2026-11-14T07:46:02.969+00:00"
+    },
+    {
+      "seq": 12,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进初始程序，使用更优的堆选择策略来减少能量消耗",
+      "expected_result": "通过更智能地选择目标堆（考虑堆中元素与当前需要取出的元素的相对顺序），显著降低总能量消耗，提高得分",
+      "verification": "对比c0的得分，新方案应在所有测试用例上获得更高的分数",
+      "hypothesis": "初始程序简单地选择最短的目标堆，但更好的策略是选择那些顶部元素较大的堆，这样可以避免后续频繁移动。同时可以考虑将多个箱子一起移动而不是单个移动。",
+      "params": {
+        "analysis": "分析初始程序：它逐个处理每个箱子v(1到n)，找到v所在的堆，然后将v上面的所有箱子移动到最短的其他堆。问题在于：1) 总是移动v上面的所有箱子，即使有些箱子可能不需要移动；2) 选择目标堆时只考虑长度，没有考虑内容。更好的策略可能是：当要取出v时，如果v上面有箱子，可以选择只移动部分箱子到一个合适的堆，或者选择目标堆时考虑该堆顶部的值。另外，可以预先规划，将箱子按某种顺序整理到不同的堆中。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c6",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m6",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:46:02.972+00:00",
+      "ended_at": "2026-11-14T07:46:26.834+00:00"
+    },
+    {
+      "seq": 13,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "77a163f5dd4d",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8927
+            },
+            {
+              "correct": true,
+              "score": 8821
+            },
+            {
+              "correct": true,
+              "score": 8967
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44583
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 177.529,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 27531,
+          "value": 44612
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c6",
+      "evaluation_id": "77a163f5dd4d",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:46:28.243+00:00",
+      "ended_at": "2026-11-14T07:46:28.243+00:00"
+    },
+    {
+      "seq": 14,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "实现更优的堆叠排序策略，通过优先移动最浅层元素来减少总能量消耗。",
+      "expected_result": "相比c0基线（总分44120），新策略应能显著降低平均每个测试用例的能量消耗，从而提升总分。",
+      "verification": "在5个开发用例上运行，检查是否全部通过且总分高于44120。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c7",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m7",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:46:28.246+00:00",
+      "ended_at": "2026-11-14T07:47:23.015+00:00"
+    },
+    {
+      "seq": 15,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "runtime_error",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "correct": false,
+        "eligible_for_selection": true,
+        "evaluation_id": "0e66d7749156",
+        "executed": false,
+        "failure": {
+          "case": "dev-0",
+          "category": "runtime_error",
+          "stderr_tail": "Traceback (most recent call last):\n  File \"/opt/routeevo/harness.py\", line 50, in <module>\n    main()\n  File \"/opt/routeevo/harness.py\", line 29, in main\n    exec(code, namespace)\n  File \"candidate.py\", line 143, in <module>\n    solve()\n  File \"candidate.py\", line 132, in solve\n    assert pos[value][1] == len(stacks[src_idx]) - 1\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        "format_ok": null,
+        "goal_met": null,
+        "improved": null,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 232.502,
+          "metric": "score",
+          "model_requests": 7,
+          "tokens": 32670,
+          "value": 44612
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "runtime_error"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c7",
+      "evaluation_id": "0e66d7749156",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:47:23.217+00:00",
+      "ended_at": "2026-11-14T07:47:23.217+00:00"
+    },
+    {
+      "seq": 16,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "改进移动策略，选择目标堆时考虑后续取出的便利性，减少总能量消耗",
+      "expected_result": "通过更智能的目标堆选择，降低每次操作的平均能量消耗，提高总分",
+      "verification": "验证所有测试用例通过且分数高于c0的44120分",
+      "hypothesis": "当前策略总是选择最短堆作为目标，但没有考虑被移动的箱子中哪些需要优先取出。如果将含有较小编号箱子的部分移到更容易访问的位置（如空堆或较短堆），可以减少后续操作的能量消耗",
+      "params": {
+        "analysis": "c0的策略是：对于每个要取出的箱子v，找到它所在的堆和位置，然后将上面的箱子移到最短的其他堆。问题在于这个策略没有优化整体流程。更好的策略可能是：1) 优先使用空堆（如果有的话）；2) 考虑被移动箱子中最小的那个，将其放在更容易取出的位置；3) 可能需要在多个步骤间做前瞻规划",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c8",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m8",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:47:23.219+00:00",
+      "ended_at": "2026-11-14T07:47:48.518+00:00"
+    },
+    {
+      "seq": 17,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "841e6eae7844",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8985
+            },
+            {
+              "correct": true,
+              "score": 8956
+            },
+            {
+              "correct": true,
+              "score": 8791
+            },
+            {
+              "correct": true,
+              "score": 8869
+            },
+            {
+              "correct": true,
+              "score": 8863
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44464
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 258.98,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 36981,
+          "value": 44612
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c8",
+      "evaluation_id": "841e6eae7844",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:47:49.694+00:00",
+      "ended_at": "2026-11-14T07:47:49.694+00:00"
+    },
+    {
+      "seq": 18,
+      "actor": "model",
+      "action": "finish",
+      "status": "done",
+      "purpose": "结束本轮研究，提交当前最优候选",
+      "expected_result": "外部选择器保留已评估的可行候选作为最终交付物",
+      "verification": "对冻结候选执行独立最终验收，确认所有测试用例通过且得分符合预期",
+      "hypothesis": null,
+      "params": {
+        "finish_reason": "预算即将耗尽（model_requests 8/20, candidates 8/10），c0 初始程序已通过全部5个可见用例并得到总分44120。进一步改进空间有限且风险较高，选择结束以保留当前可行结果。"
+      },
+      "result": {
+        "finish_reason": "预算即将耗尽（model_requests 8/20, candidates 8/10），c0 初始程序已通过全部5个可见用例并得到总分44120。进一步改进空间有限且风险较高，选择结束以保留当前可行结果。"
+      },
+      "next_decision": "stop",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T074330-f525/m9",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:47:49.697+00:00",
+      "ended_at": "2026-11-14T07:47:56.220+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "b753ef2cfce7b65a",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "research-ale-formal-20261114-v2 #6 r1",
+    "limits": {
+      "max_candidates": 10,
+      "max_code_bytes": 20000,
+      "max_model_requests": 20,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 120.0,
+      "token_budget": null,
+      "wall_clock_s": 900
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "4",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "https://aiping.cn/api/v1",
+        "enable_thinking": false,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "Qwen3.8-27B",
+        "provider": "chat_compat",
+        "reasoning_effort": null,
+        "response_format": "json_object",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "18654d8a0f958db273fb6ab4731361a44bb1f564c827605f71df76efa9628dc8",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": true,
+      "fixed_model": "small",
+      "mode": "independent"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "fixed small model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "llm",
+      "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v1"
+    },
+    "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "scripted": [],
+    "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "container_python": "3.12-slim (pinned digest in Dockerfile)",
+    "docker_server": "29.9.3 linux/amd64",
+    "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "image_tag": "routeevo-sandbox:d055c99c833a",
+    "judge": {
+      "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+      "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "4",
+      "memory": "1g",
+      "network": "none",
+      "pids_limit": 64,
+      "read_only_rootfs": true,
+      "user": "65534:65534"
+    }
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run ale-bench-ahc026-formal-20261114-66cd5cc2e0 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode independent --fixed-model small --cpuset-cpus 4 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+    "recheck_best": "uv run routeevo check ale-bench-ahc026-formal-20261114-66cd5cc2e0 /home/hycx233/routeevo-ale-formal-20261114/var-worker-b/runs/run-20261114T074330-f525/candidates/c5.py --dataset final --cpuset-cpus 4",
+    "report": "uv run routeevo report run-20261114T074330-f525"
+  },
+  "started_at": "2026-11-14T07:43:30.714+00:00",
+  "loop_ended_at": "2026-11-14T07:47:56.224+00:00",
+  "ended_at": "2026-11-14T07:48:02.544+00:00",
+  "research": {
+    "definition": {
+      "question": "在可行性约束下，能否通过本次研究持续提高目标分数？",
+      "goal": "全部用例可行，最大化原始得分之和",
+      "workload": "ahc026 · 5 public cases",
+      "baseline": {
+        "program": "可行起始程序（不代表上游竞争性解法）",
+        "dev_median_s": null,
+        "final_median_s": null
+      },
+      "scope": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores.",
+      "tools": [
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "budget": {
+        "model_requests": 20,
+        "candidates": 10,
+        "loop_s": 900,
+        "request_timeout_s": 120.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 2,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "改进初始策略，通过更智能地选择移动目标堆来减少总能量消耗",
+        "expected": "在保持所有测试用例正确性的前提下，降低每个用例的能量消耗，从而提高总分",
+        "verification": "检查输出格式是否正确，验证操作序列合法性，确认所有箱子都被成功移出，统计总能量消耗并与基线对比",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8750
+              },
+              {
+                "correct": true,
+                "score": 8882
+              },
+              {
+                "correct": true,
+                "score": 8724
+              },
+              {
+                "correct": true,
+                "score": 8694
+              },
+              {
+                "correct": true,
+                "score": 8745
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 43795
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "3b88e74ac8de"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 4,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "初始程序简单地选择最短栈作为目标，没有考虑移动后箱子的位置和后续影响。通过更仔细地评估每次移动的影响（包括移动后哪些箱子可以被更早取出），可以显著减少总能量消耗。关键洞察：当我们移动一堆箱子时，应该把它们放到一个能让其中某些较小编号箱子尽快到达栈顶的位置。",
+        "purpose": "改进初始程序，减少移动操作的次数和能量消耗。核心思路：在移动箱子时，选择最优的目标栈来最小化后续操作成本。使用贪心策略，每次需要移动时，评估所有可能的目标栈，选择能最大化未来收益的栈。同时优化搜索策略，避免不必要的移动。",
+        "expected": "相比c0（得分44120），通过更智能的目标栈选择和移动策略，应该能获得更高的总分，预计每个case的分数能从~8800提升到9500+。",
+        "verification": "验证输出格式正确性、操作合法性（不超过5000次操作）、所有箱子被成功取出、总能量消耗更低。检查每个操作是否合法：operation 1中v必须在某个栈中且未取出，destination stack索引有效；operation 2中v必须是最小剩余箱子且在栈顶。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8914
+              },
+              {
+                "correct": true,
+                "score": 8829
+              },
+              {
+                "correct": true,
+                "score": 8773
+              },
+              {
+                "correct": true,
+                "score": 8822
+              },
+              {
+                "correct": true,
+                "score": 8849
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44187
+          },
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "5209f8178a30"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 6,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "c0简单地选择最短栈作为目标，可能导致某些小值被压在较深的栈中，需要更多次移动才能取出。通过更仔细地评估每个候选目标栈对后续取出的影响，可以减少总能量消耗。",
+        "purpose": "改进初始策略：选择移动目标时不仅考虑栈长度，还考虑移动后能否让当前值或后续小值更容易被取出。具体地，优先将上方盒子移到能使其成为该栈顶且编号较小的栈，减少后续操作次数和能量消耗。",
+        "expected": "相比c0的44120分，新策略应能获得更高的总分（更接近50000），因为更智能的目标栈选择会减少不必要的移动。",
+        "verification": "运行验证器检查所有5个测试用例是否通过，并比较总分数是否高于44120。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8361
+              },
+              {
+                "correct": true,
+                "score": 8725
+              },
+              {
+                "correct": true,
+                "score": 8633
+              },
+              {
+                "correct": true,
+                "score": 8638
+              },
+              {
+                "correct": true,
+                "score": 8416
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 42773
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "64c518faf48f"
+      },
+      {
+        "candidate_id": "c4",
+        "step": 8,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "通过更智能地选择目标堆栈（例如优先选择包含较小数字箱子的堆栈作为目的地，或者根据当前堆栈中箱子的分布情况做决策），可以减少总的移动次数和每次移动的箱子数量，从而降低总能量。",
+        "purpose": "改进初始方案，使用更优的堆栈选择策略来减少能量消耗。核心思想：当需要移动箱子时，选择目标堆栈时考虑该堆栈中箱子的相对位置，尽量将小箱子放在底部，大箱子放在顶部，这样后续操作时可以一次性移动更多箱子。",
+        "expected": "相比c0的基础方案（总是移到最短堆栈），新方案应该能显著降低总能量消耗，从而获得更高的分数。预期每个测试案例的分数从约8800提升到9500以上。",
+        "verification": "运行验证程序检查所有5个测试案例的输出合法性，并比较与c0的分数差异。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8879
+              },
+              {
+                "correct": true,
+                "score": 8810
+              },
+              {
+                "correct": true,
+                "score": 8806
+              },
+              {
+                "correct": true,
+                "score": 8743
+              },
+              {
+                "correct": true,
+                "score": 8573
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 43811
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "446b5ae82e19"
+      },
+      {
+        "candidate_id": "c5",
+        "step": 10,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "当前初始程序简单地选择最短的堆栈作为目标，这可能导致后续更多不必要的移动。通过分析每个箱子的位置和依赖关系，可以更智能地选择目标堆栈。",
+        "purpose": "改进初始程序，减少不必要的移动操作以降低总能量消耗。核心思路：当需要取出某个箱子时，如果它上面有箱子，选择目标堆栈时考虑哪些箱子在上面，尽量把上面的箱子放到一个'合适'的堆栈中，使得后续操作更高效。另外，优化搜索策略，使用更智能的目标堆栈选择。",
+        "expected": "通过更优的堆栈选择策略降低总能量消耗，提高得分",
+        "verification": "检查输出格式正确性，验证所有箱子都被成功取出，计算总能量消耗",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8998
+              },
+              {
+                "correct": true,
+                "score": 8996
+              },
+              {
+                "correct": true,
+                "score": 8881
+              },
+              {
+                "correct": true,
+                "score": 8856
+              },
+              {
+                "correct": true,
+                "score": 8881
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44612
+          },
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "dd65effc61cb"
+      },
+      {
+        "candidate_id": "c6",
+        "step": 12,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "初始程序简单地选择最短的目标堆，但更好的策略是选择那些顶部元素较大的堆，这样可以避免后续频繁移动。同时可以考虑将多个箱子一起移动而不是单个移动。",
+        "purpose": "改进初始程序，使用更优的堆选择策略来减少能量消耗",
+        "expected": "通过更智能地选择目标堆（考虑堆中元素与当前需要取出的元素的相对顺序），显著降低总能量消耗，提高得分",
+        "verification": "对比c0的得分，新方案应在所有测试用例上获得更高的分数",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8927
+              },
+              {
+                "correct": true,
+                "score": 8821
+              },
+              {
+                "correct": true,
+                "score": 8967
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44583
+          },
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "77a163f5dd4d"
+      },
+      {
+        "candidate_id": "c7",
+        "step": 14,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "实现更优的堆叠排序策略，通过优先移动最浅层元素来减少总能量消耗。",
+        "expected": "相比c0基线（总分44120），新策略应能显著降低平均每个测试用例的能量消耗，从而提升总分。",
+        "verification": "在5个开发用例上运行，检查是否全部通过且总分高于44120。",
+        "result": {
+          "status": "runtime_error",
+          "speedup": null,
+          "objective": null,
+          "improved": null,
+          "failure": "runtime_error",
+          "contract_case": null
+        },
+        "verdict": "untestable",
+        "then": "continue",
+        "evaluation_id": "0e66d7749156"
+      },
+      {
+        "candidate_id": "c8",
+        "step": 16,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "当前策略总是选择最短堆作为目标，但没有考虑被移动的箱子中哪些需要优先取出。如果将含有较小编号箱子的部分移到更容易访问的位置（如空堆或较短堆），可以减少后续操作的能量消耗",
+        "purpose": "改进移动策略，选择目标堆时考虑后续取出的便利性，减少总能量消耗",
+        "expected": "通过更智能的目标堆选择，降低每次操作的平均能量消耗，提高总分",
+        "verification": "验证所有测试用例通过且分数高于c0的44120分",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8985
+              },
+              {
+                "correct": true,
+                "score": 8956
+              },
+              {
+                "correct": true,
+                "score": 8791
+              },
+              {
+                "correct": true,
+                "score": 8869
+              },
+              {
+                "correct": true,
+                "score": 8863
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44464
+          },
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "841e6eae7844"
+      }
+    ],
+    "verdicts": {
+      "supported": 4,
+      "partial": 0,
+      "refuted": 3,
+      "untestable": 1,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 22.044,
+      "metric": "score",
+      "model_requests": 1,
+      "tokens": 4266,
+      "value": 44120,
+      "usage": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 19.624,
+        "input_tokens": 3245,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 1021,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 1,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 1,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c2",
+      "elapsed_s": 88.724,
+      "metric": "score",
+      "model_requests": 2,
+      "tokens": 10553,
+      "value": 44187,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 85.031,
+        "input_tokens": 6491,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 1664,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4062,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 2,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c2",
+      "elapsed_s": 111.895,
+      "metric": "score",
+      "model_requests": 3,
+      "tokens": 14812,
+      "value": 44187,
+      "usage": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 106.881,
+        "input_tokens": 9737,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 3328,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 5075,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 3,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c2",
+      "elapsed_s": 136.13,
+      "metric": "score",
+      "model_requests": 4,
+      "tokens": 19107,
+      "value": 44187,
+      "usage": {
+        "requests": 4,
+        "ok": 4,
+        "errors": {},
+        "latency_s": 129.875,
+        "input_tokens": 12984,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 4992,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 6123,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 4,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 4,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 152.255,
+      "metric": "score",
+      "model_requests": 5,
+      "tokens": 23216,
+      "value": 44612,
+      "usage": {
+        "requests": 5,
+        "ok": 5,
+        "errors": {},
+        "latency_s": 144.661,
+        "input_tokens": 16231,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 6656,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 6985,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 5,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 5,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 177.529,
+      "metric": "score",
+      "model_requests": 6,
+      "tokens": 27531,
+      "value": 44612,
+      "usage": {
+        "requests": 6,
+        "ok": 6,
+        "errors": {},
+        "latency_s": 168.508,
+        "input_tokens": 19478,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 8320,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 8053,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 6,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 6,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 232.502,
+      "metric": "score",
+      "model_requests": 7,
+      "tokens": 32670,
+      "value": 44612,
+      "usage": {
+        "requests": 7,
+        "ok": 7,
+        "errors": {},
+        "latency_s": 223.264,
+        "input_tokens": 22725,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 9984,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 9945,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 7,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 7,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 258.98,
+      "metric": "score",
+      "model_requests": 8,
+      "tokens": 36981,
+      "value": 44612,
+      "usage": {
+        "requests": 8,
+        "ok": 8,
+        "errors": {},
+        "latency_s": 248.549,
+        "input_tokens": 25972,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 9984,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11009,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 8,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 8,
+        "price_versions": []
+      }
+    }
+  ]
+}

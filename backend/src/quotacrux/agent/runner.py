@@ -20,7 +20,7 @@ from .. import config, db, evaluator, memory, report, taskpkg
 from ..llm.base import LLMResult
 from ..llm.chat_compat import ChatCompatClient
 from ..llm.openai_responses import OpenAIResponsesClient
-from ..llm.openai_decisions import PRICE_VERSION as DECISION_PRICE_VERSION, estimate_decision_cost
+from ..llm import openai_decisions, typesafe_jev
 from ..llm.pricing import NOT_BILLED_ERRORS, estimate_cost
 from ..llm.scripted import ScriptedClient
 from ..sandbox import executor
@@ -99,7 +99,7 @@ class Runner:
                 opts.fixed_model = opts.fixed_model or "small"
         if (opts.research_mode != "legacy" or self.task.is_native) and not adaptive and opts.routing != config.RoutingConfig():
             raise ValueError("fixed native and research runs require action_router=llm and model_router=rule")
-        if opts.fixed_model or opts.routing.model == "decisions":
+        if opts.fixed_model or opts.routing.model in ("decisions", "jev"):
             # Explicit model selection takes precedence over the initial memory-based rule.
             opts.router = False
         if self.task.is_native and opts.mode != "eval":
@@ -424,7 +424,7 @@ class Runner:
             selected = self.action_router.resolve(state, res)
             if selected.choice:
                 self._step("model", "route_action", "done", started_at=started, model_call_id=call_id,
-                           purpose=f"Decisions 选择动作 {selected.choice}",
+                           purpose=f"{cfg.model} 选择动作 {selected.choice}",
                            result={"choice": selected.choice, "answers": json.loads(res.text)}, next_decision=selected.choice)
             act = selected.action
             if selected.generate:
@@ -577,12 +577,13 @@ class Runner:
         self.requests_used += 1
         if cfg.role == "small":
             self.small_requests += 1
-        if cfg.provider == "openai_decisions":
-            cost = estimate_decision_cost(res)
+        if cfg.provider in ("openai_decisions", "typesafe_jev"):
+            provider = typesafe_jev if cfg.provider == "typesafe_jev" else openai_decisions
+            cost = provider.estimate_decision_cost(res)
             cost_status = "estimated" if cost is not None else "unknown"
             if res.error_kind in NOT_BILLED_ERRORS:
                 cost, cost_status = 0.0, "not_billed"
-            price_version = DECISION_PRICE_VERSION
+            price_version = provider.PRICE_VERSION
         else:
             cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
                                                              res.error_kind not in NOT_BILLED_ERRORS, base_url=cfg.base_url)
@@ -591,7 +592,7 @@ class Runner:
             self.tokens_used += u.input_tokens + u.output_tokens
         path = self.dir / "calls" / f"{call_id}.json"
         path.write_text(json.dumps({"request": res.request_body, "response": res.response_body,
-                                    "system_prompt_sha256": self.system_prompt_sha if cfg.provider != "openai_decisions" else None},
+                                    "system_prompt_sha256": self.system_prompt_sha if cfg.role in ("small", "large") else None},
                                    ensure_ascii=False, indent=2, default=str))
         db.insert("model_calls", {
             "call_id": f"{self.run_id}/{call_id}", "run_id": self.run_id, "provider": cfg.provider, "role": cfg.role,
@@ -800,7 +801,7 @@ class Runner:
         if self.opts.fixed_model or self.requests_used >= self.limits.max_model_requests:
             return
         self.role = "large"
-        detail = {"rule": UPGRADE_RULE["id"] if self.opts.routing.model == "rule" else "decisions-model-v1",
+        detail = {"rule": UPGRADE_RULE["id"] if self.opts.routing.model == "rule" else f"{self.opts.routing.model}-model-v1",
                   "misses": self.misses, "small_requests": self.small_requests,
                   "to": self.model_cfgs["large"].model}
         self._step("program", "upgrade_model", "done", result=detail, next_decision="continue with large model", purpose=reason)

@@ -190,6 +190,8 @@ Evaluated on sealed Python optimization benchmarks (3 built-in families: `groupa
 - **Node.js + `pnpm`** (only required to build/serve the React dashboard)
 - **Model endpoints:** an `OPENAI_API_KEY` (for `gpt-6.1-sol` / `gpt-6-luna`) and an OpenAI-compatible small-model endpoint (local Ollama `qwen3.8:27b-mlx` or hosted `Qwen3.8-27B`)
 
+For Jev routing, also set `TYPESAFE_API_KEY` in `backend/.env`; `TYPESAFE_MODEL` defaults to the pinned `jev-1.14.0`.
+
 ### 1. Install & Launch the Dashboard
 
 ```bash
@@ -218,6 +220,9 @@ cd backend
 
 # Run a single task with decoupled Decisions action routing
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
+
+# Use Jev action routing; model routing can also use --model-router jev
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # Deliver online while evolving snapshots, or learn serially across tasks
 uv run quotacrux run B-01 --mode online --snapshot v19

@@ -190,6 +190,8 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 - **Node.js 与 `pnpm`**（用于构建前端可视化控制台）
 - **模型配置：** `OPENAI_API_KEY`（用于 `gpt-6.1-sol` / `gpt-6-luna`）以及兼容 OpenAI 接口的轻量模型服务（本地 Ollama `qwen3.8:27b-mlx` 或托管 `Qwen3.8-27B`）
 
+启用 Jev 路由时，在 `backend/.env` 中另行设置 `TYPESAFE_API_KEY`；`TYPESAFE_MODEL` 默认固定为 `jev-1.14.0`。
+
 ### 1. 安装依赖并启动控制台
 
 ```bash
@@ -218,6 +220,9 @@ cd backend
 
 # 使用 Decisions 动作路由运行单个任务
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
+
+# 使用 Jev 动作路由；模型路由也可改为 --model-router jev
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # 在线边交付边进化（自动发布新快照），或串行多任务自主学习
 uv run quotacrux run B-01 --mode online --snapshot v19

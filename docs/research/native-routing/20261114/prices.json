@@ -1,0 +1,39 @@
+{
+  "small": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models",
+    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+    "unit_evidence": {
+      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+      "currency_symbol": "￥",
+      "text_model_price_denominator": "/M"
+    },
+    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+  },
+  "large": {
+    "model": "gpt-6.1-sol",
+    "currency": "USD",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 2,
+    "output_per_1m": 10,
+    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+    "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+    "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+  },
+  "decisions": {
+    "model": "gpt-6-luna",
+    "currency": "USD",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 0.1,
+    "output_per_1m": 0,
+    "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+    "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+    "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "errors": [],
+  "runs": [
+    {
+      "seq": 1,
+      "run_id": "run-20261114T084944-7558",
+      "variant": "baseline",
+      "repeat": 1,
+      "candidate_files": 6,
+      "calls": 9,
+      "passed": true
+    },
+    {
+      "seq": 2,
+      "run_id": "run-20261114T085616-894b",
+      "variant": "action_decisions",
+      "repeat": 1,
+      "candidate_files": 8,
+      "calls": 14,
+      "passed": true
+    },
+    {
+      "seq": 3,
+      "run_id": "run-20261114T090245-3188",
+      "variant": "model_decisions",
+      "repeat": 1,
+      "candidate_files": 7,
+      "calls": 19,
+      "passed": true
+    },
+    {
+      "seq": 4,
+      "run_id": "run-20261114T090915-276e",
+      "variant": "both_decisions",
+      "repeat": 1,
+      "candidate_files": 7,
+      "calls": 19,
+      "passed": true
+    }
+  ],
+  "planned": 4,
+  "status_counts": {
+    "completed": 4
+  },
+  "candidate_files": 28,
+  "model_calls": 61,
+  "export_script_sha256": "01b9f68f86dd6e5957eb7e5dfd61628b15e33590be9017987161a76ad030d9ce",
+  "freeze_sha256": "6edf153e4c6043b8a4b37a492fe261dbeb89a5dbec480e144ed70760e141a5d1"
+}

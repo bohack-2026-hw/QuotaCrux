@@ -1,0 +1,1520 @@
+{
+  "run_id": "run-20261114T084520-0ba7",
+  "task": {
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "split": "formal-20261114",
+    "target_min_speedup": null,
+    "objective": {
+      "metric": "score",
+      "direction": "maximize",
+      "min_speedup": null
+    },
+    "workload": "ahc026 · 5 public cases",
+    "family": "ale-bench",
+    "presentation": {
+      "title": "ALE-Bench · ahc026",
+      "workload": "ahc026 · 5 public cases",
+      "baseline": "可行起始程序（不代表上游竞争性解法）",
+      "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+    },
+    "dev_params": {
+      "cases": 5
+    },
+    "final_params": {
+      "cases": 15
+    },
+    "source": {
+      "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+      "dataset": "SakanaAI/ALE-Bench",
+      "license": "CC-BY-ND-4.0",
+      "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+    },
+    "selection": {
+      "dev_cases": 5,
+      "final_cases": 15
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "routing-native-20261114-ale-v1 #2 action_decisions r1",
+  "scripted_model": [],
+  "status": "stopped",
+  "recorded_status": "stopped",
+  "research_mode": "feedback",
+  "dev_only": false,
+  "stop_reason": "user_stopped",
+  "stop_detail": "stop requested",
+  "config_fingerprint": "66b48a8fdc86bdd7",
+  "outcome": {
+    "run_completed": false,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": true,
+    "best_from_reuse": false,
+    "best_is_initial": false,
+    "final_evaluated": false,
+    "final_status": "not_run",
+    "final_error": null,
+    "final_correct": null,
+    "final_speedup": null,
+    "final_objective": null,
+    "goal_met": false,
+    "valid_artifact": null,
+    "summary": "未执行最终测试（user_stopped）；最佳候选 c3 仅有开发验证结果"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "66cd5cc2e0"
+      },
+      "family": "ale-bench",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c3",
+    "origin": "model",
+    "parent_candidate_id": "c0",
+    "code_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c3.py",
+    "code_sha256": "537ef078e5ad494aecaa02fbb0b925b0d68d45f73d2658dcfeaf7f25ccc72ac5",
+    "model_call_id": "m6",
+    "dev_evaluations": [
+      {
+        "evaluation_id": "0cc33d89137b",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9356
+            },
+            {
+              "correct": true,
+              "score": 9348
+            },
+            {
+              "correct": true,
+              "score": 9276
+            },
+            {
+              "correct": true,
+              "score": 9322
+            },
+            {
+              "correct": true,
+              "score": 9291
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 46593
+        },
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest valid dev score within the research budget; else initial c0",
+  "run_target_speedup": null,
+  "route": {
+    "family": "ale-bench",
+    "family_records": 0,
+    "min_matches": 1,
+    "model": "Qwen3.8-27B",
+    "reason": "router_off",
+    "route": "small",
+    "router": "off",
+    "similar_successes": 0
+  },
+  "final_evaluation": null,
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c0.py",
+      "code_sha256": "d0f96678218cad87053ccf3bdcd3fecc0acfbf49ed0571279dc35f10f1ab06d6",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "815f75d0fc57",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c1.py",
+      "code_sha256": "95eb00f4f215a1261bbbde44623ba23974c49cc6f7a2e0810cd307dc03b332aa",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "6537c1c3ec59",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c2.py",
+      "code_sha256": "95eb00f4f215a1261bbbde44623ba23974c49cc6f7a2e0810cd307dc03b332aa",
+      "model_call_id": "m4",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "72be807d7098",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c3.py",
+      "code_sha256": "537ef078e5ad494aecaa02fbb0b925b0d68d45f73d2658dcfeaf7f25ccc72ac5",
+      "model_call_id": "m6",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "0cc33d89137b",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 9356
+              },
+              {
+                "correct": true,
+                "score": 9348
+              },
+              {
+                "correct": true,
+                "score": 9276
+              },
+              {
+                "correct": true,
+                "score": 9322
+              },
+              {
+                "correct": true,
+                "score": 9291
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 46593
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 6,
+    "routing_requests": 3,
+    "generation_requests": 3,
+    "candidates_proposed": 3,
+    "candidates_passed": 3,
+    "candidates_improved": 1,
+    "candidates_no_gain": 2,
+    "candidates_failed": 0,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 1,
+    "large_model_requests": 1,
+    "small_model_requests": 2,
+    "upgrade_at_step": 9
+  },
+  "usage": {
+    "total": {
+      "requests": 6,
+      "ok": 6,
+      "errors": {},
+      "latency_s": 91.14,
+      "input_tokens": 31076,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 0,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 4222,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": 2070,
+      "reasoning_tokens_unknown_calls": 2,
+      "cost_usd": 0.051029,
+      "cost_status": "partial",
+      "cost_unknown_calls": 2,
+      "price_versions": [
+        "openai-decisions-standard-short-2026-11-14",
+        "openai/gpt-6.1-sol/standard/2026-11-13"
+      ]
+    },
+    "by_model": {
+      "router_action:openai_decisions:gpt-6-luna": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 6.076,
+        "input_tokens": 16377,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.001638,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14"
+        ]
+      },
+      "small:chat_compat:Qwen3.8-27B": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 12.325,
+        "input_tokens": 8982,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 712,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 2,
+        "price_versions": []
+      },
+      "large:openai_responses:gpt-6.1-sol": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 72.739,
+        "input_tokens": 5717,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 3510,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 2070,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.049391,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 6.076,
+        "input_tokens": 16377,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.001638,
+        "cost_status": "estimated",
+        "cost_unknown_calls": 0,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14"
+        ]
+      },
+      "generation": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 85.064,
+        "input_tokens": 14699,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4222,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 2070,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": 0.049391,
+        "cost_status": "partial",
+        "cost_unknown_calls": 2,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 103.966,
+    "agent_loop_s": 103.963,
+    "agent_loop_elapsed_s": 103.963,
+    "agent_loop_limit_s": 900,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": null,
+    "model_wait_s": 91.14,
+    "dev_evaluation_s": 12.708,
+    "evidence_tool_s": 0,
+    "container_startup_s": 3.075
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "evaluation_id": "815f75d0fc57",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "passed_cases": 5,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "815f75d0fc57",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:20.427+00:00",
+      "ended_at": "2026-11-14T08:45:21.690+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "program",
+      "action": "route_model",
+      "status": "done",
+      "purpose": "分流器关闭（对照配置）：一律先用本地小模型，按升级规则切换",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "family": "ale-bench",
+        "family_records": 0,
+        "min_matches": 1,
+        "model": "Qwen3.8-27B",
+        "reason": "router_off",
+        "route": "small",
+        "router": "off",
+        "similar_successes": 0
+      },
+      "next_decision": "start model requests on the small model",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:21.692+00:00",
+      "ended_at": "2026-11-14T08:45:21.692+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "model",
+      "action": "route_action",
+      "status": "done",
+      "purpose": "Decisions 选择动作 propose_candidate",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "answers": [
+          {
+            "choice": "propose_candidate",
+            "confidence": 0.99,
+            "name": "action",
+            "probabilities": [
+              {
+                "probability": 0.0,
+                "value": "finish"
+              },
+              {
+                "probability": 0.01,
+                "value": "analyze"
+              },
+              {
+                "probability": 0.99,
+                "value": "propose_candidate"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c0"
+              }
+            ],
+            "type": "choice"
+          }
+        ],
+        "choice": "propose_candidate"
+      },
+      "next_decision": "propose_candidate",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m1",
+      "model_role": "router_action",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:21.694+00:00",
+      "ended_at": "2026-11-14T08:45:24.031+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "提出一个更优的候选程序，通过改进移动策略来降低总能量消耗",
+      "expected_result": "在开发数据上获得比c0更高的分数（>44120）",
+      "verification": "运行验证并检查每个测试用例的得分是否提升",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m2",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:24.033+00:00",
+      "ended_at": "2026-11-14T08:45:30.434+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "6537c1c3ec59",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 11.321,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 8478,
+          "value": 44120
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "6537c1c3ec59",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:31.742+00:00",
+      "ended_at": "2026-11-14T08:45:31.742+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "route_action",
+      "status": "done",
+      "purpose": "Decisions 选择动作 propose_candidate",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "answers": [
+          {
+            "choice": "propose_candidate",
+            "confidence": 0.96,
+            "name": "action",
+            "probabilities": [
+              {
+                "probability": 0.0,
+                "value": "finish"
+              },
+              {
+                "probability": 0.03,
+                "value": "analyze"
+              },
+              {
+                "probability": 0.97,
+                "value": "propose_candidate"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c0"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c1"
+              }
+            ],
+            "type": "choice"
+          }
+        ],
+        "choice": "propose_candidate"
+      },
+      "next_decision": "propose_candidate",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m3",
+      "model_role": "router_action",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:31.744+00:00",
+      "ended_at": "2026-11-14T08:45:34.477+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "提出一个更优的候选程序，通过改进移动策略来降低总能量消耗",
+      "expected_result": "在开发数据上获得比c0更高的分数（>44120）",
+      "verification": "运行验证并检查每个测试用例的得分是否提升",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m4",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:34.479+00:00",
+      "ended_at": "2026-11-14T08:45:40.433+00:00"
+    },
+    {
+      "seq": 8,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "72be807d7098",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 8934
+            },
+            {
+              "correct": true,
+              "score": 8819
+            },
+            {
+              "correct": true,
+              "score": 8811
+            },
+            {
+              "correct": true,
+              "score": 8788
+            },
+            {
+              "correct": true,
+              "score": 8768
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 44120
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 21.28,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 19521,
+          "value": 44120
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "upgrade to large model, continue",
+      "candidate_id": "c2",
+      "evaluation_id": "72be807d7098",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:41.701+00:00",
+      "ended_at": "2026-11-14T08:45:41.701+00:00"
+    },
+    {
+      "seq": 9,
+      "actor": "program",
+      "action": "upgrade_model",
+      "status": "done",
+      "purpose": "连续 2 次候选未达到正确且达标，按升级规则切换到大模型",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "misses": 2,
+        "rule": "upgrade-rule-v2",
+        "small_requests": 2,
+        "to": "gpt-6.1-sol"
+      },
+      "next_decision": "continue with large model",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:41.703+00:00",
+      "ended_at": "2026-11-14T08:45:41.703+00:00"
+    },
+    {
+      "seq": 10,
+      "actor": "model",
+      "action": "route_action",
+      "status": "done",
+      "purpose": "Decisions 选择动作 propose_candidate",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "answers": [
+          {
+            "choice": "propose_candidate",
+            "confidence": 0.95,
+            "name": "action",
+            "probabilities": [
+              {
+                "probability": 0.01,
+                "value": "finish"
+              },
+              {
+                "probability": 0.03,
+                "value": "analyze"
+              },
+              {
+                "probability": 0.96,
+                "value": "propose_candidate"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c0"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c1"
+              },
+              {
+                "probability": 0.0,
+                "value": "run_validation:c2"
+              }
+            ],
+            "type": "choice"
+          }
+        ],
+        "choice": "propose_candidate"
+      },
+      "next_decision": "propose_candidate",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m5",
+      "model_role": "router_action",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:41.706+00:00",
+      "ended_at": "2026-11-14T08:45:42.733+00:00"
+    },
+    {
+      "seq": 11,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "将最短栈策略替换为考虑箱号顺序的分组搬运，并在时间预算内比较多种随机化方案。",
+      "expected_result": "显著减少反复搬运，在全部开发用例保持合法的同时提高总分。",
+      "verification": "由原生评测检查所有操作和运行时间；程序内部计算各方案能耗，只输出能耗最低且操作数合规的完整方案。",
+      "hypothesis": "把递减箱号段放到最小箱号合适的栈上，可减少未来为较小箱子再次清理上方箱子的次数；多策略搜索可避免固定贪心的局部劣解。",
+      "params": {
+        "analysis": "此前两个候选与基线采用相同决策，因此分数完全相同。本次实际改变目标栈选择和分段方式，并保留基线作为可行后备。",
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T084520-0ba7/m6",
+      "model_role": "large",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:45:42.740+00:00",
+      "ended_at": "2026-11-14T08:46:55.494+00:00"
+    },
+    {
+      "seq": 12,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c3",
+        "best_replaced": true,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "0cc33d89137b",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9356
+            },
+            {
+              "correct": true,
+              "score": 9348
+            },
+            {
+              "correct": true,
+              "score": 9276
+            },
+            {
+              "correct": true,
+              "score": 9322
+            },
+            {
+              "correct": true,
+              "score": 9291
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 46593
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c3",
+          "elapsed_s": 103.961,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 35298,
+          "value": 46593
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "0cc33d89137b",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T08:47:04.381+00:00",
+      "ended_at": "2026-11-14T08:47:04.381+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "66b48a8fdc86bdd7",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "routing-native-20261114-ale-v1 #2 action_decisions r1",
+    "limits": {
+      "max_candidates": 10,
+      "max_code_bytes": 20000,
+      "max_model_requests": 20,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 120.0,
+      "token_budget": null,
+      "wall_clock_s": 900
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "4",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "https://aiping.cn/api/v1",
+        "enable_thinking": false,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "Qwen3.8-27B",
+        "provider": "chat_compat",
+        "reasoning_effort": null,
+        "response_format": "json_object",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": true,
+      "fixed_model": null,
+      "mode": "feedback",
+      "model_policy": "adaptive"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "always the small model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "decisions",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v2"
+    },
+    "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "scripted": [],
+    "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "container_python": "3.12-slim (pinned digest in Dockerfile)",
+    "docker_server": "29.9.3 linux/amd64",
+    "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "image_tag": "routeevo-sandbox:d055c99c833a",
+    "judge": {
+      "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+      "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "4",
+      "memory": "1g",
+      "network": "none",
+      "pids_limit": 64,
+      "read_only_rootfs": true,
+      "user": "65534:65534"
+    }
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run ale-bench-ahc026-formal-20261114-66cd5cc2e0 --mode eval --snapshot v0 --no-router --action-router decisions --model-router rule --research-mode feedback --research-model-policy adaptive --cpuset-cpus 4 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+    "recheck_best": "uv run routeevo check ale-bench-ahc026-formal-20261114-66cd5cc2e0 /home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c3.py --dataset final --cpuset-cpus 4",
+    "report": "uv run routeevo report run-20261114T084520-0ba7"
+  },
+  "started_at": "2026-11-14T08:45:20.421+00:00",
+  "loop_ended_at": "2026-11-14T08:47:04.384+00:00",
+  "ended_at": "2026-11-14T08:47:04.387+00:00",
+  "research": {
+    "definition": {
+      "question": "在可行性约束下，能否通过本次研究持续提高目标分数？",
+      "goal": "全部用例可行，最大化原始得分之和",
+      "workload": "ahc026 · 5 public cases",
+      "baseline": {
+        "program": "可行起始程序（不代表上游竞争性解法）",
+        "dev_median_s": null,
+        "final_median_s": null
+      },
+      "scope": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores.",
+      "tools": [
+        {
+          "action": "analyze",
+          "label": "分析：写下推理与计划，不执行"
+        },
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "run_validation",
+          "label": "运行验证：重新评测已有候选"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "budget": {
+        "model_requests": 20,
+        "candidates": 10,
+        "loop_s": 900,
+        "request_timeout_s": 120.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 4,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "提出一个更优的候选程序，通过改进移动策略来降低总能量消耗",
+        "expected": "在开发数据上获得比c0更高的分数（>44120）",
+        "verification": "运行验证并检查每个测试用例的得分是否提升",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "6537c1c3ec59"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 7,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "提出一个更优的候选程序，通过改进移动策略来降低总能量消耗",
+        "expected": "在开发数据上获得比c0更高的分数（>44120）",
+        "verification": "运行验证并检查每个测试用例的得分是否提升",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 8934
+              },
+              {
+                "correct": true,
+                "score": 8819
+              },
+              {
+                "correct": true,
+                "score": 8811
+              },
+              {
+                "correct": true,
+                "score": 8788
+              },
+              {
+                "correct": true,
+                "score": 8768
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 44120
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "upgrade to large model, continue",
+        "evaluation_id": "72be807d7098"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 11,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "把递减箱号段放到最小箱号合适的栈上，可减少未来为较小箱子再次清理上方箱子的次数；多策略搜索可避免固定贪心的局部劣解。",
+        "purpose": "将最短栈策略替换为考虑箱号顺序的分组搬运，并在时间预算内比较多种随机化方案。",
+        "expected": "显著减少反复搬运，在全部开发用例保持合法的同时提高总分。",
+        "verification": "由原生评测检查所有操作和运行时间；程序内部计算各方案能耗，只输出能耗最低且操作数合规的完整方案。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 44120,
+            "cases": [
+              {
+                "correct": true,
+                "score": 9356
+              },
+              {
+                "correct": true,
+                "score": 9348
+              },
+              {
+                "correct": true,
+                "score": 9276
+              },
+              {
+                "correct": true,
+                "score": 9322
+              },
+              {
+                "correct": true,
+                "score": 9291
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 46593
+          },
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "0cc33d89137b"
+      }
+    ],
+    "verdicts": {
+      "supported": 1,
+      "partial": 0,
+      "refuted": 2,
+      "untestable": 0,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 11.321,
+      "metric": "score",
+      "model_requests": 2,
+      "tokens": 8478,
+      "value": 44120,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 8.719,
+        "input_tokens": 8122,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 356,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 1,
+        "cost_usd": 0.000427,
+        "cost_status": "partial",
+        "cost_unknown_calls": 1,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 21.28,
+      "metric": "score",
+      "model_requests": 4,
+      "tokens": 19521,
+      "value": 44120,
+      "usage": {
+        "requests": 4,
+        "ok": 4,
+        "errors": {},
+        "latency_s": 17.382,
+        "input_tokens": 18809,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 712,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": 0.000983,
+        "cost_status": "partial",
+        "cost_unknown_calls": 2,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14"
+        ]
+      }
+    },
+    {
+      "best_candidate_id": "c3",
+      "elapsed_s": 103.961,
+      "metric": "score",
+      "model_requests": 6,
+      "tokens": 35298,
+      "value": 46593,
+      "usage": {
+        "requests": 6,
+        "ok": 6,
+        "errors": {},
+        "latency_s": 91.14,
+        "input_tokens": 31076,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4222,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 2070,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": 0.051029,
+        "cost_status": "partial",
+        "cost_unknown_calls": 2,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14",
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,3227 @@
+{
+  "comparison_id": "research-routing-20261114T082947-259b",
+  "ablation_id": "research-routing-20261114T082947-259b",
+  "study": "routing",
+  "protocol": "within-task-routing-v2",
+  "status": "stopped",
+  "label": "Frozen desktop ahc026 routing study",
+  "snapshot_id": "v0",
+  "task_ids": [
+    "ale-bench-ahc026-formal-20261114-66cd5cc2e0"
+  ],
+  "research_mode": "feedback",
+  "research_model_policy": "adaptive",
+  "final_evaluation": true,
+  "dev_only": false,
+  "repeats": 3,
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 1,
+    "cpus": 1.0,
+    "cpuset_cpus": "4",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30.0
+  },
+  "variants": [
+    "baseline",
+    "action_decisions",
+    "model_decisions",
+    "both_decisions"
+  ],
+  "plan": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 3,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 4,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 9,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 10,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 11,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 12,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 17,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 18,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 19,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 20,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    }
+  ],
+  "plan_sha256": "2b62710f8bbee61ebf918b4c14c52759dbadbfa696eeae1b57c12184f8754a8a",
+  "plan_id": "routing-native-20261114-ale-v1",
+  "price_snapshots": {
+    "small": {
+      "model": "Qwen3.8-27B",
+      "currency": "CNY",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 3,
+      "output_per_1m": 12,
+      "source": "https://aiping.cn/api/v1/models",
+      "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+      "unit_evidence": {
+        "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+        "currency_symbol": "￥",
+        "text_model_price_denominator": "/M"
+      },
+      "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+    },
+    "large": {
+      "model": "gpt-6.1-sol",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 2,
+      "output_per_1m": 10,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+      "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+      "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+    },
+    "decisions": {
+      "model": "gpt-6-luna",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0,
+      "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+      "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+      "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+      "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+    }
+  },
+  "runs": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "status": "completed",
+      "final_status": "completed",
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.093141,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.093141,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 3,
+              "ok": 3,
+              "errors": {},
+              "latency_s": 75.389,
+              "input_tokens": 15239,
+              "input_tokens_unknown_calls": 0,
+              "cached_input_tokens": 2432,
+              "cached_input_tokens_unknown_calls": 0,
+              "output_tokens": 3952,
+              "output_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 3,
+              "cost_usd": null,
+              "cost_status": "unknown",
+              "cost_unknown_calls": 3,
+              "price_versions": []
+            }
+          },
+          "large:openai_responses:gpt-6.1-sol": {
+            "amount": null,
+            "currency": "USD",
+            "status": "partial",
+            "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+            "price_snapshot": {
+              "model": "gpt-6.1-sol",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 2,
+              "output_per_1m": 10,
+              "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+              "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+              "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+              "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+            },
+            "known_amount": 0.723504,
+            "purpose": "generation",
+            "role": "large",
+            "provider": "openai_responses",
+            "model": "gpt-6.1-sol",
+            "usage": {
+              "requests": 11,
+              "ok": 10,
+              "errors": {
+                "timeout": 1
+              },
+              "latency_s": 731.57,
+              "input_tokens": 190837,
+              "input_tokens_unknown_calls": 1,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 1,
+              "output_tokens": 34183,
+              "output_tokens_unknown_calls": 1,
+              "reasoning_tokens": 15862,
+              "reasoning_tokens_unknown_calls": 1,
+              "cost_usd": 0.818907,
+              "cost_status": "partial",
+              "cost_unknown_calls": 1,
+              "price_versions": [
+                "openai/gpt-6.1-sol/standard/2026-11-13"
+              ]
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.093141,
+            "known_amount": 0.093141,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": null,
+            "known_amount": 0.723504,
+            "status": "partial"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T082947-740a",
+      "stop_reason": "budget_exhausted",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_status": "completed",
+        "final_error": null,
+        "final_correct": true,
+        "final_speedup": null,
+        "final_objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9334
+            },
+            {
+              "correct": true,
+              "score": 9375
+            },
+            {
+              "correct": true,
+              "score": 9364
+            },
+            {
+              "correct": true,
+              "score": 9289
+            },
+            {
+              "correct": true,
+              "score": 9339
+            },
+            {
+              "correct": true,
+              "score": 9320
+            },
+            {
+              "correct": true,
+              "score": 9294
+            },
+            {
+              "correct": true,
+              "score": 9335
+            },
+            {
+              "correct": true,
+              "score": 9341
+            },
+            {
+              "correct": true,
+              "score": 9308
+            },
+            {
+              "correct": true,
+              "score": 9343
+            },
+            {
+              "correct": true,
+              "score": 9336
+            },
+            {
+              "correct": true,
+              "score": 9269
+            },
+            {
+              "correct": true,
+              "score": 9314
+            },
+            {
+              "correct": true,
+              "score": 9389
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 139950
+        },
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "最终方案 c7 可行，原始得分 139950（maximize；基线 131864）"
+      },
+      "best_candidate_id": "c7",
+      "best_dev": {
+        "evaluation_id": "b9b11c2d7a0a",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9402
+            },
+            {
+              "correct": true,
+              "score": 9343
+            },
+            {
+              "correct": true,
+              "score": 9337
+            },
+            {
+              "correct": true,
+              "score": 9382
+            },
+            {
+              "correct": true,
+              "score": 9372
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 46836
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": {
+        "evaluation_id": "ff61e010694c",
+        "candidate_id": "c7",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 32.886,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 131864,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9334
+            },
+            {
+              "correct": true,
+              "score": 9375
+            },
+            {
+              "correct": true,
+              "score": 9364
+            },
+            {
+              "correct": true,
+              "score": 9289
+            },
+            {
+              "correct": true,
+              "score": 9339
+            },
+            {
+              "correct": true,
+              "score": 9320
+            },
+            {
+              "correct": true,
+              "score": 9294
+            },
+            {
+              "correct": true,
+              "score": 9335
+            },
+            {
+              "correct": true,
+              "score": 9341
+            },
+            {
+              "correct": true,
+              "score": 9308
+            },
+            {
+              "correct": true,
+              "score": 9343
+            },
+            {
+              "correct": true,
+              "score": 9336
+            },
+            {
+              "correct": true,
+              "score": 9269
+            },
+            {
+              "correct": true,
+              "score": 9314
+            },
+            {
+              "correct": true,
+              "score": 9389
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 139950
+        },
+        "case_count": 15,
+        "passed_cases": 15,
+        "normalized": false,
+        "measured": true,
+        "note": null
+      },
+      "dev_status": "passed",
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "system_sha256": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab",
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": null,
+            "mode": "feedback",
+            "model_policy": "adaptive"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "always the small model",
+            "version": "off"
+          },
+          "routing": {
+            "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v2"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "execution": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "snapshot_id": "v0",
+        "routing": {
+          "action": "llm",
+          "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+          "budget_counts": "all routing and generation requests",
+          "decision_model": "gpt-6-luna",
+          "model": "rule",
+          "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+          "upgrade_is_irreversible": true,
+          "version": "routing-adapters-v2"
+        }
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 0,
+        "generation_requests": 14,
+        "candidates_proposed": 10,
+        "candidates_passed": 10,
+        "candidates_improved": 9,
+        "candidates_no_gain": 1,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 1,
+        "unusable_replies": 0,
+        "api_errors": 1,
+        "evidence_calls": 0,
+        "upgrades": 1,
+        "large_model_requests": 11,
+        "small_model_requests": 3,
+        "upgrade_at_step": 7
+      },
+      "timing": {
+        "wall_clock_total_s": 932.893,
+        "agent_loop_s": 900.001,
+        "agent_loop_elapsed_s": 900.001,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.001,
+        "final_evaluation_s": 32.886,
+        "model_wait_s": 806.959,
+        "dev_evaluation_s": 92.775,
+        "evidence_tool_s": 0,
+        "container_startup_s": 12.1
+      },
+      "usage": {
+        "requests": 14,
+        "ok": 13,
+        "errors": {
+          "timeout": 1
+        },
+        "latency_s": 806.959,
+        "input_tokens": 206076,
+        "input_tokens_unknown_calls": 1,
+        "cached_input_tokens": 2432,
+        "cached_input_tokens_unknown_calls": 1,
+        "output_tokens": 38135,
+        "output_tokens_unknown_calls": 1,
+        "reasoning_tokens": 15862,
+        "reasoning_tokens_unknown_calls": 4,
+        "cost_usd": 0.818907,
+        "cost_status": "partial",
+        "cost_unknown_calls": 4,
+        "price_versions": [
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 3,
+          "ok": 3,
+          "errors": {},
+          "latency_s": 75.389,
+          "input_tokens": 15239,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 3952,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 3,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 3,
+          "price_versions": []
+        },
+        "large:openai_responses:gpt-6.1-sol": {
+          "requests": 11,
+          "ok": 10,
+          "errors": {
+            "timeout": 1
+          },
+          "latency_s": 731.57,
+          "input_tokens": 190837,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 34183,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 15862,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": 0.818907,
+          "cost_status": "partial",
+          "cost_unknown_calls": 1,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 0,
+          "ok": 0,
+          "errors": {},
+          "latency_s": 0,
+          "input_tokens": 0,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.0,
+          "cost_status": "no_model_calls",
+          "cost_unknown_calls": 0,
+          "price_versions": []
+        },
+        "generation": {
+          "requests": 14,
+          "ok": 13,
+          "errors": {
+            "timeout": 1
+          },
+          "latency_s": 806.959,
+          "input_tokens": 206076,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 38135,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 15862,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.818907,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        }
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 34.863,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 10283,
+          "value": 44120,
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 32.259,
+            "input_tokens": 8508,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1775,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 2,
+            "price_versions": []
+          }
+        },
+        {
+          "best_candidate_id": "c2",
+          "elapsed_s": 185.724,
+          "metric": "score",
+          "model_requests": 5,
+          "tokens": 47761,
+          "value": 46382,
+          "usage": {
+            "requests": 5,
+            "ok": 5,
+            "errors": {},
+            "latency_s": 173.622,
+            "input_tokens": 38553,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 9208,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 2197,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.110842,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c3",
+          "elapsed_s": 256.743,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 64308,
+          "value": 46605,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 234.802,
+            "input_tokens": 52013,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 12295,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 3792,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.175361,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c4",
+          "elapsed_s": 325.003,
+          "metric": "score",
+          "model_requests": 7,
+          "tokens": 82687,
+          "value": 46790,
+          "usage": {
+            "requests": 7,
+            "ok": 7,
+            "errors": {},
+            "latency_s": 292.886,
+            "input_tokens": 67358,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 15329,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 5159,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.244062,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c4",
+          "elapsed_s": 393.249,
+          "metric": "score",
+          "model_requests": 8,
+          "tokens": 103413,
+          "value": 46790,
+          "usage": {
+            "requests": 8,
+            "ok": 8,
+            "errors": {},
+            "latency_s": 350.933,
+            "input_tokens": 84755,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 18658,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 6599,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.320843,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c4",
+          "elapsed_s": 476.206,
+          "metric": "score",
+          "model_requests": 9,
+          "tokens": 126851,
+          "value": 46790,
+          "usage": {
+            "requests": 9,
+            "ok": 9,
+            "errors": {},
+            "latency_s": 423.821,
+            "input_tokens": 104407,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 22444,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 8669,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.407831,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c7",
+          "elapsed_s": 562.928,
+          "metric": "score",
+          "model_requests": 10,
+          "tokens": 152855,
+          "value": 46836,
+          "usage": {
+            "requests": 10,
+            "ok": 10,
+            "errors": {},
+            "latency_s": 500.411,
+            "input_tokens": 126161,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 26694,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 10985,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.504714,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c7",
+          "elapsed_s": 639.557,
+          "metric": "score",
+          "model_requests": 11,
+          "tokens": 180879,
+          "value": 46836,
+          "usage": {
+            "requests": 11,
+            "ok": 11,
+            "errors": {},
+            "latency_s": 566.856,
+            "input_tokens": 150217,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 30662,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 12847,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.604533,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c7",
+          "elapsed_s": 727.12,
+          "metric": "score",
+          "model_requests": 12,
+          "tokens": 211983,
+          "value": 46836,
+          "usage": {
+            "requests": 12,
+            "ok": 12,
+            "errors": {},
+            "latency_s": 644.293,
+            "input_tokens": 176726,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 35257,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 14979,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": 0.716754,
+            "cost_status": "partial",
+            "cost_unknown_calls": 3,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c7",
+          "elapsed_s": 899.999,
+          "metric": "score",
+          "model_requests": 14,
+          "tokens": 244211,
+          "value": 46836,
+          "usage": {
+            "requests": 14,
+            "ok": 13,
+            "errors": {
+              "timeout": 1
+            },
+            "latency_s": 806.959,
+            "input_tokens": 206076,
+            "input_tokens_unknown_calls": 1,
+            "cached_input_tokens": 2432,
+            "cached_input_tokens_unknown_calls": 1,
+            "output_tokens": 38135,
+            "output_tokens_unknown_calls": 1,
+            "reasoning_tokens": 15862,
+            "reasoning_tokens_unknown_calls": 4,
+            "cost_usd": 0.818907,
+            "cost_status": "partial",
+            "cost_unknown_calls": 4,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        }
+      ],
+      "reproduce": {
+        "run_again": "uv run routeevo run ale-bench-ahc026-formal-20261114-66cd5cc2e0 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode feedback --research-model-policy adaptive --cpuset-cpus 4 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+        "recheck_best": "uv run routeevo check ale-bench-ahc026-formal-20261114-66cd5cc2e0 /home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T082947-740a/candidates/c7.py --dataset final --cpuset-cpus 4",
+        "report": "uv run routeevo report run-20261114T082947-740a"
+      },
+      "routing_steps": [],
+      "action_counts": {
+        "analyze": 2,
+        "propose_candidate": 10
+      },
+      "report_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T082947-740a/report.json"
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "status": "stopped",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {
+          "router_action:openai_decisions:gpt-6-luna": {
+            "amount": 0.0016377,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+            "price_snapshot": {
+              "model": "gpt-6-luna",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0,
+              "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+              "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+              "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+              "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.0016377,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-6-luna",
+            "usage": {
+              "requests": 3,
+              "ok": 3,
+              "errors": {},
+              "latency_s": 6.076,
+              "input_tokens": 16377,
+              "input_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "output_tokens": 0,
+              "output_tokens_unknown_calls": 0,
+              "reasoning_tokens": 0,
+              "reasoning_tokens_unknown_calls": 0,
+              "cost_usd": 0.001638,
+              "cost_status": "estimated",
+              "cost_unknown_calls": 0,
+              "price_versions": [
+                "openai-decisions-standard-short-2026-11-14"
+              ]
+            }
+          },
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.03549,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://aiping.cn/api/v1/models",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://aiping.cn/api/v1/models",
+              "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+              "unit_evidence": {
+                "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                "currency_symbol": "￥",
+                "text_model_price_denominator": "/M"
+              },
+              "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.03549,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 2,
+              "ok": 2,
+              "errors": {},
+              "latency_s": 12.325,
+              "input_tokens": 8982,
+              "input_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "output_tokens": 712,
+              "output_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 2,
+              "cost_usd": null,
+              "cost_status": "unknown",
+              "cost_unknown_calls": 2,
+              "price_versions": []
+            }
+          },
+          "large:openai_responses:gpt-6.1-sol": {
+            "amount": 0.046534,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+            "price_snapshot": {
+              "model": "gpt-6.1-sol",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 2,
+              "output_per_1m": 10,
+              "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+              "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+              "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+              "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.046534,
+            "purpose": "generation",
+            "role": "large",
+            "provider": "openai_responses",
+            "model": "gpt-6.1-sol",
+            "usage": {
+              "requests": 1,
+              "ok": 1,
+              "errors": {},
+              "latency_s": 72.739,
+              "input_tokens": 5717,
+              "input_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "output_tokens": 3510,
+              "output_tokens_unknown_calls": 0,
+              "reasoning_tokens": 2070,
+              "reasoning_tokens_unknown_calls": 0,
+              "cost_usd": 0.049391,
+              "cost_status": "estimated",
+              "cost_unknown_calls": 0,
+              "price_versions": [
+                "openai/gpt-6.1-sol/standard/2026-11-13"
+              ]
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.03549,
+            "known_amount": 0.03549,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": 0.0481717,
+            "known_amount": 0.0481717,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "split": "formal-20261114",
+        "target_min_speedup": null,
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        },
+        "workload": "ahc026 · 5 public cases",
+        "family": "ale-bench",
+        "presentation": {
+          "title": "ALE-Bench · ahc026",
+          "workload": "ahc026 · 5 public cases",
+          "baseline": "可行起始程序（不代表上游竞争性解法）",
+          "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+          "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+        },
+        "dev_params": {
+          "cases": 5
+        },
+        "final_params": {
+          "cases": 15
+        },
+        "source": {
+          "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+          "dataset": "SakanaAI/ALE-Bench",
+          "license": "CC-BY-ND-4.0",
+          "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+        },
+        "selection": {
+          "dev_cases": 5,
+          "final_cases": 15
+        }
+      },
+      "run_id": "run-20261114T084520-0ba7",
+      "stop_reason": "user_stopped",
+      "outcome": {
+        "run_completed": false,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": false,
+        "final_status": "not_run",
+        "final_error": null,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "未执行最终测试（user_stopped）；最佳候选 c3 仅有开发验证结果"
+      },
+      "best_candidate_id": "c3",
+      "best_dev": {
+        "evaluation_id": "0cc33d89137b",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 44120,
+          "cases": [
+            {
+              "correct": true,
+              "score": 9356
+            },
+            {
+              "correct": true,
+              "score": 9348
+            },
+            {
+              "correct": true,
+              "score": 9276
+            },
+            {
+              "correct": true,
+              "score": 9322
+            },
+            {
+              "correct": true,
+              "score": 9291
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 46593
+        },
+        "eligible_for_selection": true
+      },
+      "final_evaluation": null,
+      "dev_status": "passed",
+      "comparison_config": {
+        "config": {
+          "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+          "evaluator_version": "runtime-suite-eval-3",
+          "experience_extractor": "extractor-v3",
+          "limits": {
+            "max_candidates": 10,
+            "max_code_bytes": 20000,
+            "max_model_requests": 20,
+            "measurement_timeout_s": 10.0,
+            "min_request_window_s": 15.0,
+            "model_request_timeout_s": 120.0,
+            "token_budget": null,
+            "wall_clock_s": 900
+          },
+          "measure": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "function_warmups": 1,
+            "max_output_bytes": 67108864,
+            "memory": "1g",
+            "pids_limit": 64,
+            "ready_timeout_s": 30.0,
+            "repeats": 5
+          },
+          "models": {
+            "large": {
+              "base_url": "https://api.openai.com/v1",
+              "enable_thinking": null,
+              "extra": {},
+              "max_output_tokens": 32000,
+              "model": "gpt-6.1-sol",
+              "provider": "openai_responses",
+              "reasoning_effort": "xhigh",
+              "response_format": "json_schema",
+              "role": "large",
+              "temperature": null
+            },
+            "small": {
+              "base_url": "https://aiping.cn/api/v1",
+              "enable_thinking": false,
+              "extra": {},
+              "max_output_tokens": 8192,
+              "model": "Qwen3.8-27B",
+              "provider": "chat_compat",
+              "reasoning_effort": null,
+              "response_format": "json_object",
+              "role": "small",
+              "temperature": null
+            }
+          },
+          "prompt": {
+            "system_sha256": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab",
+            "version": "agent-prompt-v7"
+          },
+          "research_protocol": {
+            "final_evaluation": true,
+            "fixed_model": null,
+            "mode": "feedback",
+            "model_policy": "adaptive"
+          },
+          "retrieval": {
+            "compatibility": "benchmark adapter task semantics and minimum matching features",
+            "features": {
+              "groupagg": [
+                "rows",
+                "distinct_keys",
+                "rows_per_key",
+                "order",
+                "skew"
+              ],
+              "intervals": [
+                "rows",
+                "order",
+                "intervals_per_merged",
+                "magnitude",
+                "sign"
+              ],
+              "logstats": [
+                "rows",
+                "groups",
+                "rows_per_group",
+                "order",
+                "errors"
+              ]
+            },
+            "max_per_outcome": {
+              "failure": 2,
+              "no_gain": 1,
+              "success": 3
+            },
+            "rank": "matching features desc, then newest first",
+            "scope": "records of the same task family only",
+            "version": "retrieval-v2"
+          },
+          "reuse": {
+            "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+            "learn_target_margin": 0.05,
+            "max_programs": 3,
+            "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+            "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+            "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+            "version": "reuse-v2"
+          },
+          "router": {
+            "start": "always the small model",
+            "version": "off"
+          },
+          "routing": {
+            "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+            "budget_counts": "all routing and generation requests",
+            "decision_model": "gpt-6-luna",
+            "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+            "upgrade_is_irreversible": true,
+            "version": "routing-adapters-v2"
+          },
+          "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "upgrade_rule": {
+            "consecutive_misses": 2,
+            "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+            "id": "upgrade-rule-v2",
+            "max_small_requests_without_goal": 3
+          }
+        },
+        "task_manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+        "environment": {
+          "container_python": "3.12-slim (pinned digest in Dockerfile)",
+          "docker_server": "29.9.3 linux/amd64",
+          "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+          "image_tag": "routeevo-sandbox:d055c99c833a",
+          "judge": {
+            "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+            "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62"
+          },
+          "limits": {
+            "cpus": 1.0,
+            "cpuset_cpus": "4",
+            "memory": "1g",
+            "network": "none",
+            "pids_limit": 64,
+            "read_only_rootfs": true,
+            "user": "65534:65534"
+          }
+        }
+      },
+      "execution": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "snapshot_id": "v0",
+        "routing": {
+          "action": "decisions",
+          "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+          "budget_counts": "all routing and generation requests",
+          "decision_model": "gpt-6-luna",
+          "model": "rule",
+          "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+          "upgrade_is_irreversible": true,
+          "version": "routing-adapters-v2"
+        }
+      },
+      "iterations": {
+        "model_requests": 6,
+        "routing_requests": 3,
+        "generation_requests": 3,
+        "candidates_proposed": 3,
+        "candidates_passed": 3,
+        "candidates_improved": 1,
+        "candidates_no_gain": 2,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 1,
+        "large_model_requests": 1,
+        "small_model_requests": 2,
+        "upgrade_at_step": 9
+      },
+      "timing": {
+        "wall_clock_total_s": 103.966,
+        "agent_loop_s": 103.963,
+        "agent_loop_elapsed_s": 103.963,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 91.14,
+        "dev_evaluation_s": 12.708,
+        "evidence_tool_s": 0,
+        "container_startup_s": 3.075
+      },
+      "usage": {
+        "requests": 6,
+        "ok": 6,
+        "errors": {},
+        "latency_s": 91.14,
+        "input_tokens": 31076,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4222,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 2070,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": 0.051029,
+        "cost_status": "partial",
+        "cost_unknown_calls": 2,
+        "price_versions": [
+          "openai-decisions-standard-short-2026-11-14",
+          "openai/gpt-6.1-sol/standard/2026-11-13"
+        ]
+      },
+      "usage_by_model": {
+        "router_action:openai_decisions:gpt-6-luna": {
+          "requests": 3,
+          "ok": 3,
+          "errors": {},
+          "latency_s": 6.076,
+          "input_tokens": 16377,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.001638,
+          "cost_status": "estimated",
+          "cost_unknown_calls": 0,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 2,
+          "ok": 2,
+          "errors": {},
+          "latency_s": 12.325,
+          "input_tokens": 8982,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 712,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 2,
+          "price_versions": []
+        },
+        "large:openai_responses:gpt-6.1-sol": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 72.739,
+          "input_tokens": 5717,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 3510,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 2070,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.049391,
+          "cost_status": "estimated",
+          "cost_unknown_calls": 0,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 3,
+          "ok": 3,
+          "errors": {},
+          "latency_s": 6.076,
+          "input_tokens": 16377,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.001638,
+          "cost_status": "estimated",
+          "cost_unknown_calls": 0,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "generation": {
+          "requests": 3,
+          "ok": 3,
+          "errors": {},
+          "latency_s": 85.064,
+          "input_tokens": 14699,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 4222,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 2070,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.049391,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        }
+      },
+      "progress": [
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 11.321,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 8478,
+          "value": 44120,
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 8.719,
+            "input_tokens": 8122,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 356,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 0,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": 0.000427,
+            "cost_status": "partial",
+            "cost_unknown_calls": 1,
+            "price_versions": [
+              "openai-decisions-standard-short-2026-11-14"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c0",
+          "elapsed_s": 21.28,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 19521,
+          "value": 44120,
+          "usage": {
+            "requests": 4,
+            "ok": 4,
+            "errors": {},
+            "latency_s": 17.382,
+            "input_tokens": 18809,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 712,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 0,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": 0.000983,
+            "cost_status": "partial",
+            "cost_unknown_calls": 2,
+            "price_versions": [
+              "openai-decisions-standard-short-2026-11-14"
+            ]
+          }
+        },
+        {
+          "best_candidate_id": "c3",
+          "elapsed_s": 103.961,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 35298,
+          "value": 46593,
+          "usage": {
+            "requests": 6,
+            "ok": 6,
+            "errors": {},
+            "latency_s": 91.14,
+            "input_tokens": 31076,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 4222,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 2070,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": 0.051029,
+            "cost_status": "partial",
+            "cost_unknown_calls": 2,
+            "price_versions": [
+              "openai-decisions-standard-short-2026-11-14",
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        }
+      ],
+      "reproduce": {
+        "run_again": "uv run routeevo run ale-bench-ahc026-formal-20261114-66cd5cc2e0 --mode eval --snapshot v0 --no-router --action-router decisions --model-router rule --research-mode feedback --research-model-policy adaptive --cpuset-cpus 4 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+        "recheck_best": "uv run routeevo check ale-bench-ahc026-formal-20261114-66cd5cc2e0 /home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/candidates/c3.py --dataset final --cpuset-cpus 4",
+        "report": "uv run routeevo report run-20261114T084520-0ba7"
+      },
+      "routing_steps": [
+        {
+          "seq": 3,
+          "action": "route_action",
+          "status": "done",
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.99,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.0,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.01,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.99,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "model_role": "router_action",
+          "model_call_id": "run-20261114T084520-0ba7/m1"
+        },
+        {
+          "seq": 6,
+          "action": "route_action",
+          "status": "done",
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.96,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.0,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.03,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.97,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c1"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "model_role": "router_action",
+          "model_call_id": "run-20261114T084520-0ba7/m3"
+        },
+        {
+          "seq": 10,
+          "action": "route_action",
+          "status": "done",
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.95,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.01,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.03,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.96,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c1"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c2"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "model_role": "router_action",
+          "model_call_id": "run-20261114T084520-0ba7/m5"
+        }
+      ],
+      "action_counts": {
+        "propose_candidate": 3
+      },
+      "report_path": "/home/hycx233/routeevo-routing-formal-20261114/var/runs/run-20261114T084520-0ba7/report.json"
+    },
+    {
+      "seq": 3,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 4,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 9,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 10,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 11,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 12,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 17,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 18,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 19,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    },
+    {
+      "seq": 20,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "cost": {
+        "by_model": {},
+        "by_currency": {},
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "task": {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "min_speedup": null
+        }
+      }
+    }
+  ],
+  "created_at": "2026-11-14T08:29:47.465+00:00",
+  "artifact": "/home/hycx233/routeevo-routing-formal-20261114/var/comparisons/research-routing-20261114T082947-259b.json",
+  "path": "/home/hycx233/routeevo-routing-formal-20261114/var/comparisons/research-routing-20261114T082947-259b.json",
+  "fair": null,
+  "fairness": {
+    "tasks_with_mixed_configurations": [],
+    "plan_matches": true,
+    "complete_variant_matrix": true,
+    "all_planned_runs_recorded": false,
+    "all_planned_runs_completed": false,
+    "all_final_evaluations_completed": false
+  },
+  "summary": {
+    "tasks": [
+      {
+        "task": {
+          "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+          "split": "formal-20261114",
+          "target_min_speedup": null,
+          "objective": {
+            "metric": "score",
+            "direction": "maximize",
+            "min_speedup": null
+          },
+          "workload": "ahc026 · 5 public cases",
+          "family": "ale-bench",
+          "presentation": {
+            "title": "ALE-Bench · ahc026",
+            "workload": "ahc026 · 5 public cases",
+            "baseline": "可行起始程序（不代表上游竞争性解法）",
+            "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+            "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+          },
+          "dev_params": {
+            "cases": 5
+          },
+          "final_params": {
+            "cases": 15
+          },
+          "source": {
+            "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+            "dataset": "SakanaAI/ALE-Bench",
+            "license": "CC-BY-ND-4.0",
+            "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+          },
+          "selection": {
+            "dev_cases": 5,
+            "final_cases": 15
+          }
+        },
+        "variants": [
+          {
+            "variant": "baseline",
+            "routing": {
+              "action": "llm",
+              "model": "rule"
+            },
+            "planned": 3,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 2,
+            "final_status_counts": {
+              "completed": 1,
+              "not_run": 2
+            },
+            "final_correct": 1,
+            "final_values": [
+              139950,
+              null,
+              null
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 139950,
+            "c0_deliveries": 0,
+            "candidates_proposed": 10,
+            "candidates_passed": 10,
+            "candidate_pass_rate": 1.0,
+            "upgraded_runs": 1,
+            "upgrade_rate": 1.0,
+            "generation_roles": {
+              "small": 3,
+              "large": 11
+            },
+            "action_counts": {
+              "analyze": 2,
+              "propose_candidate": 10
+            },
+            "usage": {
+              "requests": 14,
+              "latency_s": 806.959,
+              "errors": {
+                "timeout": 1
+              },
+              "input_tokens": 206076,
+              "input_tokens_unknown_calls": 1,
+              "output_tokens": 38135,
+              "output_tokens_unknown_calls": 1,
+              "cached_input_tokens": 2432,
+              "cached_input_tokens_unknown_calls": 1,
+              "reasoning_tokens": 15862,
+              "reasoning_tokens_unknown_calls": 4
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 14,
+                "latency_s": 806.959,
+                "errors": {
+                  "timeout": 1
+                },
+                "input_tokens": 206076,
+                "input_tokens_unknown_calls": 1,
+                "output_tokens": 38135,
+                "output_tokens_unknown_calls": 1,
+                "cached_input_tokens": 2432,
+                "cached_input_tokens_unknown_calls": 1,
+                "reasoning_tokens": 15862,
+                "reasoning_tokens_unknown_calls": 4
+              }
+            },
+            "cost": {
+              "by_model": {
+                "large:openai_responses:gpt-6.1-sol": {
+                  "amount": null,
+                  "currency": "USD",
+                  "status": "partial",
+                  "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+                  "price_snapshot": {
+                    "model": "gpt-6.1-sol",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 2,
+                    "output_per_1m": 10,
+                    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+                    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+                    "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+                    "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+                  },
+                  "known_amount": 0.723504,
+                  "purpose": "generation",
+                  "role": "large",
+                  "provider": "openai_responses",
+                  "model": "gpt-6.1-sol",
+                  "usage": {
+                    "requests": 11,
+                    "latency_s": 731.57,
+                    "errors": {
+                      "timeout": 1
+                    },
+                    "input_tokens": 190837,
+                    "input_tokens_unknown_calls": 1,
+                    "output_tokens": 34183,
+                    "output_tokens_unknown_calls": 1,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 1,
+                    "reasoning_tokens": 15862,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.093141,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://aiping.cn/api/v1/models",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://aiping.cn/api/v1/models",
+                    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                    "unit_evidence": {
+                      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                      "currency_symbol": "￥",
+                      "text_model_price_denominator": "/M"
+                    },
+                    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.093141,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 3,
+                    "latency_s": 75.389,
+                    "errors": {},
+                    "input_tokens": 15239,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 3952,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 2432,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 3
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.093141,
+                  "known_amount": 0.093141,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": null,
+                  "known_amount": 0.723504,
+                  "status": "partial"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 932.893,
+              "model_wait_s": 806.959,
+              "dev_evaluation_s": 92.775,
+              "final_evaluation_s": 32.886
+            }
+          },
+          {
+            "variant": "action_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "rule"
+            },
+            "planned": 3,
+            "completed": 0,
+            "failed": 1,
+            "not_run": 2,
+            "final_status_counts": {
+              "not_run": 3
+            },
+            "final_correct": 0,
+            "final_values": [
+              null,
+              null,
+              null
+            ],
+            "final_metric_observations": 0,
+            "final_metric_median": null,
+            "c0_deliveries": 0,
+            "candidates_proposed": 3,
+            "candidates_passed": 3,
+            "candidate_pass_rate": 1.0,
+            "upgraded_runs": 1,
+            "upgrade_rate": 1.0,
+            "generation_roles": {
+              "small": 2,
+              "large": 1
+            },
+            "action_counts": {
+              "propose_candidate": 3
+            },
+            "usage": {
+              "requests": 6,
+              "latency_s": 91.14,
+              "errors": {},
+              "input_tokens": 31076,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 4222,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": 2070,
+              "reasoning_tokens_unknown_calls": 2
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 3,
+                "latency_s": 6.076,
+                "errors": {},
+                "input_tokens": 16377,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 3,
+                "latency_s": 85.064,
+                "errors": {},
+                "input_tokens": 14699,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 4222,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 2070,
+                "reasoning_tokens_unknown_calls": 2
+              }
+            },
+            "cost": {
+              "by_model": {
+                "large:openai_responses:gpt-6.1-sol": {
+                  "amount": 0.046534,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+                  "price_snapshot": {
+                    "model": "gpt-6.1-sol",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 2,
+                    "output_per_1m": 10,
+                    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+                    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+                    "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+                    "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.046534,
+                  "purpose": "generation",
+                  "role": "large",
+                  "provider": "openai_responses",
+                  "model": "gpt-6.1-sol",
+                  "usage": {
+                    "requests": 1,
+                    "latency_s": 72.739,
+                    "errors": {},
+                    "input_tokens": 5717,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 3510,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": 2070,
+                    "reasoning_tokens_unknown_calls": 0
+                  }
+                },
+                "router_action:openai_decisions:gpt-6-luna": {
+                  "amount": 0.0016377,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+                  "price_snapshot": {
+                    "model": "gpt-6-luna",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0,
+                    "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+                    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+                    "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+                    "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.0016377,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-6-luna",
+                  "usage": {
+                    "requests": 3,
+                    "latency_s": 6.076,
+                    "errors": {},
+                    "input_tokens": 16377,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 0,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": 0,
+                    "reasoning_tokens_unknown_calls": 0
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.03549,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://aiping.cn/api/v1/models",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://aiping.cn/api/v1/models",
+                    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+                    "unit_evidence": {
+                      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+                      "currency_symbol": "￥",
+                      "text_model_price_denominator": "/M"
+                    },
+                    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.03549,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 2,
+                    "latency_s": 12.325,
+                    "errors": {},
+                    "input_tokens": 8982,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 712,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 2
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.03549,
+                  "known_amount": 0.03549,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": 0.0481717,
+                  "known_amount": 0.0481717,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 103.966,
+              "model_wait_s": 91.14,
+              "dev_evaluation_s": 12.708,
+              "final_evaluation_s": 0
+            }
+          },
+          {
+            "variant": "model_decisions",
+            "routing": {
+              "action": "llm",
+              "model": "decisions"
+            },
+            "planned": 3,
+            "completed": 0,
+            "failed": 0,
+            "not_run": 3,
+            "final_status_counts": {
+              "not_run": 3
+            },
+            "final_correct": 0,
+            "final_values": [
+              null,
+              null,
+              null
+            ],
+            "final_metric_observations": 0,
+            "final_metric_median": null,
+            "c0_deliveries": 0,
+            "candidates_proposed": 0,
+            "candidates_passed": 0,
+            "candidate_pass_rate": null,
+            "upgraded_runs": 0,
+            "upgrade_rate": null,
+            "generation_roles": {
+              "small": 0,
+              "large": 0
+            },
+            "action_counts": {},
+            "usage": {
+              "requests": 0,
+              "latency_s": 0,
+              "errors": {},
+              "input_tokens": 0,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 0,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": 0,
+              "reasoning_tokens_unknown_calls": 0
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              }
+            },
+            "cost": {
+              "by_model": {},
+              "by_currency": {},
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 0,
+              "model_wait_s": 0,
+              "dev_evaluation_s": 0,
+              "final_evaluation_s": 0
+            }
+          },
+          {
+            "variant": "both_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "decisions"
+            },
+            "planned": 3,
+            "completed": 0,
+            "failed": 0,
+            "not_run": 3,
+            "final_status_counts": {
+              "not_run": 3
+            },
+            "final_correct": 0,
+            "final_values": [
+              null,
+              null,
+              null
+            ],
+            "final_metric_observations": 0,
+            "final_metric_median": null,
+            "c0_deliveries": 0,
+            "candidates_proposed": 0,
+            "candidates_passed": 0,
+            "candidate_pass_rate": null,
+            "upgraded_runs": 0,
+            "upgrade_rate": null,
+            "generation_roles": {
+              "small": 0,
+              "large": 0
+            },
+            "action_counts": {},
+            "usage": {
+              "requests": 0,
+              "latency_s": 0,
+              "errors": {},
+              "input_tokens": 0,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 0,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": 0,
+              "reasoning_tokens_unknown_calls": 0
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              }
+            },
+            "cost": {
+              "by_model": {},
+              "by_currency": {},
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 0,
+              "model_wait_s": 0,
+              "dev_evaluation_s": 0,
+              "final_evaluation_s": 0
+            }
+          }
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "action_decisions",
+        "value_a": 139950,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "model_decisions",
+        "value_a": 139950,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "both_decisions",
+        "value_a": 139950,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "model_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "variant_a": "model_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "baseline",
+        "variant_b": "action_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "baseline",
+        "variant_b": "model_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "baseline",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "action_decisions",
+        "variant_b": "model_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "action_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "variant_a": "model_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "baseline",
+        "variant_b": "action_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "baseline",
+        "variant_b": "model_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "baseline",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "action_decisions",
+        "variant_b": "model_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "action_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "variant_a": "model_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      }
+    ],
+    "interactions": [
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 1,
+        "status": "missing_or_failed",
+        "both_minus_action_minus_model_plus_baseline": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 2,
+        "status": "missing_or_failed",
+        "both_minus_action_minus_model_plus_baseline": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+        "repeat": 3,
+        "status": "missing_or_failed",
+        "both_minus_action_minus_model_plus_baseline": null
+      }
+    ],
+    "planned": 12,
+    "not_run": 10
+  },
+  "cost": {
+    "by_model": {
+      "large:openai_responses:gpt-6.1-sol": {
+        "amount": null,
+        "currency": "USD",
+        "status": "partial",
+        "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        "price_snapshot": {
+          "model": "gpt-6.1-sol",
+          "currency": "USD",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 2,
+          "output_per_1m": 10,
+          "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+          "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+          "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+          "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+        },
+        "known_amount": 0.770038,
+        "purpose": "generation",
+        "role": "large",
+        "provider": "openai_responses",
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "requests": 12,
+          "latency_s": 804.3090000000001,
+          "errors": {
+            "timeout": 1
+          },
+          "input_tokens": 196554,
+          "input_tokens_unknown_calls": 1,
+          "output_tokens": 37693,
+          "output_tokens_unknown_calls": 1,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 1,
+          "reasoning_tokens": 17932,
+          "reasoning_tokens_unknown_calls": 1
+        }
+      },
+      "router_action:openai_decisions:gpt-6-luna": {
+        "amount": 0.0016377,
+        "currency": "USD",
+        "status": "estimated",
+        "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+        "price_snapshot": {
+          "model": "gpt-6-luna",
+          "currency": "USD",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 0.1,
+          "output_per_1m": 0,
+          "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+          "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+          "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+          "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+        "known_amount": 0.0016377,
+        "purpose": "routing",
+        "role": "router_action",
+        "provider": "openai_decisions",
+        "model": "gpt-6-luna",
+        "usage": {
+          "requests": 3,
+          "latency_s": 6.076,
+          "errors": {},
+          "input_tokens": 16377,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0
+        }
+      },
+      "small:chat_compat:Qwen3.8-27B": {
+        "amount": 0.128631,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://aiping.cn/api/v1/models",
+          "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+          "unit_evidence": {
+            "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+            "currency_symbol": "￥",
+            "text_model_price_denominator": "/M"
+          },
+          "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+        "known_amount": 0.128631,
+        "purpose": "generation",
+        "role": "small",
+        "provider": "chat_compat",
+        "model": "Qwen3.8-27B",
+        "usage": {
+          "requests": 5,
+          "latency_s": 87.714,
+          "errors": {},
+          "input_tokens": 24221,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 4664,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 5
+        }
+      }
+    },
+    "by_currency": {
+      "CNY": {
+        "amount": 0.128631,
+        "known_amount": 0.128631,
+        "status": "estimated"
+      },
+      "USD": {
+        "amount": null,
+        "known_amount": 0.7716757,
+        "status": "partial"
+      }
+    },
+    "unpriced_model_ledgers": 0,
+    "scope": "recorded calls only; unexecuted slots remain in planned count"
+  },
+  "sides": {
+    "baseline": {
+      "model_requests": 14,
+      "routing_requests": 0,
+      "generation_requests": 14
+    },
+    "action_decisions": {
+      "model_requests": 6,
+      "routing_requests": 3,
+      "generation_requests": 3
+    },
+    "model_decisions": {
+      "model_requests": 0,
+      "routing_requests": 0,
+      "generation_requests": 0
+    },
+    "both_decisions": {
+      "model_requests": 0,
+      "routing_requests": 0,
+      "generation_requests": 0
+    }
+  },
+  "ended_at": "2026-11-14T08:47:04.394+00:00"
+}

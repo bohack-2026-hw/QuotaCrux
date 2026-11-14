@@ -1,0 +1,44 @@
+{
+  "retrieved_at": "2026-11-14T07:56:03.716533+00:00",
+  "source_batch": "research-ale-formal-20261114-v2",
+  "code_sha": "990f598b87f7c93bd27b6ceef5751bbc2d39dd79",
+  "scope": "Completed Qwen calls only; usage/timing evidence for estimates, not routing treatment outcomes.",
+  "runs": [
+    {
+      "run_id": "run-20261114T073335-1a5c",
+      "requests": 15,
+      "input_tokens": 187393,
+      "output_tokens": 11795,
+      "latency_s": 242.615,
+      "unknown_usage_calls": 0,
+      "error_calls": 0
+    },
+    {
+      "run_id": "run-20261114T073907-620a",
+      "requests": 12,
+      "input_tokens": 116983,
+      "output_tokens": 13377,
+      "latency_s": 250.404,
+      "unknown_usage_calls": 0,
+      "error_calls": 0
+    },
+    {
+      "run_id": "run-20261114T074330-f525",
+      "requests": 9,
+      "input_tokens": 29219,
+      "output_tokens": 11166,
+      "latency_s": 255.066,
+      "unknown_usage_calls": 0,
+      "error_calls": 0
+    },
+    {
+      "run_id": "run-20261114T074821-6b87",
+      "requests": 12,
+      "input_tokens": 118419,
+      "output_tokens": 12852,
+      "latency_s": 279.556,
+      "unknown_usage_calls": 0,
+      "error_calls": 0
+    }
+  ]
+}

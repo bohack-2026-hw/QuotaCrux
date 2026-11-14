@@ -1,0 +1,134 @@
+[
+  {
+    "seq": 1,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 1,
+    "mode": "feedback",
+    "variant": "baseline",
+    "routing": {
+      "action": "llm",
+      "model": "rule"
+    }
+  },
+  {
+    "seq": 2,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 1,
+    "mode": "feedback",
+    "variant": "action_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "rule"
+    }
+  },
+  {
+    "seq": 3,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 1,
+    "mode": "feedback",
+    "variant": "model_decisions",
+    "routing": {
+      "action": "llm",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 4,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 1,
+    "mode": "feedback",
+    "variant": "both_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 9,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 2,
+    "mode": "feedback",
+    "variant": "action_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "rule"
+    }
+  },
+  {
+    "seq": 10,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 2,
+    "mode": "feedback",
+    "variant": "model_decisions",
+    "routing": {
+      "action": "llm",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 11,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 2,
+    "mode": "feedback",
+    "variant": "both_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 12,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 2,
+    "mode": "feedback",
+    "variant": "baseline",
+    "routing": {
+      "action": "llm",
+      "model": "rule"
+    }
+  },
+  {
+    "seq": 17,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 3,
+    "mode": "feedback",
+    "variant": "model_decisions",
+    "routing": {
+      "action": "llm",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 18,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 3,
+    "mode": "feedback",
+    "variant": "both_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "decisions"
+    }
+  },
+  {
+    "seq": 19,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 3,
+    "mode": "feedback",
+    "variant": "baseline",
+    "routing": {
+      "action": "llm",
+      "model": "rule"
+    }
+  },
+  {
+    "seq": 20,
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "repeat": 3,
+    "mode": "feedback",
+    "variant": "action_decisions",
+    "routing": {
+      "action": "decisions",
+      "model": "rule"
+    }
+  }
+]

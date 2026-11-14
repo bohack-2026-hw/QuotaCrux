@@ -700,5 +700,19 @@ window.render = (t) => {
   renderer.render(scene, camera)
 }
 
+// still frames for the slide deck: one replay state, no overlays, chosen camera and background
+window.__still = ({ which = 0, p = 0, cam = null, hot = [], bg = null, h = null }) => {
+  const R = which === 7 ? R7 : R0
+  for (const m of [tube, glow]) m.visible = true
+  drawTube(1)
+  for (const m of [chip, chipGlow, judge, ...discs]) m.visible = false
+  ring.visible = false
+  placeReplay(R, p, null, false)
+  applyHot(new Set(hot))
+  setCam(cam || frame(h || Math.max(20, R.H[Math.floor(p)])))
+  if (bg) { scene.background = new THREE.Color(bg); scene.fog.color = new THREE.Color(bg) }
+  renderer.render(scene, camera)
+}
+
 window.render(0)
 window.ready = true

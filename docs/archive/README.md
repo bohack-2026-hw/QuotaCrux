@@ -10,6 +10,7 @@
 | 主分支整合 | [2026-11-14集成记录](integration-20261114.md) | 记录并行开发线合并的提交与检查 |
 | 反馈对照 | [初版双组方案](feedback-comparison-plan-v1.md) | 保存正式 v2 三模式协议之前的设计 |
 | 经验学习 | [第一至三版结果](memory-learning-results.md) · [PDF](memory-learning-results.pdf) | 保存 groupagg、D 留出和 S 任务流的完整汇总 |
+| 演示文稿第一版 | [项目与技术文稿](presentation-v1/)（PPTX · PDF，`backend/scripts/build_deck.py` 生成） | 2026-11 被 `docs/presentation/slides/` 的新版技术演示取代 |
 | Decisions 探索 | [接口探索与回放](decisions-experiments/README.md)、[原24轮计划](routing-study-plan-v1.md) | 保存初次接口验证和范围调整前的计划 |
 
 历史结果生成脚本 `backend/scripts/write_results.py` 输出到 `memory-learning-results.md`。后续路由实验见[当前入口](../research/native-routing/README.md)。

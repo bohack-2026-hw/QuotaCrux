@@ -1,6 +1,8 @@
 """Build the presentation deck from stored records (no hand-typed results).
 
-    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/presentation/QuotaCrux-technical.pptx]
+    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/archive/presentation-v1/QuotaCrux-technical.pptx]
+
+Archived: the current deck is built from docs/presentation/slides/ (see its README).
 
 Charts follow the dashboard palette (validated with the dataviz validator on #fbf9f4): old snapshot #2a78d6,
 new snapshot #eb6834. Every number on a slide is read from the SQLite store or a comparison summary.
@@ -886,7 +888,7 @@ def build(out: Path, shots: Path) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "QuotaCrux-technical.pptx"))
-    ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "deck" / "shots"))
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "archive" / "presentation-v1" / "QuotaCrux-technical.pptx"))
+    ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "archive" / "presentation-v1" / "deck" / "shots"))
     args = ap.parse_args()
     build(Path(args.out), Path(args.shots))

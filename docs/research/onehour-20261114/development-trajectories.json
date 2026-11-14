@@ -1,0 +1,333 @@
+{
+  "scope": "retained development quality; no final scores or inferred future trajectory",
+  "runs": [
+    {
+      "host": "desktop",
+      "variant": "fixed_small",
+      "run_id": "run-20261114T151033-f2c4",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 27.49,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 66.445,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 114.942,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 182.561,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 261.12,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 273.181,
+          "value": 44120
+        }
+      ]
+    },
+    {
+      "host": "desktop",
+      "variant": "fixed_large",
+      "run_id": "run-20261114T151509-a28c",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 66.086,
+          "value": 46257
+        },
+        {
+          "elapsed_s": 120.489,
+          "value": 46427
+        },
+        {
+          "elapsed_s": 173.793,
+          "value": 46498
+        },
+        {
+          "elapsed_s": 233.844,
+          "value": 46562
+        },
+        {
+          "elapsed_s": 294.111,
+          "value": 46562
+        },
+        {
+          "elapsed_s": 331.887,
+          "value": 46575
+        },
+        {
+          "elapsed_s": 360.205,
+          "value": 46575
+        }
+      ]
+    },
+    {
+      "host": "desktop",
+      "variant": "adaptive_rule",
+      "run_id": "run-20261114T152142-4468",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 49.674,
+          "value": 45374
+        },
+        {
+          "elapsed_s": 114.592,
+          "value": 46426
+        },
+        {
+          "elapsed_s": 192.651,
+          "value": 46729
+        },
+        {
+          "elapsed_s": 255.623,
+          "value": 46749
+        },
+        {
+          "elapsed_s": 303.078,
+          "value": 46799
+        },
+        {
+          "elapsed_s": 338.275,
+          "value": 46855
+        },
+        {
+          "elapsed_s": 360.26,
+          "value": 46855
+        }
+      ]
+    },
+    {
+      "host": "desktop",
+      "variant": "action_decisions",
+      "run_id": "run-20261114T152815-44b8",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 28.487,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 59.442,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 124.153,
+          "value": 46535
+        },
+        {
+          "elapsed_s": 317.41,
+          "value": 46701
+        },
+        {
+          "elapsed_s": 360.801,
+          "value": 46701
+        }
+      ]
+    },
+    {
+      "host": "laptop",
+      "variant": "fixed_small",
+      "run_id": "run-20261114T154219-2648",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 32.026,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 53.272,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 82.095,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 100.15,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 117.272,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 134.082,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 151.129,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 184.304,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 219.16,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 230.33,
+          "value": 44120
+        }
+      ]
+    },
+    {
+      "host": "laptop",
+      "variant": "fixed_large",
+      "run_id": "run-20261114T153547-7844",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 72.435,
+          "value": 45841
+        },
+        {
+          "elapsed_s": 133.033,
+          "value": 46267
+        },
+        {
+          "elapsed_s": 202.022,
+          "value": 46364
+        },
+        {
+          "elapsed_s": 254.224,
+          "value": 46407
+        },
+        {
+          "elapsed_s": 309.806,
+          "value": 46513
+        },
+        {
+          "elapsed_s": 359.887,
+          "value": 46596
+        },
+        {
+          "elapsed_s": 359.887,
+          "value": 46596
+        }
+      ]
+    },
+    {
+      "host": "laptop",
+      "variant": "adaptive_rule",
+      "run_id": "run-20261114T152545-a811",
+      "status": "failed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 41.642,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 53.005,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 102.389,
+          "value": 46233
+        },
+        {
+          "elapsed_s": 201.723,
+          "value": 46510
+        },
+        {
+          "elapsed_s": 284.524,
+          "value": 46510
+        },
+        {
+          "elapsed_s": 304.561,
+          "value": 46510
+        }
+      ]
+    },
+    {
+      "host": "laptop",
+      "variant": "action_decisions",
+      "run_id": "run-20261114T151127-bd8c",
+      "status": "completed",
+      "development_baseline": 44120,
+      "points": [
+        {
+          "elapsed_s": 0,
+          "value": 44120
+        },
+        {
+          "elapsed_s": 25.096,
+          "value": 44187
+        },
+        {
+          "elapsed_s": 43.616,
+          "value": 44281
+        },
+        {
+          "elapsed_s": 104.325,
+          "value": 46403
+        },
+        {
+          "elapsed_s": 194.955,
+          "value": 46898
+        },
+        {
+          "elapsed_s": 250.158,
+          "value": 46898
+        },
+        {
+          "elapsed_s": 291.509,
+          "value": 46898
+        },
+        {
+          "elapsed_s": 335.171,
+          "value": 46898
+        },
+        {
+          "elapsed_s": 360.384,
+          "value": 46898
+        }
+      ]
+    }
+  ]
+}

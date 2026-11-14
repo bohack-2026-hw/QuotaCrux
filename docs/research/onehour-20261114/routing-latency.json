@@ -1,0 +1,150 @@
+{
+  "scope": "Only the two action_decisions cells of the onehour supplement; routing API latency, not end-to-end speedup. Frozen price estimate, not supplier bill.",
+  "hosts": [
+    {
+      "host": "desktop",
+      "run_id": "run-20261114T152815-44b8",
+      "calls": [
+        {
+          "call_id": "run-20261114T152815-44b8/m1",
+          "status": "ok",
+          "latency_s": 4.045,
+          "input_tokens": 4277,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T152815-44b8/m3",
+          "status": "ok",
+          "latency_s": 8.9,
+          "input_tokens": 6460,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T152815-44b8/m5",
+          "status": "ok",
+          "latency_s": 1.432,
+          "input_tokens": 8359,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T152815-44b8/m7",
+          "status": "ok",
+          "latency_s": 1.734,
+          "input_tokens": 10099,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T152815-44b8/m9",
+          "status": "ok",
+          "latency_s": 1.375,
+          "input_tokens": 10208,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T152815-44b8/m11",
+          "status": "ok",
+          "latency_s": 1.018,
+          "input_tokens": 12578,
+          "output_tokens": 0
+        }
+      ],
+      "requests": 6,
+      "successes": 6,
+      "total_latency_s": 18.504,
+      "mean_latency_s": 3.084,
+      "median_latency_s": 1.583,
+      "loop_s": 360.801,
+      "loop_time_fraction": 0.05128588889720373,
+      "routing_cost_usd_estimate": 0.0051981,
+      "choices": {
+        "propose_candidate": 6
+      }
+    },
+    {
+      "host": "laptop",
+      "run_id": "run-20261114T151127-bd8c",
+      "calls": [
+        {
+          "call_id": "run-20261114T151127-bd8c/m1",
+          "status": "ok",
+          "latency_s": 2.631,
+          "input_tokens": 4275,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m3",
+          "status": "ok",
+          "latency_s": 0.666,
+          "input_tokens": 6298,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m5",
+          "status": "ok",
+          "latency_s": 0.893,
+          "input_tokens": 7969,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m7",
+          "status": "ok",
+          "latency_s": 0.711,
+          "input_tokens": 9905,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m9",
+          "status": "ok",
+          "latency_s": 0.793,
+          "input_tokens": 12808,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m11",
+          "status": "ok",
+          "latency_s": 1.307,
+          "input_tokens": 15623,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m13",
+          "status": "ok",
+          "latency_s": 1.948,
+          "input_tokens": 18993,
+          "output_tokens": 0
+        },
+        {
+          "call_id": "run-20261114T151127-bd8c/m15",
+          "status": "ok",
+          "latency_s": 1.124,
+          "input_tokens": 22416,
+          "output_tokens": 0
+        }
+      ],
+      "requests": 8,
+      "successes": 8,
+      "total_latency_s": 10.073,
+      "mean_latency_s": 1.259125,
+      "median_latency_s": 1.0085000000000002,
+      "loop_s": 360.384,
+      "loop_time_fraction": 0.027950741431362103,
+      "routing_cost_usd_estimate": 0.0098287,
+      "choices": {
+        "propose_candidate": 8
+      }
+    }
+  ],
+  "overall": {
+    "requests": 14,
+    "successes": 14,
+    "median_latency_s": 1.341,
+    "mean_latency_s": 2.0412142857142856,
+    "min_latency_s": 0.666,
+    "max_latency_s": 8.9,
+    "total_latency_s": 28.577,
+    "routing_cost_usd_estimate": 0.0150268,
+    "choices": {
+      "propose_candidate": 14
+    }
+  }
+}

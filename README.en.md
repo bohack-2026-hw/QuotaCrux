@@ -126,6 +126,10 @@ Evaluated on 15 hidden final cases under a unified per-run budget (`360s` wall-c
 - **Speed vs. quality trade-off (`Decisions / Decisions`):** Finished **71.2% faster** (`112.9s` vs. `392.0s`) by staying on the small model and calling `finish` early, yielding a smaller `+0.51%` gain — illustrating explicit budget vs. quality trade-offs.
 - **Fixed-Qwen ALE formal ablation (15 runs):** Across `ahc024` and `ahc026`, hosted `Qwen3.8-27B` proposed 96 candidates, with **60/96 (62.5%)** passing dev checks and **15/15** delivered candidates passing final tests.
 
+**Two-host supplement (2026-11-14):** Four strategies were then run once each on laptop and desktop: fixed small, fixed large, rule-based adaptation, and action Decisions. Both fixed-small runs delivered 0% gain; the six runs using the large model gained 5.43%–6.37%. Action Decisions won once and lost once against rule-based adaptation, whose laptop run ended on an API timeout. All eight frozen deliveries passed final validation. See the [supplement report](docs/research/onehour-20261114/README.md) for results and failures, and the [time–quality curves](docs/research/onehour-20261114/quality-time.png).
+
+The added evidence refines the **time, cost, and quality trade-off**. Across 14 Decisions action calls, median latency was 1.34s and estimated routing cost totaled about $0.015, supporting adoption with limited overhead. Every call selected another candidate proposal, and the complete searches still largely used the loop budget; these results do not establish end-to-end acceleration. This batch did not repeat the earlier dual-Decisions early finish, so stable speed/quality modes remain unproven.
+
 ### 2. Exploratory AlgoTune Optimization (`gpt-6.1-sol`, Mac Dev Suite)
 
 Conducted with fixed `gpt-6.1-sol` (`180s` / `5` requests / `3` candidates per episode, `2` dev inputs × `5` timing repeats, final test disabled; speedup measured over paired reference timings):

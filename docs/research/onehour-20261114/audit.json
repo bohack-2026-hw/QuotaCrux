@@ -1,0 +1,88 @@
+{
+  "planned_cells": 8,
+  "final_passed": 8,
+  "research_completed": 7,
+  "research_api_failed": 1,
+  "additional_interrupted_attempts": 1,
+  "recorded_requests": 88,
+  "unmatched_started_requests": 1,
+  "model_candidates_proposed": 48,
+  "model_candidates_dev_passed": 42,
+  "per_run": [
+    {
+      "host": "desktop",
+      "run_id": "run-20261114T151033-f2c4",
+      "final_score": 131864,
+      "final_cases": 15,
+      "model_requests": 14,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "desktop",
+      "run_id": "run-20261114T151509-a28c",
+      "final_score": 139414,
+      "final_cases": 15,
+      "model_requests": 7,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "desktop",
+      "run_id": "run-20261114T152142-4468",
+      "final_score": 140262,
+      "final_cases": 15,
+      "model_requests": 9,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "desktop",
+      "run_id": "run-20261114T152815-44b8",
+      "final_score": 139532,
+      "final_cases": 15,
+      "model_requests": 12,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "laptop",
+      "run_id": "run-20261114T151127-bd8c",
+      "final_score": 140223,
+      "final_cases": 15,
+      "model_requests": 16,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "laptop",
+      "run_id": "run-20261114T152545-a811",
+      "final_score": 139020,
+      "final_cases": 15,
+      "model_requests": 8,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "laptop",
+      "run_id": "run-20261114T153547-7844",
+      "final_score": 139123,
+      "final_cases": 15,
+      "model_requests": 6,
+      "candidate_hashes_verified": true
+    },
+    {
+      "host": "laptop",
+      "run_id": "run-20261114T154219-2648",
+      "final_score": 131864,
+      "final_cases": 15,
+      "model_requests": 15,
+      "candidate_hashes_verified": true
+    }
+  ],
+  "archives": {
+    "desktop.tar.gz": {
+      "bytes": 814156,
+      "sha256": "5f5ac0c399c80ba041953b52ba15ff77a28f01ff4fa1a7cda806f22ddd68fcd4"
+    },
+    "laptop.tar.gz": {
+      "bytes": 854028,
+      "sha256": "0ca807abeff001aa2be5532f704fad5c0516dd018013457e4fb067f2dd045ec6"
+    }
+  },
+  "max_loop_overrun_s": 0.801
+}

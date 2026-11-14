@@ -1,0 +1,225 @@
+{
+  "checked_at": "2026-11-14T23:09:28.802811+08:00",
+  "comparisons": [
+    {
+      "kind": "candidate",
+      "laptop": {
+        "id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+        "os": "linux",
+        "architecture": "amd64",
+        "rootfs": {
+          "Type": "layers",
+          "Layers": [
+            "sha256:dd57f90311a2567b55ff22eeacff1602fd04ad7566e315957731359eab173b90",
+            "sha256:3dc3efdf011007403514ffd3b699da9deef847535ae30a3639ef3fee93c1375e",
+            "sha256:96a69f98ae076bdff5264720ee922820291d658c6a2df97f7c4899864ceb7ea8",
+            "sha256:340931a1d98607a7f1319082179f82ba477f1a1de6e3ecf2ea11f4cc0fe454c3",
+            "sha256:15fc4b846a360fedf26eda23960aeec50900901e7279ae979e3e88cbc2ec7cbc",
+            "sha256:613daf5e32e543041a9aef1a77b488d0eb3d16f7d40dbf124203e34c26702384",
+            "sha256:738675639d9c6807019460e3a89d0523d66f542ee1a4e029dc89e8f1069c9391"
+          ]
+        },
+        "config_sha256": "12f3607e14ff9c93a1d61193e8b427d34abcc33e7ec7d3037f0828b9d7e02b3d",
+        "config_keys": [
+          "Cmd",
+          "Env",
+          "User",
+          "WorkingDir"
+        ],
+        "config_env_keys": [
+          "PATH",
+          "LANG",
+          "GPG_KEY",
+          "PYTHON_VERSION",
+          "PYTHON_SHA256"
+        ],
+        "config_non_env": {
+          "User": "65534:65534",
+          "Cmd": [
+            "python3"
+          ],
+          "WorkingDir": "/work"
+        },
+        "labels_keys": []
+      },
+      "desktop": {
+        "id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+        "os": "linux",
+        "architecture": "amd64",
+        "rootfs": {
+          "Type": "layers",
+          "Layers": [
+            "sha256:dd57f90311a2567b55ff22eeacff1602fd04ad7566e315957731359eab173b90",
+            "sha256:3dc3efdf011007403514ffd3b699da9deef847535ae30a3639ef3fee93c1375e",
+            "sha256:96a69f98ae076bdff5264720ee922820291d658c6a2df97f7c4899864ceb7ea8",
+            "sha256:340931a1d98607a7f1319082179f82ba477f1a1de6e3ecf2ea11f4cc0fe454c3",
+            "sha256:b5b9a66f17c12be7d7bebaee115d6533c48cbb69ba738ac1408ed850c1b216b0",
+            "sha256:a597657e675aaec45797d2d8cc2b4f6f11622c1afe458915d072da370abf5d62",
+            "sha256:1a88598381f152a9149108477bc2eab355726e2597f9f6170735750f8727a8dc"
+          ]
+        },
+        "config_sha256": "12f3607e14ff9c93a1d61193e8b427d34abcc33e7ec7d3037f0828b9d7e02b3d",
+        "config_keys": [
+          "Cmd",
+          "Env",
+          "User",
+          "WorkingDir"
+        ],
+        "config_env_keys": [
+          "PATH",
+          "LANG",
+          "GPG_KEY",
+          "PYTHON_VERSION",
+          "PYTHON_SHA256"
+        ],
+        "config_non_env": {
+          "User": "65534:65534",
+          "Cmd": [
+            "python3"
+          ],
+          "WorkingDir": "/work"
+        },
+        "labels_keys": []
+      },
+      "same_rootfs": false,
+      "same_config": true,
+      "different_config_keys": [],
+      "same_os_arch": true,
+      "different_layers": [
+        {
+          "index_1based": 5,
+          "laptop": "sha256:15fc4b846a360fedf26eda23960aeec50900901e7279ae979e3e88cbc2ec7cbc",
+          "desktop": "sha256:b5b9a66f17c12be7d7bebaee115d6533c48cbb69ba738ac1408ed850c1b216b0"
+        },
+        {
+          "index_1based": 6,
+          "laptop": "sha256:613daf5e32e543041a9aef1a77b488d0eb3d16f7d40dbf124203e34c26702384",
+          "desktop": "sha256:a597657e675aaec45797d2d8cc2b4f6f11622c1afe458915d072da370abf5d62"
+        },
+        {
+          "index_1based": 7,
+          "laptop": "sha256:738675639d9c6807019460e3a89d0523d66f542ee1a4e029dc89e8f1069c9391",
+          "desktop": "sha256:1a88598381f152a9149108477bc2eab355726e2597f9f6170735750f8727a8dc"
+        }
+      ],
+      "runtime_probe": {
+        "checked_at": "2026-11-14T15:12:13.525188+00:00",
+        "execution_constraints": {
+          "network": "none",
+          "read_only": true,
+          "cpus": 0.1,
+          "remove_on_exit": true
+        },
+        "laptop": {
+          "harness_bytes": 1414,
+          "harness_path": "/opt/routeevo/harness.py",
+          "harness_sha256": "1a94f4538d6aa82d55d979b3763a86e0e960370f586b704f34598989f8f3d444",
+          "python_version": "3.12.16"
+        },
+        "desktop": {
+          "harness_bytes": 1414,
+          "harness_path": "/opt/routeevo/harness.py",
+          "harness_sha256": "1a94f4538d6aa82d55d979b3763a86e0e960370f586b704f34598989f8f3d444",
+          "python_version": "3.12.16"
+        },
+        "same_python_version": true,
+        "same_harness_bytes": true,
+        "source_commit": "912b20a",
+        "source_harness_sha256": "1a94f4538d6aa82d55d979b3763a86e0e960370f586b704f34598989f8f3d444",
+        "laptop_matches_source": true,
+        "desktop_matches_source": true
+      }
+    },
+    {
+      "kind": "judge",
+      "laptop": {
+        "id": "sha256:436314dd37dccd5f80e1582997a573415acfa1325eebb8496e1b35fa3cdddb2f",
+        "os": "linux",
+        "architecture": "amd64",
+        "rootfs": {
+          "Type": "layers",
+          "Layers": [
+            "sha256:dd57f90311a2567b55ff22eeacff1602fd04ad7566e315957731359eab173b90",
+            "sha256:3dc3efdf011007403514ffd3b699da9deef847535ae30a3639ef3fee93c1375e",
+            "sha256:96a69f98ae076bdff5264720ee922820291d658c6a2df97f7c4899864ceb7ea8",
+            "sha256:340931a1d98607a7f1319082179f82ba477f1a1de6e3ecf2ea11f4cc0fe454c3",
+            "sha256:3037fd678a303d1fe9910a64ff70cfc69506521e8ece42df033bcf9131cdf312",
+            "sha256:72b0f2c99c813cfeed4c0fc5646b16d5c9fd852fb7b75efcc5ede26722f18a34",
+            "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+            "sha256:202b1da3a82180adaff5e4aceb66c0e2f444132dae010dbbbbd32cbd19a81262",
+            "sha256:bd3a9588661c6e19225a5ed8f284af7f3b494e074aefa4e4ddcf63d96107f24e",
+            "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+          ]
+        },
+        "config_sha256": "44cd9478d171655572c5e52d874029c954b5ae4f27284a2dd4dcff9761266c77",
+        "config_keys": [
+          "Cmd",
+          "Env",
+          "User",
+          "WorkingDir"
+        ],
+        "config_env_keys": [
+          "PATH",
+          "LANG",
+          "GPG_KEY",
+          "PYTHON_VERSION",
+          "PYTHON_SHA256"
+        ],
+        "config_non_env": {
+          "User": "65534:65534",
+          "Cmd": [
+            "python3"
+          ],
+          "WorkingDir": "/tmp"
+        },
+        "labels_keys": []
+      },
+      "desktop": {
+        "id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76",
+        "os": "linux",
+        "architecture": "amd64",
+        "rootfs": {
+          "Type": "layers",
+          "Layers": [
+            "sha256:dd57f90311a2567b55ff22eeacff1602fd04ad7566e315957731359eab173b90",
+            "sha256:3dc3efdf011007403514ffd3b699da9deef847535ae30a3639ef3fee93c1375e",
+            "sha256:96a69f98ae076bdff5264720ee922820291d658c6a2df97f7c4899864ceb7ea8",
+            "sha256:340931a1d98607a7f1319082179f82ba477f1a1de6e3ecf2ea11f4cc0fe454c3",
+            "sha256:3037fd678a303d1fe9910a64ff70cfc69506521e8ece42df033bcf9131cdf312",
+            "sha256:72b0f2c99c813cfeed4c0fc5646b16d5c9fd852fb7b75efcc5ede26722f18a34",
+            "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+            "sha256:202b1da3a82180adaff5e4aceb66c0e2f444132dae010dbbbbd32cbd19a81262",
+            "sha256:bd3a9588661c6e19225a5ed8f284af7f3b494e074aefa4e4ddcf63d96107f24e",
+            "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+          ]
+        },
+        "config_sha256": "44cd9478d171655572c5e52d874029c954b5ae4f27284a2dd4dcff9761266c77",
+        "config_keys": [
+          "Cmd",
+          "Env",
+          "User",
+          "WorkingDir"
+        ],
+        "config_env_keys": [
+          "PATH",
+          "LANG",
+          "GPG_KEY",
+          "PYTHON_VERSION",
+          "PYTHON_SHA256"
+        ],
+        "config_non_env": {
+          "User": "65534:65534",
+          "Cmd": [
+            "python3"
+          ],
+          "WorkingDir": "/tmp"
+        },
+        "labels_keys": []
+      },
+      "same_rootfs": true,
+      "same_config": true,
+      "different_config_keys": [],
+      "same_os_arch": true
+    }
+  ]
+}

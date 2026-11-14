@@ -1,0 +1,9 @@
+﻿host,seq,variant,run_id,status,final_status,final_score,c0_final_score,gain_score,gain_percent,loop_s,total_s,requests,small_requests,large_requests,routing_requests,candidates_passed,candidates_proposed,candidate_valid_rate,CNY_known,CNY_status,CNY_unknown_ledgers,USD_known,USD_status,USD_unknown_ledgers,unpriced_model_ledgers,unmatched_started_calls,stop_reason,warnings
+desktop,1,fixed_small,run-20261114T151033-f2c4,completed,completed,131864,131864,0,0.0,273.181,276.193,14,14,0,0,3,5,0.6,0.787047,estimated,0,0,no_model_calls,0,0,0,agent_finished,
+desktop,2,fixed_large,run-20261114T151509-a28c,completed,completed,139414,131864,7550,5.725596068676818,360.205,392.946,7,0,7,0,6,6,1.0,0,no_model_calls,0,0.251606,partial,1,0,0,budget_exhausted,
+desktop,3,adaptive_rule,run-20261114T152142-4468,completed,completed,140262,131864,8398,6.368682885397075,360.26,392.97,9,3,6,0,6,6,1.0,0.091422,estimated,0,0.265076,partial,1,0,0,budget_exhausted,
+desktop,4,action_decisions,run-20261114T152815-44b8,completed,completed,139532,131864,7668,5.8150822059091185,360.801,393.085,12,2,4,6,4,4,1.0,0.057465,estimated,0,0.0989221,partial,1,0,0,budget_exhausted,
+laptop,1,action_decisions,run-20261114T151127-bd8c,completed,completed,140223,131864,8359,6.339106958684705,360.384,393.255,16,2,6,8,6,7,0.8571428571428571,0.054234,estimated,0,0.3024987,partial,1,0,0,budget_exhausted,
+laptop,2,adaptive_rule,run-20261114T152545-a811,failed,completed,139020,131864,7156,5.426803373172359,304.561,336.653,8,3,5,0,2,5,0.4,0.074976,estimated,0,0.155424,partial,1,0,0,model_api_error,
+laptop,3,fixed_large,run-20261114T153547-7844,completed,completed,139123,131864,7259,5.5049141539768245,359.887,392.193,6,0,6,0,6,6,1.0,0,no_model_calls,0,0.251572,estimated,0,0,0,budget_exhausted,
+laptop,4,fixed_small,run-20261114T154219-2648,completed,completed,131864,131864,0,0.0,230.33,233.394,15,15,0,0,9,9,1.0,0.691455,estimated,0,0,no_model_calls,0,0,0,agent_finished,

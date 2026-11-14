@@ -71,8 +71,8 @@ class RoutingConfig:
     model: str = "rule"
 
     def __post_init__(self):
-        if self.action not in ("llm", "decisions") or self.model not in ("rule", "decisions"):
-            raise ValueError("routing requires action=llm|decisions and model=rule|decisions")
+        if self.action not in ("llm", "decisions", "jev") or self.model not in ("rule", "decisions", "jev"):
+            raise ValueError("routing requires action=llm|decisions|jev and model=rule|decisions|jev")
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -80,7 +80,7 @@ class RoutingConfig:
 
 @dataclass(frozen=True)
 class ModelConfig:
-    provider: str  # "openai_responses" | "chat_compat" | "openai_decisions" | "scripted"
+    provider: str  # "openai_responses" | "chat_compat" | "openai_decisions" | "typesafe_jev" | "scripted"
     model: str
     role: str  # "small" | "large" | "router_action" | "router_model"
     base_url: str | None = None

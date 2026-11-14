@@ -11,7 +11,9 @@ from test_routing import harness
 
 NONDEFAULT_ROUTING = [config.RoutingConfig("decisions", "rule"),
                       config.RoutingConfig("llm", "decisions"),
-                      config.RoutingConfig("decisions", "decisions")]
+                      config.RoutingConfig("decisions", "decisions"),
+                      config.RoutingConfig("jev", "rule"), config.RoutingConfig("llm", "jev"),
+                      config.RoutingConfig("jev", "jev")]
 
 
 @pytest.mark.parametrize("selection", NONDEFAULT_ROUTING)
@@ -34,7 +36,7 @@ def execute(harness, **options):
 
 
 @pytest.mark.parametrize("role", ["small", "large"])
-@pytest.mark.parametrize("model_router", ["rule", "decisions"])
+@pytest.mark.parametrize("model_router", ["rule", "decisions", "jev"])
 def test_fixed_model_skips_initial_router_paid_model_router_and_upgrade(harness, role, model_router):
     rep = execute(harness, router=True, fixed_model=role, routing=config.RoutingConfig("llm", model_router))
     assert rep["status"] == "completed" and rep["stop_reason"] == "agent_finished"
@@ -60,9 +62,10 @@ def test_fixed_model_retains_requested_action_decisions_without_model_decision_c
     assert ledger["input_tokens"] == 300 and ledger["cost_usd"] == pytest.approx(0.00003)
 
 
-def test_legacy_model_decisions_gets_first_choice_even_with_empty_memory(harness):
+@pytest.mark.parametrize("provider", ["decisions", "jev"])
+def test_legacy_model_decisions_gets_first_choice_even_with_empty_memory(harness, provider):
     harness.model_choice = "small"
-    rep = execute(harness, router=True, routing=config.RoutingConfig("llm", "decisions"))
+    rep = execute(harness, router=True, routing=config.RoutingConfig("llm", provider))
     assert rep["status"] == "completed" and rep["stop_reason"] == "agent_finished"
     assert rep["config"]["router"]["version"] == "off"
     assert [call["role"] for call in harness.calls] == ["small"] * 3

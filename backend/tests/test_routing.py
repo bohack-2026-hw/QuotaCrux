@@ -57,7 +57,7 @@ def harness(monkeypatch):
             return ({r: Client(r) for r in ("small", "large")},
                     {r: config.ModelConfig("scripted", f"scripted-{r}", r) for r in ("small", "large")})
 
-        def decide(self, evidence, questions, timeout_s):
+        def decide(self, evidence, questions, timeout_s, *, model=None):
             q = questions[0]
             self.decisions.append({"evidence": evidence, "question": q})
             if self.stop_after_route:
@@ -71,7 +71,7 @@ def harness(monkeypatch):
                        "probabilities": [{"value": c["value"], "probability": float(c["value"] == choice)}
                                          for c in q["choices"]]}]
             return LLMResult(True, json.dumps(answer), Usage(100, 0, 0, 0, 0, "reported"), 0.1,
-                             model_returned=routing.openai_decisions.MODEL,
+                             model_returned=model or routing.openai_decisions.MODEL,
                              request_body={"questions": questions}, response_body={"answers": answer})
 
         def run(self, action="llm", model="rule", **limits):
@@ -84,6 +84,7 @@ def harness(monkeypatch):
     h = Harness()
     monkeypatch.setattr(runner, "_make_clients", h.clients)
     monkeypatch.setattr(routing.openai_decisions, "decide", h.decide)
+    monkeypatch.setattr(routing.typesafe_jev, "decide", h.decide)
     return h
 
 
@@ -92,6 +93,11 @@ def harness(monkeypatch):
     ("decisions", "rule", ["small", "small"], 3),
     ("llm", "decisions", ["large", "large", "large"], 1),
     ("decisions", "decisions", ["large", "large"], 4),
+    ("jev", "rule", ["small", "small"], 3),
+    ("llm", "jev", ["large", "large", "large"], 1),
+    ("jev", "jev", ["large", "large"], 4),
+    ("jev", "decisions", ["large", "large"], 4),
+    ("decisions", "jev", ["large", "large"], 4),
 ])
 def test_four_routes_keep_evaluator_and_account_for_every_call(harness, action, model, roles, routing_requests):
     rep = harness.run(action, model)
@@ -108,9 +114,11 @@ def test_four_routes_keep_evaluator_and_account_for_every_call(harness, action, 
         for s in route_steps]
     ledger = rep["usage"]["by_purpose"]["routing"]
     assert ledger["input_tokens"] == routing_requests * 100
-    assert ledger["cost_usd"] == pytest.approx(routing_requests * 0.00001)
+    jev_requests = (3 if action == "jev" else 0) + (1 if model == "jev" else 0)
+    assert ledger["cost_usd"] == pytest.approx(round((routing_requests - jev_requests) * 0.00001
+                                                    + jev_requests * 0.0000042, 6))
     assert rep["experience"]["published_snapshot_id"] is None
-    if action == "decisions":
+    if action in ("decisions", "jev"):
         assert all(c["schema"]["properties"]["action"]["enum"] == ["propose_candidate"] for c in harness.calls)
 
 
@@ -122,17 +130,19 @@ def test_decisions_model_router_can_stay_small_after_two_misses(harness):
     assert rep["iterations"]["routing_requests"] == 3
 
 
-def test_direct_actions_do_not_call_generation_or_model_router(harness):
+@pytest.mark.parametrize("provider", ["decisions", "jev"])
+def test_direct_actions_do_not_call_generation_or_model_router(harness, provider):
     harness.action_choices = ["profile_candidate:c0", "run_validation:c0", "finish"]
-    rep = harness.run("decisions", "decisions")
+    rep = harness.run(provider, provider)
     assert rep["iterations"]["evidence_calls"] == 1
     assert rep["iterations"]["routing_requests"] == 3
     assert not harness.calls
     assert {d["question"]["name"] for d in harness.decisions} == {"action"}
 
 
-def test_model_route_reserves_a_generation_request(harness):
-    rep = harness.run(model="decisions", max_model_requests=1)
+@pytest.mark.parametrize("provider", ["decisions", "jev"])
+def test_model_route_reserves_a_generation_request(harness, provider):
+    rep = harness.run(model=provider, max_model_requests=1)
     assert rep["stop_reason"] == "budget_exhausted"
     assert not harness.calls and not harness.decisions
 
@@ -167,9 +177,10 @@ def test_generator_cannot_override_selected_action(harness):
 
 
 @pytest.mark.parametrize("error,count,status", [("timeout", 2, "unknown"), ("config", 1, "not_applicable")])
-def test_decision_failures_are_recorded_without_generator_fallback(harness, error, count, status):
+@pytest.mark.parametrize("provider", ["decisions", "jev"])
+def test_decision_failures_are_recorded_without_generator_fallback(harness, error, count, status, provider):
     harness.decision_error = error
-    rep = harness.run(model="decisions")
+    rep = harness.run(model=provider)
     assert rep["status"] == "failed" and rep["stop_reason"] == "model_api_error"
     assert rep["iterations"]["routing_requests"] == count and not harness.calls
     assert rep["usage"]["by_purpose"]["routing"]["cost_status"] == status
@@ -225,7 +236,8 @@ def test_ablation_stops_and_saves_failed_run(harness):
     assert json.loads(Path(result["artifact"]).read_text())["status"] == "failed"
 
 
-def test_api_accepts_routing_choices_and_rejects_unknown_ones(harness, monkeypatch):
+@pytest.mark.parametrize("provider", ["decisions", "jev"])
+def test_api_accepts_routing_choices_and_rejects_unknown_ones(harness, monkeypatch, provider):
     from fastapi.testclient import TestClient
     from quotacrux import api
 
@@ -239,11 +251,17 @@ def test_api_accepts_routing_choices_and_rejects_unknown_ones(harness, monkeypat
     monkeypatch.setattr(api, "threading", SimpleNamespace(Thread=InlineThread))
     harness.action_choices = ["finish"]
     with TestClient(api.app) as client:
-        body = {"task_id": harness.task.task_id, "snapshot_id": "v0", "action_router": "decisions", "model_router": "decisions"}
+        body = {"task_id": harness.task.task_id, "snapshot_id": "v0", "action_router": provider, "model_router": provider}
         assert client.post("/api/runs", json={**body, "action_router": "unknown"}).status_code == 422
         response = client.post("/api/runs", json=body)
         assert response.status_code == 202
         rep = client.get(f"/api/runs/{response.json()['run_id']}").json()
         assert rep["status"] == "completed" and rep["iterations"]["routing_requests"] == 1
-        assert rep["config"]["routing"]["action"] == "decisions"
-        assert rep["config"]["routing"]["model"] == "decisions"
+        assert rep["config"]["routing"]["action"] == provider
+        assert rep["config"]["routing"]["model"] == provider
+        assert f"--action-router {provider}" in rep["reproduce"]["run_again"]
+        if provider == "jev":
+            assert rep["config"]["routing"]["jev_model"] == "jev-1.14.0"
+            call = db.one("SELECT * FROM model_calls WHERE run_id = ?", (rep["run_id"],))
+            assert call["provider"] == "typesafe_jev" and call["model_returned"] == "jev-1.14.0"
+            assert call["price_version"] == routing.typesafe_jev.PRICE_VERSION

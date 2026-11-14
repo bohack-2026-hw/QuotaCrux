@@ -13,6 +13,8 @@ os.environ["QUOTACRUX_NO_DOTENV"] = "1"
 os.environ["OPENAI_API_KEY"] = "test-no-network"
 os.environ["OPENAI_BASE_URL"] = "http://127.0.0.1:9/v1"
 os.environ["QWEN_BASE_URL"] = "http://127.0.0.1:9/v1"
+os.environ["TYPESAFE_API_KEY"] = "test-no-network"
+os.environ["TYPESAFE_MODEL"] = "jev-1.14.0"
 
 
 def docker_available() -> bool:

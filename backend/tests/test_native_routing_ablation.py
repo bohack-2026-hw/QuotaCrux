@@ -10,6 +10,7 @@ from quotacrux import config, db, evaluator, routing_ablation
 from quotacrux.agent import runner
 from quotacrux.benchmarks import ale, algotune, native
 from test_routing import harness
+from test_research_protocol import score_task
 
 
 @pytest.mark.parametrize("family,metric", [("ale-bench", "score"), ("algotune", "speedup")])
@@ -76,3 +77,28 @@ def test_invalid_adaptive_protocol_is_rejected_before_clients(harness, monkeypat
     with pytest.raises(ValueError):
         runner.Runner(runner.RunOptions(task_id=harness.task.task_id, mode="eval", snapshot_id=snapshot,
             research_mode=mode, research_model_policy="adaptive", fixed_model=fixed))
+
+
+def test_native_adaptive_jev_keeps_final_private_and_uses_native_menu(harness, score_task, monkeypatch):
+    def evaluate(task, code, dataset, measure, limits, *, run_id, candidate_id, **kwargs):
+        value = 10 + int(candidate_id[1:])
+        ev = evaluator.Evaluation(uuid.uuid4().hex[:12], task.task_id, dataset, "passed", True, True, True,
+            value > 10, value > 10, None, None, None,
+            detail={"objective": {"metric": "score", "direction": "maximize", "value": value, "baseline": 10}})
+        return native.persist(task, ev, code, db.now(), time.perf_counter(), run_id, candidate_id)
+
+    monkeypatch.setattr(evaluator, "evaluate", evaluate)
+    run = runner.Runner(runner.RunOptions(task_id=score_task.task_id, snapshot_id="v0",
+        research_mode="feedback", research_model_policy="adaptive", routing=config.RoutingConfig("jev", "jev"),
+        limits=replace(config.RunLimits(), max_model_requests=8)))
+    run.create()
+    rep = run.execute()
+    assert rep["status"] == "completed" and rep["stop_reason"] == "agent_finished"
+    assert rep["iterations"]["routing_requests"] == 4 and rep["iterations"]["generation_requests"] == 2
+    assert rep["iterations"]["upgrades"] == 1 and rep["outcome"]["final_correct"]
+    assert rep["best_candidate"]["candidate_id"] == "c2"
+    for decision in harness.decisions:
+        assert "private sentinel" not in json.dumps(decision)
+        assert decision["evidence"]["objective"]["metric"] == "score"
+        assert decision["evidence"]["objective"]["direction"] == "maximize"
+        assert not any(c["value"].startswith("profile_candidate") for c in decision["question"]["choices"])

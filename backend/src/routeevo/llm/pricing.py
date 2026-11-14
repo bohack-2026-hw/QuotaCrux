@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from urllib.parse import urlsplit
+
 from .base import Usage
 
 PRICE_TABLES = {
@@ -33,7 +35,8 @@ def price_version_for(provider: str, model: str) -> str | None:
 NOT_BILLED_ERRORS = {"config", "http_4xx", "rate_limit"}
 
 
-def estimate_cost(provider: str, model: str, usage: Usage, request_sent: bool) -> tuple[float | None, str, str | None]:
+def estimate_cost(provider: str, model: str, usage: Usage, request_sent: bool,
+                  *, base_url: str | None = None) -> tuple[float | None, str, str | None]:
     """Return (cost_usd, cost_status, price_version).
 
     cost_status: estimated | unknown | not_billed | local_no_api_fee | not_applicable.
@@ -42,8 +45,12 @@ def estimate_cost(provider: str, model: str, usage: Usage, request_sent: bool) -
     if provider == "scripted":
         return 0.0, "not_applicable", None
     if provider == "chat_compat":
-        # Self-hosted Qwen: no API fee; machine cost is not accounted and is reported as unknown separately.
-        return 0.0, "local_no_api_fee", None
+        if not request_sent:
+            return 0.0, "not_billed", None
+        # Hosted compatible APIs do not inherit the local service's zero-API-fee assumption.
+        if urlsplit(base_url or "").hostname in ("localhost", "127.0.0.1", "::1"):
+            return 0.0, "local_no_api_fee", None
+        return None, "unknown", None
     version = price_version_for(provider, model)
     if version is None:
         return None, "unknown", None

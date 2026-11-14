@@ -48,4 +48,11 @@ def test_cost_estimate_and_unknowns():
     assert cost == pytest.approx((8_000 * 2 + 2_000 * 0.1 + 30_000 * 10) / 1e6)
     assert estimate_cost("openai_responses", "gpt-6.1-sol", Usage(), request_sent=True)[:2] == (None, "unknown")
     assert estimate_cost("openai_responses", "gpt-6.1-sol", Usage(), request_sent=False)[:2] == (0.0, "not_billed")
-    assert estimate_cost("chat_compat", "qwen", Usage(), request_sent=True)[1] == "local_no_api_fee"
+    assert estimate_cost("chat_compat", "qwen", Usage(), request_sent=True,
+                         base_url="http://127.0.0.1:11434/v1")[1] == "local_no_api_fee"
+
+
+def test_hosted_qwen_cost_is_not_reported_as_free():
+    args = ("chat_compat", "Qwen3.8-27B", Usage(input_tokens=100, output_tokens=50, source="reported"))
+    assert estimate_cost(*args, request_sent=True, base_url="https://aiping.cn/api/v1") == (None, "unknown", None)
+    assert estimate_cost(*args, request_sent=False, base_url="https://aiping.cn/api/v1") == (0.0, "not_billed", None)

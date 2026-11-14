@@ -278,7 +278,8 @@ def cmd_probe(args) -> None:
     print(f"probing {args.role}: {cfg.provider} {cfg.model} effort={cfg.reasoning_effort} max_output={cfg.max_output_tokens}"
           f" timeout={args.timeout}s", file=sys.stderr)
     res = clients[args.role].complete(prompt.SYSTEM_PROMPT, state, actions.ACTION_SCHEMA, args.timeout, cfg.max_output_tokens)
-    cost, cost_status, version = estimate_cost(cfg.provider, cfg.model, res.usage, res.error_kind not in NOT_BILLED_ERRORS)
+    cost, cost_status, version = estimate_cost(cfg.provider, cfg.model, res.usage,
+                                             res.error_kind not in NOT_BILLED_ERRORS, base_url=cfg.base_url)
     try:
         parsed = actions.parse(res.text or "").action if res.ok else None
     except actions.InvalidAction as exc:

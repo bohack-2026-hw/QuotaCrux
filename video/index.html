@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>QuotaCrux 枢决 · video</title>
+<script type="importmap">{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }</script>
+<style>
+  :root { --bg: #F3F2EE; --ink: #111113; --grey: #8E8D88; --line: #D8D6CF; --accent: #FF4D1F; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink);
+    font-family: "PingFang SC", sans-serif; }
+  #gl { position: absolute; inset: 0; }
+  .layer { position: absolute; inset: 0; pointer-events: none; }
+  .latin { font-family: "Avenir Next", sans-serif; }
+  #title { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); }
+  #title svg { position: absolute; inset: 0; }
+  #title .name { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 210px; letter-spacing: -6px; line-height: 1; }
+  #title .cn { font-size: 96px; font-weight: 600; letter-spacing: 18px; margin-top: 18px; }
+  #sub { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); max-width: 1500px; text-align: center;
+    font-size: 44px; font-weight: 600; line-height: 1.45; padding: 14px 36px; border-radius: 16px;
+    background: rgba(243, 242, 238, 0.86); box-shadow: 0 2px 0 rgba(17, 17, 19, 0.06); }
+  #hud { position: absolute; right: 72px; top: 60px; text-align: right; }
+  #hud .k { font-size: 30px; font-weight: 600; color: var(--grey); }
+  #hud .v { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 120px; line-height: 1; letter-spacing: -3px; }
+  #tag { position: absolute; left: 72px; top: 56px; padding: 10px 18px 14px; border-radius: 14px; background: rgba(243, 242, 238, 0.82); }
+  #tag .k { font-size: 30px; font-weight: 600; color: var(--accent); }
+  #tag .v { font-size: 64px; font-weight: 600; line-height: 1.2; }
+</style>
+</head>
+<body>
+<canvas id="gl" width="1920" height="1080"></canvas>
+<div class="layer" id="title"></div>
+<div class="layer"><div id="tag"></div><div id="hud"></div><div id="sub"></div></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

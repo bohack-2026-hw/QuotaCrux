@@ -1,0 +1,311 @@
+{
+  "status": "assumption_based_desktop_scenarios",
+  "paid_pilot_requests": 0,
+  "scope": "desktop ahc026 only; Mac timing and workload estimates remain pending #4",
+  "role_request_mix_per_episode": {
+    "baseline": {
+      "small": 2,
+      "large": 18,
+      "decisions": 0
+    },
+    "action_decisions": {
+      "small": 2,
+      "large": 8,
+      "decisions": 10
+    },
+    "model_decisions": {
+      "small": 1,
+      "large": 17,
+      "decisions": 2
+    },
+    "both_decisions": {
+      "small": 1,
+      "large": 8,
+      "decisions": 11
+    }
+  },
+  "scenarios": [
+    {
+      "name": "reference_budget_fill",
+      "scope": "desktop ALE 12 episodes",
+      "role_requests": {
+        "small": 18,
+        "large": 153,
+        "decisions": 69
+      },
+      "per_call_assumptions": {
+        "small": {
+          "input_tokens": 15000,
+          "output_tokens": 2000,
+          "latency_s": 25
+        },
+        "large": {
+          "input_tokens": 15000,
+          "output_tokens": 2000,
+          "latency_s": 40
+        },
+        "decisions": {
+          "input_tokens": 15000,
+          "output_tokens": 0,
+          "latency_s": 1.5
+        }
+      },
+      "estimated_tokens_by_model": {
+        "small": {
+          "input_tokens": 270000,
+          "output_tokens": 36000
+        },
+        "large": {
+          "input_tokens": 2295000,
+          "output_tokens": 306000
+        },
+        "decisions": {
+          "input_tokens": 1035000,
+          "output_tokens": 0
+        }
+      },
+      "estimated_cost_by_currency": {
+        "CNY": 1.242,
+        "USD": 7.753500000000001
+      },
+      "estimated_episode_s_by_variant": {
+        "baseline": 842.0,
+        "action_decisions": 457.0,
+        "model_decisions": 780.0,
+        "both_decisions": 433.5
+      },
+      "estimated_serial_wall_clock_s": 7537.5,
+      "per_episode_dev_and_initial_s": 60,
+      "per_episode_final_and_setup_s": 12,
+      "note": "Costs assume all 20 calls in the stated mix; time clips each research loop to 900 seconds. These are planning scenarios, not measured routing predictions or hard monetary caps. Early finish or the time cap can reduce actual calls."
+    },
+    {
+      "name": "longer_generation_budget_fill",
+      "scope": "desktop ALE 12 episodes",
+      "role_requests": {
+        "small": 18,
+        "large": 153,
+        "decisions": 69
+      },
+      "per_call_assumptions": {
+        "small": {
+          "input_tokens": 15000,
+          "output_tokens": 2000,
+          "latency_s": 25
+        },
+        "large": {
+          "input_tokens": 15000,
+          "output_tokens": 6000,
+          "latency_s": 75
+        },
+        "decisions": {
+          "input_tokens": 15000,
+          "output_tokens": 0,
+          "latency_s": 1.5
+        }
+      },
+      "estimated_tokens_by_model": {
+        "small": {
+          "input_tokens": 270000,
+          "output_tokens": 36000
+        },
+        "large": {
+          "input_tokens": 2295000,
+          "output_tokens": 918000
+        },
+        "decisions": {
+          "input_tokens": 1035000,
+          "output_tokens": 0
+        }
+      },
+      "estimated_cost_by_currency": {
+        "CNY": 1.242,
+        "USD": 13.8735
+      },
+      "estimated_episode_s_by_variant": {
+        "baseline": 912,
+        "action_decisions": 737.0,
+        "model_decisions": 912,
+        "both_decisions": 713.5
+      },
+      "estimated_serial_wall_clock_s": 9823.5,
+      "per_episode_dev_and_initial_s": 60,
+      "per_episode_final_and_setup_s": 12,
+      "note": "Costs assume all 20 calls in the stated mix; time clips each research loop to 900 seconds. These are planning scenarios, not measured routing predictions or hard monetary caps. Early finish or the time cap can reduce actual calls."
+    }
+  ],
+  "sources": {
+    "qwen": {
+      "artifact": "ahc026-qwen-observed-usage.json",
+      "requests": 48,
+      "mean_input_tokens": 9416.958333333334,
+      "mean_output_tokens": 1024.7916666666667,
+      "mean_latency_s": 21.4091875
+    },
+    "large": {
+      "runs": [
+        {
+          "run_id": "run-20261113T161733-7c5a",
+          "source": "docs/research/run-20261113T161733-7c5a/report.json",
+          "source_sha256": "549ad9f7e2626b207092959f23652df33793ab29e8b36abfa06cdc4a58f28393",
+          "model": {
+            "base_url": "https://api.openai.com/v1",
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "usage": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 49.496,
+            "input_tokens": 3124,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2123,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 1680,
+            "reasoning_tokens_unknown_calls": 0,
+            "cost_usd": 0.029038,
+            "cost_status": "estimated",
+            "cost_unknown_calls": 0,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "run_id": "run-20261113T162613-8f0a",
+          "source": "docs/research/run-20261113T162613-8f0a/report.json",
+          "source_sha256": "947a707040ed92047dc1006f8102990d9267873fe233f0bbd0ae9e7f5011680a",
+          "model": {
+            "base_url": "https://api.openai.com/v1",
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "usage": {
+            "requests": 2,
+            "ok": 1,
+            "errors": {
+              "timeout": 1
+            },
+            "latency_s": 97.255,
+            "input_tokens": 7579,
+            "input_tokens_unknown_calls": 1,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 1,
+            "output_tokens": 3445,
+            "output_tokens_unknown_calls": 1,
+            "reasoning_tokens": 2981,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": 0.053396,
+            "cost_status": "partial",
+            "cost_unknown_calls": 1,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "run_id": "run-20261113T212515-d6bd",
+          "source": "docs/research/run-20261113T212515-d6bd/report.json",
+          "source_sha256": "be22479e819a10eaf71d2778b1cfd6626b2fbddac5a32f7cb16309241b56a88e",
+          "model": {
+            "base_url": "https://api.openai.com/v1",
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "usage": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 52.214,
+            "input_tokens": 21875,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 2110,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 1479,
+            "reasoning_tokens_unknown_calls": 0,
+            "cost_usd": 0.075784,
+            "cost_status": "estimated",
+            "cost_unknown_calls": 0,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        {
+          "run_id": "run-20261114T023245-a91f",
+          "source": "backend/var/runs/run-20261114T023245-a91f/report.json",
+          "source_sha256": "4c6a21b93bbb340e543fc71b5d59e2cc91bbfe3cc7b57b819c45ac26ba634f38",
+          "model": {
+            "base_url": "https://api.openai.com/v1",
+            "enable_thinking": null,
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "usage": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 29.604,
+            "input_tokens": 3403,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1443,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 1034,
+            "reasoning_tokens_unknown_calls": 0,
+            "cost_usd": 0.022936,
+            "cost_status": "estimated",
+            "cost_unknown_calls": 0,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        }
+      ],
+      "requests": 6,
+      "known_successful_calls": 5,
+      "mean_known_input_tokens": 7196.2,
+      "mean_known_output_tokens": 1824.2,
+      "mean_attempt_latency_s": 38.094833333333334,
+      "limitation": "Same model, endpoint, xhigh and output limit; older groupagg workloads, one timeout with unknown usage."
+    },
+    "decisions": {
+      "artifact": "docs/decision-model/results.json",
+      "requests": 25,
+      "mean_input_tokens": 5806.68,
+      "median_latency_s": 0.8690405919987825,
+      "mean_latency_s": 1.0531053648007218,
+      "limitation": "Historical development replay, not the new native routing workload."
+    }
+  }
+}

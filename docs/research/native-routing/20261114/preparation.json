@@ -1,0 +1,549 @@
+{
+  "status": "prepared_awaiting_execution_preflight",
+  "study": "routing",
+  "plan_id": "routing-native-20261114-v1",
+  "experiment_sha": "e0d23719b97928db0ab7b87de9469a6bf6c3a101",
+  "uv_lock_sha256": "b91e771f5eb0ce21af362e14dc5b7f241c22198d53758e9349b2d9bbcf9ddd35",
+  "mode": "eval",
+  "research_mode": "feedback",
+  "research_model_policy": "adaptive",
+  "snapshot_id": "v0",
+  "fixed_model": null,
+  "initial_memory_router": false,
+  "final_evaluation": true,
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "models": {
+    "small": {
+      "provider": "chat_compat",
+      "model": "Qwen3.8-27B",
+      "role": "small",
+      "base_url": "https://aiping.cn/api/v1",
+      "reasoning_effort": null,
+      "enable_thinking": false,
+      "max_output_tokens": 8192,
+      "temperature": null,
+      "response_format": "json_object",
+      "extra": {}
+    },
+    "large": {
+      "provider": "openai_responses",
+      "model": "gpt-6.1-sol",
+      "role": "large",
+      "base_url": "https://api.openai.com/v1",
+      "reasoning_effort": "xhigh",
+      "enable_thinking": null,
+      "max_output_tokens": 32000,
+      "temperature": null,
+      "response_format": "json_schema",
+      "extra": {}
+    },
+    "decisions": {
+      "provider": "openai_decisions",
+      "model": "gpt-6-luna",
+      "role": "router_action",
+      "base_url": "https://api.openai.com/v1",
+      "reasoning_effort": null,
+      "enable_thinking": null,
+      "max_output_tokens": 0,
+      "temperature": null,
+      "response_format": "json_schema",
+      "extra": {}
+    }
+  },
+  "prompt_hashes_by_task": {
+    "ale-bench-ahc026-formal-20261114-66cd5cc2e0": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab"
+  },
+  "routing_manifest": {
+    "baseline": {
+      "action": "llm",
+      "model": "rule",
+      "version": "routing-adapters-v2",
+      "decision_model": "gpt-6-luna",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "budget_counts": "all routing and generation requests"
+    },
+    "action_decisions": {
+      "action": "decisions",
+      "model": "rule",
+      "version": "routing-adapters-v2",
+      "decision_model": "gpt-6-luna",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "budget_counts": "all routing and generation requests"
+    },
+    "model_decisions": {
+      "action": "llm",
+      "model": "decisions",
+      "version": "routing-adapters-v2",
+      "decision_model": "gpt-6-luna",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "budget_counts": "all routing and generation requests"
+    },
+    "both_decisions": {
+      "action": "decisions",
+      "model": "decisions",
+      "version": "routing-adapters-v2",
+      "decision_model": "gpt-6-luna",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "budget_counts": "all routing and generation requests"
+    }
+  },
+  "price_snapshots": {
+    "small": {
+      "model": "Qwen3.8-27B",
+      "currency": "CNY",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 3,
+      "output_per_1m": 12,
+      "source": "https://aiping.cn/api/v1/models",
+      "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+      "unit_evidence": {
+        "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+        "currency_symbol": "￥",
+        "text_model_price_denominator": "/M"
+      },
+      "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+    },
+    "large": {
+      "model": "gpt-6.1-sol",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 2,
+      "output_per_1m": 10,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+      "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+      "context": "Standard processing; <=272000 input tokens; reasoning tokens included in output."
+    },
+    "decisions": {
+      "model": "gpt-6-luna",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0,
+      "source": "https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability",
+      "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+      "cache_policy": "Standard uncached token estimate; cache reads/writes, discounts and credits are not modeled.",
+      "context": "Short context; explicit caching with no breakpoints, no cache writes requested."
+    }
+  },
+  "price_snapshot_required_fields": [
+    "model",
+    "currency",
+    "source",
+    "retrieved_at",
+    "unit",
+    "input_per_1m",
+    "output_per_1m"
+  ],
+  "price_snapshot_unit": "per_1m_tokens",
+  "tasks": {
+    "ALGOTUNE_CONVOLVE_1D_TASK_ID": {
+      "owner_issue": 4,
+      "host": "mac",
+      "problem": "convolve_1d",
+      "objective": {
+        "metric": "speedup",
+        "direction": "maximize"
+      },
+      "manifest_sha256": null,
+      "package_hashes": null,
+      "seed_manifest_sha256": null,
+      "dev_cases": 5,
+      "final_cases": 15,
+      "environment": null,
+      "measure": null,
+      "calibration_artifact": null,
+      "concurrency": null,
+      "api_in_flight_limit": null
+    },
+    "ale-bench-ahc026-formal-20261114-66cd5cc2e0": {
+      "owner_issue": 3,
+      "host": "desktop",
+      "problem": "ahc026",
+      "objective": {
+        "direction": "maximize",
+        "metric": "score",
+        "min_speedup": null
+      },
+      "manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+      "package_hashes": {
+        "contract": {
+          "bytes": 5837,
+          "file": "contract.txt",
+          "sha256": "f2bc67a6d1eee1ab4e293a8cae9cf9e86553630f1eae433ebc9b6220f7a8bd5e"
+        },
+        "dev_expected": {
+          "bytes": 2,
+          "file": "dev-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "dev_input": {
+          "bytes": 3755,
+          "file": "dev.json",
+          "sha256": "695b38610d4b1d52f168b975b5bfeba85abb26eea917d72535137d643410d32a"
+        },
+        "dev_profile": {
+          "bytes": 328,
+          "file": "dev_profile.json",
+          "sha256": "18df07aba77fef84350ceac75d7c27468a438cd58abc86927a493974b855acc7"
+        },
+        "examples": {
+          "bytes": 2,
+          "file": "examples.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_expected": {
+          "bytes": 2,
+          "file": "final-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_input": {
+          "bytes": 11577,
+          "file": "final.json",
+          "sha256": "6a7bf0b3b274c577b71b6521934f08210098be837c75ba15b890f8955b43ec74"
+        },
+        "initial": {
+          "bytes": 610,
+          "file": "initial.py",
+          "sha256": "d0f96678218cad87053ccf3bdcd3fecc0acfbf49ed0571279dc35f10f1ab06d6"
+        }
+      },
+      "dev_cases": 5,
+      "final_cases": 15,
+      "environment": {
+        "image_tag": "routeevo-sandbox:d055c99c833a",
+        "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+        "docker_server": "29.9.3 linux/amd64",
+        "container_python": "3.12-slim (pinned digest in Dockerfile)",
+        "limits": {
+          "cpus": 1.0,
+          "cpuset_cpus": "4",
+          "memory": "1g",
+          "pids_limit": 64,
+          "network": "none",
+          "read_only_rootfs": true,
+          "user": "65534:65534"
+        },
+        "judge": {
+          "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62",
+          "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76"
+        }
+      },
+      "measure": {
+        "repeats": 5,
+        "function_warmups": 1,
+        "cpus": 1.0,
+        "cpuset_cpus": "4",
+        "memory": "1g",
+        "pids_limit": 64,
+        "max_output_bytes": 67108864,
+        "ready_timeout_s": 30.0
+      },
+      "calibration_artifact": "../../native-formal-20261114/ale/evidence/",
+      "concurrency": 1,
+      "api_in_flight_limit": 1,
+      "binding_source_commit": "540adf6",
+      "planned_root": "/home/hycx233/routeevo-routing-formal-20261114",
+      "source": {
+        "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+        "dataset": "SakanaAI/ALE-Bench",
+        "license": "CC-BY-ND-4.0",
+        "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+      },
+      "selection": {
+        "dev_cases": 5,
+        "final_cases": 15
+      }
+    }
+  },
+  "estimate": {
+    "artifact": "estimate.json",
+    "sha256": "c63f2c4ffd9765cf8295dc29713e879df035c36bd8e67731cf24124294bb93d0",
+    "scope": "desktop ahc026 12 episodes; assumption-based request-budget scenarios; Mac estimate pending #4"
+  },
+  "plan": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 3,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 4,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 5,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 6,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 7,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 8,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 1,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 9,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 10,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 11,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 12,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 13,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 14,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 15,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 16,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 2,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 17,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 18,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 19,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 20,
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 21,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 22,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 23,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 24,
+      "task_id": "ALGOTUNE_CONVOLVE_1D_TASK_ID",
+      "repeat": 3,
+      "mode": "feedback",
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    }
+  ],
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "prompt_version": "agent-prompt-v7"
+}

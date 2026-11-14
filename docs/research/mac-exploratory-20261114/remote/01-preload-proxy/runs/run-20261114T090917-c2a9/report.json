@@ -1,0 +1,576 @@
+{
+  "run_id": "run-20261114T090917-c2a9",
+  "task": {
+    "task_id": "algotune-convolve_1d-remote-lmstudio-short-20261114",
+    "split": "remote-lmstudio-short-20261114",
+    "target_min_speedup": 1.1,
+    "objective": {
+      "metric": "speedup",
+      "direction": "maximize",
+      "min_speedup": 1.1
+    },
+    "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+    "family": "algotune",
+    "presentation": {
+      "title": "AlgoTune · convolve_1d",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": "上游 solve 方法；独立函数计时",
+      "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+    },
+    "dev_params": {
+      "cases": 2
+    },
+    "final_params": {
+      "cases": 1
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+    },
+    "selection": {
+      "dev_cases": 2,
+      "final_cases": 1
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "exploratory-remote-lmstudio-short-20261114 #1 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "recorded_status": "completed",
+  "research_mode": "feedback",
+  "dev_only": true,
+  "stop_reason": "budget_exhausted",
+  "stop_detail": "model_requests: used 3/3",
+  "config_fingerprint": "b5c8b24b966eeeb9",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": false,
+    "dev_validation_passed": false,
+    "dev_improved": false,
+    "best_from_reuse": false,
+    "best_is_initial": true,
+    "final_evaluated": false,
+    "final_status": "disabled",
+    "final_error": null,
+    "final_correct": null,
+    "final_speedup": null,
+    "final_objective": null,
+    "goal_met": false,
+    "valid_artifact": null,
+    "summary": "开发集运行，未启用最终测试；最佳候选 c0 仅有开发验证结果"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "fb78be9195"
+      },
+      "family": "algotune",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c0",
+    "origin": "initial",
+    "parent_candidate_id": null,
+    "code_path": "<VAR_DIR>/runs/run-20261114T090917-c2a9/candidates/c0.py",
+    "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+    "model_call_id": null,
+    "dev_evaluations": [
+      {
+        "evaluation_id": "8a51d4bdf49b",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": null,
+        "goal_met": null,
+        "objective": null,
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0",
+  "run_target_speedup": 1.1,
+  "route": null,
+  "final_evaluation": null,
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "<VAR_DIR>/runs/run-20261114T090917-c2a9/candidates/c0.py",
+      "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "8a51d4bdf49b",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 3,
+    "routing_requests": 0,
+    "generation_requests": 3,
+    "candidates_proposed": 0,
+    "candidates_passed": 0,
+    "candidates_improved": 0,
+    "candidates_no_gain": 0,
+    "candidates_failed": 0,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 3,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "large_model_requests": 0,
+    "small_model_requests": 3,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 3,
+      "ok": 0,
+      "errors": {
+        "bad_response": 3
+      },
+      "latency_s": 1.707,
+      "input_tokens": null,
+      "input_tokens_unknown_calls": 3,
+      "cached_input_tokens": null,
+      "cached_input_tokens_unknown_calls": 3,
+      "output_tokens": null,
+      "output_tokens_unknown_calls": 3,
+      "reasoning_tokens": null,
+      "reasoning_tokens_unknown_calls": 3,
+      "cost_usd": null,
+      "cost_status": "unknown",
+      "cost_unknown_calls": 3,
+      "price_versions": []
+    },
+    "by_model": {
+      "small:chat_compat:qwen3.8-27b-uncensored-mlx": {
+        "requests": 3,
+        "ok": 0,
+        "errors": {
+          "bad_response": 3
+        },
+        "latency_s": 1.707,
+        "input_tokens": null,
+        "input_tokens_unknown_calls": 3,
+        "cached_input_tokens": null,
+        "cached_input_tokens_unknown_calls": 3,
+        "output_tokens": null,
+        "output_tokens_unknown_calls": 3,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 3,
+        "price_versions": []
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 0,
+        "ok": 0,
+        "errors": {},
+        "latency_s": 0,
+        "input_tokens": 0,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.0,
+        "cost_status": "no_model_calls",
+        "cost_unknown_calls": 0,
+        "price_versions": []
+      },
+      "generation": {
+        "requests": 3,
+        "ok": 0,
+        "errors": {
+          "bad_response": 3
+        },
+        "latency_s": 1.707,
+        "input_tokens": null,
+        "input_tokens_unknown_calls": 3,
+        "cached_input_tokens": null,
+        "cached_input_tokens_unknown_calls": 3,
+        "output_tokens": null,
+        "output_tokens_unknown_calls": 3,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 3,
+        "price_versions": []
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 3.263,
+    "agent_loop_s": 3.262,
+    "agent_loop_elapsed_s": 3.262,
+    "agent_loop_limit_s": 120.0,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": null,
+    "model_wait_s": 1.707,
+    "dev_evaluation_s": 1.542,
+    "evidence_tool_s": 0,
+    "container_startup_s": 0.308
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 2,
+        "correct": true,
+        "evaluation_id": "8a51d4bdf49b",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": null,
+        "improved": null,
+        "passed_cases": 2,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "8a51d4bdf49b",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:09:17.879+00:00",
+      "ended_at": "2026-11-14T09:09:19.422+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "model_request",
+      "status": "unusable_reply",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "error_kind": "bad_response",
+        "message": "HTTP 503, non-JSON body",
+        "role": "small"
+      },
+      "next_decision": "retry with a new request if budget allows",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090917-c2a9/m1",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:09:19.423+00:00",
+      "ended_at": "2026-11-14T09:09:19.930+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "model",
+      "action": "model_request",
+      "status": "unusable_reply",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "error_kind": "bad_response",
+        "message": "HTTP 503, non-JSON body",
+        "role": "small"
+      },
+      "next_decision": "retry with a new request if budget allows",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090917-c2a9/m2",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:09:19.930+00:00",
+      "ended_at": "2026-11-14T09:09:20.567+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "model_request",
+      "status": "unusable_reply",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "error_kind": "bad_response",
+        "message": "HTTP 503, non-JSON body",
+        "role": "small"
+      },
+      "next_decision": "retry with a new request if budget allows",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T090917-c2a9/m3",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T09:09:20.567+00:00",
+      "ended_at": "2026-11-14T09:09:21.141+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "b5c8b24b966eeeb9",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "exploratory-remote-lmstudio-short-20261114 #1 r1",
+    "limits": {
+      "max_candidates": 2,
+      "max_code_bytes": 20000,
+      "max_model_requests": 3,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 100.0,
+      "token_budget": null,
+      "wall_clock_s": 120.0
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "http://remote-lmstudio.invalid/v1",
+        "enable_thinking": false,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "qwen3.8-27b-uncensored-mlx",
+        "provider": "chat_compat",
+        "reasoning_effort": "none",
+        "response_format": "none",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "74d658afa1124a6d3a2c0af44a291d08bea7d6d95b9828ba6bcc0a037647b9df",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": false,
+      "fixed_model": "small",
+      "mode": "feedback",
+      "model_policy": "fixed"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "fixed small model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "llm",
+      "action_prompt_sha256": "afa7c9cd12787ba9cb811212efad4a8917d3ea8c022c2ee4b8a0b8119e731c9e",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v2"
+    },
+    "sandbox_image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "scripted": [],
+    "task_manifest_sha256": "db318023a527cdd357275d7b5d5c7a3770e27959e5ef338186dc4b04d7d3b84a",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "gc_policy": "automatic_gc_disabled_during_solve",
+    "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+    "image_tag": "routeevo-scientific:9df8e32a4952",
+    "judge": {
+      "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a",
+      "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "protocol": "isolated-function-timing-v2",
+    "threads": 1
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run algotune-convolve_1d-remote-lmstudio-short-20261114 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode feedback --fixed-model small --dev-only --cpuset-cpus 2 --wall-clock 120.0 --max-requests 3 --max-candidates 2 --request-timeout 100.0",
+    "recheck_best": "uv run routeevo check algotune-convolve_1d-remote-lmstudio-short-20261114 <VAR_DIR>/runs/run-20261114T090917-c2a9/candidates/c0.py --dataset final --cpuset-cpus 2",
+    "report": "uv run routeevo report run-20261114T090917-c2a9"
+  },
+  "started_at": "2026-11-14T09:09:17.879+00:00",
+  "loop_ended_at": "2026-11-14T09:09:21.141+00:00",
+  "ended_at": "2026-11-14T09:09:21.142+00:00",
+  "research": {
+    "definition": {
+      "question": "在输出完全正确的前提下，能否让这段AlgoTune · convolve_1d程序在该工作负载上至少快 1.1×？",
+      "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": {
+        "program": "上游 solve 方法；独立函数计时",
+        "dev_median_s": null,
+        "final_median_s": null
+      },
+      "scope": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden.",
+      "tools": [
+        {
+          "action": "analyze",
+          "label": "分析：写下推理与计划，不执行"
+        },
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "run_validation",
+          "label": "运行验证：重新评测已有候选"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "budget": {
+        "model_requests": 3,
+        "candidates": 2,
+        "loop_s": 120.0,
+        "request_timeout_s": 100.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "本轮为开发集预实验，未打开最终数据"
+    },
+    "experiments": [],
+    "verdicts": {
+      "supported": 0,
+      "partial": 0,
+      "refuted": 0,
+      "untestable": 0,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": []
+}

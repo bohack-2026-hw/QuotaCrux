@@ -1,0 +1,25 @@
+{
+  "batch": "remote-direct",
+  "source_directory_name": "remote-lmstudio-direct-20261114",
+  "comparison_id": "research-20261114T091800-0fe2",
+  "run_ids": [
+    "run-20261114T091800-a13b"
+  ],
+  "task_ids": [
+    "algotune-convolve_1d-remote-lmstudio-direct-20261114"
+  ],
+  "included": [
+    "comparison",
+    "all evidence files including the captured CLI log",
+    "all run reports",
+    "all model call request/response JSON",
+    "all candidate programs",
+    "portable JSON snapshot of every SQLite table",
+    "task manifests, public task metadata and dataset hashes"
+  ],
+  "excluded": {
+    "sqlite_wal_shm": "replaced by ledger.json because the binary files contain machine-local paths",
+    "raw_dev_and_final_inputs": "sealed inputs are represented by task-identity hashes and byte counts",
+    "locks": "empty runtime coordination files are not result evidence"
+  }
+}

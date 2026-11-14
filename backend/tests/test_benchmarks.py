@@ -8,9 +8,9 @@ import uuid
 import pytest
 
 from conftest import requires_docker
-from routeevo import config, evaluator, memory, taskpkg
-from routeevo.benchmarks import Case, effibench
-from routeevo.sandbox import executor
+from quotacrux import config, evaluator, memory, taskpkg
+from quotacrux.benchmarks import Case, effibench
+from quotacrux.sandbox import executor
 
 
 def record(interface="io"):
@@ -180,8 +180,8 @@ def test_official_checker_argument_order_and_output_normalization():
 
 @requires_docker
 def test_scripted_run_report_profile_and_export(tmp_path):
-    from routeevo import api, cli, narrative
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux import api, cli, narrative
+    from quotacrux.agent.runner import RunOptions, Runner
     task = build(record("functional"))
     base = {"purpose": "验证适配流程", "expected_result": "正确性通过", "verification": "外部评测器"}
     script = tmp_path / "script.json"
@@ -205,13 +205,13 @@ def test_scripted_run_report_profile_and_export(tmp_path):
     cli.export_bundle(rep["run_id"], out, narrative.run_markdown(rep["run_id"]))
     assert "import-effibench" in (out / "reproduce.sh").read_text()
     check_line = next(line for line in (out / "reproduce.sh").read_text().splitlines()
-                      if line.startswith("uv run routeevo check"))
+                      if line.startswith("uv run quotacrux check"))
     assert f"--cpuset-cpus {cpuset}" in check_line and "--function-warmups 3" in check_line
 
 
 @requires_docker
 def test_candidate_checker_error_stops_without_upgrade_or_learning(tmp_path):
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux.agent.runner import RunOptions, Runner
     rec = record()
     rec["evaluator"] = "def evaluate(actual, expected):\n    if actual == 'bad': raise RuntimeError('checker error')\n    return int(actual) == int(expected)\n"
     task = build(rec)

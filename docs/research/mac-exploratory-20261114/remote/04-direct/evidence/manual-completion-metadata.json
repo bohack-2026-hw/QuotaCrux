@@ -1,0 +1,11 @@
+{
+  "status": "semantically-reconstructed-from-truncated-model-proposal",
+  "eligible_as_model_generated_candidate": false,
+  "source_run_id": "run-20261114T091800-a13b",
+  "source_call_id": "run-20261114T091800-a13b/m1",
+  "source_finish_reason": "length",
+  "source_visible_output_present": true,
+  "manual_change": "Semantically reconstructed the truncated tail from the model's complete reasoning, with unused-import cleanup and variable renaming.",
+  "evaluation_scope": "exploratory dev-only",
+  "formal_results_eligible": false
+}

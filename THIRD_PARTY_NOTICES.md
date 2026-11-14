@@ -1,8 +1,8 @@
 # Third-party notices
 
-`backend/src/routeevo/benchmarks/effibench_imports.py` adapts the Python import prelude from
+`backend/src/quotacrux/benchmarks/effibench_imports.py` adapts the Python import prelude from
 [EffiBench-X](https://github.com/EffiBench/EffiBench-X/blob/21b6668a49a342c843e679cc5ed16081064a5768/effibench/utils.py).
-The `sortedcontainers` imports are omitted for RouteEvo's standard-library environment.
+The `sortedcontainers` imports are omitted for QuotaCrux's standard-library environment.
 `effibench_judge.py` follows the output normalization and positional evaluator invocation in
 that revision's `effibench/run_tests.py`. Upstream is licensed under
 [Apache License 2.0](docs/licenses/EffiBench-X-Apache-2.0.txt).
@@ -14,7 +14,7 @@ The catalog records upstream problem identities, shard sizes and SHA256 checksum
 The ALE-Bench adapter downloads unmodified task archives from
 [SakanaAI/ALE-Bench](https://huggingface.co/datasets/SakanaAI/ALE-Bench/tree/0f426173b4e4e73b09b2b3631ae0490f66b75f99)
 under the dataset's CC-BY-ND-4.0 license. Original statements, generators and score calculators remain in ignored
-local storage; they are not redistributed in this repository. The initial feasible Python programs are RouteEvo's.
+local storage; they are not redistributed in this repository. The initial feasible Python programs are QuotaCrux's.
 
 AlgoTune task sources are downloaded from
 [oripress/AlgoTune](https://github.com/oripress/AlgoTune/tree/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906)

@@ -21,9 +21,9 @@ def write(path, obj):
 
 
 def check(args, manifest):
-    from routeevo import config, db, taskpkg
-    from routeevo.agent import actions, prompt
-    from routeevo.research_compare import validate_plan
+    from quotacrux import config, db, taskpkg
+    from quotacrux.agent import actions, prompt
+    from quotacrux.research_compare import validate_plan
 
     actual = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     if actual != manifest["code_sha"] or subprocess.check_output(["git", "status", "--porcelain"], text=True).strip():
@@ -55,7 +55,7 @@ def check(args, manifest):
 
 
 def worker(args, manifest):
-    from routeevo import config, research_compare
+    from quotacrux import config, research_compare
     task, measure = check(args, manifest)
     if not args.execute:
         print(json.dumps({"worker": args.worker, "task_id": task.task_id, "status": "ready"}), flush=True)
@@ -72,8 +72,8 @@ def worker(args, manifest):
 
 
 def main(args, manifest):
-    from routeevo import research_compare
-    from routeevo.research_views import comparison_summary
+    from quotacrux import research_compare
+    from quotacrux.research_views import comparison_summary
     script = str(Path(__file__).resolve())
 
     def command(name, execute=False, seq=None):

@@ -7,11 +7,11 @@ from dataclasses import replace
 
 import pytest
 
-from routeevo import config, db, evaluator
-from routeevo.agent import prompt
-from routeevo.agent.runner import Runner, RunOptions
-from routeevo.benchmarks import ale, native
-from routeevo.llm.scripted import ScriptedClient
+from quotacrux import config, db, evaluator
+from quotacrux.agent import prompt
+from quotacrux.agent.runner import Runner, RunOptions
+from quotacrux.benchmarks import ale, native
+from quotacrux.llm.scripted import ScriptedClient
 
 
 @pytest.fixture

@@ -1,0 +1,90 @@
+{
+  "task_id": "algotune-pagerank-remote-lmstudio-short-20261114",
+  "canonical_manifest_sha256": "bdaa6d298988cb5457727fa78ce657749cd279ddccac4cabf89ab9fcfc579768",
+  "selection": {
+    "dev_cases": 2,
+    "final_cases": 1
+  },
+  "source": {
+    "license": "MIT",
+    "repository": "oripress/AlgoTune",
+    "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+    "task_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf"
+  },
+  "native": {
+    "allowed_imports": [
+      "numpy",
+      "scipy",
+      "networkx"
+    ],
+    "candidate_image": {
+      "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+      "image_tag": "routeevo-scientific:9df8e32a4952"
+    },
+    "candidate_interface": "solve",
+    "judge_image": {
+      "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f",
+      "image_tag": "routeevo-algotune-pagerank:ee2973687637"
+    },
+    "seed": 1729,
+    "size": 1000
+  },
+  "files": {
+    "UPSTREAM_LICENSE.txt": {
+      "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d",
+      "bytes": 1096,
+      "content_committed": true
+    },
+    "contract.txt": {
+      "sha256": "c8a6f2f637aa9e6ab2f5bc6c930fb3fa7473b70f04f26c1a313d265c17657c9f",
+      "bytes": 1107,
+      "content_committed": true
+    },
+    "dev-expected.json": {
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bytes": 2,
+      "content_committed": false
+    },
+    "dev.json": {
+      "sha256": "f33bdc42fcaffec212caf480a3264dd0bb33d6e949c508f5f1f25ff3f29fae5f",
+      "bytes": 81543,
+      "content_committed": false
+    },
+    "dev_profile.json": {
+      "sha256": "2b6030463b5bebece65f9a112cdafd58dd93692238c9f921be52146eace74dcc",
+      "bytes": 1031,
+      "content_committed": true
+    },
+    "examples.json": {
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bytes": 2,
+      "content_committed": true
+    },
+    "final-expected.json": {
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bytes": 2,
+      "content_committed": false
+    },
+    "final.json": {
+      "sha256": "cf1f365c6d4bd19fccaec6f859ccc27c1615c455e42602f1316ceecc65b72f93",
+      "bytes": 41485,
+      "content_committed": false
+    },
+    "initial.py": {
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "bytes": 2415,
+      "content_committed": true
+    },
+    "manifest.json": {
+      "sha256": "a440c0930234f3828a594298d33aaa955b7948a9e8a57ed6d9973df310118a3a",
+      "bytes": 2940,
+      "content_committed": true
+    },
+    "upstream_task.py": {
+      "sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf",
+      "bytes": 12308,
+      "content_committed": true
+    }
+  },
+  "sealed_dataset_policy": "dev/final inputs are identified by hash and byte count; raw datasets are not committed"
+}

@@ -43,8 +43,8 @@ def locks(var: Path):
 
 
 def prepare(args) -> None:
-    from routeevo import config, db, taskpkg
-    from routeevo.sandbox import executor
+    from quotacrux import config, db, taskpkg
+    from quotacrux.sandbox import executor
 
     selected = WORKERS[args.worker]
     source_root = args.root / "var-prepare" / "tasks"
@@ -86,7 +86,7 @@ def prepare(args) -> None:
 
 
 def worker(args) -> None:
-    from routeevo import config, db, evaluator, taskpkg
+    from quotacrux import config, db, evaluator, taskpkg
 
     record = json.loads((args.root / "evidence" / f"worker-{args.worker}.json").read_text())
     task = taskpkg.load(record["task_id"])

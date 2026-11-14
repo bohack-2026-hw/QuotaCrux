@@ -15,8 +15,8 @@ from pathlib import Path
 # The backend's comparison lock imports fcntl; summarising needs no lock, so a stub lets this run on Windows.
 sys.modules.setdefault("fcntl", types.ModuleType("fcntl"))
 
-from routeevo import routing_ablation as ra  # noqa: E402
-from routeevo.research_views import comparison_view  # noqa: E402
+from quotacrux import routing_ablation as ra  # noqa: E402
+from quotacrux.research_views import comparison_view  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "fixtures" / "routing-fixture.json"
 TASKS = {

@@ -1,6 +1,6 @@
 # EffiBench-X 四题真实模型评测
 
-2026-11-14，在 `feat/effibench-x-adapter` 的 `6297c0b87b7d6eb4b3247d1880e7a97b05ff3d7d` 上运行。**4/4 题最终正确，60/60 个 final 用例通过；2/4 题达到加速目标；包含保留初始程序的两题，几何平均加速比为 1.5585×。** 这轮从已有正确参考程序开始做优化，正确率不是从零解题的 pass@1。
+2026-11-14，在 `feat/effibench-x-adapter` 的 `6297c0b87b7d6eb4b3247d1880e7a97b05ff3d7d` 上运行。**4/4 题最终正确，60/60 个 final 用例通过；2/4 题达到加速目标；包含保留初始程序的两题，几何平均加速比为 1.5585×。** 本轮从已有正确参考程序开始优化。
 
 四次研究运行合计 **507.532 秒（8 分 27.532 秒）**。Qwen 额度消耗 **¥0.0980028**；OpenAI 已知用量估算 **$0.123553**，另有一次连接超时没有返回用量，保留为未知。
 
@@ -26,11 +26,11 @@
 
 ## 固定配置与选样
 
-- 数据：`EffiBench/effibench-x`，revision `49babbec95f0897d5f06276aaf274f9f1dcd036b`；上游 runner/checker 版本及接入边界见[适配方案](../../benchmark-adapters.md)。
-- 选样在模型调用前写入 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1#issuecomment-6870725713)：从已缓存的同一分片选两道 io、两道 functional 题，覆盖不同程序结构；没有根据运行成绩更换题目。这是小规模方便样本，没有做难度分层。
+- 数据：`EffiBench/effibench-x`，revision `49babbec95f0897d5f06276aaf274f9f1dcd036b`；上游 runner/checker 版本及接入边界见[适配方案](../../design/effibench-integration.md)。
+- 选样在模型调用前写入 [issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1#issuecomment-6870725713)：从已缓存的同一分片选两道 io、两道 functional 题，覆盖不同程序结构；没有根据运行成绩更换题目。这是小规模方便样本，没有做难度分层。
 - 原始分片 `data/test-00009-of-00020.parquet`，7,321,349 bytes，SHA256 `958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc`。
 - 每题输入先去重，再按输入 SHA256 排序，前 5 个作 dev、后 15 个作 final；完整用例 ID、文件哈希和来源在 [plan.json](plan.json)。`leetcode/3188` 的 100 个原始用例有 92 个唯一输入，其余三题均为 100 个。
-- RouteEvo split 为 `B`，`eval` 模式，空经验快照 `v0`。B 是本地实验标记，上游只有 test split；本轮不发布学习经验。
+- QuotaCrux split 为 `B`，`eval` 模式，空经验快照 `v0`。B 是本地实验标记，上游只有 test split；本轮不发布学习经验。
 - 小模型：AIPing `Qwen3.8-27B`，`enable_thinking=false`，`json_object`，最多 8192 output tokens；大模型：OpenAI `gpt-6.1-sol`，`reasoning_effort=xhigh`，最多 32000 output tokens。
 - 使用 `upgrade-rule-v2`：从小模型开始，连续两个候选未达目标或小模型连续三次请求未达目标后升级。提示词为 `agent-prompt-v3`；完整配置与哈希在 [results.json](results.json)。没有接入同时迭代中的 Decisions 或 `feat/shared-core` 新首选模型规则。
 - 每题最多 6 次模型请求、4 个候选、300 秒研究循环；单次请求上限 120 秒（连接超时 10 秒）、单次程序测量上限 10 秒。最终评测位于研究循环之后，包含在上表总耗时中。四题都没有超过循环预算。
@@ -38,11 +38,11 @@
 
 本地 agent 已协调串行 Docker 运行，并在余额对账窗口暂停同一个 Qwen key 的调用。结束后立即释放窗口。远端协作通过 issue #1 同步；运行时冻结代码，不在批次中途合并另一分支。
 
-## 正确性、时间与费用口径
+## 正确性、时间与费用计算方法
 
 在任何模型调用前，四题参考解的 20 个入选用例全部通过预检，共 **80/80**，耗时 **19.202 秒**。这部分不计入模型优化成绩和上表研究耗时。
 
-正确性由数据集原始 checker 在独立沙箱判定。性能先预热基线与候选，再交替计时 5 轮，取 suite 总时间中位数之比；程序计时从沙箱 ready 后发送输入到收到完整输出，容器准备与 checker 不计入该加速比。研究墙钟时间包含这些开销。
+正确性由数据集原始 checker 在独立沙箱判定。性能先预热基线与候选，再交替计时 5 轮，取 suite 总时间中位数之比；程序计时从沙箱 ready 后发送输入到收到完整输出，容器准备与 checker 不计入该加速比。研究实际耗时包含这些开销。
 
 批次从 `2026-11-14T03:13:13.840Z` 到 `03:21:44.422Z`，共 510.582 秒，其中各 run 合计 507.532 秒，其余是配置、容器环境查询与余额查询间隔。模型等待共 280.231 秒。原始 5 轮计时、每个候选的 dev 结果与运行 ID 均保存在 [results.json](results.json)。
 
@@ -61,7 +61,7 @@ OpenAI 按[官方标准价](https://developers.openai.com/api/docs/models/gpt-6.
 
 两道 Codeforces 初始程序本身很短，候选主要修改解析和输出，没有形成稳定优势。两道 functional 题的优化都精简了输入处理、函数调用或循环，也移除了通用 prelude 导入；**加速比相对于导入后的完整参考程序，包含 runner/prelude 成本**。这轮没有单独分离算法与包装开销的贡献。原始候选代码保存在 [best/](best/)，没有为展示而再编辑。
 
-这是 RouteEvo 的参考程序优化子集结果，不是 EffiBench-X 官方代码生成和综合效率排名。4 题、每题一次运行、15 个 final 用例足以检查接入与量级，不能推断 623 题的总体成绩。下一批适合预先按来源、接口和参考程序运行量级分层，加入运行更重的题目，并对相同冻结子集比较路由版本。
+本轮评测 4 题，每题运行一次、使用 15 个 final 用例，报告参考程序的优化结果。623 题全量成绩待测。下一批适合预先按来源、接口和参考程序运行量级分层，加入运行更重的题目，并对相同冻结子集比较路由版本。
 
 ## 文件与复现
 
@@ -76,12 +76,12 @@ OpenAI 按[官方标准价](https://developers.openai.com/api/docs/models/gpt-6.
 ```bash
 cd backend
 uv sync --extra benchmark --python 3.12.11
-export ROUTEEVO_VAR_DIR="$PWD/var/effibench-x-real-repeat"
+export QUOTACRUX_VAR_DIR="$PWD/var/effibench-x-real-repeat"
 report_dir="../docs/research/effibench-x-20261114"
 for problem in codeforces/2104A codeforces/2108A leetcode/3188 leetcode/3193; do
-  uv run --extra benchmark routeevo tasks import-effibench "$problem" --split B --dev-cases 5 --case-limit 20
+  uv run --extra benchmark quotacrux tasks import-effibench "$problem" --split B --dev-cases 5 --case-limit 20
 done
-cp "$report_dir/plan.json" "$ROUTEEVO_VAR_DIR/plan.json"
+cp "$report_dir/plan.json" "$QUOTACRUX_VAR_DIR/plan.json"
 uv run python "$report_dir/run_subset.py" preflight --env-file .env --pricing-snapshot "$report_dir/qwen-price.json"
 uv run python "$report_dir/run_subset.py" run --env-file .env --pricing-snapshot "$report_dir/qwen-price.json"
 ```
@@ -90,4 +90,4 @@ uv run python "$report_dir/run_subset.py" run --env-file .env --pricing-snapshot
 
 ## 本次验证
 
-8 项 actions/pricing 测试通过；80 个参考样例预检通过；4 次真实运行完成，9 个模型候选通过 dev，60 个 final 样例通过。公开文件中的 token/cost 汇总已与原始账本核对，OpenAI 已知费用按返回缓存字段逐次复算；最终代码 SHA256 已与运行记录核对。报告与复现脚本通过 JSON、Python/Bash 语法和 Git whitespace 检查；`best/` 中的模型代码按原始字节保存，保留生成时的行尾空格以保证哈希一致。前一轮的适配器与原有回归验证见[试接入记录](../../effibench-pilot.md)。
+8 项 actions/pricing 测试通过；80 个参考样例预检通过；4 次真实运行完成，9 个模型候选通过 dev，60 个 final 样例通过。公开文件中的 token/cost 汇总已与原始账本核对，OpenAI 已知费用按返回缓存字段逐次复算；最终代码 SHA256 已与运行记录核对。报告与复现脚本通过 JSON、Python/Bash 语法和 Git whitespace 检查；`best/` 中的模型代码按原始字节保存，保留生成时的行尾空格以保证哈希一致。前一轮的适配器与原有回归验证见[试接入记录](../../archive/effibench-preflight.md)。

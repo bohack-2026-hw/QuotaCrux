@@ -47,7 +47,7 @@ The decision layer also draws from **TypeSafe's Jev**: mapping `"state + typed q
 | Decision API example | Relevant capability | Status in this repository |
 | --- | --- | --- |
 | **OpenAI Decisions (`gpt-6-luna`)** | Select among supplied actions or model tiers and return structured choices + probabilities | **Integrated and exercised in the 4-way routing study**; see [client](backend/src/quotacrux/llm/openai_decisions.py) & [experiment log](docs/research/native-routing/20261114/short-results/README.md) |
-| **[TypeSafe Jev](https://docs.typesafe.ai/introduction)** | Typed choices, scoring rubrics, and truth judgments composable into control flow | **Design inspiration & candidate adapter**; not integrated |
+| **[TypeSafe Jev](https://docs.typesafe.ai/introduction)** | Typed choices, scoring rubrics, and truth judgments composable into control flow | **Choice action and model routing integrated**; use `--action-router jev` / `--model-router jev`, see [configuration](docs/design/action-model-routing.md#typesafe-jev) |
 | **[Gemini Decisions (`gemini-decision-1`)](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)** | Evaluates closed choices, boolean predicates, and scoring criteria over shared context | **Parallel Decision API reference & candidate adapter**; not integrated |
 
 Adding a new decision provider only requires an adapter mapping its request/response schema, validating allowed choices, and logging tokens/cost into the shared budget ledger. Current routing ablations charge both decisions and generations to one unified cap, exposing genuine quality/cost/time trade-offs (1 run per combination in the short study).
@@ -58,10 +58,14 @@ Adding a new decision provider only requires an adapter mapping its request/resp
 
 Aligned with the **"Built for Better — Building Self-Evolving Intelligence"** principle, QuotaCrux turns every sandbox outcome into inspectable, diffable, rollback-safe evolutionary state—so the next run is measurably faster, cheaper, and more reliable than the last:
 
-<img src="docs/assets/readme/self-evolution-loop-en.png" alt="Built for Better quantified cross-round self-evolution and zero-LLM delivery" width="880" />
-
 - **Cross-round progression to 100% attainment (`A-Batch` `v0 → v19`):** Across `A-01..A-06`, Round 1 met `5/6` speedup targets; by Round 2 (`v19`), every task improved further to **`6/6` attainment** (per-task final speedups rising from `1.09×–1.77×` to `1.24×–2.03×`; `$0.455` cumulative learning cost).
+
+<img src="docs/assets/readme/evolution-abatch-en.png" alt="A-Batch two-round self-evolution speedups per task" width="780" />
+
 - **Verified generalization on sealed suites & live streams:** On the never-seen `D-Batch` held-out suite, switching to `v19` raised target attainment from `15/18` to **`18/18`**, median speedup from `1.20×` to **`1.73×`**, and delivered **`18/18` runs with zero LLM calls (`$0.000`)**. On `S-Stream` (seeded with `groupagg`-only `v19` plus unseen `logstats`/`intervals` tasks), QuotaCrux escalated on first encounters and solved **all `30/30` follow-up tasks with zero LLM calls** (vs. `9/30` without memory), cutting GPT requests by **78%** (`27 → 6`).
+
+<img src="docs/assets/readme/evolution-zero-llm-en.png" alt="Zero-LLM re-validation delivery rates across D-Batch and S-Stream" width="780" />
+
 - **Within-run correction & failure-aware retrieval:** Within a single run, sandbox refutation drives deterministic escalation (e.g., `A-01`: `0.90×` refuted → format error → escalated to `gpt-6.1-sol` reading exact failure evidence to hit **`1.45×`**). Across runs, the extractor records **verified code, 5 workload features, and tri-state sandbox verdicts** (`v19` = `59` records: `42` success, `13` no-gain, `4` failure; LLM prose stays tagged as unverified hypotheses). Pre-LLM re-validation automatically skips any candidate whose prior `no_gain` or `failure` record matches closer than its `success` record.
 - **Immutable snapshots, structural diffs & instant safe rollback:** Every learning step publishes an immutable snapshot (`v0, v1, …`) linked to its parent run; inspect diffs or switch the active pointer safely in the Snapshots UI or CLI with a full audit trail:
   ```bash
@@ -113,12 +117,16 @@ All figures below are audited directly against run ledgers and frozen evaluation
 
 Evaluated on 15 hidden final cases under a unified per-run budget (`360s` wall-clock cap, `20` total HTTP requests including routing calls, up to `10` candidates; `small` = hosted `Qwen3.8-27B`, `large` = `gpt-6.1-sol`, `Decisions` = `gpt-6-luna`; 1 run per combination from `v0`):
 
-<img src="docs/assets/readme/routing-ablation-ahc026-en.png" alt="ALE-Bench ahc026 4-way action and model routing ablation" width="880" />
-
-- **Highest final quality (`Decisions / rule`):** Reached **`139,972`** (**`+6.15%`** over `c0 = 131,864`, beating the default `LLM / rule` baseline by `+236` pts) while cutting task box-movement energy across the 15 final cases from `18,136` to `10,028` (**-44.7%**). `gpt-6.1-sol` used **46.6%** of total tokens (`68,207 / 146,253`), and `gpt-6-luna` routing cost just `$0.0068` (**2.26%** of the run's `$0.3006` recorded USD subtotal, plus 2 Qwen requests).
+- **Highest final quality (`Decisions / rule`):** Reached **`139,972`** (**`+6.15%`** over `c0 = 131,864`, beating the default `LLM / rule` baseline by `+236` pts) while cutting task box-movement energy across the 15 final cases from `18,136` to `10,028` (**-44.7%**).
 - **Early stopping vs. depth (`Decisions / Decisions`):** Finished **71.2% faster** (`112.9s` vs. `392.0s`) by staying on `small` and calling `finish` early (`+0.51%` score gain), making the cost/speed vs. quality trade-off explicit.
+
+<img src="docs/assets/readme/routing-ahc026-tradeoff-en.png" alt="ALE-Bench ahc026 routing ablation speed vs final quality trade-off" width="780" />
+
+- **Minimal routing overhead & candidate pass rate:** Under `Decisions / rule`, `gpt-6.1-sol` accounted for **46.6%** of total tokens (`68,207 / 146,253`), while `gpt-6-luna` routing cost just `$0.0068` (**2.26%** of that run's `$0.3006` recorded USD subtotal, plus 2 Qwen requests), with all 7/7 candidates passing.
 - **Fixed-Qwen ALE formal ablation (15 runs):** Across `ahc024` and `ahc026`, hosted `Qwen3.8-27B` proposed 96 candidates, with **60/96 (62.5%)** passing dev checks and **15/15** delivered candidates passing hidden final tests.
 - **Two-host supplement (2026-11-14):** Four strategies (fixed `small`, fixed `large`, rule adaptation, and action Decisions) were run once each on laptop and desktop. Both fixed-small runs yielded `0%` gain, whereas the six runs using the large model gained `5.43%–6.37%`. Action Decisions split 1–1 against rule adaptation (whose laptop run ended on an API timeout), and all eight frozen deliveries passed final validation; see the [supplement report](docs/research/onehour-20261114/README.md) and [time–quality curves](docs/research/onehour-20261114/quality-time.png).
+
+<img src="docs/assets/readme/routing-ahc026-requests-en.png" alt="ALE-Bench ahc026 HTTP request mix, pass rate, and decision cost" width="780" />
 
 > **Boundary clarified by the two-host supplement:** Across 14 Decisions action calls, median latency was `1.34s` with an estimated total routing cost of about `$0.015`, supporting low-overhead integration. Because every call in this batch continued proposing candidates and complete searches still consumed most of the loop budget—without repeating the earlier dual-Decisions early finish—these runs do not establish end-to-end speedup or settled speed/quality modes yet.
 
@@ -138,7 +146,7 @@ Evaluated on 15 hidden final cases under a unified per-run budget (`360s` wall-c
 
 Conducted with fixed `gpt-6.1-sol` (`180s` / `5` requests / `3` candidates per episode, `2` dev inputs × `5` paired timing repeats, final testing disabled; audited batch OpenAI spend `USD 0.336`):
 
-<img src="docs/assets/readme/algotune-speedups-en.png" alt="AlgoTune PageRank and 1D Convolution speedup comparison" width="880" />
+<img src="docs/assets/readme/algotune-speedups-en.png" alt="AlgoTune PageRank and 1D Convolution speedup comparison" width="780" />
 
 - **Graph representation breakthrough (PageRank):** Both modes eliminated NetworkX graph construction in favor of SciPy sparse power iteration, slashing solve latency from `11.15 ms` / `10.91 ms` down to **`0.45 ms` (`25.04×`)** and **`0.47 ms` (`23.05×`)**.
 - **Precision-aware FFT scheduling (1D Convolution):** Switched to `float32` real FFT within the L2 tolerance and batched buffer reuse, accelerating solve latency to **`0.42 ms` (`2.67×`)** and **`0.74 ms` (`1.30×`)**.
@@ -159,11 +167,13 @@ Conducted with fixed `gpt-6.1-sol` (`180s` / `5` requests / `3` candidates per e
 
 Evaluated on sealed Python optimization benchmarks (3 built-in families: `groupagg`, `logstats`, `intervals`; identical model weights, prompts, and evaluators — varying *only* the experience snapshot):
 
-<img src="docs/assets/readme/experience-memory-comparison-en.png" alt="Controlled comparison of text-only v6, executable v19 reuse, and online S-Stream triage" width="880" />
+- **`C-Batch` prose regression vs. `D-Batch` program reuse:** `v6` prose advice trimmed GPT escalations slightly yet pushed median held-out speedup down **-8.5%** (`1.41× → 1.29×`); executable snapshot `v19` (from two A-batch learning rounds) raised `D-Batch` attainment from `15/18` to **`18/18`** and median speedup **+44.2%** (`1.20× → 1.73×`).
 
-- **`C-Batch` proved text-only memory can backfire:** `v6` prose advice trimmed GPT escalations slightly yet pushed median held-out speedup down **-8.5%** (`1.41× → 1.29×`), motivating executable snapshots (`v2`) and coverage triage (`v3`).
-- **`D-Batch` achieved zero-LLM held-out delivery:** With `v19` (from two A-batch learning rounds), sealed held-out attainment climbed from `15/18` to **`18/18`**, median speedup jumped **+44.2%** (`1.20× → 1.73×`), total batch runtime dropped **62.5%** (`1782s → 669s`), and all 18 runs finished with **zero LLM requests (`$0.000` held-out cost; prior learning rounds cost `$0.455` separately)**.
-- **`S-Stream` scaled seamlessly across unseen families:** Starting from `groupagg`-only `v19`, online evolution maintained `36/36` attainment and `1.86×` median speedup while cutting GPT calls by **78%** (`27 → 6`), USD spend from `$0.402` to **`$0.086`**, and solving **every follow-up run (`30/30`) without an LLM call**.
+<img src="docs/assets/readme/experience-quality-ablation-en.png" alt="Controlled comparison of text-only regression vs executable program reuse" width="780" />
+
+- **`D-Batch` zero-LLM held-out delivery & `S-Stream` online scaling:** All 18 `D-Batch` held-out runs completed with **zero LLM requests (`$0.000` held-out cost; prior learning rounds cost `$0.455` separately)** and **62.5%** lower total runtime (`1782s → 669s`). Starting from `groupagg`-only `v19`, `S-Stream` preserved `36/36` attainment and `1.86×` median speedup while cutting GPT calls by **78%** (`27 → 6`), USD spend from `$0.402` to **`$0.086`**, and solving **every follow-up run (`30/30`) without an LLM call**.
+
+<img src="docs/assets/readme/experience-cost-runtime-en.png" alt="Frontier cost collapse and batch runtime reduction from experience reuse" width="780" />
 
 <details>
 <summary>Show raw experience-memory controlled comparison table</summary>

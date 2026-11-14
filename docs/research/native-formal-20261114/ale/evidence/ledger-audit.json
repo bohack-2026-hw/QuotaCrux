@@ -1,0 +1,84 @@
+{
+  "recorded_at": "2026-11-14T07:01:03.431983+00:00",
+  "source_sha": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "model": {
+    "provider": "chat_compat",
+    "model": "Qwen3.8-27B",
+    "role": "small",
+    "base_url": "https://aiping.cn/api/v1",
+    "reasoning_effort": null,
+    "enable_thinking": false,
+    "max_output_tokens": 8192,
+    "temperature": null,
+    "response_format": "json_object",
+    "extra": {}
+  },
+  "dotenv_mode": "0o600",
+  "workers": {
+    "a": {
+      "counts": {
+        "tasks": 1,
+        "runs": 0,
+        "model_calls": 0,
+        "evaluations": 18,
+        "final_evaluations": 0
+      },
+      "manifest_sha256": "1be26f2a809875d8fee65fc5ca8aa3a46955a467516c0946cc6d938802b8e6ef",
+      "file_hashes_verified": {
+        "contract": "fb31ec81a5e086915d7ee546f89ef579d72dbdefbe7cae5daaa6470746967bbc",
+        "dev_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "dev_input": "17251589b9709b7d7d2b58600b37bfee103d4d8e81a23a4e9836b035b8c0e5b0",
+        "dev_profile": "4698fbc1f96932ba2a0bffe61d04659d01992855aa33bab77593605e87225b02",
+        "examples": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_input": "5cc37d4036a89fe2dc57c87f40aedf2377d967ae340481a6a62dfabf4d2127b3",
+        "initial": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38"
+      },
+      "locks_released": {
+        "run.lock": true,
+        "compare.lock": true
+      },
+      "integrity_check": "ok",
+      "evaluation_status_counts": [
+        {
+          "dataset": "dev",
+          "status": "passed",
+          "count": 18
+        }
+      ]
+    },
+    "b": {
+      "counts": {
+        "tasks": 1,
+        "runs": 0,
+        "model_calls": 0,
+        "evaluations": 18,
+        "final_evaluations": 0
+      },
+      "manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+      "file_hashes_verified": {
+        "contract": "f2bc67a6d1eee1ab4e293a8cae9cf9e86553630f1eae433ebc9b6220f7a8bd5e",
+        "dev_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "dev_input": "695b38610d4b1d52f168b975b5bfeba85abb26eea917d72535137d643410d32a",
+        "dev_profile": "18df07aba77fef84350ceac75d7c27468a438cd58abc86927a493974b855acc7",
+        "examples": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_input": "6a7bf0b3b274c577b71b6521934f08210098be837c75ba15b890f8955b43ec74",
+        "initial": "d0f96678218cad87053ccf3bdcd3fecc0acfbf49ed0571279dc35f10f1ab06d6"
+      },
+      "locks_released": {
+        "run.lock": true,
+        "compare.lock": true
+      },
+      "integrity_check": "ok",
+      "evaluation_status_counts": [
+        {
+          "dataset": "dev",
+          "status": "passed",
+          "count": 18
+        }
+      ]
+    }
+  },
+  "running_routeevo_containers": []
+}

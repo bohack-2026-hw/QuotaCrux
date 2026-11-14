@@ -4,7 +4,7 @@ import { useWidth } from '../hooks'
 import { FINAL, RUN_STATE, fmt, money, rmode } from '../labels'
 import type { Cost, RBatch, RRun, RTask } from '../research'
 import { costTotals, fairLabel } from '../research'
-import { bigNumber, deltaText, metricName, metricText, modeSummary } from '../researchFormat'
+import { bigNumber, gainOf, metricName, metricText, modeSummary } from '../researchFormat'
 import { REPO_BLOB } from '../researchData'
 import { Chip } from './ui'
 
@@ -196,7 +196,6 @@ export function ModeLegend({ modes, repeats }: { modes: string[]; repeats: numbe
     <div className="legend">
       {modes.map((m) => <span key={m} className="row" style={{ gap: 6 }}><ModeMark mode={m} size={11} />{rmode(m).label}（{rmode(m).short}）</span>)}
       {repeats.length > 1 && <span className="muted">实线 r1 · 长虚线 r2 · 短虚线 r3</span>}
-      <span className="muted">标记 = 保留结果更新；竖线 = 运行结束</span>
     </div>
   )
 }
@@ -210,15 +209,15 @@ export function Scoreboard({ task, lead, planned }: { task: RTask; lead: string 
       {task.modes.map((m) => {
         const s = modeSummary(task, m)
         const [n, unit] = bigNumber(task.metric, s.value)
-        const d = deltaText(task, s.value)
-        const sub = s.pending ? '研究中' : s.value == null ? '无有效结果'
-          : s.improved > 0 ? (task.metric === 'score' ? `比基线 ${d ?? ''}` : '快于初始程序')
-          : '未超过基线'
+        const g = s.improved > 0 ? gainOf(task, s.value) : null
+        const isLead = lead === m
         return (
-          <div key={m} className={`score ${lead === m ? 'lead' : ''}`}>
-            <div className="who"><ModeMark mode={m} size={10} />{rmode(m).label}{s.runs > 1 && <span className="mono muted">· {s.runs} 次中位</span>}</div>
-            <div className="num">{n}{unit && <small>{unit}</small>}</div>
-            <div className={`sub ${s.improved > 0 ? 'up' : ''}`}>{sub}</div>
+          <div key={m} className={`score ${isLead ? 'lead' : ''}`} style={{ ['--mode' as string]: rmode(m).color }}>
+            <div className="who"><ModeMark mode={m} size={10} />{rmode(m).label}{s.runs > 1 && <span className="mono muted">· {s.runs} 次中位</span>}{isLead && <span className="lead-tag">最佳</span>}</div>
+            <div className={`num ${isLead ? 'gain-text' : ''}`}>{n}{unit && <small>{unit}</small>}</div>
+            {s.pending ? <div className="sub">研究中</div>
+              : g ? <span className="gain-pill">▲ {task.metric === 'score' ? `${g.detail} · ${g.big}${g.unit}` : g.detail}</span>
+              : <div className="sub">{s.value == null ? '无有效结果' : '与基线持平'}</div>}
           </div>
         )
       })}
@@ -233,21 +232,16 @@ export function Scoreboard({ task, lead, planned }: { task: RTask; lead: string 
   )
 }
 
-/** The whole batch state in four badges: which data, final, fairness, repeats. */
+/** Two badges answer what a judge asks first: how far the evidence goes, and whether the groups were equal. */
 export function BatchBadges({ b }: { b: RBatch }) {
-  const reps = Math.max(1, ...b.tasks.map((t) => t.repeats.length))
   const counts = b.runs.reduce<Record<string, number>>((a, r) => ({ ...a, [r.final.state]: (a[r.final.state] ?? 0) + 1 }), {})
-  const finalChip = b.finalEnabled === false ? <Chip tone="warn" icon="!">最终集未验证</Chip>
+  const scope = b.running ? <Chip tone="accent" icon="●">进行中 {b.finished}/{b.planned}</Chip>
+    : b.finalEnabled === false ? <Chip tone="warn" icon="!">开发集结果 · 最终集待验证</Chip>
     : counts.passed === b.runs.length ? <Chip tone="good" icon="✓">最终集全部通过</Chip>
-    : (counts.failed || counts.error || counts.missing) ? <Chip tone="bad" icon="✕">最终集 {counts.passed ?? 0}/{b.runs.length} 通过</Chip>
-    : <Chip icon="…">最终集 {counts.passed ?? 0}/{b.runs.length} 已通过</Chip>
-  return (
-    <div className="row">
-      <Chip tone={b.running ? 'accent' : 'neutral'} icon={b.running ? '●' : undefined}>{b.running ? `进行中 ${b.finished}/${b.planned}` : b.finalEnabled === false ? '开发预实验' : '正式对照'}</Chip>
-      {finalChip}
-      <FairChip b={b} />
-      <Chip>每组 {reps} 次</Chip>
-      {b.limits && <Chip>每轮上限 {b.limits.wall_clock_s}s · {b.limits.max_model_requests} 次请求 · {b.limits.max_candidates} 个候选</Chip>}
-    </div>
-  )
+    : <Chip tone={counts.failed || counts.error || counts.missing ? 'bad' : 'neutral'}>最终集 {counts.passed ?? 0}/{b.runs.length} 通过</Chip>
+  const budget = b.limits ? `${b.limits.wall_clock_s}s · ${b.limits.max_model_requests} 次请求` : ''
+  const same = b.fair === true ? <Chip tone="good" icon="✓">同模型 · 同预算{budget ? ` ${budget}` : ''}</Chip>
+    : b.fair === false ? <Chip tone="bad" icon="✕">组间配置不一致</Chip>
+    : <Chip tone="warn" icon="?">同预算{budget ? ` ${budget}` : ''} · 一致性待确认</Chip>
+  return <div className="row">{scope}{same}</div>
 }

@@ -72,3 +72,27 @@ export function taskVerdict(task: RTask, label: (m: string) => string): { text: 
   const d = deltaText(task, top.value)
   return { text: `${label(top.mode)}领先：${metricText(task.metric, top.value)}${d ? `，比基线 ${d}` : ''}${others ? `；${others}` : ''}`, lead: top.mode }
 }
+
+/** The improvement a room should see, in the task's own unit; null when nothing beat the baseline. */
+export function gainOf(task: RTask, v: number | null): { big: string; unit: string; detail: string } | null {
+  if (v == null || task.baseline == null) return null
+  if (task.metric === 'score') {
+    const d = v - task.baseline
+    if (d <= 0) return null
+    const pct = task.baseline ? (d / Math.abs(task.baseline)) * 100 : null
+    return { big: pct != null ? `+${pct.toFixed(2)}` : `+${fmt.n(d)}`, unit: pct != null ? '%' : '分', detail: `+${fmt.n(d)} 分` }
+  }
+  if (v <= 1) return null
+  return { big: v.toFixed(2), unit: '×', detail: `提速 ${v.toFixed(2)}×` }
+}
+
+/** The single best result of a task across modes, with its mode. */
+export function bestOf(task: RTask): { mode: string; value: number } | null {
+  let best: { mode: string; value: number } | null = null
+  for (const m of task.modes) {
+    const s = modeSummary(task, m)
+    if (s.value == null || s.improved === 0) continue
+    if (!best || (task.direction === 'minimize' ? s.value < best.value : s.value > best.value)) best = { mode: m, value: s.value }
+  }
+  return best
+}

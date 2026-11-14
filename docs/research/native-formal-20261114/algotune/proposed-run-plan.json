@@ -1,0 +1,67 @@
+{
+  "schema": "routeevo-formal-run-plan-proposal-v1",
+  "status": "proposal-awaiting-issue-2-freeze-and-timing-recalibration",
+  "slice": "algotune-mac",
+  "experiment_sha": null,
+  "prompt_hashes": null,
+  "price_snapshot": null,
+  "model": {
+    "provider": "hosted",
+    "name": "Qwen3.8-27B",
+    "role": "small",
+    "response_format": "json_object",
+    "enable_thinking": false,
+    "max_output_tokens": 8192
+  },
+  "execution": {
+    "concurrency": 1,
+    "var_dir": "backend/var-algotune-formal-20261114",
+    "docker_vm_cpuset_cpu": "2",
+    "physical_core_exclusive": false,
+    "function_warmups": 3,
+    "timing_repeats": 5,
+    "snapshot": "v0",
+    "mode": "eval",
+    "wall_clock_s": 900,
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "model_request_timeout_s": 120,
+    "final_policy": "freeze the dev-selected candidate, then evaluate final exactly once; final never reselects or returns to the model"
+  },
+  "tasks": {
+    "convolve_1d": {
+      "task_id": "algotune-convolve_1d-formal-20261114-82a6fac682",
+      "manifest_sha256": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",
+      "modes": {
+        "feedback": 3,
+        "independent": 3,
+        "no_feedback": 3
+      }
+    },
+    "pagerank": {
+      "task_id": "algotune-pagerank-formal-20261114-b2ad8ba1c8",
+      "manifest_sha256": "61ab8297dfa51ccce5c79a77bc7dafe074bb6fa41936f7065b4ccbbe024994f4",
+      "modes": {
+        "feedback": 3,
+        "independent": 3
+      }
+    }
+  },
+  "runs": [
+    {"sequence": 1, "problem": "convolve_1d", "mode": "feedback", "repeat": 1},
+    {"sequence": 2, "problem": "pagerank", "mode": "independent", "repeat": 1},
+    {"sequence": 3, "problem": "convolve_1d", "mode": "no_feedback", "repeat": 1},
+    {"sequence": 4, "problem": "pagerank", "mode": "feedback", "repeat": 1},
+    {"sequence": 5, "problem": "convolve_1d", "mode": "independent", "repeat": 1},
+    {"sequence": 6, "problem": "pagerank", "mode": "feedback", "repeat": 2},
+    {"sequence": 7, "problem": "convolve_1d", "mode": "no_feedback", "repeat": 2},
+    {"sequence": 8, "problem": "pagerank", "mode": "independent", "repeat": 2},
+    {"sequence": 9, "problem": "convolve_1d", "mode": "independent", "repeat": 2},
+    {"sequence": 10, "problem": "pagerank", "mode": "independent", "repeat": 3},
+    {"sequence": 11, "problem": "convolve_1d", "mode": "feedback", "repeat": 2},
+    {"sequence": 12, "problem": "pagerank", "mode": "feedback", "repeat": 3},
+    {"sequence": 13, "problem": "convolve_1d", "mode": "independent", "repeat": 3},
+    {"sequence": 14, "problem": "convolve_1d", "mode": "feedback", "repeat": 3},
+    {"sequence": 15, "problem": "convolve_1d", "mode": "no_feedback", "repeat": 3}
+  ]
+}

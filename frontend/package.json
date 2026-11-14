@@ -7,12 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:research": "node --experimental-strip-types --no-warnings scripts/check-research.ts",
+    "sample:research": "node scripts/research-sample.mjs"
   },
   "dependencies": {
-    "@fontsource/instrument-serif": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
-    "@fontsource/noto-serif-sc": "^5.3.1",
     "@fontsource/schibsted-grotesk": "^5.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

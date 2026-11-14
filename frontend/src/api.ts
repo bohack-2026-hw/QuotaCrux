@@ -1,5 +1,7 @@
 // Thin typed client for the FastAPI backend. Reports are large nested objects; only fields the UI reads are typed.
 
+import type { RawBatch, RawBatchRow, RawPoint } from './research'
+
 export type Json = Record<string, unknown>
 export interface Objective { metric: string; direction: string; value?: number; baseline?: number | null }
 
@@ -53,6 +55,11 @@ export interface RunRow {
   final_goal_met: number | null
   final_speedup: number | null
   final_score: number | null
+  // From #2 (research-comparison-v1 run list); absent on older APIs, where a missing final row means "final not run".
+  research_mode?: string | null
+  dev_only?: boolean | null
+  final_status?: string | null
+  final_error?: string | null
 }
 
 export interface Step {
@@ -121,6 +128,7 @@ export interface Research {
 export interface Report {
   run_id: string
   research: Research
+  progress?: RawPoint[]
   task: { task_id: string; split: string; family?: string; workload?: string; target_min_speedup: number | null; dev_params: Json; objective: Objective }
   route?: Route | null
   mode: string
@@ -338,5 +346,8 @@ export const api = {
   note: (id: string) => call<{ lines: string[]; fair: boolean; scripted_model: boolean }>(`/comparisons/${id}/note`),
   markdownUrl: (runId: string) => `/api/runs/${runId}/markdown`,
   sessions: () => call<Session[]>('/sessions'),
+  // Read-only within-task research comparisons (research-comparison-v1 from #2, see src/research.ts).
+  researchComparisons: () => call<RawBatchRow[]>('/research-comparisons'),
+  researchComparison: (id: string) => call<RawBatch>(`/research-comparisons/${id}`),
   startSession: (body: { learn_task: string; eval_task: string; base_snapshot_id: string }) => post<{ session_id: string }>('/sessions', body),
 }

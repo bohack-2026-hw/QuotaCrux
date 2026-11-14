@@ -80,7 +80,7 @@ function ExperienceCard({ e, isNew, focused, onOpenRun }: { e: Experience; isNew
           ? <>实测加速比 <b>{fmt.x(e.result.speedup)}</b>{e.result.improved ? '，全部样本快于基线' : '，与基线重叠，不计改善'}。</>
           : <>验证结果为 <b>{st}</b>{e.result.failure_kinds ? `（${e.result.failure_kinds.join('、')}）` : ''}。</>}
       </div>
-      {ex && <p className="small" style={{ color: '#8e2424', margin: '4px 0' }}>反例：{typeof ex === 'string' ? ex.slice(0, 160) : `期望 ${String(ex.expected)}，得到 ${String(ex.got)}`}</p>}
+      {ex && <p className="small" style={{ color: 'var(--critical-ink)', margin: '4px 0' }}>反例：{typeof ex === 'string' ? ex.slice(0, 160) : `期望 ${String(ex.expected)}，得到 ${String(ex.got)}`}</p>}
       {e.hypothesis && <p className="why">{e.hypothesis}</p>}
       <dl className="kv">
         <dt>改动特征</dt><dd>{(e.action.code_features.calls ?? []).slice(0, 10).map((c) => <span key={c} className="tag mono" style={{ marginRight: 4 }}>{c}</span>)}</dd>

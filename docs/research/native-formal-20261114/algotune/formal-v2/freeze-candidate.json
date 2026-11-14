@@ -1,0 +1,154 @@
+{
+  "freeze_status": "candidate-awaiting-timing-v2-calibration-and-issue-2-acceptance",
+  "plan_id": "research-algotune-formal-20261114-v2",
+  "protocol": "within-task-feedback-v2",
+  "code_sha": "e8c5fbe748116993297ed0e195c2adf09c37c37d",
+  "executor_sha256": "6871c1ea3a7d72829fb41661964610cd6b116c624da07777976804f237c3533a",
+  "central_plan_path": "docs/research/native-formal-20261114/central-plan.json",
+  "central_plan_sha256": "b8dddb6e21f00ac7af2297f4c2198b49b0c925b3130171e8a201cefdc842bcc3",
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "prompt_version": "agent-prompt-v7",
+  "model": {
+    "provider": "chat_compat",
+    "model": "Qwen3.8-27B",
+    "role": "small",
+    "base_url": "https://aiping.cn/api/v1",
+    "reasoning_effort": null,
+    "enable_thinking": false,
+    "max_output_tokens": 8192,
+    "temperature": null,
+    "response_format": "json_object",
+    "extra": {}
+  },
+  "docker_runtime": {
+    "os": "linux",
+    "architecture": "aarch64",
+    "cpus": 16,
+    "memory_bytes": 16818020352,
+    "version": "29.8.2"
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 3,
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30.0
+  },
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "pricing": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models",
+    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+    "unit_evidence": {
+      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+      "currency_symbol": "\uffe5",
+      "text_model_price_denominator": "/M"
+    },
+    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+  },
+  "host_policy": {
+    "execution_concurrency": 1,
+    "physical_core_exclusive": false,
+    "max_load_1m_at_start": 8.0
+  },
+  "calibration": {
+    "accepted": false,
+    "evidence_path": null,
+    "evidence_sha256": null
+  },
+  "tasks": {
+    "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1": {
+      "task_key": "algotune/convolve_1d",
+      "manifest_sha256": "50918575680656c420cd98828d61e131bf39a949a6c449354421a6366dfc3b59",
+      "environment": {
+        "image_tag": "routeevo-scientific:9df8e32a4952",
+        "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+        "threads": 1,
+        "limits": {
+          "repeats": 5,
+          "function_warmups": 3,
+          "cpus": 1.0,
+          "cpuset_cpus": "2",
+          "memory": "1g",
+          "pids_limit": 64,
+          "max_output_bytes": 67108864,
+          "ready_timeout_s": 30.0
+        },
+        "protocol": "isolated-function-timing-v2",
+        "gc_policy": "automatic_gc_disabled_during_solve",
+        "judge": {
+          "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba",
+          "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a"
+        }
+      },
+      "prompt_sha256": {
+        "feedback": "74d658afa1124a6d3a2c0af44a291d08bea7d6d95b9828ba6bcc0a037647b9df",
+        "independent": "8b4195bffad2049e8d02f2535c9760e2a953685aeebdd9aee7a63f17f6eaa36c",
+        "no_feedback": "c0bf4f3a3ef4b926f9c0cf2e9d327bfd75a8fe982408bdb9e99143551c2c34aa"
+      }
+    },
+    "algotune-pagerank-formal-v2-20261114-650c457660": {
+      "task_key": "algotune/pagerank",
+      "manifest_sha256": "ece7e28cb604ca9cf8ba93f1f668a60d6a162cb8540120badd344e2eeefa39b1",
+      "environment": {
+        "image_tag": "routeevo-scientific:9df8e32a4952",
+        "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
+        "threads": 1,
+        "limits": {
+          "repeats": 5,
+          "function_warmups": 3,
+          "cpus": 1.0,
+          "cpuset_cpus": "2",
+          "memory": "1g",
+          "pids_limit": 64,
+          "max_output_bytes": 67108864,
+          "ready_timeout_s": 30.0
+        },
+        "protocol": "isolated-function-timing-v2",
+        "gc_policy": "automatic_gc_disabled_during_solve",
+        "judge": {
+          "image_tag": "routeevo-algotune-pagerank:ee2973687637",
+          "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f"
+        }
+      },
+      "prompt_sha256": {
+        "feedback": "74d658afa1124a6d3a2c0af44a291d08bea7d6d95b9828ba6bcc0a037647b9df",
+        "independent": "8b4195bffad2049e8d02f2535c9760e2a953685aeebdd9aee7a63f17f6eaa36c",
+        "no_feedback": "c0bf4f3a3ef4b926f9c0cf2e9d327bfd75a8fe982408bdb9e99143551c2c34aa"
+      }
+    }
+  },
+  "algotune_plan": [
+    {"seq": 16, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "feedback"},
+    {"seq": 17, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "no_feedback"},
+    {"seq": 18, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "independent"},
+    {"seq": 19, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "no_feedback"},
+    {"seq": 20, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "independent"},
+    {"seq": 21, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "feedback"},
+    {"seq": 22, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "independent"},
+    {"seq": 23, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "feedback"},
+    {"seq": 24, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "no_feedback"},
+    {"seq": 25, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 1, "mode": "feedback"},
+    {"seq": 26, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 1, "mode": "independent"},
+    {"seq": 27, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 2, "mode": "independent"},
+    {"seq": 28, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 2, "mode": "feedback"},
+    {"seq": 29, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 3, "mode": "feedback"},
+    {"seq": 30, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 3, "mode": "independent"}
+  ]
+}

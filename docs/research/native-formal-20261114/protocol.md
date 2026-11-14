@@ -1,12 +1,16 @@
 # 正式研究协议 v2
 
-日期：2026-11-14。公共代码固定 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`，提示版本 `agent-prompt-v7`。本文与机器清单在首次正式模型请求前发布；新增 Decisions 路由消融 #6 使用另一个批次和 SHA。
+日期：2026-11-14。原协议与机器清单在首次正式模型请求前发布，提示版本为 `agent-prompt-v7`。ALE 实际执行源码固定 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`；Mac GC v2 与新增 Decisions 路由批次固定 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。本文同步交付状态与版本边界，原冻结清单和执行记录保留各自实际来源。
 
 ## 预登记范围
 
 [central-plan.json](central-plan.json) 固定全部 30 项逻辑矩阵：ahc024 F/I 各3次；ahc026 F/N/I 各3次；convolve_1d F/N/I 各3次；pagerank F/I 各3次。F/N/I 为 feedback/no_feedback/independent，三组按 F-N-I / N-I-F / I-F-N 轮换，两组交替。每题5 dev/15 final。
 
-公共代码、模型、数据生成参数和30项矩阵统一固定，主机材料按执行分片绑定。ALE 的实际 task/image/prompt/hash/core/15项次序见 [ale-freeze.json](ale-freeze.json)，已可执行。Mac 的 task/image/hardware/calibration 仍由 #4 提交；绑定前其15项保持未运行，不以别的机器的数据冒充 Mac 结果。这项分片冻结安排替代“等待两机所有物理材料齐备才运行任一分片”的排期，实验矩阵与比较条件不变。
+模型、数据生成参数和30项逻辑矩阵保持原冻结设置，源码和主机材料按实际执行分片记录。ALE 的 task/image/prompt/hash/core/15项次序见 [ale-freeze.json](ale-freeze.json)，15项已全部执行：14项 completed、1项因 API 错误 failed，15项冻结候选均通过 final；完整成果见 [ale/results/](ale/results/README.md)。失败运行状态与 final 验收分别保留。
+
+Mac 已接受 GC v2 计时修订，新任务、镜像与校准物理绑定仍待 #4 回传，原15项尚未启动；版本、保留的交错次序和启动核对见 [Mac交接](mac-handoff.md)。各模式仍在同题、同机、同源码/镜像下比较，旧v1计时不混入新v2汇总。新增 Decisions 路由使用独立计划和输出，Mac卷积另加12轮，不写入原30项矩阵。分片冻结允许各批校准与冻结核验通过后直接启动。
+
+以下设置用于原30项固定模型批次：
 
 - 托管 Qwen3.8-27B，eval/v0，固定 small，关闭初始经验分流与模型升级。thinking=false、max_output_tokens=8192、response_format=json_object；完整公开配置进入冻结清单。
 - 每轮上限900秒、20模型请求、10候选、单模型请求120秒。允许主动finish，不因开发达标提前停止。真实墙钟含模型与评测时间；预算外完成的候选保留记录但不入选。
@@ -41,7 +45,7 @@ final状态分 disabled/pending/completed/failed/not_run；completed须验收通
 
 ## 执行
 
-在desktop的固定源码checkout内，使用已登记的两worker任务包，先运行不带`--execute`的冻结一致性检查，再执行同一命令加`--execute`。脚本核对源码SHA、干净checkout、模型、任务manifest、镜像、schema和各模式提示哈希，拒绝覆盖已有批次目录。
+以下保留已完成 ALE 批次的启动命令：在desktop的固定源码checkout内，使用已登记的两worker任务包，先运行不带`--execute`的冻结一致性检查，再执行同一命令加`--execute`。脚本核对源码SHA、干净checkout、模型、任务manifest、镜像、schema和各模式提示哈希，拒绝覆盖已有批次目录。当前待执行的 Mac 原15轮及新增路由12轮按 [Mac交接](mac-handoff.md)完成v2物理绑定后启动。
 
 ```bash
 cd /home/hycx233/routeevo-ale-formal-20261114/repo/backend

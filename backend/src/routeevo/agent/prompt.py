@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v4"
+PROMPT_VERSION = "agent-prompt-v5"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -62,11 +62,22 @@ def system_prompt(task, research_mode: str) -> str:
                "feedback are hidden; an external selector keeps the best feasible result." if research_mode == "independent" else
                "Use this run's actual feedback to refine hypotheses and candidates. Continue improving within the budget; "
                "meeting an intermediate threshold does not stop the research. Finish when further experiments are unlikely to help.")
+    scoring = ("Among candidates passing every feasibility check, the highest raw total score wins; improve on c0's score."
+               if task.objective["metric"] == "score" else
+               "Speedup is baseline median time divided by candidate median time. A correct candidate counts as improved "
+               "and can replace c0 only when EVERY measured candidate sample is faster than EVERY baseline sample "
+               "(max(candidate times) < min(baseline times)). A median speedup above 1 or the target alone is insufficient. "
+               "The feedback's timing_spread exposes those ranges. The target is a milestone, not a stopping condition.")
+    example = {"action": "propose_candidate", "purpose": "说明本次改动目的", "expected_result": "写明预期结果",
+               "verification": "写明验证方法", "hypothesis": None, "analysis": None, "tool": None,
+               "candidate_id": None, "parent_candidate_id": "c0", "code": "<complete Python code>", "finish_reason": None}
     return ("You are RouteEvo's research execution module. Reply with exactly one JSON action.\n"
             "The task contract specifies the candidate interface, installed libraries, objective and evaluator. "
             "Preserve correctness/feasibility for every valid input. Never access private tests, evaluator code or answers. "
-            "All model, compilation and tool work consumes the episode budget.\n" + control + "\n" +
-            ("This task provides native validation feedback; the cProfile evidence tool is unavailable.\n" if task.is_native else "") + actions)
+            "All model, compilation and tool work consumes the episode budget.\n" + control + "\n" + scoring + "\n" +
+            ("This task provides native validation feedback; the cProfile evidence tool is unavailable.\n" if task.is_native else "") + actions +
+            "\nJSON shape example (replace the values; purpose, expected_result and verification must be non-empty strings):\n" +
+            json.dumps(example, ensure_ascii=False))
 
 
 def _block(title: str, body: str) -> str:

@@ -1,0 +1,633 @@
+{
+ "run_id": "run-20261114T041659-fa51",
+ "task": {
+  "task_id": "S-01",
+  "split": "S",
+  "family": "logstats",
+  "target_min_speedup": 1.1,
+  "workload": "访问日志统计 · 按时间 · 160,000 行 · 300 个接口 · 24 小时 · 错误率 0.02",
+  "dev_params": {
+   "disorder": 0.0,
+   "endpoints": 300,
+   "error_rate": 0.02,
+   "hours": 24,
+   "latency_mean": 120,
+   "order": "time",
+   "rows": 160000,
+   "seed": 6101,
+   "skew": 0.8,
+   "start": "2026-11-01T00"
+  },
+  "final_params": {
+   "disorder": 0.0,
+   "endpoints": 300,
+   "error_rate": 0.02,
+   "hours": 24,
+   "latency_mean": 120,
+   "order": "time",
+   "rows": 160000,
+   "seed": 6102,
+   "skew": 0.8,
+   "start": "2026-11-01T00"
+  }
+ },
+ "mode": "online",
+ "snapshot_id": "v19",
+ "label": "str-20261114T041659-4736 #1 r1 memory",
+ "scripted_model": [],
+ "status": "completed",
+ "stop_reason": "goal_reached",
+ "stop_detail": "c1 dev speedup 6.6312 >= 1.1",
+ "config_fingerprint": "de0e2b8d4673b574",
+ "outcome": {
+  "run_completed": true,
+  "candidate_ran": true,
+  "dev_validation_passed": true,
+  "dev_improved": true,
+  "best_from_reuse": false,
+  "best_is_initial": false,
+  "final_evaluated": true,
+  "final_correct": true,
+  "final_speedup": 6.3494,
+  "goal_met": true,
+  "valid_artifact": true,
+  "summary": "达到目标：c1 最终测试正确，加速比 6.3494"
+ },
+ "experience": {
+  "snapshot_read": "v19",
+  "retrieval": {
+   "current_buckets": {
+    "errors": "low",
+    "groups": "<10k",
+    "order": "time_sorted",
+    "rows": "<300k",
+    "rows_per_group": "<=50"
+   },
+   "family": "logstats",
+   "family_records": 0,
+   "features": 5,
+   "matched_by_outcome": {},
+   "min_matches": 3,
+   "retrieval": "retrieval-v2",
+   "scores": {},
+   "selected": [],
+   "snapshot_size": 59
+  },
+  "read": [],
+  "published_snapshot_id": "v46",
+  "published_experiences": [
+   "e-20261114T041659-fa51-c1"
+  ]
+ },
+ "best_candidate": {
+  "candidate_id": "c1",
+  "origin": "model",
+  "parent_candidate_id": "c0",
+  "code_path": "var/runs/run-20261114T041659-fa51/candidates/c1.py",
+  "code_sha256": "287305e0672c7bceddd41256905bd6f398ca5765602074f80dc85b34b3117653",
+  "model_call_id": "m1",
+  "dev_evaluations": [
+   {
+    "evaluation_id": "6614d62d64d8",
+    "status": "passed",
+    "correct": 1,
+    "speedup": 6.6312,
+    "improved": 1,
+    "goal_met": 1
+   }
+  ]
+ },
+ "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+ "run_target_speedup": 1.1,
+ "route": {
+  "family": "logstats",
+  "family_records": 0,
+  "min_matches": 3,
+  "model": "gpt-6.1-sol",
+  "reason": "new_family",
+  "route": "large",
+  "router": "router-v1",
+  "similar_successes": 0
+ },
+ "final_evaluation": {
+  "evaluation_id": "2daaef27ec10",
+  "candidate_id": "c1",
+  "status": "passed",
+  "correct": true,
+  "speedup": 6.3494,
+  "candidate_median_s": 0.1103699158411473,
+  "baseline_median_s": 0.7007868750952184,
+  "timing": {
+   "baseline": {
+    "iqr": 0.016634603962302208,
+    "max": 0.7074012921657413,
+    "median": 0.7007868750952184,
+    "min": 0.6827165000140667
+   },
+   "baseline_min_max_s": [
+    0.6827165000140667,
+    0.7074012921657413
+   ],
+   "baseline_s": [
+    0.7019338328391314,
+    0.7007868750952184,
+    0.6933494170662016,
+    0.6827165000140667,
+    0.7074012921657413
+   ],
+   "candidate": {
+    "iqr": 0.008419354446232319,
+    "max": 0.11182691692374647,
+    "median": 0.1103699158411473,
+    "min": 0.10193233308382332
+   },
+   "candidate_min_max_s": [
+    0.10193233308382332,
+    0.11182691692374647
+   ],
+   "candidate_s": [
+    0.10193233308382332,
+    0.11137141613289714,
+    0.10442729108035564,
+    0.1103699158411473,
+    0.11182691692374647
+   ],
+   "improved_rule": "all candidate samples faster than all baseline samples",
+   "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+  },
+  "failure": null,
+  "duration_s": 6.905,
+  "note": null
+ },
+ "candidates": [
+  {
+   "candidate_id": "c0",
+   "origin": "initial",
+   "parent_candidate_id": null,
+   "code_path": "var/runs/run-20261114T041659-fa51/candidates/c0.py",
+   "code_sha256": "7472bcfa7d9aa142aa77980e05c0af9628c6669d18bdeb4180a41e41e11be030",
+   "model_call_id": null,
+   "dev_evaluations": [
+    {
+     "evaluation_id": "1d5aba4e87f7",
+     "status": "passed",
+     "correct": 1,
+     "speedup": null,
+     "improved": null,
+     "goal_met": null
+    }
+   ]
+  },
+  {
+   "candidate_id": "c1",
+   "origin": "model",
+   "parent_candidate_id": "c0",
+   "code_path": "var/runs/run-20261114T041659-fa51/candidates/c1.py",
+   "code_sha256": "287305e0672c7bceddd41256905bd6f398ca5765602074f80dc85b34b3117653",
+   "model_call_id": "m1",
+   "dev_evaluations": [
+    {
+     "evaluation_id": "6614d62d64d8",
+     "status": "passed",
+     "correct": 1,
+     "speedup": 6.6312,
+     "improved": 1,
+     "goal_met": 1
+    }
+   ]
+  }
+ ],
+ "iterations": {
+  "model_requests": 1,
+  "candidates_proposed": 1,
+  "candidates_passed": 1,
+  "candidates_improved": 1,
+  "candidates_no_gain": 0,
+  "candidates_failed": 0,
+  "programs_reused": 0,
+  "programs_reused_improved": 0,
+  "invalid_actions": 0,
+  "unusable_replies": 0,
+  "api_errors": 0,
+  "evidence_calls": 0,
+  "upgrades": 0,
+  "large_model_requests": 1,
+  "small_model_requests": 0,
+  "upgrade_at_step": null
+ },
+ "usage": {
+  "total": {
+   "requests": 1,
+   "ok": 1,
+   "errors": {},
+   "latency_s": 22.019,
+   "input_tokens": 2992,
+   "input_tokens_unknown_calls": 0,
+   "cached_input_tokens": 0,
+   "cached_input_tokens_unknown_calls": 0,
+   "output_tokens": 995,
+   "output_tokens_unknown_calls": 0,
+   "reasoning_tokens": 500,
+   "reasoning_tokens_unknown_calls": 0,
+   "cost_usd": 0.017428,
+   "cost_status": "estimated",
+   "cost_unknown_calls": 0,
+   "price_versions": [
+    "openai/gpt-6.1-sol/standard/2026-11-13"
+   ]
+  },
+  "by_model": {
+   "large:openai_responses:gpt-6.1-sol": {
+    "requests": 1,
+    "ok": 1,
+    "errors": {},
+    "latency_s": 22.019,
+    "input_tokens": 2992,
+    "input_tokens_unknown_calls": 0,
+    "cached_input_tokens": 0,
+    "cached_input_tokens_unknown_calls": 0,
+    "output_tokens": 995,
+    "output_tokens_unknown_calls": 0,
+    "reasoning_tokens": 500,
+    "reasoning_tokens_unknown_calls": 0,
+    "cost_usd": 0.017428,
+    "cost_status": "estimated",
+    "cost_unknown_calls": 0,
+    "price_versions": [
+     "openai/gpt-6.1-sol/standard/2026-11-13"
+    ]
+   }
+  },
+  "self_hosted_machine_cost": null
+ },
+ "timing": {
+  "wall_clock_total_s": 37.789,
+  "agent_loop_s": 30.88,
+  "agent_loop_elapsed_s": 30.88,
+  "agent_loop_limit_s": 300.0,
+  "agent_loop_overrun_s": 0.0,
+  "final_evaluation_s": 6.905,
+  "model_wait_s": 22.019,
+  "dev_evaluation_s": 8.85,
+  "evidence_tool_s": 0,
+  "container_startup_s": 4.189
+ },
+ "steps": [
+  {
+   "seq": 1,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": null,
+    "candidate_median_s": null,
+    "correct": true,
+    "evaluation_id": "1d5aba4e87f7",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": null,
+    "improved": null,
+    "speedup": null,
+    "status": "passed"
+   },
+   "next_decision": "continue",
+   "candidate_id": "c0",
+   "evaluation_id": "1d5aba4e87f7",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-14T04:17:00.146+00:00",
+   "ended_at": "2026-11-14T04:17:02.104+00:00"
+  },
+  {
+   "seq": 2,
+   "actor": "program",
+   "action": "route_model",
+   "status": "done",
+   "purpose": "分流：快照中没有任务族 logstats 的任何经验，按全新问题直接交给大模型；本次验证过的结果会写入经验，供之后相似的任务复用",
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "family": "logstats",
+    "family_records": 0,
+    "min_matches": 3,
+    "model": "gpt-6.1-sol",
+    "reason": "new_family",
+    "route": "large",
+    "router": "router-v1",
+    "similar_successes": 0
+   },
+   "next_decision": "start model requests on the large model",
+   "candidate_id": null,
+   "evaluation_id": null,
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-14T04:17:02.106+00:00",
+   "ended_at": "2026-11-14T04:17:02.106+00:00"
+  },
+  {
+   "seq": 3,
+   "actor": "model",
+   "action": "propose_candidate",
+   "status": "submitted",
+   "purpose": "利用输入格式保证，去除正则和日期解析开销，并用列表保存聚合结果。",
+   "expected_result": "保持所有合法输入的输出一致，开发数据加速比超过 1.1。",
+   "verification": "提交后运行公开契约用例、开发数据正确性检查和计时；特别检查乱序时间、排序边界和单行分组的错误计数。",
+   "hypothesis": "基线逐行调用 datetime.strptime 和 strftime 的成本较高；直接截取小时、按空白拆分并使用整数列表聚合，预计可显著降低运行时间。契约内所有字段均为 ASCII，因此字节元组排序与要求的字符串排序一致。",
+   "params": {
+    "parent_candidate_id": "c0"
+   },
+   "result": {
+    "parent_candidate_id": "c0"
+   },
+   "next_decision": "validate candidate",
+   "candidate_id": "c1",
+   "evaluation_id": null,
+   "model_call_id": "run-20261114T041659-fa51/m1",
+   "tool_call_id": null,
+   "started_at": "2026-11-14T04:17:02.106+00:00",
+   "ended_at": "2026-11-14T04:17:24.129+00:00"
+  },
+  {
+   "seq": 4,
+   "actor": "program",
+   "action": "run_validation",
+   "status": "passed",
+   "purpose": null,
+   "expected_result": null,
+   "verification": null,
+   "hypothesis": null,
+   "params": {},
+   "result": {
+    "baseline_median_s": 0.7034655830357224,
+    "best_candidate_id": "c1",
+    "best_replaced": true,
+    "candidate_median_s": 0.10608458309434354,
+    "correct": true,
+    "evaluation_id": "6614d62d64d8",
+    "executed": true,
+    "format_ok": true,
+    "goal_met": true,
+    "improved": true,
+    "run_target_speedup": 1.1,
+    "speedup": 6.6312,
+    "status": "passed",
+    "timing_spread": {
+     "baseline_min_max_s": [
+      0.695092000067234,
+      0.7323732920922339
+     ],
+     "candidate_min_max_s": [
+      0.09884820808656514,
+      0.11460891598835588
+     ]
+    }
+   },
+   "next_decision": "stop: goal_reached",
+   "candidate_id": "c1",
+   "evaluation_id": "6614d62d64d8",
+   "model_call_id": null,
+   "tool_call_id": null,
+   "started_at": "2026-11-14T04:17:31.024+00:00",
+   "ended_at": "2026-11-14T04:17:31.024+00:00"
+  }
+ ],
+ "config": {
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "evaluator_version": "eval-3",
+  "experience_extractor": "extractor-v3",
+  "fingerprint": "de0e2b8d4673b574",
+  "fingerprint_excludes": [
+   "mode",
+   "snapshot_id",
+   "label",
+   "environment details beyond image id"
+  ],
+  "label": "str-20261114T041659-4736 #1 r1 memory",
+  "limits": {
+   "max_candidates": 4,
+   "max_code_bytes": 20000,
+   "max_model_requests": 6,
+   "measurement_timeout_s": 10.0,
+   "min_request_window_s": 15.0,
+   "model_request_timeout_s": 120.0,
+   "token_budget": null,
+   "wall_clock_s": 300.0
+  },
+  "measure": {
+   "cpus": 1.0,
+   "max_output_bytes": 67108864,
+   "memory": "1g",
+   "pids_limit": 64,
+   "ready_timeout_s": 30.0,
+   "repeats": 5
+  },
+  "models": {
+   "large": {
+    "base_url": "https://api.openai.com/v1",
+    "extra": {},
+    "max_output_tokens": 32000,
+    "model": "gpt-6.1-sol",
+    "provider": "openai_responses",
+    "reasoning_effort": "xhigh",
+    "response_format": "json_schema",
+    "role": "large",
+    "temperature": null
+   },
+   "small": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "extra": {},
+    "max_output_tokens": 8192,
+    "model": "qwen3.8:27b-mlx",
+    "provider": "chat_compat",
+    "reasoning_effort": "none",
+    "response_format": "none",
+    "role": "small",
+    "temperature": null
+   }
+  },
+  "prompt": {
+   "system_sha256": "639059580bec208a9c68112c1d355a4ba8a4e612b89a0e5019cd5ced7cf3826e",
+   "version": "agent-prompt-v3"
+  },
+  "retrieval": {
+   "features": {
+    "groupagg": [
+     "rows",
+     "distinct_keys",
+     "rows_per_key",
+     "order",
+     "skew"
+    ],
+    "intervals": [
+     "rows",
+     "order",
+     "intervals_per_merged",
+     "magnitude",
+     "sign"
+    ],
+    "logstats": [
+     "rows",
+     "groups",
+     "rows_per_group",
+     "order",
+     "errors"
+    ]
+   },
+   "max_per_outcome": {
+    "failure": 2,
+    "no_gain": 1,
+    "success": 3
+   },
+   "min_matches": 3,
+   "rank": "matching features desc, then newest first",
+   "scope": "records of the same task family only",
+   "version": "retrieval-v2"
+  },
+  "reuse": {
+   "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+   "learn_target_margin": 0.05,
+   "max_programs": 3,
+   "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+   "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+   "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+   "version": "reuse-v1"
+  },
+  "router": {
+   "after_start": "a run that starts small still switches to large by the upgrade rule",
+   "large_otherwise": [
+    "new_family: no record of this task family",
+    "new_conditions: records of the family exist but no success matches the workload on >= min_matches features"
+   ],
+   "min_matches": 3,
+   "order": "re-validate verified programs first (no model); then route the model requests",
+   "small_if": "the snapshot holds a success record of the same task family matching the workload on >= min_matches features",
+   "version": "router-v1"
+  },
+  "sandbox_image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "scripted": [],
+  "task_manifest_sha256": "3b23597139c203fbcb6732c857a6ee0c18846dd40cf85ca9cd123640eff3a373",
+  "upgrade_rule": {
+   "consecutive_misses": 2,
+   "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+   "id": "upgrade-rule-v2",
+   "max_small_requests_without_goal": 3
+  }
+ },
+ "environment": {
+  "container_python": "3.12-slim (pinned digest in Dockerfile)",
+  "docker_server": "29.8.2 linux/arm64",
+  "image_id": "sha256:900b6e5b75025140351158ba71ff25ebc97264b160f8a3bc16fecf8bab5a3a63",
+  "image_tag": "routeevo-sandbox:d055c99c833a",
+  "limits": {
+   "cpus": 1.0,
+   "memory": "1g",
+   "network": "none",
+   "pids_limit": 64,
+   "read_only_rootfs": true,
+   "user": "65534:65534"
+  }
+ },
+ "reproduce": {
+  "run_again": "uv run routeevo run S-01 --mode online --snapshot v19",
+  "recheck_best": "uv run routeevo check S-01 var/runs/run-20261114T041659-fa51/candidates/c1.py --dataset final",
+  "report": "uv run routeevo report run-20261114T041659-fa51"
+ },
+ "started_at": "2026-11-14T04:17:00.144+00:00",
+ "loop_ended_at": "2026-11-14T04:17:31.024+00:00",
+ "ended_at": "2026-11-14T04:17:37.933+00:00",
+ "research": {
+  "definition": {
+   "question": "在输出完全正确的前提下，能否让这段访问日志统计程序在该工作负载上至少快 1.1×？",
+   "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+   "workload": "访问日志统计 · 按时间 · 160,000 行 · 300 个接口 · 24 小时 · 错误率 0.02",
+   "baseline": {
+    "program": "c0：正则逐行解析 + datetime.strptime 取小时 + dict 汇总（初始程序，正确）",
+    "dev_median_s": 0.7034655830357224,
+    "final_median_s": 0.7007868750952184
+   },
+   "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+   "tools": [
+    {
+     "action": "route_model",
+     "label": "分流（程序执行）：按经验快照对本任务的覆盖情况，决定模型请求先交给本地小模型还是大模型"
+    },
+    {
+     "action": "reuse_candidate",
+     "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+    },
+    {
+     "action": "analyze",
+     "label": "分析：写下推理与计划，不执行"
+    },
+    {
+     "action": "get_evidence",
+     "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+    },
+    {
+     "action": "propose_candidate",
+     "label": "提出候选：提交完整程序，程序立即验证"
+    },
+    {
+     "action": "run_validation",
+     "label": "运行验证：重新评测已有候选"
+    },
+    {
+     "action": "finish",
+     "label": "结束：交付当前最佳已验证候选"
+    }
+   ],
+   "verification": "开发数据正确性 + 7 个公开契约用例 + 基线与候选各预热一次、交替计时 5 轮；全部候选样本快于全部基线样本才算改善，加速比 = 两者中位数之比",
+   "budget": {
+    "model_requests": 6,
+    "candidates": 4,
+    "loop_s": 300.0,
+    "request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0
+   },
+   "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+  },
+  "experiments": [
+   {
+    "candidate_id": "c1",
+    "step": 3,
+    "kind": "model",
+    "target": 1.1,
+    "hypothesis": "基线逐行调用 datetime.strptime 和 strftime 的成本较高；直接截取小时、按空白拆分并使用整数列表聚合，预计可显著降低运行时间。契约内所有字段均为 ASCII，因此字节元组排序与要求的字符串排序一致。",
+    "purpose": "利用输入格式保证，去除正则和日期解析开销，并用列表保存聚合结果。",
+    "expected": "保持所有合法输入的输出一致，开发数据加速比超过 1.1。",
+    "verification": "提交后运行公开契约用例、开发数据正确性检查和计时；特别检查乱序时间、排序边界和单行分组的错误计数。",
+    "result": {
+     "status": "passed",
+     "speedup": 6.6312,
+     "improved": true,
+     "failure": null,
+     "contract_case": null
+    },
+    "verdict": "supported",
+    "then": "stop: goal_reached",
+    "evaluation_id": "6614d62d64d8"
+   }
+  ],
+  "verdicts": {
+   "supported": 1,
+   "partial": 0,
+   "refuted": 0,
+   "untestable": 0,
+   "untested": 0
+  },
+  "verdict_labels": {
+   "supported": "得到支持",
+   "partial": "部分支持（改善，但未达目标）",
+   "refuted": "被反驳（正确但没有改善）",
+   "untestable": "未能检验（候选出错）",
+   "untested": "未评测（预算或运行结束）"
+  }
+ }
+}

@@ -26,13 +26,14 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   const report = usePoll(() => (current ? api.run(current) : Promise.resolve(null)), [current], 1500, isLive)
 
   const task = tasks.data?.find((t) => t.task_id === taskId)
-  const learnable = task ? ['A', 'smoke'].includes(task.split) : false
+  const native = task ? ['ale-bench', 'algotune', 'kernelbench'].includes(task.family) : false
+  const learnable = task ? !native && ['A', 'smoke'].includes(task.split) : false
   const effMode = learnable ? mode : 'eval'
 
   const start = async () => {
     setErr(null)
     try {
-      const r = await api.startRun({ task_id: taskId, mode: effMode, snapshot_id: snapshot || undefined, label: 'dashboard' })
+      const r = await api.startRun({ task_id: taskId, mode: effMode, snapshot_id: native ? 'v0' : snapshot || undefined, label: 'dashboard' })
       setRunId(r.run_id)
       runs.refresh()
     } catch (e) { setErr((e as Error).message) }
@@ -58,18 +59,18 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
           </label>
           {task && (
             <p className="small muted" style={{ margin: '-6px 0 14px' }}>
-              {task.presentation.workload} · 目标 {task.target.min_speedup}×
+              {task.presentation.workload} · {task.target.metric === 'score' ? '目标：最大化原始得分' : `目标 ${task.target.min_speedup}×`}
             </p>
           )}
           <div className="field"><span>运行模式</span>
             <div className="seg">
               <button className={effMode === 'eval' ? 'on' : ''} onClick={() => setMode('eval')}>评测 · 冻结经验</button>
               <button className={effMode === 'learn' ? 'on' : ''} disabled={!learnable} onClick={() => setMode('learn')}
-                title={learnable ? '' : 'B/C 任务只能在评测模式运行'}>学习 · 发布新版本</button>
+                title={learnable ? '' : '此任务使用评测模式'}>学习 · 发布新版本</button>
             </div>
           </div>
           <label className="field"><span>读取的经验快照</span>
-            <select value={snapshot} onChange={(e) => setSnapshot(e.target.value)}>
+            <select value={native ? 'v0' : snapshot} disabled={native} onChange={(e) => setSnapshot(e.target.value)}>
               <option value="">当前生效版本（{activeSnapshot}）</option>
               {snaps.data?.snapshots.map((s) => <option key={s.snapshot_id} value={s.snapshot_id}>{s.snapshot_id} · {s.experience_count} 条经验</option>)}
             </select>
@@ -109,6 +110,7 @@ function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) 
       <div className="spread">
         <b>{r.task_id} · {r.mode === 'learn' ? '学习' : '评测'} · 读 {r.snapshot_id}</b>
         <span>{r.status === 'running' ? '运行中'
+          : r.final_score != null ? <span>得分 {fmt.n(r.final_score)}</span>
           : r.final_goal_met ? <span style={{ color: 'var(--good-ink)' }}>达标 {fmt.x(r.final_speedup)}</span>
           : `未达标 · ${STOP[r.stop_reason ?? ''] ?? r.status}`}</span>
       </div>
@@ -176,13 +178,13 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
           <Stat k="Token 输入 / 输出" v={`${fmt.n(u.input_tokens)} / ${fmt.n(u.output_tokens)}`}
             s={u.reasoning_tokens != null ? `其中推理 ${fmt.n(u.reasoning_tokens)}` : u.input_tokens_unknown_calls ? `${u.input_tokens_unknown_calls} 次调用用量未知` : '推理 token 未单列'} />
           <Stat k="模型费用" v={fmt.usd(u.cost_usd)} s={costNote(u.cost_status)} />
-          <Stat k="最终加速比" v={fmt.x(o.final_speedup)} s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : '最终测试未运行'} />
+          <Stat k={rep.task.objective.metric === 'score' ? '最终原始得分' : '最终加速比'} v={rep.task.objective.metric === 'score' ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)} s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : '最终测试未运行'} />
         </div>
       </div>
 
       <div className="grid cols-2">
         <div className="card">
-          <div className="spread"><h3>候选与加速比（开发数据）</h3><span className="small muted">点击查看代码</span></div>
+          <div className="spread"><h3>候选与{rep.task.objective.metric === 'score' ? '原始得分' : '加速比'}（开发数据）</h3><span className="small muted">点击查看代码</span></div>
           {rep.candidates.length > 0
             ? <SpeedupBars candidates={rep.candidates} target={rep.task.target_min_speedup} bestId={rep.best_candidate?.candidate_id ?? null} onPick={setCodeOf} />
             : <Empty title="等待初始程序验证" />}
@@ -289,7 +291,7 @@ function Experiments({ r }: { r: Research }) {
               <td className="mono nowrap">{e.candidate_id}{e.kind === 'reuse' && <span className="tag" style={{ marginLeft: 6 }}>复用</span>}</td>
               <td>{e.hypothesis ?? e.purpose ?? '—'}</td>
               <td className="muted">{e.expected ?? '—'}</td>
-              <td className="nowrap">{res.status ?? '—'}{res.speedup != null ? ` · ${fmt.x(res.speedup)}` : ''}{res.contract_case ? ` · ${res.contract_case}` : ''}</td>
+              <td className="nowrap">{res.status ?? '—'}{res.objective ? ` · 得分 ${fmt.n(res.objective.value)}` : res.speedup != null ? ` · ${fmt.x(res.speedup)}` : ''}{res.contract_case ? ` · ${res.contract_case}` : ''}</td>
               <td><Chip tone={tone} icon={icon}>{r.verdict_labels[e.verdict].split('（')[0]}</Chip></td>
               <td className="small">{e.then ? decision(e.then) : '—'}</td>
             </tr>

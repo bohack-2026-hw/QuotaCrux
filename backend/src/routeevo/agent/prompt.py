@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v3"
+PROMPT_VERSION = "agent-prompt-v4"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -52,6 +52,23 @@ build on it (set it as parent) rather than on c0, and do not resubmit a program 
 SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()
 
 
+def system_prompt(task, research_mode: str) -> str:
+    if research_mode == "legacy" and not task.is_native:
+        return SYSTEM_PROMPT
+    actions = "Actions (set every field; fields an action does not use must be null)" + SYSTEM_PROMPT.split(
+        "Actions (set every field; fields an action does not use must be null)", 1)[1].split("\nExperience records", 1)[0]
+    control = ("Each request is an independent attempt from c0. Propose a complete fresh candidate with parent c0, "
+               "or finish. Do not request analyze, get_evidence or run_validation actions. Other attempts' code and "
+               "feedback are hidden; an external selector keeps the best feasible result." if research_mode == "independent" else
+               "Use this run's actual feedback to refine hypotheses and candidates. Continue improving within the budget; "
+               "meeting an intermediate threshold does not stop the research. Finish when further experiments are unlikely to help.")
+    return ("You are RouteEvo's research execution module. Reply with exactly one JSON action.\n"
+            "The task contract specifies the candidate interface, installed libraries, objective and evaluator. "
+            "Preserve correctness/feasibility for every valid input. Never access private tests, evaluator code or answers. "
+            "All model, compilation and tool work consumes the episode budget.\n" + control + "\n" +
+            ("This task provides native validation feedback; the cProfile evidence tool is unavailable.\n" if task.is_native else "") + actions)
+
+
 def _block(title: str, body: str) -> str:
     return f"## {title}\n{body.rstrip()}\n"
 
@@ -73,7 +90,7 @@ def build_state(
         for i, ex in enumerate(task.examples)
     )
     parts = [
-        _block("Task", f"task_id: {task.task_id}\ntarget: speedup >= {task.target_min_speedup}\n\n{task.contract}"),
+        _block("Task", f"task_id: {task.task_id}\nobjective: {json.dumps(task.objective)}\n\n{task.contract}"),
         _block("Evaluation protocol", task.presentation["agent_notes"]),
         _block("Visible examples", examples),
         _block("Dev data profile (the timed input; computed by the program)", json.dumps(task.dev_profile, indent=2)),

@@ -64,7 +64,8 @@ def get_task(task_id: str) -> dict:
 def list_runs(task_id: str | None = None, limit: int = 50) -> list[dict]:
     # The final-test outcome travels with each row: a run can stop on "goal reached" (dev data) and still miss the final test.
     sql = ("SELECT r.run_id, r.task_id, r.mode, r.snapshot_id, r.status, r.stop_reason, r.best_candidate_id, r.config_fingerprint,"
-           " r.started_at, r.ended_at, e.goal_met AS final_goal_met, e.speedup AS final_speedup"
+           " r.started_at, r.ended_at, e.goal_met AS final_goal_met, e.speedup AS final_speedup,"
+           " json_extract(e.detail_json, '$.objective.value') AS final_score"
            " FROM runs r LEFT JOIN evaluations e ON e.evaluation_id = r.final_evaluation_id")
     params: tuple = ()
     if task_id:

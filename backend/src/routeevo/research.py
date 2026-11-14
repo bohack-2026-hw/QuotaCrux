@@ -33,33 +33,40 @@ def definition(rep: dict) -> dict:
     base = db.one("SELECT baseline_median_s FROM evaluations WHERE run_id = ? AND dataset = 'dev' AND baseline_median_s IS NOT NULL"
                   " ORDER BY started_at LIMIT 1", (rep["run_id"],))
     final = rep["final_evaluation"]
+    native = rep["task"]["family"] in ("ale-bench", "algotune", "kernelbench")
+    score = rep["task"].get("objective", {}).get("metric") == "score"
     return {
-        "question": QUESTION.format(target=rep["task"]["target_min_speedup"]),
-        "goal": f"输出全对；全部样本快于基线；加速比 ≥ {rep['task']['target_min_speedup']}×",
+        "question": "在可行性约束下，能否通过本次研究持续提高目标分数？" if score else QUESTION.format(target=rep["task"]["target_min_speedup"]),
+        "goal": "全部用例可行，最大化原始得分之和" if score else f"输出全对；全部样本快于基线；加速比 ≥ {rep['task']['target_min_speedup']}×",
         "workload": presentation["workload"],
         "baseline": {
             "program": presentation["baseline"],
             "dev_median_s": base["baseline_median_s"] if base else None,
             "final_median_s": final["baseline_median_s"] if final else None,
         },
-        "scope": SCOPE.format(max_code_bytes=lim["max_code_bytes"]),
-        "tools": [{"action": a, "label": t} for a, t in TOOLS],
-        "verification": (f"{presentation['validation']}；基线与候选各预热一次、交替计时 "
+        "scope": presentation["agent_notes"] if native else SCOPE.format(max_code_bytes=lim["max_code_bytes"]),
+        "tools": [{"action": a, "label": t} for a, t in TOOLS
+                  if (not native or a not in ("reuse_candidate", "get_evidence")) and
+                  (rep["config"].get("research_protocol", {}).get("mode") != "independent" or a in ("propose_candidate", "finish"))],
+        "verification": presentation["validation"] if native else (f"{presentation['validation']}；基线与候选各预热一次、交替计时 "
                          f"{rep['config']['measure']['repeats']} 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善"),
         "budget": {"model_requests": lim["max_model_requests"], "candidates": lim["max_candidates"],
                    "loop_s": lim["wall_clock_s"], "request_timeout_s": lim["model_request_timeout_s"],
                    "measurement_timeout_s": lim["measurement_timeout_s"]},
-        "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程",
+        "final_test": ("本轮为开发集预实验，未打开最终数据" if rep["config"].get("research_protocol", {}).get("final_evaluation") is False else
+                       "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"),
     }
 
 
-def _verdict(res: dict, target: float) -> str:
+def _verdict(res: dict, target: float | None) -> str:
     if not res:
         return "untested"
     if res.get("status") != "passed":
         return "untestable"
     if not res.get("improved"):
         return "refuted"
+    if target is None:
+        return "supported"
     return "supported" if (res.get("speedup") or 0) >= target else "partial"
 
 
@@ -81,7 +88,7 @@ def experiments(rep: dict) -> list[dict]:
             "kind": "reuse" if s["action"] == "reuse_candidate" else "model", "target": target,
             "hypothesis": s["hypothesis"], "purpose": s["purpose"],
             "expected": s["expected_result"], "verification": s["verification"],
-            "result": {"status": res.get("status"), "speedup": res.get("speedup"), "improved": res.get("improved"),
+            "result": {"status": res.get("status"), "speedup": res.get("speedup"), "objective": res.get("objective"), "improved": res.get("improved"),
                        "failure": failure.get("category"), "contract_case": failure.get("contract_case")},
             "verdict": _verdict(res, target),
             "then": check["next_decision"] if check else None,

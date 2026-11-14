@@ -90,4 +90,4 @@ uv run routeevo run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
 
 见 [EffiBench-X 试接入结果](effibench-pilot.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
 
-后续研究评测按[单任务持续优化方案](research-evaluation-plan.md)推进，主线验证同一 episode 利用反馈的效果。现有适配器和四题结果保留；[长时 benchmark 调研](long-horizon-benchmarks.md)中的 ALE-Bench、AlgoTune、KernelBench 尚未接入，其分数、函数计时和 GPU 运行环境不能直接套用当前 speedup 评测器。
+后续研究评测按[单任务持续优化方案](research-evaluation-plan.md)推进，主线验证同一 episode 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生 adapter 接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](research-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。

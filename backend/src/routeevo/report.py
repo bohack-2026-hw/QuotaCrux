@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 from datetime import datetime
 
 from . import db, research
@@ -74,13 +75,15 @@ def build(run_id: str) -> dict:
             "candidate_id": c["candidate_id"], "origin": c["origin"], "parent_candidate_id": c["parent_candidate_id"],
             "code_path": c["code_path"], "code_sha256": c["code_sha256"], "model_call_id": c["model_call_id"],
             "dev_evaluations": [{"evaluation_id": e["evaluation_id"], "status": e["status"], "correct": e["correct"],
-                                 "speedup": e["speedup"], "improved": e["improved"], "goal_met": e["goal_met"]} for e in mine],
+                                 "speedup": e["speedup"], "improved": e["improved"], "goal_met": e["goal_met"],
+                                 "objective": json.loads(e["detail_json"]).get("objective"),
+                                 "eligible_for_selection": json.loads(e["detail_json"]).get("eligible_for_selection", True)} for e in mine],
         })
     model_cands = [c for c in cand_out if c["origin"] == "model"]
     reused = [c for c in cand_out if c["origin"] == "experience"]
     latest = {c["candidate_id"]: (c["dev_evaluations"][-1] if c["dev_evaluations"] else None) for c in model_cands + reused}
     passed_all = [cid for cid, e in latest.items() if e and e["status"] == "passed"]
-    improved_all = [cid for cid in passed_all if latest[cid]["improved"]]
+    improved_all = [cid for cid in passed_all if latest[cid]["improved"] and latest[cid]["eligible_for_selection"]]
     model_ids = {c["candidate_id"] for c in model_cands}
     passed = [cid for cid in passed_all if cid in model_ids]
     improved = [cid for cid in improved_all if cid in model_ids]
@@ -95,6 +98,7 @@ def build(run_id: str) -> dict:
             "speedup": final["speedup"], "candidate_median_s": final["candidate_median_s"],
             "baseline_median_s": final["baseline_median_s"], "timing": detail.get("timing"),
             "failure": detail.get("failure"), "duration_s": detail.get("duration_s"),
+            "objective": detail.get("objective"), "case_count": detail.get("case_count"), "passed_cases": detail.get("passed_cases"),
             "note": "initial program checked for correctness only; no improvement to measure" if final["candidate_id"] == "c0" else None,
         }
     goal_met = bool(final and final["goal_met"])
@@ -110,6 +114,7 @@ def build(run_id: str) -> dict:
     out = {
         "run_id": run_id,
         "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
+                 "objective": {"metric": "speedup", "direction": "maximize", **manifest["target"]},
                  "family": manifest["family"], "presentation": benchmark(manifest["family"]).presentation(manifest),
                  "dev_params": manifest["dev_params"], "final_params": manifest["final_params"],
                  "source": manifest.get("source"), "selection": manifest.get("selection")},
@@ -127,6 +132,7 @@ def build(run_id: str) -> dict:
             "final_evaluated": final is not None,
             "final_correct": final_out["correct"] if final_out else None,
             "final_speedup": final_out["speedup"] if final_out else None,
+            "final_objective": final_out.get("objective") if final_out else None,
             "goal_met": goal_met,
             "valid_artifact": bool(final_out and final_out["correct"]) if final_out else None,
             "summary": _summary(run, best_id, final_out, goal_met),
@@ -143,7 +149,8 @@ def build(run_id: str) -> dict:
                 "SELECT experience_id FROM experiences WHERE json_extract(source_json, '$.run_id') = ?", (run_id,))],
         },
         "best_candidate": next((c for c in cand_out if c["candidate_id"] == best_id), None),
-        "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
+        "best_rule": ("highest valid dev score within the research budget; else initial c0" if target is None else
+                      "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0"),
         "run_target_speedup": json.loads(raised["result_json"])["run_target_speedup"] if raised else target,
         "final_evaluation": final_out,
         "candidates": cand_out,
@@ -193,7 +200,7 @@ def build(run_id: str) -> dict:
         "config": {k: v for k, v in cfg.items() if k != "environment"},
         "environment": cfg.get("environment"),
         "reproduce": {
-            "run_again": f"uv run routeevo run {run['task_id']} --mode {run['mode']} --snapshot {run['snapshot_id']}",
+            "run_again": _run_command(run, cfg),
             "recheck_best": (f"uv run routeevo check {run['task_id']} {next((c['code_path'] for c in cand_out if c['candidate_id'] == best_id), '')} --dataset final"
                              if best_id else None),
             "report": f"uv run routeevo report {run_id}",
@@ -201,7 +208,28 @@ def build(run_id: str) -> dict:
         "started_at": run["started_at"], "loop_ended_at": run["loop_ended_at"], "ended_at": run["ended_at"],
     }
     out["research"] = research.summarize(out)
+    out["progress"] = []
+    for step in out["steps"]:
+        if "progress" in step["result"]:
+            item = dict(step["result"]["progress"])
+            item["usage"] = _ledger([c for c in calls if c["ended_at"] <= step["ended_at"]])
+            out["progress"].append(item)
     return out
+
+
+def _run_command(run, cfg: dict) -> str:
+    argv = ["uv", "run", "routeevo", "run", run["task_id"], "--mode", run["mode"], "--snapshot", run["snapshot_id"]]
+    protocol = cfg.get("research_protocol", {})
+    if protocol.get("mode"):
+        argv += ["--research-mode", protocol["mode"]]
+    if protocol.get("fixed_model"):
+        argv += ["--fixed-model", protocol["fixed_model"]]
+    if protocol.get("final_evaluation") is False:
+        argv += ["--dev-only"]
+    for flag, key in (("--wall-clock", "wall_clock_s"), ("--max-requests", "max_model_requests"),
+                      ("--max-candidates", "max_candidates"), ("--request-timeout", "model_request_timeout_s")):
+        argv += [flag, str(cfg["limits"][key])]
+    return shlex.join(argv)
 
 
 def _summary(run, best_id: str | None, final: dict | None, goal_met: bool) -> str:
@@ -213,6 +241,9 @@ def _summary(run, best_id: str | None, final: dict | None, goal_met: bool) -> st
         return f"未执行最终测试（{run['stop_reason']}）；最佳候选 {best_id} 仅有开发验证结果"
     if not final["correct"]:
         return f"最终测试失败：{best_id} 在最终数据上 {final['status']}"
+    if final.get("objective"):
+        score = final["objective"]
+        return f"最终方案 {best_id} 可行，原始得分 {score['value']}（{score['direction']}；基线 {score['baseline']}）"
     if best_id == "c0":
         return "无改进：保留初始程序，最终测试正确"
     if goal_met:

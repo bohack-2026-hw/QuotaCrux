@@ -71,8 +71,17 @@ class Task:
         return tuple(self.dir / self.manifest["files"][f"{name}_{kind}"]["file"] for kind in ("input", "expected"))
 
     @property
-    def target_min_speedup(self) -> float:
-        return float(self.manifest["target"]["min_speedup"])
+    def target_min_speedup(self) -> float | None:
+        value = self.manifest["target"]["min_speedup"]
+        return None if value is None else float(value)
+
+    @property
+    def is_native(self) -> bool:
+        return "native" in self.manifest
+
+    @property
+    def objective(self) -> dict:
+        return {"metric": "speedup", "direction": "maximize", **self.manifest["target"]}
 
 
 def _write(path: Path, data: bytes) -> dict:
@@ -152,6 +161,15 @@ def rebuild_command(task_id: str) -> str:
     if task.manifest["family"] == "groupagg":
         return "uv run routeevo tasks build >/dev/null  # verify frozen groupagg packages"
     m = task.manifest
+    if task.is_native:
+        args = ["uv", "run", "routeevo", "tasks", "import-" + m["family"], m["problem"]["key"],
+                "--split", task.split, "--task-id", task_id, "--dev-cases", str(m["dev_params"]["cases"]),
+                "--final-cases", str(m["final_params"]["cases"])]
+        if m["family"] == "algotune":
+            args += ["--size", str(m["native"]["size"]), "--seed", str(m["native"]["seed"])]
+        if m["family"] == "kernelbench":
+            args += ["--worker-command", json.dumps(m["native"]["worker_command"]), "--image", m["native"]["image_id"]]
+        return shlex.join(args)
     return shlex.join(["uv", "run", "--extra", "benchmark", "routeevo", "tasks", "import-effibench", m["problem"]["key"],
                        "--split", task.split, "--task-id", task_id, "--dev-cases", str(m["dev_params"]["cases"]),
                        "--case-limit", str(m["selection"]["selected_cases"])])

@@ -1,6 +1,7 @@
 // Thin typed client for the FastAPI backend. Reports are large nested objects; only fields the UI reads are typed.
 
 export type Json = Record<string, unknown>
+export interface Objective { metric: string; direction: string; value?: number; baseline?: number | null }
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, { headers: { 'content-type': 'application/json' }, ...init })
@@ -22,7 +23,7 @@ export interface TaskSummary {
   task_id: string
   split: string
   notes: string
-  target: { min_speedup: number }
+  target: { min_speedup: number | null; metric?: string }
   family: string
   presentation: { title: string; workload: string }
   dev_params: Json
@@ -39,6 +40,7 @@ export interface RunRow {
   started_at: string
   final_goal_met: number | null
   final_speedup: number | null
+  final_score: number | null
 }
 
 export interface Step {
@@ -74,7 +76,7 @@ export interface Candidate {
   origin: string
   parent_candidate_id: string | null
   code_path: string
-  dev_evaluations: { status: string; speedup: number | null; improved: number | null; goal_met: number | null }[]
+  dev_evaluations: { status: string; speedup: number | null; improved: number | null; goal_met: number | null; objective?: Objective | null }[]
 }
 
 export interface Experiment {
@@ -84,7 +86,7 @@ export interface Experiment {
   purpose: string | null
   expected: string | null
   verification: string | null
-  result: { status: string | null; speedup: number | null; improved: number | boolean | null; failure: string | null; contract_case: string | null }
+  result: { status: string | null; speedup: number | null; improved: number | boolean | null; failure: string | null; contract_case: string | null; objective?: Objective | null }
   verdict: 'supported' | 'partial' | 'refuted' | 'untestable' | 'untested'
   then: string | null
   kind?: 'reuse' | 'model'
@@ -106,7 +108,7 @@ export interface Research {
 export interface Report {
   run_id: string
   research: Research
-  task: { task_id: string; split: string; target_min_speedup: number; dev_params: Json }
+  task: { task_id: string; split: string; target_min_speedup: number | null; dev_params: Json; objective: Objective }
   mode: string
   snapshot_id: string
   label: string | null
@@ -124,6 +126,7 @@ export interface Report {
     final_evaluated: boolean
     final_correct: boolean | null
     final_speedup: number | null
+    final_objective?: Objective | null
     goal_met: boolean
     summary: string
   }

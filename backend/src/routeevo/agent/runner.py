@@ -56,6 +56,9 @@ class RunOptions:
     measure: config.MeasureConfig = field(default_factory=config.MeasureConfig)
     script: Path | None = None  # scripted stand-in model, functional checks only
     label: str | None = None
+    research_mode: str | None = None  # legacy | feedback | independent
+    fixed_model: str | None = None  # small | large; research comparisons default to small
+    final_evaluation: bool = True
 
 
 def _make_clients(opts: RunOptions) -> tuple[dict, dict[str, config.ModelConfig]]:
@@ -81,6 +84,20 @@ class Runner:
             raise ValueError("mode must be learn or eval")
         self.opts = opts
         self.task = taskpkg.load(opts.task_id)
+        opts.research_mode = opts.research_mode or ("feedback" if self.task.is_native else "legacy")
+        if opts.research_mode not in ("legacy", "feedback", "independent"):
+            raise ValueError("invalid research mode")
+        if opts.fixed_model not in (None, "small", "large"):
+            raise ValueError("fixed_model must be small or large")
+        if opts.research_mode != "legacy":
+            if opts.mode != "eval" or opts.snapshot_id not in (None, "v0"):
+                raise ValueError("research comparisons require eval mode and empty snapshot v0")
+            opts.snapshot_id = "v0"
+            opts.fixed_model = opts.fixed_model or "small"
+        if self.task.is_native and opts.mode != "eval":
+            raise ValueError("native research benchmarks currently support eval mode only")
+        self.system_prompt = prompt.system_prompt(self.task, opts.research_mode)
+        self.system_prompt_sha = hashlib.sha256(self.system_prompt.encode()).hexdigest()
         if opts.mode == "learn" and self.task.split not in memory.LEARNABLE_SPLITS:
             raise ValueError(f"task {self.task.task_id} is in split {self.task.split}; only {sorted(memory.LEARNABLE_SPLITS)} "
                              "tasks may write experience (B/C run in eval mode with a frozen snapshot)")
@@ -96,7 +113,7 @@ class Runner:
         self._lock_fd = None
 
         self.seq = 0
-        self.role = "small"
+        self.role = opts.fixed_model or "small"
         self.requests_used = 0
         self.tokens_used = 0
         self.model_candidates = 0
@@ -131,7 +148,8 @@ class Runner:
             # Holding the lock proves no other run is alive; any 'running' row is left over from a killed process.
             db.get().execute("UPDATE runs SET status = 'interrupted', stop_reason = COALESCE(stop_reason, 'process_interrupted'),"
                              " ended_at = COALESCE(ended_at, ?) WHERE status = 'running'", (db.now(),))
-            self.env = executor.environment_info(self.measure)
+            self.env = (self.task.adapter.environment_info(self.task, self.measure) if self.task.is_native
+                        else executor.environment_info(self.measure))
             cfg = self._config()
             for sub in ("candidates", "calls", "tools"):
                 (self.dir / sub).mkdir(parents=True, exist_ok=True)
@@ -152,7 +170,9 @@ class Runner:
             "task_manifest_sha256": db.one("SELECT manifest_sha256 FROM tasks WHERE task_id = ?", (self.task.task_id,))["manifest_sha256"],
             "models": {r: c.public_dict() for r, c in self.model_cfgs.items()},
             "upgrade_rule": UPGRADE_RULE,
-            "prompt": {"version": prompt.PROMPT_VERSION, "system_sha256": prompt.SYSTEM_PROMPT_SHA256},
+            "prompt": {"version": prompt.PROMPT_VERSION, "system_sha256": self.system_prompt_sha},
+            "research_protocol": {"mode": self.opts.research_mode, "fixed_model": self.opts.fixed_model,
+                                  "final_evaluation": self.opts.final_evaluation},
             "action_schema_sha256": hashlib.sha256(json.dumps(actions.ACTION_SCHEMA, sort_keys=True).encode()).hexdigest(),
             "limits": self.limits.to_dict(),
             "measure": self.measure.to_dict(),
@@ -243,8 +263,9 @@ class Runner:
         started = db.now()
         ev = evaluator.evaluate(self.task, code.encode(), "dev", self.measure, self.limits,
                                 run_id=self.run_id, candidate_id=cid, measure_timing=False)
-        latest = {"status": ev.status, "correct": ev.correct, "speedup": 1.0 if ev.correct else None,
-                  "note": "initial program; speedup 1.0 by definition"}
+        latest = {**ev.public_feedback(), "status": ev.status, "correct": ev.correct,
+                  "speedup": 1.0 if ev.correct and self.task.target_min_speedup is not None else None,
+                  "note": "initial program; measured score" if self.task.target_min_speedup is None else "initial program; speedup 1.0 by definition"}
         self.candidates[cid]["latest_evaluation"] = latest
         ok = ev.status == "passed"
         if ok:
@@ -260,6 +281,8 @@ class Runner:
 
         Eval runs stop here when one reaches the target. Learning runs raise their target above the best of them, so
         the model spends its requests on beating what is already known instead of re-deriving it."""
+        if self.opts.research_mode != "legacy":
+            return
         programs, summary = memory.reusable_programs(self.snapshot_id, self.task.manifest["family"], self.task.dev_profile)
         db.add_event(self.run_id, "reuse_selected", summary)
         if not programs:
@@ -320,6 +343,8 @@ class Runner:
                               "best_candidate_id": self.best_id}
 
     def _on_target(self, ev: evaluator.Evaluation) -> bool:
+        if self.task.objective["metric"] == "score":
+            return bool(ev.status == "passed" and ev.goal_met)
         return bool(ev.status == "passed" and ev.improved and ev.speedup is not None and ev.speedup >= self.run_target)
 
     def _iterate(self) -> None:
@@ -328,7 +353,7 @@ class Runner:
         blocked = self._budget_block()
         if blocked:
             return self._stop("budget_exhausted", blocked)
-        if self.role == "small" and self.small_requests >= UPGRADE_RULE["max_small_requests_without_goal"]:
+        if not self.opts.fixed_model and self.role == "small" and self.small_requests >= UPGRADE_RULE["max_small_requests_without_goal"]:
             self._upgrade(f"小模型已用 {self.small_requests} 次请求仍没有达标候选，按升级规则切换到大模型")
 
         started = db.now()
@@ -336,6 +361,8 @@ class Runner:
         if not res.ok:
             return self._handle_model_failure(res, call_id, cfg, started)
         self.api_errors_in_row = 0
+        if self.opts.research_mode != "legacy" and time.perf_counter() >= self.t0 + self.limits.wall_clock_s:
+            return self._stop("budget_exhausted", "model response completed after the research deadline")
         try:
             act = actions.parse(res.text or "")
         except actions.InvalidAction as exc:
@@ -346,6 +373,8 @@ class Runner:
             "run_validation": self._do_validate, "finish": self._do_finish,
         }[act.action]
         try:
+            if self.opts.research_mode == "independent" and act.action not in ("propose_candidate", "finish"):
+                raise actions.InvalidAction("independent_action", "independent attempts must propose a fresh candidate or finish")
             handler(act, call_id, started)
         except actions.InvalidAction as exc:
             self._invalid(started, call_id, exc, act=act)
@@ -364,31 +393,35 @@ class Runner:
 
     def _budget_view(self) -> dict:
         elapsed = time.perf_counter() - self.t0
-        best = self.candidates.get(self.best_id or "", {}).get("latest_evaluation", {})
+        visible_best = "c0" if self.opts.research_mode == "independent" else self.best_id
+        best = self.candidates.get(visible_best or "", {}).get("latest_evaluation", {})
         return {
             "model_requests_used": self.requests_used, "model_requests_max": self.limits.max_model_requests,
             "candidates_used": self.model_candidates, "candidates_max": self.limits.max_candidates,
             "wall_clock_elapsed_s": round(elapsed, 1), "wall_clock_limit_s": self.limits.wall_clock_s,
             "current_model_role": self.role, "upgraded_to_large_model": self.role == "large",
-            "best_candidate_id": self.best_id, "best_dev_speedup": best.get("speedup"),
+            "best_candidate_id": visible_best, "best_dev_speedup": best.get("speedup"),
+            "best_objective": best.get("objective"), "research_mode": self.opts.research_mode,
             "target_speedup": self.run_target, "task_target_speedup": self.task.target_min_speedup,
         }
 
     def _call_model(self) -> tuple[LLMResult, str, config.ModelConfig]:
         cfg = self.model_cfgs[self.role]
+        independent = self.opts.research_mode == "independent"
         state = prompt.build_state(
             task=self.task,
-            candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items()],
-            evidence=self.evidence, history=self.history, experiences=self.experiences, snapshot_id=self.snapshot_id,
+            candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items() if not independent or cid == "c0"],
+            evidence=[] if independent else self.evidence, history=[] if independent else self.history,
+            experiences=self.experiences, snapshot_id=self.snapshot_id,
             experience_summary=self.experience_summary,
-            budget=self._budget_view(), last_feedback=self.last_feedback,
+            budget=self._budget_view(), last_feedback=None if independent else self.last_feedback,
         )
         remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)
         timeout = max(1.0, min(self.limits.model_request_timeout_s, remaining))
         call_id = f"m{self.requests_used + 1}"
         db.add_event(self.run_id, "model_started", {"call_id": call_id, "role": self.role, "model": cfg.model, "timeout_s": round(timeout, 1)})
         started = db.now()
-        res = self.clients[self.role].complete(prompt.SYSTEM_PROMPT, state, actions.ACTION_SCHEMA, timeout, cfg.max_output_tokens)
+        res = self.clients[self.role].complete(self.system_prompt, state, actions.ACTION_SCHEMA, timeout, cfg.max_output_tokens)
         ended = db.now()
         self.requests_used += 1
         if self.role == "small":
@@ -400,7 +433,7 @@ class Runner:
             self.tokens_used += u.input_tokens + u.output_tokens
         path = self.dir / "calls" / f"{call_id}.json"
         path.write_text(json.dumps({"request": res.request_body, "response": res.response_body,
-                                    "system_prompt_sha256": prompt.SYSTEM_PROMPT_SHA256}, ensure_ascii=False, indent=2, default=str))
+                                    "system_prompt_sha256": self.system_prompt_sha}, ensure_ascii=False, indent=2, default=str))
         db.insert("model_calls", {
             "call_id": f"{self.run_id}/{call_id}", "run_id": self.run_id, "provider": cfg.provider, "role": self.role,
             "model_requested": cfg.model, "model_returned": res.model_returned, "reasoning_effort": cfg.reasoning_effort,
@@ -408,7 +441,7 @@ class Runner:
             "error_kind": res.error_kind, "error_message": res.error_message, "request_id": res.request_id,
             "input_tokens": u.input_tokens, "cached_input_tokens": u.cached_input_tokens, "output_tokens": u.output_tokens,
             "reasoning_tokens": u.reasoning_tokens, "usage_source": u.source,
-            "estimated_input_tokens": (len(prompt.SYSTEM_PROMPT) + len(state)) // 4,
+            "estimated_input_tokens": (len(self.system_prompt) + len(state)) // 4,
             "cost_usd": cost, "cost_status": cost_status, "price_version": price_version,
             "latency_s": round(res.latency_s, 3), "request_path": str(path), "response_path": str(path),
             "started_at": started, "ended_at": ended,
@@ -454,6 +487,8 @@ class Runner:
         self.last_feedback = None
 
     def _do_evidence(self, act: actions.Action, call_id: str, started: str) -> None:
+        if self.task.is_native:
+            raise actions.InvalidAction("unavailable_tool", "use native validation feedback for this benchmark; cProfile is unavailable")
         if act.tool not in actions.EVIDENCE_TOOLS:
             raise actions.InvalidAction("unknown_tool", f"tool must be one of {actions.EVIDENCE_TOOLS}")
         cid = self._existing_candidate(act.candidate_id, require_runnable=True)
@@ -479,10 +514,12 @@ class Runner:
     def _do_propose(self, act: actions.Action, call_id: str, started: str) -> None:
         if self.model_candidates >= self.limits.max_candidates:
             raise actions.InvalidAction("candidate_budget", "no candidate budget left")
-        parent = self._existing_candidate(act.parent_candidate_id or self.best_id, require_runnable=False)
+        if self.opts.research_mode == "independent" and act.parent_candidate_id not in (None, "c0"):
+            raise actions.InvalidAction("independent_parent", "independent attempts can only modify c0")
+        parent = self._existing_candidate(act.parent_candidate_id or ("c0" if self.opts.research_mode == "independent" else self.best_id), require_runnable=False)
         static_error = None
         try:
-            actions.check_code(act.code, self.limits.max_code_bytes)
+            actions.check_code(act.code, self.limits.max_code_bytes, tuple(self.task.manifest.get("native", {}).get("allowed_imports", [])))
         except actions.InvalidAction as exc:
             if exc.kind in ("missing_code", "code_too_large"):
                 raise
@@ -512,7 +549,8 @@ class Runner:
     def _validate(self, cid: str) -> evaluator.Evaluation:
         db.add_event(self.run_id, "evaluation_started", {"candidate_id": cid, "dataset": "dev"})
         return evaluator.evaluate(self.task, self.candidates[cid]["code"].encode(), "dev", self.measure, self.limits,
-                                  run_id=self.run_id, candidate_id=cid)
+                                  run_id=self.run_id, candidate_id=cid,
+                                  deadline=self.t0 + self.limits.wall_clock_s if self.opts.research_mode != "legacy" else None)
 
     def _static_failure(self, cid: str, exc: actions.InvalidAction) -> evaluator.Evaluation:
         ev = evaluator.Evaluation(uuid.uuid4().hex[:12], self.task.task_id, "dev", "static_check_failed", False,
@@ -530,7 +568,11 @@ class Runner:
 
     def _after_validation(self, cid: str, ev: evaluator.Evaluation, counts_as_attempt: bool) -> None:
         fb = ev.public_feedback()
-        self.candidates[cid]["latest_evaluation"] = {k: fb.get(k) for k in ("status", "correct", "speedup", "improved", "goal_met", "failure", "timing_spread")}
+        eligible = self.opts.research_mode == "legacy" or time.perf_counter() <= self.t0 + self.limits.wall_clock_s
+        fb["eligible_for_selection"] = eligible
+        ev.detail["eligible_for_selection"] = eligible
+        db.update("evaluations", "evaluation_id", ev.evaluation_id, {"detail_json": db.dumps(ev.detail)})
+        self.candidates[cid]["latest_evaluation"] = fb
         if ev.status in ("sandbox_error", "baseline_failed", "checker_error"):
             self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
                        result=fb, next_decision="stop: environment_error")
@@ -538,24 +580,32 @@ class Runner:
 
         replaced = self._recompute_best()
         on_target = self._on_target(ev)
-        if on_target:
+        if on_target and self.opts.research_mode == "legacy":
             decision = "stop: goal_reached"
         else:
             if counts_as_attempt:
                 self.misses += 1
             decision = "continue"
-            if self.role == "small" and self.misses >= UPGRADE_RULE["consecutive_misses"]:
+            if not self.opts.fixed_model and self.role == "small" and self.misses >= UPGRADE_RULE["consecutive_misses"]:
                 decision = ("upgrade to large model, continue" if self.requests_used < self.limits.max_model_requests
                             else "upgrade rule met but no model requests left")
+        best = self.candidates[self.best_id].get("latest_evaluation") or {}
+        progress = {"elapsed_s": round(time.perf_counter() - self.t0, 3), "best_candidate_id": self.best_id,
+                    "metric": self.task.objective["metric"], "value": (best.get("objective") or {}).get("value")
+                    if self.task.objective["metric"] == "score" else best.get("speedup"),
+                    "model_requests": self.requests_used, "tokens": self.tokens_used}
         self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
-                   result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced, "run_target_speedup": self.run_target},
+                   result={**fb, "best_candidate_id": self.best_id, "best_replaced": replaced, "run_target_speedup": self.run_target,
+                           "progress": progress},
                    next_decision=decision)
         db.add_event(self.run_id, "evaluation_finished", {"candidate_id": cid, "status": ev.status, "speedup": ev.speedup,
                                                           "goal_met": ev.goal_met, "best_candidate_id": self.best_id})
         self.last_feedback = {"validation_of": cid, **fb, "best_candidate_id": self.best_id,
                               "run_target_speedup": self.run_target, "on_run_target": on_target}
 
-        if on_target:
+        if not eligible or ev.status == "budget_exhausted":
+            return self._stop("budget_exhausted", "development evaluation completed outside the research budget")
+        if on_target and self.opts.research_mode == "legacy":
             return self._stop("goal_reached", f"{cid} dev speedup {ev.speedup} >= {self.run_target}")
         if decision.startswith("upgrade to"):
             self._upgrade(f"连续 {self.misses} 次候选未达到正确且达标，按升级规则切换到大模型")
@@ -568,16 +618,20 @@ class Runner:
         Failed or regressed candidates stay on record but never displace the best artifact.
         """
         best, best_speedup = "c0", 1.0
+        if self.task.objective["metric"] == "score":
+            best_speedup = self.candidates["c0"]["latest_evaluation"]["objective"]["value"]
         for cid, c in self.candidates.items():
             latest = c.get("latest_evaluation") or {}
-            if cid != "c0" and latest.get("status") == "passed" and latest.get("improved") and latest["speedup"] > best_speedup:
-                best, best_speedup = cid, latest["speedup"]
+            value = (latest.get("objective") or {}).get("value") if self.task.objective["metric"] == "score" else latest.get("speedup")
+            if (cid != "c0" and latest.get("status") == "passed" and latest.get("improved")
+                    and latest.get("eligible_for_selection", True) and value is not None and value > best_speedup):
+                best, best_speedup = cid, value
         changed = best != self.best_id
         self.best_id = best
         return changed
 
     def _upgrade(self, reason: str) -> None:
-        if self.requests_used >= self.limits.max_model_requests:
+        if self.opts.fixed_model or self.requests_used >= self.limits.max_model_requests:
             return
         self.role = "large"
         detail = {"rule": UPGRADE_RULE["id"], "misses": self.misses, "small_requests": self.small_requests,
@@ -625,7 +679,7 @@ class Runner:
         if candidate_id:
             summary["candidate_id"] = candidate_id
         if result and actor == "program":
-            summary["result"] = {k: result.get(k) for k in ("status", "correct", "speedup", "goal_met", "best_candidate_id") if k in result}
+            summary["result"] = {k: result.get(k) for k in ("status", "correct", "speedup", "objective", "goal_met", "best_candidate_id") if k in result}
         self.history.append(summary)
         db.add_event(self.run_id, "step", {**summary, "next_decision": next_decision})
         return self.seq
@@ -637,6 +691,9 @@ class Runner:
     # ---------- final ----------
 
     def _final_evaluation(self) -> None:
+        if not self.opts.final_evaluation:
+            db.add_event(self.run_id, "final_eval_skipped", {"reason": "development_only_protocol"})
+            return
         if self.stop_reason in NO_FINAL_EVAL or not self.best_id:
             db.add_event(self.run_id, "final_eval_skipped", {"reason": self.stop_reason, "best_candidate_id": self.best_id})
             return

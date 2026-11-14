@@ -94,7 +94,7 @@ def parse(text: str) -> Action:
     return Action(**fields)
 
 
-def check_code(code: str | None, max_bytes: int) -> None:
+def check_code(code: str | None, max_bytes: int, allowed_imports: tuple[str, ...] = ()) -> None:
     """Static checks only; the code is compiled, never executed, on the host."""
     if not code or not code.strip():
         raise InvalidAction("missing_code", "propose_candidate requires non-empty code")
@@ -111,5 +111,5 @@ def check_code(code: str | None, max_bytes: int) -> None:
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
             names = [node.module]
         for name in names:
-            if name.split(".")[0] not in _ALLOWED_TOP_MODULES:
-                raise InvalidAction("non_stdlib_import", f"only the Python standard library is available; found import {name!r}")
+            if name.split(".")[0] not in _ALLOWED_TOP_MODULES | set(allowed_imports):
+                raise InvalidAction("non_stdlib_import", f"import {name!r} is not available in this task's environment")

@@ -39,6 +39,18 @@ def cmd_tasks_import_effibench(args) -> None:
             "selection": task.manifest["selection"], "workload": task.presentation["workload"]})
 
 
+def cmd_tasks_import_native(args) -> None:
+    from .benchmarks import get
+    options = {"split": args.split, "dev_cases": args.dev_cases, "final_cases": args.final_cases, "task_id": args.task_id}
+    if args.family == "algotune":
+        options.update(size=args.size, seed=args.seed)
+    if args.family == "kernelbench":
+        options.update(source=Path(args.source) if args.source else None, worker_command=args.worker_command, image=args.image)
+    task = get(args.family).import_problem(args.problem, **options)
+    _print({"task_id": task.task_id, "source": task.manifest["source"], "selection": task.manifest["selection"],
+            "objective": task.objective, "workload": task.presentation["workload"]})
+
+
 
 def cmd_tasks_lock(args) -> None:
     _print(taskpkg.write_lock(args.task_ids or None))
@@ -56,7 +68,8 @@ def cmd_run(args) -> None:
     from .agent.runner import RunOptions, Runner
 
     opts = RunOptions(task_id=args.task_id, mode=args.mode, snapshot_id=args.snapshot, limits=_limits(args),
-                      script=Path(args.script).resolve() if args.script else None, label=args.label)
+                      script=Path(args.script).resolve() if args.script else None, label=args.label,
+                      research_mode=args.research_mode, fixed_model=args.fixed_model, final_evaluation=not args.dev_only)
     runner = Runner(opts)
     run_id = runner.create()
     print(f"run {run_id} started (task {args.task_id}, mode {args.mode}, snapshot {runner.snapshot_id})", file=sys.stderr)
@@ -205,6 +218,12 @@ def cmd_comparison(args) -> None:
     _print(s) if args.json else _print_comparison(s)
 
 
+def cmd_research_compare(args) -> None:
+    from . import research_compare
+    _print(research_compare.execute(args.task_ids, repeats=args.repeats, limits=_limits(args),
+        fixed_model=args.fixed_model, final_evaluation=not args.dev_only, label=args.label))
+
+
 def cmd_export_run(args) -> None:
     from .narrative import run_markdown
 
@@ -237,6 +256,9 @@ def export_bundle(run_id: str, out: Path, text: str) -> None:
     (out / "README.md").write_text(text)
     (out / "report.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1).replace(local, ""))
     task = rep["task"]["task_id"]
+    license_path = taskpkg.load(task).dir / "UPSTREAM_LICENSE.txt"
+    if license_path.exists():
+        shutil.copyfile(license_path, out / license_path.name)
     lines = ["#!/usr/bin/env bash",
              f"# Reproduce {run_id} ({task}). Runs from the repository's backend/ directory.",
              "set -euo pipefail",
@@ -317,6 +339,21 @@ def main(argv: list[str] | None = None) -> None:
     eb.add_argument("--parquet", help="use a local shard instead of downloading; pinned SHA256 still checked")
     eb.add_argument("--task-id")
     eb.set_defaults(fn=cmd_tasks_import_effibench)
+    for family in ("ale-bench", "algotune", "kernelbench"):
+        parser = tsub.add_parser("import-" + family, help=f"import the frozen {family} research subset")
+        parser.add_argument("problem")
+        parser.add_argument("--split", required=True)
+        parser.add_argument("--task-id")
+        parser.add_argument("--dev-cases", type=int, default=5)
+        parser.add_argument("--final-cases", type=int, default=150 if family == "ale-bench" else 15)
+        if family == "algotune":
+            parser.add_argument("--size", type=int, default=1000)
+            parser.add_argument("--seed", type=int, default=1729)
+        if family == "kernelbench":
+            parser.add_argument("--source", help="offline reference .py file; pinned upstream blob is verified")
+            parser.add_argument("--worker-command", required=True, help="JSON argv for the GPU evaluation worker (local or ssh)")
+            parser.add_argument("--image", required=True, help="immutable GPU candidate image id on worker host")
+        parser.set_defaults(fn=cmd_tasks_import_native, family=family)
     lk = tsub.add_parser("lock", help="pin manifests in tasks/lock.json")
     lk.add_argument("task_ids", nargs="*")
     lk.set_defaults(fn=cmd_tasks_lock)
@@ -331,6 +368,9 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--max-candidates", type=int)
     r.add_argument("--wall-clock", type=float)
     r.add_argument("--request-timeout", type=float)
+    r.add_argument("--research-mode", choices=["legacy", "feedback", "independent"])
+    r.add_argument("--fixed-model", choices=["small", "large"])
+    r.add_argument("--dev-only", action="store_true", help="pilot: do not open the private final suite")
     r.set_defaults(fn=cmd_run)
 
     ln = sub.add_parser("learn", help="serial learn-mode runs over tasks (each publishes on top of the last)")
@@ -395,6 +435,18 @@ def main(argv: list[str] | None = None) -> None:
     cs.add_argument("comparison_id")
     cs.add_argument("--json", action="store_true")
     cs.set_defaults(fn=cmd_comparison)
+
+    rc = sub.add_parser("research-compare", help="within-task feedback vs independent attempts; serial equal budgets")
+    rc.add_argument("task_ids", nargs="+")
+    rc.add_argument("--repeats", type=int, default=1)
+    rc.add_argument("--label")
+    rc.add_argument("--fixed-model", choices=["small", "large"], default="small")
+    rc.add_argument("--wall-clock", type=float, default=900)
+    rc.add_argument("--max-requests", type=int, default=20)
+    rc.add_argument("--max-candidates", type=int, default=10)
+    rc.add_argument("--request-timeout", type=float)
+    rc.add_argument("--dev-only", action="store_true")
+    rc.set_defaults(fn=cmd_research_compare)
 
     xr = sub.add_parser("export-run", help="Markdown research record of one run, from stored records")
     xr.add_argument("run_id")

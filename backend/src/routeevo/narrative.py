@@ -64,10 +64,12 @@ def _cell(text) -> str:
 def run_markdown(run_id: str) -> str:
     r = report.build(run_id)
     t, o, u, tm = r["task"], r["outcome"], r["usage"]["total"], r["timing"]
+    is_score = t["objective"]["metric"] == "score"
+    metric = "原始得分" if is_score else "加速比"
     lines = [
         f"# 研究记录 {run_id}",
         "",
-        f"- 任务：{t['task_id']}（{t['split']} 批），目标：输出全对且加速比 ≥ {t['target_min_speedup']}×",
+        f"- 任务：{t['task_id']}（{t['split']} 批），目标：{r['research']['definition']['goal']}",
         f"- 模式：{'学习' if r['mode'] == 'learn' else '评测'}；读取经验快照：{r['snapshot_id']}；配置指纹：`{r['config_fingerprint']}`",
         f"- 结论：**{o['summary']}**（终止：{STOP_ZH.get(r['stop_reason'], r['stop_reason'])}）",
         f"- 状态拆分：候选运行完成 {o['candidate_ran']} · 开发验证通过 {o['dev_validation_passed']} · "
@@ -92,6 +94,8 @@ def run_markdown(run_id: str) -> str:
     for s in r["steps"]:
         res = s["result"]
         fb = []
+        if res.get("objective"):
+            fb.append(f"原始得分 {res['objective']['value']}，基线 {res['objective']['baseline']}")
         if res.get("speedup") is not None:
             fb.append(f"加速比 {_x(res['speedup'])}{'，改善' if res.get('improved') else ''}")
         if res.get("failure"):
@@ -112,6 +116,8 @@ def run_markdown(run_id: str) -> str:
     for e in r["research"]["experiments"]:
         res = e["result"]
         measured = f"{res['status'] or '—'}{(' · ' + _x(res['speedup'])) if res['speedup'] is not None else ''}"
+        if res.get("objective"):
+            measured += f" · 原始得分 {res['objective']['value']}"
         if res["contract_case"]:
             measured += f" · {res['contract_case']}"
         tag = "（复用）" if e.get("kind") == "reuse" else ""
@@ -119,15 +125,17 @@ def run_markdown(run_id: str) -> str:
                      f"{r['research']['verdict_labels'][e['verdict']]} | {_decision(e['then'] or '')} |")
     if not r["research"]["experiments"]:
         lines.append("| — | 本次运行没有提出候选 | — | — | — | — |")
-    lines += ["", "## 候选", "", "| 候选 | 来源 | 父候选 | 开发验证 | 加速比 | 代码 |", "|---|---|---|---|---|---|"]
+    lines += ["", "## 候选", "", f"| 候选 | 来源 | 父候选 | 开发验证 | {metric} | 代码 |", "|---|---|---|---|---|---|"]
     for c in r["candidates"]:
         ev = c["dev_evaluations"][-1] if c["dev_evaluations"] else {}
         sp = 1.0 if c["candidate_id"] == "c0" else ev.get("speedup")
+        value = _g((ev.get("objective") or {}).get("value")) if is_score else _x(sp)
         lines.append(f"| {c['candidate_id']}{' ★' if r['best_candidate'] and c['candidate_id'] == r['best_candidate']['candidate_id'] else ''} | "
-                     f"{c['origin']} | {c['parent_candidate_id'] or '—'} | {ev.get('status', '—')} | {_x(sp)} | `{_rel(c['code_path'])}` |")
+                     f"{c['origin']} | {c['parent_candidate_id'] or '—'} | {ev.get('status', '—')} | {value} | `{_rel(c['code_path'])}` |")
     fe = r["final_evaluation"]
     lines += ["", "## 独立最终测试", ""]
-    lines.append(f"- {fe['candidate_id'] if fe else '—'}：{fe['status'] if fe else '未运行'}，加速比 {_x(fe['speedup']) if fe else '—'}"
+    value = (_g((fe.get("objective") or {}).get("value")) if is_score else _x(fe["speedup"])) if fe else "—"
+    lines.append(f"- {fe['candidate_id'] if fe else '—'}：{fe['status'] if fe else '未运行'}，{metric} {value}"
                  + (f"（候选中位 {fe['candidate_median_s']:.3f}s / 基线中位 {fe['baseline_median_s']:.3f}s）" if fe and fe.get("candidate_median_s") else ""))
     lines += ["", "## 读取的经验", ""]
     if r["experience"]["read"]:

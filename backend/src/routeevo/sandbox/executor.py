@@ -75,8 +75,9 @@ def environment_info(measure: config.MeasureConfig) -> dict:
     return info
 
 
-def run_sample(code: bytes, input_bytes: bytes, timeout_s: float, measure: config.MeasureConfig, profile: bool = False) -> SampleResult:
-    image = ensure_image()["image_tag"]
+def run_sample(code: bytes, input_bytes: bytes, timeout_s: float, measure: config.MeasureConfig, profile: bool = False,
+               *, image: str | None = None, harness: str = "/opt/routeevo/harness.py") -> SampleResult:
+    image = image or ensure_image()["image_tag"]
     work = config.VAR_DIR / "sandbox" / uuid.uuid4().hex
     work.mkdir(parents=True)
     code_file = work / "candidate.py"
@@ -91,8 +92,9 @@ def run_sample(code: bytes, input_bytes: bytes, timeout_s: float, measure: confi
         "--pids-limit", str(measure.pids_limit),
         "--user", "65534:65534", "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
         "-e", "PYTHONHASHSEED=0", "-e", "PYTHONDONTWRITEBYTECODE=1",
+        "-e", "OPENBLAS_NUM_THREADS=1", "-e", "OMP_NUM_THREADS=1", "-e", "MKL_NUM_THREADS=1",
         "-v", f"{work}:/work:ro", "-w", "/work",
-        image, "python", "-B", "-s", "/opt/routeevo/harness.py", "/work/candidate.py",
+        image, "python", "-B", "-s", harness, "/work/candidate.py",
     ]
     if profile:
         cmd.append("--profile")

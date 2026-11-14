@@ -16,4 +16,13 @@ def get(family: str):
     if family == "effibench-x":
         from . import effibench
         return effibench
+    if family == "ale-bench":
+        from . import ale
+        return ale
+    if family == "algotune":
+        from . import algotune
+        return algotune
+    if family == "kernelbench":
+        from . import kernelbench
+        return kernelbench
     raise ValueError(f"unsupported family {family!r}")

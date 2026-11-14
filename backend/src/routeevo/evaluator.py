@@ -55,6 +55,9 @@ class Evaluation:
         }
         if self.detail.get("failure"):
             fb["failure"] = self.detail["failure"]
+        for key in ("objective", "case_count", "passed_cases"):
+            if key in self.detail:
+                fb[key] = self.detail[key]
         if self.detail.get("timing"):
             t = self.detail["timing"]
             fb["timing_spread"] = {"candidate_min_max_s": t["candidate_min_max_s"], "baseline_min_max_s": t["baseline_min_max_s"]}
@@ -77,7 +80,11 @@ def evaluate(
     candidate_id: str | None = None,
     measure_timing: bool = True,
     baseline_code: bytes | None = None,
+    deadline: float | None = None,
 ) -> Evaluation:
+    if task.is_native:
+        return task.adapter.evaluate(task, code, dataset, measure, limits, run_id=run_id, candidate_id=candidate_id,
+            measure_timing=measure_timing, baseline_code=baseline_code, deadline=deadline)
     started = db.now()
     t_start = time.perf_counter()
     cases = task.adapter.cases(task, dataset)
@@ -102,7 +109,10 @@ def evaluate(
     def suite(src: bytes, who: str, kind: str, selected) -> tuple[float | None, dict | None]:
         outputs, elapsed, output_bytes = [], 0.0, 0
         for case in selected:
-            r = executor.run_sample(src, case.input, timeout, measure)
+            remaining = timeout if deadline is None else min(timeout, deadline - time.perf_counter())
+            if remaining <= 0:
+                return None, {"category": "budget_exhausted"}
+            r = executor.run_sample(src, case.input, remaining, measure)
             record(who, f"{kind}:{case.name}", r)
             if r.status != "ok":
                 return None, {**sample_failure(r), "case": case.name}
@@ -196,6 +206,8 @@ def _b(v: bool | None) -> int | None:
 
 def profile_candidate(task: Task, code: bytes, measure: config.MeasureConfig, limits: config.RunLimits) -> dict:
     """Evidence tool: cProfile of the candidate on dev input. Output correctness is reported, not the data."""
+    if task.is_native:
+        raise ValueError("this benchmark uses native validation feedback; cProfile is not available")
     cases = task.adapter.cases(task, "dev")
     case = cases[0]
     r = executor.run_sample(code, case.input, limits.measurement_timeout_s * 3, measure, profile=True)

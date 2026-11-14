@@ -5,35 +5,40 @@ import { fmt, status } from '../labels'
 
 /* Speedup per candidate against the target line. Failed candidates have no bar; their status is written instead. */
 export function SpeedupBars({ candidates, target, bestId, onPick }: {
-  candidates: Candidate[]; target: number; bestId: string | null; onPick?: (cid: string) => void
+  candidates: Candidate[]; target: number | null; bestId: string | null; onPick?: (cid: string) => void
 }) {
   const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null)
   const [box, W] = useWidth<HTMLDivElement>()
+  const score = target == null
+  const format = score ? fmt.n : fmt.x
   const rows = candidates.map((c) => {
     const ev = c.dev_evaluations[c.dev_evaluations.length - 1]
-    const speed = c.candidate_id === 'c0' ? 1 : ev?.status === 'passed' ? ev.speedup : null
+    const speed = score ? (ev?.status === 'passed' ? ev.objective?.value ?? null : null)
+      : c.candidate_id === 'c0' ? 1 : ev?.status === 'passed' ? ev.speedup : null
     return { id: c.candidate_id, speed, ev, initial: c.candidate_id === 'c0', reused: c.origin === 'experience' }
   })
-  const maxX = Math.max(1.6, target + 0.2, ...rows.map((r) => (r.speed ?? 0) + 0.1))
+  const maxX = score ? Math.max(1, ...rows.map((r) => (r.speed ?? 0) * 1.1))
+    : Math.max(1.6, (target ?? 1.1) + 0.2, ...rows.map((r) => (r.speed ?? 0) + 0.1))
   const left = 64, right = 70, rowH = 34, top = 22
   const H = top + rows.length * rowH + 26
   const x = (v: number) => left + (v / maxX) * (W - left - right)
-  const ticks = [0, 0.5, 1, 1.5, 2, 2.5, 3].filter((t) => t <= maxX)
+  const ticks = score ? [0, 1, 2, 3, 4].map((n) => Math.round(n * maxX / 4))
+    : [0, 0.5, 1, 1.5, 2, 2.5, 3].filter((t) => t <= maxX)
 
   return (
     <div className="chart" ref={box} onMouseLeave={() => setTip(null)}>
-      <svg width={W} height={H} role="img" aria-label="各候选在开发数据上的加速比">
+      <svg width={W} height={H} role="img" aria-label={`各候选在开发数据上的${score ? '原始得分' : '加速比'}`}>
         <g className="grid">{ticks.map((t) => <line key={t} x1={x(t)} x2={x(t)} y1={top - 6} y2={H - 22} />)}</g>
-        <g className="axis">{ticks.map((t) => <text key={t} x={x(t)} y={H - 6} textAnchor="middle">{t}×</text>)}</g>
-        <g className="target">
+        <g className="axis">{ticks.map((t, i) => <text key={i} x={x(t)} y={H - 6} textAnchor="middle">{t}{score ? '' : '×'}</text>)}</g>
+        {target != null && <g className="target">
           <line x1={x(target)} x2={x(target)} y1={top - 14} y2={H - 22} />
           <text x={x(target) + 4} y={top - 6}>目标 {target}×</text>
-        </g>
+        </g>}
         {rows.map((r, i) => {
           const y = top + i * rowH
           const best = r.id === bestId
           const [label] = status(r.ev?.status)
-          const tipText = r.initial ? 'c0 初始程序：加速比定义为 1.00×'
+          const tipText = score ? `${r.id}：${r.speed == null ? label : `原始得分 ${format(r.speed)}`}` : r.initial ? 'c0 初始程序：加速比定义为 1.00×'
             : r.speed != null ? `${r.id}${r.reused ? '（复用经验中的程序）' : ''}：${fmt.x(r.speed)}${r.ev?.improved ? '，全部样本快于基线' : '，与基线重叠，不计改善'}`
             : r.ev ? `${r.id}：${label}` : `${r.id}：验证中`
           return (
@@ -51,7 +56,7 @@ export function SpeedupBars({ candidates, target, bestId, onPick }: {
                   <rect x={left} y={y + 9} height={rowH - 18} rx={4}
                     width={Math.max(2, x(r.speed) - left)}
                     fill={r.initial ? 'var(--rule-strong)' : r.ev?.goal_met ? 'var(--good)' : r.ev?.improved ? 'var(--ink-2)' : 'var(--ink-3)'} />
-                  <text x={x(r.speed) + 6} y={y + rowH / 2 + 4} className="lbl-strong">{fmt.x(r.speed)}</text>
+                  <text x={x(r.speed) + 6} y={y + rowH / 2 + 4} className="lbl-strong">{format(r.speed)}</text>
                 </>
               ) : r.ev ? (
                 <text x={left + 4} y={y + rowH / 2 + 4} className="lbl" style={{ fill: 'var(--critical)' }}>✕ {label}</text>

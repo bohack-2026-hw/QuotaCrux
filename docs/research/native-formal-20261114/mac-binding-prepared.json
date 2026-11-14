@@ -1,0 +1,237 @@
+{
+  "status": "prepared_not_executable",
+  "plan_id": "native-formal-20261114-mac-v2",
+  "protocol": "within-task-feedback-v2",
+  "slice": "algotune-mac",
+  "code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "ale_actual_code_sha": "990f598b87f7c93bd27b6ceef5751bbc2d39dd79",
+  "timing_protocol": "isolated-function-timing-v2",
+  "gc_policy": "automatic_gc_disabled_during_solve",
+  "central_plan": {
+    "source_commit": "540adf6",
+    "file": "central-plan.json",
+    "sha256": "b8dddb6e21f00ac7af2297f4c2198b49b0c925b3130171e8a201cefdc842bcc3"
+  },
+  "original_proposal": {
+    "source_commit": "bdd78b85e448f591dab13babdc279ec7cd6cefe5",
+    "file": "docs/research/native-formal-20261114/algotune/proposed-run-plan.json",
+    "sha256": "7de4fe8c666aa8b1737c1743cffc1f7c6b7f515ac8e6253eeaf18ec2aa416fd6"
+  },
+  "price_snapshot": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models",
+    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+    "unit_evidence": {
+      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+      "currency_symbol": "￥",
+      "text_model_price_denominator": "/M"
+    },
+    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+  },
+  "price_snapshot_sha256": "2235d0c4b147792c718567c56b14e9fe76a8d67d9002ea9979bd5358c07f93d3",
+  "model": {
+    "provider": "chat_compat",
+    "model": "Qwen3.8-27B",
+    "role": "small",
+    "base_url": "https://aiping.cn/api/v1",
+    "reasoning_effort": null,
+    "enable_thinking": false,
+    "max_output_tokens": 8192,
+    "temperature": null,
+    "response_format": "json_object",
+    "extra": {}
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "fixed_model": "small",
+  "final_evaluation": true,
+  "concurrency": 1,
+  "limits": {
+    "wall_clock_s": 900,
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "model_request_timeout_s": 120
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 3,
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30.0
+  },
+  "generation": {
+    "size": 1000,
+    "seed": 1729,
+    "dev_cases": 5,
+    "final_cases": 15
+  },
+  "prompt_version": "agent-prompt-v7",
+  "tasks": {
+    "convolve_1d": {
+      "task_id": null,
+      "manifest_sha256": null,
+      "candidate_image_id": null,
+      "judge_image_id": null,
+      "environment": null,
+      "prompt_sha256": null,
+      "calibration_sha256": null,
+      "calibration_status": "awaiting-v2-rebuild-and-quiet-window-calibration"
+    },
+    "pagerank": {
+      "task_id": null,
+      "manifest_sha256": null,
+      "candidate_image_id": null,
+      "judge_image_id": null,
+      "environment": null,
+      "prompt_sha256": null,
+      "calibration_sha256": null,
+      "calibration_status": "awaiting-v2-rebuild-and-quiet-window-calibration"
+    }
+  },
+  "runs": [
+    {
+      "seq": 1,
+      "central_slot": 16,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 2,
+      "central_slot": 26,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 1,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 3,
+      "central_slot": 17,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 1,
+      "mode": "no_feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 4,
+      "central_slot": 25,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 1,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 5,
+      "central_slot": 18,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 1,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 6,
+      "central_slot": 28,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 7,
+      "central_slot": 19,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 2,
+      "mode": "no_feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 8,
+      "central_slot": 27,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 2,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 9,
+      "central_slot": 20,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 2,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 10,
+      "central_slot": 30,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 3,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 11,
+      "central_slot": 21,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 2,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 12,
+      "central_slot": 29,
+      "task_key": "algotune/pagerank",
+      "task_id": null,
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 13,
+      "central_slot": 22,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 3,
+      "mode": "independent",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 14,
+      "central_slot": 23,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 3,
+      "mode": "feedback",
+      "host": "snowball-mac"
+    },
+    {
+      "seq": 15,
+      "central_slot": 24,
+      "task_key": "algotune/convolve_1d",
+      "task_id": null,
+      "repeat": 3,
+      "mode": "no_feedback",
+      "host": "snowball-mac"
+    }
+  ],
+  "routing_experiments_in_this_plan": false,
+  "execution_authorization": "After v2 calibration and each study freeze checks pass, run the fixed-model 15 and separate routing 12 without reconfirmation."
+}

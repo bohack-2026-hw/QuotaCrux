@@ -1,0 +1,15 @@
+{
+  "model": "Qwen3.8-27B",
+  "currency": "CNY",
+  "unit": "per_1m_tokens",
+  "input_per_1m": 3,
+  "output_per_1m": 12,
+  "source": "https://aiping.cn/api/v1/models",
+  "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+  "unit_evidence": {
+    "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+    "currency_symbol": "￥",
+    "text_model_price_denominator": "/M"
+  },
+  "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+}

@@ -1,4 +1,5 @@
 """Time solve(problem) calls; the candidate image contains no reference or checker."""
+import gc
 import json
 from pathlib import Path
 import sys
@@ -23,11 +24,19 @@ for i in range(request["repeats"] + warmups):
     solve = namespace["solve"]
     problem = decode(request["problem"])
     initialization.append(perf_counter() - start)
-    start = perf_counter()
-    answer = solve(problem)
-    elapsed = perf_counter() - start
+    gc_was_enabled = gc.isenabled()
+    if gc_was_enabled:
+        gc.disable()
+    try:
+        start = perf_counter()
+        answer = solve(problem)
+        elapsed = perf_counter() - start
+    finally:
+        if gc_was_enabled:
+            gc.enable()
     results.append(encode(answer))
     if i >= warmups:
         times.append(elapsed)
 print(json.dumps({"solutions": results, "times_s": times, "initialization_s": initialization,
-                  "warmup_count": warmups}, allow_nan=False))
+                  "warmup_count": warmups,
+                  "gc_policy": "automatic_gc_disabled_during_solve"}, allow_nan=False))

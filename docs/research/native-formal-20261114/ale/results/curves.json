@@ -1,0 +1,1145 @@
+[
+  {
+    "run_id": "run-20261114T073335-32c6",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "feedback",
+    "repeat": 1,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.264,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 47.289,
+        "tokens": 9931,
+        "cny": 0.048684,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 75.839,
+        "tokens": 24522,
+        "cny": 0.102528,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 116.976,
+        "tokens": 43803,
+        "cny": 0.180639,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 159.403,
+        "tokens": 81168,
+        "cny": 0.310059,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 198.97,
+        "tokens": 111741,
+        "cny": 0.419499,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 234.515,
+        "tokens": 147849,
+        "cny": 0.546183,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 275.599,
+        "tokens": 210176,
+        "cny": 0.750867,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 318.144,
+        "tokens": 258160,
+        "cny": 0.916833,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 328.337,
+        "tokens": 284138,
+        "cny": 0.997116,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T073335-1a5c",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "feedback",
+    "repeat": 1,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.184,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 31.974,
+        "tokens": 9260,
+        "cny": 0.039318,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 68.485,
+        "tokens": 23527,
+        "cny": 0.095709,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 114.879,
+        "tokens": 43324,
+        "cny": 0.173316,
+        "value": 44575,
+        "candidate_id": "c3"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 149.094,
+        "tokens": 68856,
+        "cny": 0.266265,
+        "value": 44575,
+        "candidate_id": "c3"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 200.91,
+        "tokens": 116714,
+        "cny": 0.431916,
+        "value": 44575,
+        "candidate_id": "c3"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 233.693,
+        "tokens": 155639,
+        "cny": 0.565188,
+        "value": 44575,
+        "candidate_id": "c3"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 252.617,
+        "tokens": 199188,
+        "cny": 0.703719,
+        "value": 44575,
+        "candidate_id": "c3"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T073907-af56",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "independent",
+    "repeat": 1,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.317,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 56.499,
+        "tokens": 5877,
+        "cny": 0.041985,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 92.707,
+        "tokens": 10941,
+        "cny": 0.074205,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 174.579,
+        "tokens": 18445,
+        "cny": 0.135705,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 192.302,
+        "tokens": 22511,
+        "cny": 0.15594,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 197.056,
+        "tokens": 25847,
+        "cny": 0.167415,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 227.331,
+        "tokens": 30914,
+        "cny": 0.199662,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 230.647,
+        "tokens": 34203,
+        "cny": 0.210573,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T073907-620a",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "no_feedback",
+    "repeat": 1,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.247,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 46.145,
+        "tokens": 9443,
+        "cny": 0.046356,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 116.955,
+        "tokens": 25612,
+        "cny": 0.124194,
+        "value": 44159,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 186.839,
+        "tokens": 70287,
+        "cny": 0.294282,
+        "value": 44159,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 217.7,
+        "tokens": 84005,
+        "cny": 0.34881,
+        "value": 44159,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 256.856,
+        "tokens": 130360,
+        "cny": 0.511473,
+        "value": 44159,
+        "candidate_id": "c2"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T074330-3c9d",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "independent",
+    "repeat": 2,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.211,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 32.741,
+        "tokens": 4591,
+        "cny": 0.026571,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 85.405,
+        "tokens": 10320,
+        "cny": 0.066789,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 100.162,
+        "tokens": 14199,
+        "cny": 0.084807,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 106.95,
+        "tokens": 17668,
+        "cny": 0.097896,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 135.047,
+        "tokens": 22229,
+        "cny": 0.124089,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 167.455,
+        "tokens": 27422,
+        "cny": 0.157866,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 230.124,
+        "tokens": 32945,
+        "cny": 0.195603,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 283.799,
+        "tokens": 38359,
+        "cny": 0.232032,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 286.774,
+        "tokens": 41674,
+        "cny": 0.243273,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T074330-f525",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "independent",
+    "repeat": 1,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.143,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 22.044,
+        "tokens": 4266,
+        "cny": 0.021987,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 88.724,
+        "tokens": 10553,
+        "cny": 0.068217,
+        "value": 44187,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 111.895,
+        "tokens": 14812,
+        "cny": 0.090111,
+        "value": 44187,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 136.13,
+        "tokens": 19107,
+        "cny": 0.112428,
+        "value": 44187,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 152.255,
+        "tokens": 23216,
+        "cny": 0.132513,
+        "value": 44612,
+        "candidate_id": "c5"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 177.529,
+        "tokens": 27531,
+        "cny": 0.15507,
+        "value": 44612,
+        "candidate_id": "c5"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 232.502,
+        "tokens": 32670,
+        "cny": 0.187515,
+        "value": 44612,
+        "candidate_id": "c5"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 258.98,
+        "tokens": 36981,
+        "cny": 0.210024,
+        "value": 44612,
+        "candidate_id": "c5"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 265.51,
+        "tokens": 40385,
+        "cny": 0.221649,
+        "value": 44612,
+        "candidate_id": "c5"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T074821-020e",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "feedback",
+    "repeat": 2,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.242,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 25.487,
+        "tokens": 4879,
+        "cny": 0.026211,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 47.754,
+        "tokens": 17172,
+        "cny": 0.07425,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 74.301,
+        "tokens": 32979,
+        "cny": 0.13302,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 96.152,
+        "tokens": 52372,
+        "cny": 0.202503,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 125.859,
+        "tokens": 64882,
+        "cny": 0.255738,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 164.249,
+        "tokens": 93208,
+        "cny": 0.359193,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 233.955,
+        "tokens": 179654,
+        "cny": 0.648834,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 307.296,
+        "tokens": 266165,
+        "cny": 0.934674,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 317.208,
+        "tokens": 290675,
+        "cny": 1.010058,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T074821-6b87",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "no_feedback",
+    "repeat": 2,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.162,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 70.675,
+        "tokens": 12130,
+        "cny": 0.063012,
+        "value": 45374,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 141.819,
+        "tokens": 38584,
+        "cny": 0.176106,
+        "value": 45374,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 192.542,
+        "tokens": 72524,
+        "cny": 0.298851,
+        "value": 45374,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 247.227,
+        "tokens": 99639,
+        "cny": 0.399834,
+        "value": 45374,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 279.352,
+        "tokens": 115378,
+        "cny": 0.460245,
+        "value": 45374,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 288.38,
+        "tokens": 131271,
+        "cny": 0.509481,
+        "value": 45374,
+        "candidate_id": "c1"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T075341-6da8",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "feedback",
+    "repeat": 3,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.184,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 23.432,
+        "tokens": 4880,
+        "cny": 0.026223,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 57.173,
+        "tokens": 18586,
+        "cny": 0.082749,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 107.763,
+        "tokens": 50217,
+        "cny": 0.2016,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 134.567,
+        "tokens": 77567,
+        "cny": 0.297645,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 161.099,
+        "tokens": 93845,
+        "cny": 0.357495,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 202.393,
+        "tokens": 130740,
+        "cny": 0.487017,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 239.819,
+        "tokens": 152653,
+        "cny": 0.569217,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 265.064,
+        "tokens": 176333,
+        "cny": 0.652029,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 292.71,
+        "tokens": 201807,
+        "cny": 0.740322,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 325.682,
+        "tokens": 282577,
+        "cny": 0.993846,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T075341-62cf",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "independent",
+    "repeat": 2,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.109,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 31.159,
+        "tokens": 4543,
+        "cny": 0.025293,
+        "value": 45219,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 44.288,
+        "tokens": 8479,
+        "cny": 0.043293,
+        "value": 45219,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 59.304,
+        "tokens": 12401,
+        "cny": 0.061125,
+        "value": 45219,
+        "candidate_id": "c1"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 72.484,
+        "tokens": null,
+        "cny": null,
+        "value": 45219,
+        "candidate_id": "c1"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T080312-9c97",
+    "problem": "ahc024",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "mode": "independent",
+    "repeat": 3,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.235,
+        "tokens": 0,
+        "cny": 0,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 26.962,
+        "tokens": 4218,
+        "cny": 0.022104,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 59.02,
+        "tokens": 9143,
+        "cny": 0.052683,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 64.453,
+        "tokens": 12495,
+        "cny": 0.064386,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 104.136,
+        "tokens": 17227,
+        "cny": 0.092649,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 164.432,
+        "tokens": 22869,
+        "cny": 0.131823,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 172.822,
+        "tokens": 26385,
+        "cny": 0.145485,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 186.714,
+        "tokens": 30068,
+        "cny": 0.161151,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 210.237,
+        "tokens": 34241,
+        "cny": 0.182697,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 235.208,
+        "tokens": 38800,
+        "cny": 0.208875,
+        "value": 5,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 246.488,
+        "tokens": 42156,
+        "cny": 0.220617,
+        "value": 5,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T080312-370b",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "feedback",
+    "repeat": 2,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.159,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 20.046,
+        "tokens": 8589,
+        "cny": 0.032139,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 39.223,
+        "tokens": 20579,
+        "cny": 0.075462,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 61.722,
+        "tokens": 35610,
+        "cny": 0.127881,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 77.951,
+        "tokens": 53309,
+        "cny": 0.187953,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 92.304,
+        "tokens": 63448,
+        "cny": 0.222249,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 115.322,
+        "tokens": 97238,
+        "cny": 0.33396,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 124.53,
+        "tokens": 110135,
+        "cny": 0.376548,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 133.852,
+        "tokens": 123844,
+        "cny": 0.421581,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 145.351,
+        "tokens": 138178,
+        "cny": 0.46677,
+        "value": 44120,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T080722-9c52",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "independent",
+    "repeat": 3,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.248,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 15.743,
+        "tokens": 4007,
+        "cny": 0.01887,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 19.9,
+        "tokens": 7416,
+        "cny": 0.030555,
+        "value": 44120,
+        "candidate_id": "c0"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T080746-c98c",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "feedback",
+    "repeat": 3,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.232,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 16.293,
+        "tokens": 8502,
+        "cny": 0.031887,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 44.466,
+        "tokens": 21349,
+        "cny": 0.081453,
+        "value": 44270,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 81.518,
+        "tokens": 38021,
+        "cny": 0.139992,
+        "value": 44270,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 116.24,
+        "tokens": 58541,
+        "cny": 0.212703,
+        "value": 44270,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 146.657,
+        "tokens": 95818,
+        "cny": 0.338142,
+        "value": 44270,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 168.942,
+        "tokens": 125686,
+        "cny": 0.439068,
+        "value": 44270,
+        "candidate_id": "c2"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 184.68,
+        "tokens": 159046,
+        "cny": 0.544845,
+        "value": 44270,
+        "candidate_id": "c2"
+      }
+    ]
+  },
+  {
+    "run_id": "run-20261114T081057-be69",
+    "problem": "ahc026",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "mode": "no_feedback",
+    "repeat": 3,
+    "points": [
+      {
+        "source": "measured_initial_dev",
+        "elapsed_s": 1.305,
+        "tokens": 0,
+        "cny": 0,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 10.71,
+        "tokens": 3822,
+        "cny": 0.014985,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 34.646,
+        "tokens": 13036,
+        "cny": 0.051357,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 119.628,
+        "tokens": 36521,
+        "cny": 0.161862,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 183.431,
+        "tokens": 62472,
+        "cny": 0.274833,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 246.711,
+        "tokens": 96249,
+        "cny": 0.411282,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 259.309,
+        "tokens": 113855,
+        "cny": 0.468285,
+        "value": 44120,
+        "candidate_id": "c0"
+      },
+      {
+        "source": "recorded_progress",
+        "elapsed_s": 363.083,
+        "tokens": 157941,
+        "cny": 0.649125,
+        "value": 44272,
+        "candidate_id": "c7"
+      },
+      {
+        "source": "carry_forward_at_loop_freeze",
+        "elapsed_s": 372.685,
+        "tokens": 181049,
+        "cny": 0.720033,
+        "value": 44272,
+        "candidate_id": "c7"
+      }
+    ]
+  }
+]

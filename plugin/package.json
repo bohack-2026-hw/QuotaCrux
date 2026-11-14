@@ -1,0 +1,29 @@
+{
+  "name": "@local/quotacrux-dsh",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Project-scoped research evidence and routing demonstrations for DeepSeek Harness.",
+  "exports": {
+    ".": "./index.js",
+    "./p0": "./p0.js",
+    "./engine": "./engine.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./engine/locale/*.json": "./locale/*.json",
+    "./engine/icon": "./icon.svg",
+    "./p0/locale/*.json": "./locale/p0/*.json",
+    "./p0/icon": "./icon.svg"
+  },
+  "files": ["*.js", "engine_worker.py", "cordis.patch.yml", "locale", "icon.svg", "README.md", "VALIDATION.md", "LIVE-VALIDATION.md"],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check index.js && node --check local-adapter.js && node --check engine.js && node --check live.js && node --check live-state.js && node --check client.js && node --check native-log.js && node --check transport.js && node --check p0.js && node --check core.js && node --check models.js"
+  },
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": { "platform": "web", "immediately": true,
+      "inject": ["@deepseek-ai/dsh-client-ui-tool", "@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-session", "@deepseek-ai/dsh-client-locale"] }
+  }
+}

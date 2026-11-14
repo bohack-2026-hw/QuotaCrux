@@ -1,0 +1,36 @@
+- insert:
+    - id: quotacrux-live-host
+      name: '@local/quotacrux-dsh'
+    - id: preset-quotacrux-p0
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: quotacrux-p0
+        name: QuotaCrux · 历史回放
+        description: 查看真实路由记录，并在同一项目的会话间共享研究证据。
+        order: 10
+        plugins:
+          - id: quotacrux-p0-tools
+            name: '@local/quotacrux-dsh/p0'
+            config: {}
+    - id: preset-quotacrux-live
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: quotacrux-live
+        name: QuotaCrux · 本地优先
+        description: 正常处理所有请求，默认本机 Gemma；远程求助作为工具调用，现有优化引擎按需使用。
+        order: 9
+        plugins:
+          - id: quotacrux-engine
+            name: '@local/quotacrux-dsh/engine'
+            config: {}
+          - id: quotacrux-files
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              readImage: false
+              applyPatch: false
+          - id: quotacrux-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: quotacrux-shell
+            name: '@deepseek-ai/dsh-tool-bash'

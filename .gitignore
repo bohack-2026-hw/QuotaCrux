@@ -1,4 +1,7 @@
 .DS_Store
 
+# Local project-scoped DSH evidence references.
+.quotacrux/
+
 # poster build intermediate (images inlined)
 docs/poster/*.html

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import threading
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -310,4 +311,19 @@ def all_rows(sql: str, params: tuple = ()) -> list[sqlite3.Row]:
 
 
 def add_event(run_id: str, type_: str, payload: dict[str, Any]) -> None:
-    insert("events", {"run_id": run_id, "ts": now(), "type": type_, "payload_json": dumps(payload)})
+    timestamp = now()
+    insert("events", {"run_id": run_id, "ts": timestamp, "type": type_, "payload_json": dumps(payload)})
+    observer = getattr(_local, "event_observer", None)
+    if observer is not None:
+        observer({"run_id": run_id, "ts": timestamp, "type": type_, "payload": payload})
+
+
+@contextmanager
+def observe_events(observer):
+    """Stream committed events to an in-process adapter, confined to this thread."""
+    previous = getattr(_local, "event_observer", None)
+    _local.event_observer = observer
+    try:
+        yield
+    finally:
+        _local.event_observer = previous

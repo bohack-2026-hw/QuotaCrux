@@ -199,16 +199,8 @@ def autoplay(slide, spid, ms):
         slide._element.append(el)
 
 # ============================================================== 1 cover
-s, tl = new(notes="开场（先自动播放 BoHack 开场动画）：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
-# the bohack.top opening, captured frame by frame from the site, plays on the cover itself (once): the pen draws
-# the logo, it settles top-left exactly where every later slide keeps it, and the cover builds on top of it.
-mov = s.shapes.add_movie(A("bohack-intro.mp4"), 0, 0, prs.slide_width, prs.slide_height, poster_frame_image=A("bohack-intro-poster.png"), mime_type="video/mp4")
-tl.add(mov, "play", 0, 2733)
-# the same lockup appears over the video's last frame the moment it ends, so nothing changes on screen when the
-# player drops the finished video back to its blank poster
-for sh in lockup(s, L, 56 - 19 * HDR_K, HDR_K, shapes=True):
-    tl.fade(sh, 2700, 60)
-INTRO_MS = 2800
+s, tl = new(notes="开场：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
+lockup(s, L, 56 - 19 * HDR_K, HDR_K)
 t1 = T(s, 1144, 32, 700, 48, "倍漾量化 · Research Agent 赛道", size=15, align="r", anchor="m")
 rule = line(s, L, 88, R, 88, INK, 2, name="!!rule")
 brand = T(s, 60, 120, 1300, 240, "QuotaCrux", size=118, bold=True, color=BLUE, latin=NUM, name="!!brand")
@@ -738,8 +730,6 @@ qt = T(s, 1494, 668, 350, 40, "扫码查看代码与报告", size=16, color=INK2
 tl.fade(qt, 3300, 400)
 tl.fade(T(s, L, 930, 1000, 44, "github.com/bohack-2026-hw/QuotaCrux", size=17, color=INK2, latin=NUM), 3300, 500)
 
-for f in TLS[0].fx[3:]:
-    f["delay"] += INTRO_MS
 for t in TLS:
     t.build()
 prs.core_properties.title = "QuotaCrux 枢决 · 技术演示"

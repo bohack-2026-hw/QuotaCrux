@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "QuotaCrux local-first assistant",
+    "description": "Handles ordinary requests with local Gemma and normal text replies. Remote assistance is an explicit remote_llm tool with reasons, task, answer and usage, limited to one call per turn. Existing research optimization is optional, not an input whitelist."
+  }
+}

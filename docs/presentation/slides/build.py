@@ -30,7 +30,16 @@ SECTIONS = ["为什么", "怎么做", "效果", "总结"]
 PAPER = os.path.join(HERE, "build", "paper-flat.png")
 os.makedirs(os.path.dirname(PAPER), exist_ok=True)
 Image.new("RGB", (192, 108), BG).save(PAPER)
-LOCKUP = (63, 25, 218, 52)  # where the bohack.top intro lands; the same spot on every slide
+# bohack.top lockup, in its own CSS px: mark (0,0,56,38) and text block (70,3.2,101,31.6); 171 x 38 overall
+
+
+def lockup(s, x, y, k):
+    """BoHack mark + text at scale k; shared names let morph carry them from the intro to the header."""
+    return [pic(s, A("bohack-mark.png"), x, y, 56 * k, 38 * k, name="!!bhmark"),
+            pic(s, A("bohack-text.png"), x + 70 * k, y + 3.2 * k, 101 * k, 31.6 * k, name="!!bhtext")]
+
+
+HDR_K = 1.2  # header lockup: 205 x 46 px, centred on y = 56
 
 prs = Presentation()
 prs.slide_width, prs.slide_height = Emu(12192000), Emu(6858000)
@@ -63,9 +72,9 @@ def new(section=None, title=None, kicker=None, notes=""):
     TLS.append(tl)
     if section is not None:
         # header: brand left, section route right; same names on every slide so morph keeps them still
-        pic(s, A("bohack-lockup.png"), *LOCKUP, name="!!bohack")
-        line(s, 306, 36, 306, 72, RULE, 2, name="!!divider")
-        T(s, 326, 30, 400, 48, [[("QuotaCrux", {"color": BLUE, "bold": True}), ("  枢决", {"color": INK, "bold": True})]], size=17, anchor="m", name="!!brand")
+        lockup(s, L, 56 - 19 * HDR_K, HDR_K)
+        line(s, 304, 38, 304, 74, RULE, 2, name="!!divider")
+        T(s, 322, 32, 400, 48, [[("QuotaCrux", {"color": BLUE, "bold": True}), ("  枢决", {"color": INK, "bold": True})]], size=17, anchor="m", name="!!brand")
         line(s, L, 88, R, 88, INK, 2, name="!!rule")
         x0, labw = 1250, [84, 84, 56, 56]
         for i, nm in enumerate(SECTIONS):
@@ -148,11 +157,22 @@ def table(s, x, y, cols, rows, rh=64, head_size=13, size=15, hot_col=None, align
 
 B_ = {"bold": True, "color": BLUE}
 
+# ============================================================== 0 intro (auto-advances)
+s, tl = new(notes="BoHack 开场：Logo 画出后自动进入封面。")
+K = 5
+ox, oy = (1920 - 171 * K) / 2, (1080 - 38 * K) / 2
+mark, word = lockup(s, ox, oy, K)
+tl.wipe(mark, 200, 1100, direction="left").wipe(word, 1100, 700, direction="left")
+tr = s._element.find(".//{http://schemas.openxmlformats.org/presentationml/2006/main}transition")
+s._element.remove(s._element.find("{http://schemas.openxmlformats.org/markup-compatibility/2006}AlternateContent"))
+set_transition(s, "fade", 600)
+for t_ in s._element.iter("{http://schemas.openxmlformats.org/presentationml/2006/main}transition"):
+    t_.set("advTm", "1200")
+
 # ============================================================== 1 cover
-s, tl = new(notes="开场（先播放 BoHack 开场动画）：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
-COVER = tl
-pic(s, A("bohack-intro.gif"), 0, 0, 1300, 640, name="!!bohack")
-t1 = T(s, 1144, 34, 700, 48, "倍漾量化 · Research Agent 赛道", size=15, align="r", anchor="m")
+s, tl = new(notes="开场：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
+lockup(s, L, 56 - 19 * HDR_K, HDR_K)
+t1 = T(s, 1144, 32, 700, 48, "倍漾量化 · Research Agent 赛道", size=15, align="r", anchor="m")
 rule = line(s, L, 88, R, 88, INK, 2, name="!!rule")
 brand = T(s, 60, 120, 1300, 240, "QuotaCrux", size=118, bold=True, color=BLUE, latin=NUM, name="!!brand")
 cn = T(s, 76, 360, 400, 170, "枢决", size=80, bold=True)
@@ -277,10 +297,10 @@ for k, (args, hot) in enumerate([((840, 370, 320, 100, "可见状态", "契约 �
     each(tl, box(s, *args, hot=hot), "pop", dl + k * 220, 400)
 for k, (a, b_, c, d2, dr) in enumerate([(1160, 420, 1220, 420, "left"), (1380, 470, 1380, 550, "up"), (1220, 600, 1160, 600, "right"), (1000, 650, 1000, 730, "up"), (1160, 780, 1220, 780, "left")]):
     tl.wipe(arrow(s, a, b_, c, d2), dl + 150 + k * 220, 250, direction=dr)
-tl.fade(T(s, 1392, 492, 220, 36, "分析 / 提出候选", size=13, color=INK2), dl + 400, 400)
+tl.fade(T(s, 1190, 492, 176, 36, "分析 / 提出候选", size=13, color=INK2, align="r"), dl + 400, 400)
 byp = [line(s, 1540, 420, 1580, 420, INK2, 2), line(s, 1580, 420, 1580, 780, INK2, 2), arrow(s, 1580, 780, 1540, 780)]
 each(tl, byp, "fade", dl + 1400, 400)
-tl.fade(T(s, 1588, 520, 30, 180, "取证复验结束", size=12, color=INK2), dl + 1400, 400)
+tl.fade(T(s, 1586, 500, 34, 220, list("取证复验结束"), size=12, color=INK2, align="c", spacing=1.0), dl + 1400, 400)
 fbk = [line(s, 1380, 830, 1380, 866, ORANGE, 2, dash="dash"), line(s, 1380, 866, 822, 866, ORANGE, 2, dash="dash"),
        line(s, 822, 866, 822, 420, ORANGE, 2, dash="dash"), arrow(s, 822, 420, 840, 420, ORANGE, 2)]
 each(tl, fbk, "fade", dl + 1600, 400)
@@ -682,8 +702,6 @@ qt = T(s, 1494, 668, 350, 40, "扫码查看代码与报告", size=16, color=INK2
 tl.zoom(qf, 2900, 600).zoom(qi, 3000, 600).fade(qt, 3300, 400)
 tl.fade(T(s, L, 930, 1000, 44, "github.com/bohack-2026-hw/QuotaCrux", size=17, color=INK2, latin=NUM), 3300, 500)
 
-for f in COVER.fx:
-    f["delay"] += 2300
 for t in TLS:
     t.build()
 prs.core_properties.title = "QuotaCrux 枢决 · 技术演示"

@@ -1,0 +1,35 @@
+{
+  "api_cost": 0,
+  "captured_at": "2026-11-14T15:59:09.333193+08:00",
+  "counts": {
+    "evaluations": 24,
+    "model_calls": 0,
+    "runs": 0,
+    "tasks": 2
+  },
+  "dev_evaluations": 24,
+  "evaluation_counts": [
+    {
+      "count": 24,
+      "dataset": "dev",
+      "status": "passed"
+    }
+  ],
+  "final_evaluations": 0,
+  "foreign_key_violations": 0,
+  "formal_runs": 0,
+  "integrity_check": "ok",
+  "locks": {
+    "compare.lock": false,
+    "run.lock": false
+  },
+  "model_requests": 0,
+  "routeevo_containers": [],
+  "sqlite_path": "backend/var-algotune-formal-20261114/routeevo.sqlite3",
+  "task_manifests": {
+    "convolve_1d": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",
+    "pagerank": "61ab8297dfa51ccce5c79a77bc7dafe074bb6fa41936f7065b4ccbbe024994f4"
+  },
+  "task_packages_verified": true,
+  "var_dir": "backend/var-algotune-formal-20261114"
+}

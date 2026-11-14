@@ -1,0 +1,2081 @@
+{
+  "run_id": "run-20261114T073907-af56",
+  "task": {
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "split": "formal-20261114",
+    "target_min_speedup": null,
+    "objective": {
+      "metric": "score",
+      "direction": "maximize",
+      "min_speedup": null
+    },
+    "workload": "ahc024 · 5 public cases",
+    "family": "ale-bench",
+    "presentation": {
+      "title": "ALE-Bench · ahc024",
+      "workload": "ahc024 · 5 public cases",
+      "baseline": "可行起始程序（不代表上游竞争性解法）",
+      "validation": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "agent_notes": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores."
+    },
+    "dev_params": {
+      "cases": 5
+    },
+    "final_params": {
+      "cases": 15
+    },
+    "source": {
+      "archive_sha256": "b4f02d3cbcea3200d3e7d29dcf27b1e0bcce1fb566ed249541683114f7986585",
+      "dataset": "SakanaAI/ALE-Bench",
+      "license": "CC-BY-ND-4.0",
+      "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+    },
+    "selection": {
+      "dev_cases": 5,
+      "final_cases": 15
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "research-ale-formal-20261114-v2 #3 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "recorded_status": "completed",
+  "research_mode": "independent",
+  "dev_only": false,
+  "stop_reason": "agent_finished",
+  "stop_detail": "预算已用尽，停止继续实验。",
+  "config_fingerprint": "61c8511ac4ccba5a",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": false,
+    "best_from_reuse": false,
+    "best_is_initial": true,
+    "final_evaluated": true,
+    "final_status": "completed",
+    "final_error": null,
+    "final_correct": true,
+    "final_speedup": null,
+    "final_objective": {
+      "aggregation": "sum",
+      "baseline": 15,
+      "cases": [
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        }
+      ],
+      "direction": "maximize",
+      "metric": "score",
+      "value": 15
+    },
+    "goal_met": false,
+    "valid_artifact": true,
+    "summary": "最终方案 c0 可行，原始得分 15（maximize；基线 15）"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "d052b16d54"
+      },
+      "family": "ale-bench",
+      "family_records": 0,
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c0",
+    "origin": "initial",
+    "parent_candidate_id": null,
+    "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c0.py",
+    "code_sha256": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38",
+    "model_call_id": null,
+    "dev_evaluations": [
+      {
+        "evaluation_id": "c51502d31e1a",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 0,
+        "goal_met": 0,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest valid dev score within the research budget; else initial c0",
+  "run_target_speedup": null,
+  "route": null,
+  "final_evaluation": {
+    "evaluation_id": "c7a280c63c64",
+    "candidate_id": "c0",
+    "status": "passed",
+    "correct": true,
+    "speedup": null,
+    "candidate_median_s": null,
+    "baseline_median_s": null,
+    "timing": null,
+    "failure": null,
+    "duration_s": 3.743,
+    "objective": {
+      "aggregation": "sum",
+      "baseline": 15,
+      "cases": [
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        },
+        {
+          "correct": true,
+          "score": 1
+        }
+      ],
+      "direction": "maximize",
+      "metric": "score",
+      "value": 15
+    },
+    "case_count": 15,
+    "passed_cases": 15,
+    "normalized": false,
+    "measured": true,
+    "note": "initial program; native score measured"
+  },
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c0.py",
+      "code_sha256": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "c51502d31e1a",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c1.py",
+      "code_sha256": "16532644a6d07c41ccfb2e47724854d580bdefce95665f938065eeb5ca959928",
+      "model_call_id": "m1",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "62a3eea44d00",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c2.py",
+      "code_sha256": "3b18716a179e31662e0d7b71548ca2eaa1d628c2b90e0e0b380bbf22b75c2eb9",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "62303fce6a9c",
+          "status": "wrong_output",
+          "correct": 0,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 0
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c3.py",
+      "code_sha256": "5cb172f8005aae4fd09c0f779f17a1c439914d8b4c1e0f5d60fd1a03f576c321",
+      "model_call_id": "m3",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "a8f497aed578",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c4",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c4.py",
+      "code_sha256": "2914ec7f8589b420d7545a5a21c17e6bdd6a306d4d729a7089f7b3ba8a9331e0",
+      "model_call_id": "m4",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "b6fe92ecf5a2",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c5",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c5.py",
+      "code_sha256": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38",
+      "model_call_id": "m5",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "0b2110fcb5c0",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c6",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c6.py",
+      "code_sha256": "9386e98775ef3d5a5c0f1ff503d73d6a53c0e631894fde0bd0f674f2633c8273",
+      "model_call_id": "m6",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "7cb016779978",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 7,
+    "routing_requests": 0,
+    "generation_requests": 7,
+    "candidates_proposed": 6,
+    "candidates_passed": 5,
+    "candidates_improved": 0,
+    "candidates_no_gain": 5,
+    "candidates_failed": 1,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "large_model_requests": 0,
+    "small_model_requests": 7,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 7,
+      "ok": 7,
+      "errors": {},
+      "latency_s": 219.296,
+      "input_tokens": 22207,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 9984,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 11996,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": null,
+      "reasoning_tokens_unknown_calls": 7,
+      "cost_usd": null,
+      "cost_status": "unknown",
+      "cost_unknown_calls": 7,
+      "price_versions": []
+    },
+    "by_model": {
+      "small:chat_compat:Qwen3.8-27B": {
+        "requests": 7,
+        "ok": 7,
+        "errors": {},
+        "latency_s": 219.296,
+        "input_tokens": 22207,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 9984,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11996,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 7,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 7,
+        "price_versions": []
+      }
+    },
+    "by_purpose": {
+      "routing": {
+        "requests": 0,
+        "ok": 0,
+        "errors": {},
+        "latency_s": 0,
+        "input_tokens": 0,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 0,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": 0,
+        "reasoning_tokens_unknown_calls": 0,
+        "cost_usd": 0.0,
+        "cost_status": "no_model_calls",
+        "cost_unknown_calls": 0,
+        "price_versions": []
+      },
+      "generation": {
+        "requests": 7,
+        "ok": 7,
+        "errors": {},
+        "latency_s": 219.296,
+        "input_tokens": 22207,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 9984,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11996,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 7,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 7,
+        "price_versions": []
+      }
+    },
+    "self_hosted_machine_cost": null
+  },
+  "timing": {
+    "wall_clock_total_s": 234.403,
+    "agent_loop_s": 230.647,
+    "agent_loop_elapsed_s": 230.647,
+    "agent_loop_limit_s": 900,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": 3.743,
+    "model_wait_s": 219.296,
+    "dev_evaluation_s": 11.21,
+    "evidence_tool_s": 0,
+    "container_startup_s": 8.006
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "evaluation_id": "c51502d31e1a",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "c51502d31e1a",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:39:07.213+00:00",
+      "ended_at": "2026-11-14T07:39:08.524+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "构建满足邻接关系的紧凑地图，最大化0格数量",
+      "expected_result": "每个测试用例得分显著高于c0的1分",
+      "verification": "检查输出合法性并计算0格数",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m1",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:39:08.527+00:00",
+      "ended_at": "2026-11-14T07:40:01.870+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "62a3eea44d00",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 56.499,
+          "metric": "score",
+          "model_requests": 1,
+          "tokens": 5877,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "62a3eea44d00",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:40:03.705+00:00",
+      "ended_at": "2026-11-14T07:40:03.705+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "构建一个有效的地图，使得每个区域连通且保持所有邻接关系，同时最大化0的数量（即最小化非零方块数）",
+      "expected_result": "通过贪心算法将每个区域压缩到尽可能小的连通块中，保持所有颜色间的邻接关系不变",
+      "verification": "检查输出是否满足：1) 每个颜色连通 2) 所有邻接关系与原图一致 3) 格式正确",
+      "hypothesis": "使用BFS/DFS找到每个区域的边界点，然后尝试将它们放置在更紧凑的位置上",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m2",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:40:03.707+00:00",
+      "ended_at": "2026-11-14T07:40:38.070+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "wrong_output",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": false,
+        "eligible_for_selection": true,
+        "evaluation_id": "62303fce6a9c",
+        "executed": true,
+        "failure": {
+          "category": "wrong_output",
+          "message": "one or more outputs violate task constraints"
+        },
+        "format_ok": false,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": false,
+              "score": 0
+            },
+            {
+              "correct": false,
+              "score": 0
+            },
+            {
+              "correct": false,
+              "score": 0
+            },
+            {
+              "correct": false,
+              "score": 0
+            },
+            {
+              "correct": false,
+              "score": 0
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 0
+        },
+        "passed_cases": 0,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 92.707,
+          "metric": "score",
+          "model_requests": 2,
+          "tokens": 10941,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "wrong_output"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c2",
+      "evaluation_id": "62303fce6a9c",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:40:39.913+00:00",
+      "ended_at": "2026-11-14T07:40:39.913+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "实现一个基于图论的地图压缩算法，通过最小化0色方块数量来提高得分。核心思路：将每个区域视为节点，构建邻接图，然后用贪心+局部搜索的方法在50x50网格上放置这些区域，使得所有区域连通且邻接关系正确，同时最大化0色方块数量。",
+      "expected_result": "得分应显著高于c0的5分（每case 1分），因为c0只是原样输出输入，没有做任何优化。新算法应该能产生更紧凑的地图布局，从而增加0色方块数量。",
+      "verification": "检查输出是否满足：1) 每个颜色区域连通；2) 所有邻接关系与原始地图一致；3) 0色区域连通（包括外部）。验证得分E+1是否大于1。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m3",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:40:39.915+00:00",
+      "ended_at": "2026-11-14T07:42:00.274+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "a8f497aed578",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 174.579,
+          "metric": "score",
+          "model_requests": 3,
+          "tokens": 18445,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "a8f497aed578",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:01.785+00:00",
+      "ended_at": "2026-11-14T07:42:01.785+00:00"
+    },
+    {
+      "seq": 8,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "构建一个有效的地图，使得每个区域的颜色块是连通的，并且相邻关系与原图一致。初始方案是将所有非零颜色放在中心区域，外围为0。",
+      "expected_result": "输出一个50x50的网格，其中中心部分包含所有100个颜色，外围为0，满足连通性和相邻性条件。",
+      "verification": "检查输出的网格是否满足：1) 每个颜色的方块是连通的；2) 任意两个颜色之间的相邻关系与原图一致；3) 所有颜色的方块都在网格内。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c4",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m4",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:01.788+00:00",
+      "ended_at": "2026-11-14T07:42:18.084+00:00"
+    },
+    {
+      "seq": 9,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "b6fe92ecf5a2",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 192.302,
+          "metric": "score",
+          "model_requests": 4,
+          "tokens": 22511,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c4",
+      "evaluation_id": "b6fe92ecf5a2",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:19.508+00:00",
+      "ended_at": "2026-11-14T07:42:19.508+00:00"
+    },
+    {
+      "seq": 10,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "提交一个简单可行的初始方案，确保通过所有测试用例",
+      "expected_result": "程序输出与输入相同的网格，满足连通性和邻接性条件，获得基础分数",
+      "verification": "验证输出格式正确、每个颜色区域连通、邻接关系与原图一致",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c5",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m5",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:19.510+00:00",
+      "ended_at": "2026-11-14T07:42:22.931+00:00"
+    },
+    {
+      "seq": 11,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "0b2110fcb5c0",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 197.056,
+          "metric": "score",
+          "model_requests": 5,
+          "tokens": 25847,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c5",
+      "evaluation_id": "0b2110fcb5c0",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:24.262+00:00",
+      "ended_at": "2026-11-14T07:42:24.262+00:00"
+    },
+    {
+      "seq": 12,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "实现一个基础但有效的算法：首先识别所有区域之间的邻接关系，然后尝试用更少的格子表示这些关系。初始策略是将每个区域压缩到其边界框内，并尽量靠近中心放置，以减少0格子的数量。",
+      "expected_result": "生成一个满足所有约束条件的地图，其中0格子的数量少于原始输入，从而获得更高的分数。",
+      "verification": "检查输出是否满足以下约束：1) 每个颜色区域是连通的；2) 颜色对之间的邻接关系与原始地图一致；3) 输出格式正确。",
+      "hypothesis": "通过将区域压缩并重新排列，可以显著减少0格子的数量，同时保持正确的邻接关系。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c6",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m6",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:24.264+00:00",
+      "ended_at": "2026-11-14T07:42:52.547+00:00"
+    },
+    {
+      "seq": 13,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": null,
+        "case_count": 5,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "7cb016779978",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 5,
+          "cases": [
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            },
+            {
+              "correct": true,
+              "score": 1
+            }
+          ],
+          "direction": "maximize",
+          "metric": "score",
+          "value": 5
+        },
+        "passed_cases": 5,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 227.331,
+          "metric": "score",
+          "model_requests": 6,
+          "tokens": 30914,
+          "value": 5
+        },
+        "run_target_speedup": null,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c6",
+      "evaluation_id": "7cb016779978",
+      "model_call_id": null,
+      "model_role": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:54.537+00:00",
+      "ended_at": "2026-11-14T07:42:54.537+00:00"
+    },
+    {
+      "seq": 14,
+      "actor": "model",
+      "action": "finish",
+      "status": "done",
+      "purpose": "结束本轮研究",
+      "expected_result": "交付外部选择器保留的候选",
+      "verification": "对已冻结候选执行独立最终验收",
+      "hypothesis": null,
+      "params": {
+        "finish_reason": "预算已用尽，停止继续实验。"
+      },
+      "result": {
+        "finish_reason": "预算已用尽，停止继续实验。"
+      },
+      "next_decision": "stop",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T073907-af56/m7",
+      "model_role": "small",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T07:42:54.540+00:00",
+      "ended_at": "2026-11-14T07:42:57.849+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "61c8511ac4ccba5a",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "research-ale-formal-20261114-v2 #3 r1",
+    "limits": {
+      "max_candidates": 10,
+      "max_code_bytes": 20000,
+      "max_model_requests": 20,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 120.0,
+      "token_budget": null,
+      "wall_clock_s": 900
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 1,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "https://aiping.cn/api/v1",
+        "enable_thinking": false,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "Qwen3.8-27B",
+        "provider": "chat_compat",
+        "reasoning_effort": null,
+        "response_format": "json_object",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "18654d8a0f958db273fb6ab4731361a44bb1f564c827605f71df76efa9628dc8",
+      "version": "agent-prompt-v7"
+    },
+    "research_protocol": {
+      "final_evaluation": true,
+      "fixed_model": "small",
+      "mode": "independent"
+    },
+    "retrieval": {
+      "compatibility": "benchmark adapter task semantics and minimum matching features",
+      "features": {
+        "groupagg": [
+          "rows",
+          "distinct_keys",
+          "rows_per_key",
+          "order",
+          "skew"
+        ],
+        "intervals": [
+          "rows",
+          "order",
+          "intervals_per_merged",
+          "magnitude",
+          "sign"
+        ],
+        "logstats": [
+          "rows",
+          "groups",
+          "rows_per_group",
+          "order",
+          "errors"
+        ]
+      },
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "scope": "records of the same task family only",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "router": {
+      "start": "fixed small model",
+      "version": "off"
+    },
+    "routing": {
+      "action": "llm",
+      "action_prompt_sha256": "90e77a89a25e5cf88acf55f1f732af30a76d6c8d6576437d1349e21c25d84572",
+      "budget_counts": "all routing and generation requests",
+      "decision_model": "gpt-6-luna",
+      "model": "rule",
+      "model_prompt_sha256": "45c5c1cce73963172e7f3774c783b0e3ba9c50b2650d9986c8c98bf49aad879a",
+      "upgrade_is_irreversible": true,
+      "version": "routing-adapters-v1"
+    },
+    "sandbox_image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "scripted": [],
+    "task_manifest_sha256": "1be26f2a809875d8fee65fc5ca8aa3a46955a467516c0946cc6d938802b8e6ef",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "container_python": "3.12-slim (pinned digest in Dockerfile)",
+    "docker_server": "29.9.3 linux/amd64",
+    "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+    "image_tag": "routeevo-sandbox:d055c99c833a",
+    "judge": {
+      "image_id": "sha256:ee44715bc32a6abd30a73f69c850912f10aa07ec8a476b62cb745a8ce708805a",
+      "image_tag": "routeevo-ale-ahc024:440437e8b148"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "memory": "1g",
+      "network": "none",
+      "pids_limit": 64,
+      "read_only_rootfs": true,
+      "user": "65534:65534"
+    }
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run ale-bench-ahc024-formal-20261114-d052b16d54 --mode eval --snapshot v0 --no-router --action-router llm --model-router rule --research-mode independent --fixed-model small --cpuset-cpus 2 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+    "recheck_best": "uv run routeevo check ale-bench-ahc024-formal-20261114-d052b16d54 /home/hycx233/routeevo-ale-formal-20261114/var-worker-a/runs/run-20261114T073907-af56/candidates/c0.py --dataset final --cpuset-cpus 2",
+    "report": "uv run routeevo report run-20261114T073907-af56"
+  },
+  "started_at": "2026-11-14T07:39:07.206+00:00",
+  "loop_ended_at": "2026-11-14T07:42:57.853+00:00",
+  "ended_at": "2026-11-14T07:43:01.609+00:00",
+  "research": {
+    "definition": {
+      "question": "在可行性约束下，能否通过本次研究持续提高目标分数？",
+      "goal": "全部用例可行，最大化原始得分之和",
+      "workload": "ahc024 · 5 public cases",
+      "baseline": {
+        "program": "可行起始程序（不代表上游竞争性解法）",
+        "dev_median_s": null,
+        "final_median_s": null
+      },
+      "scope": "Score optimization, not runtime optimization. Keep every output valid and maximize total score. Use a complete Python standard-library stdin/stdout program. No profile tool is available; propose_candidate and run_validation return per-case scores.",
+      "tools": [
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "AtCoder 原始裁判；全部用例合法，最大化原始得分之和",
+      "budget": {
+        "model_requests": 20,
+        "candidates": 10,
+        "loop_s": 900,
+        "request_timeout_s": 120.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 2,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "构建满足邻接关系的紧凑地图，最大化0格数量",
+        "expected": "每个测试用例得分显著高于c0的1分",
+        "verification": "检查输出合法性并计算0格数",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "62a3eea44d00"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 4,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "使用BFS/DFS找到每个区域的边界点，然后尝试将它们放置在更紧凑的位置上",
+        "purpose": "构建一个有效的地图，使得每个区域连通且保持所有邻接关系，同时最大化0的数量（即最小化非零方块数）",
+        "expected": "通过贪心算法将每个区域压缩到尽可能小的连通块中，保持所有颜色间的邻接关系不变",
+        "verification": "检查输出是否满足：1) 每个颜色连通 2) 所有邻接关系与原图一致 3) 格式正确",
+        "result": {
+          "status": "wrong_output",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              },
+              {
+                "correct": false,
+                "score": 0
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 0
+          },
+          "improved": false,
+          "failure": "wrong_output",
+          "contract_case": null
+        },
+        "verdict": "untestable",
+        "then": "continue",
+        "evaluation_id": "62303fce6a9c"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 6,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "实现一个基于图论的地图压缩算法，通过最小化0色方块数量来提高得分。核心思路：将每个区域视为节点，构建邻接图，然后用贪心+局部搜索的方法在50x50网格上放置这些区域，使得所有区域连通且邻接关系正确，同时最大化0色方块数量。",
+        "expected": "得分应显著高于c0的5分（每case 1分），因为c0只是原样输出输入，没有做任何优化。新算法应该能产生更紧凑的地图布局，从而增加0色方块数量。",
+        "verification": "检查输出是否满足：1) 每个颜色区域连通；2) 所有邻接关系与原始地图一致；3) 0色区域连通（包括外部）。验证得分E+1是否大于1。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "a8f497aed578"
+      },
+      {
+        "candidate_id": "c4",
+        "step": 8,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "构建一个有效的地图，使得每个区域的颜色块是连通的，并且相邻关系与原图一致。初始方案是将所有非零颜色放在中心区域，外围为0。",
+        "expected": "输出一个50x50的网格，其中中心部分包含所有100个颜色，外围为0，满足连通性和相邻性条件。",
+        "verification": "检查输出的网格是否满足：1) 每个颜色的方块是连通的；2) 任意两个颜色之间的相邻关系与原图一致；3) 所有颜色的方块都在网格内。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "b6fe92ecf5a2"
+      },
+      {
+        "candidate_id": "c5",
+        "step": 10,
+        "kind": "model",
+        "target": null,
+        "hypothesis": null,
+        "purpose": "提交一个简单可行的初始方案，确保通过所有测试用例",
+        "expected": "程序输出与输入相同的网格，满足连通性和邻接性条件，获得基础分数",
+        "verification": "验证输出格式正确、每个颜色区域连通、邻接关系与原图一致",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "0b2110fcb5c0"
+      },
+      {
+        "candidate_id": "c6",
+        "step": 12,
+        "kind": "model",
+        "target": null,
+        "hypothesis": "通过将区域压缩并重新排列，可以显著减少0格子的数量，同时保持正确的邻接关系。",
+        "purpose": "实现一个基础但有效的算法：首先识别所有区域之间的邻接关系，然后尝试用更少的格子表示这些关系。初始策略是将每个区域压缩到其边界框内，并尽量靠近中心放置，以减少0格子的数量。",
+        "expected": "生成一个满足所有约束条件的地图，其中0格子的数量少于原始输入，从而获得更高的分数。",
+        "verification": "检查输出是否满足以下约束：1) 每个颜色区域是连通的；2) 颜色对之间的邻接关系与原始地图一致；3) 输出格式正确。",
+        "result": {
+          "status": "passed",
+          "speedup": null,
+          "objective": {
+            "aggregation": "sum",
+            "baseline": 5,
+            "cases": [
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              },
+              {
+                "correct": true,
+                "score": 1
+              }
+            ],
+            "direction": "maximize",
+            "metric": "score",
+            "value": 5
+          },
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "7cb016779978"
+      }
+    ],
+    "verdicts": {
+      "supported": 0,
+      "partial": 0,
+      "refuted": 5,
+      "untestable": 1,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 56.499,
+      "metric": "score",
+      "model_requests": 1,
+      "tokens": 5877,
+      "value": 5,
+      "usage": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 53.333,
+        "input_tokens": 3171,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 2706,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 1,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 1,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 92.707,
+      "metric": "score",
+      "model_requests": 2,
+      "tokens": 10941,
+      "value": 5,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 87.686,
+        "input_tokens": 6343,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 1664,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 4598,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 2,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 174.579,
+      "metric": "score",
+      "model_requests": 3,
+      "tokens": 18445,
+      "value": 5,
+      "usage": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 168.033,
+        "input_tokens": 9515,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 3328,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 8930,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 3,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 192.302,
+      "metric": "score",
+      "model_requests": 4,
+      "tokens": 22511,
+      "value": 5,
+      "usage": {
+        "requests": 4,
+        "ok": 4,
+        "errors": {},
+        "latency_s": 184.316,
+        "input_tokens": 12688,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 4992,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 9823,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 4,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 4,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 197.056,
+      "metric": "score",
+      "model_requests": 5,
+      "tokens": 25847,
+      "value": 5,
+      "usage": {
+        "requests": 5,
+        "ok": 5,
+        "errors": {},
+        "latency_s": 187.725,
+        "input_tokens": 15861,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 6656,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 9986,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 5,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 5,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 227.331,
+      "metric": "score",
+      "model_requests": 6,
+      "tokens": 30914,
+      "value": 5,
+      "usage": {
+        "requests": 6,
+        "ok": 6,
+        "errors": {},
+        "latency_s": 215.996,
+        "input_tokens": 19034,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 8320,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 11880,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 6,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 6,
+        "price_versions": []
+      }
+    }
+  ]
+}

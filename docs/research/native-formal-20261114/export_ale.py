@@ -24,7 +24,7 @@ REPO = HERE.parents[2]
 sys.path.insert(0, str(REPO / "backend/src"))
 
 from routeevo.research_compare import comparable, summarize  # noqa: E402
-from routeevo.research_views import estimate_cost, validate_pricing  # noqa: E402
+from routeevo.research_views import comparison_summary, estimate_cost, validate_pricing  # noqa: E402
 
 CODE_SHA = "990f598b87f7c93bd27b6ceef5751bbc2d39dd79"
 PLAN_ID = "research-ale-formal-20261114-v2"
@@ -98,6 +98,56 @@ def token_total(usage):
            for k in ("input_tokens", "output_tokens")):
         return None
     return usage["input_tokens"] + usage["output_tokens"]
+
+
+def assemble_continuation(root, target, frozen, initial, errors):
+    directory = root / "formal-v2-continuation1"
+    if not directory.exists():
+        return initial
+    manifest_path = directory / "frozen-manifest.json"
+    manifest = read(manifest_path)
+    source_path = directory / f"{manifest['plan_id']}.json"
+    continuation = read(source_path)
+    need(manifest == read(HERE / "ale-continuation-1.json"), errors, "continuation manifest differs from committed plan")
+    changed = {k for k in frozen.keys() | manifest.keys() if frozen.get(k) != manifest.get(k)}
+    need(changed == {"plan_id", "ale_plan", "continuation"}, errors, "continuation changes frozen execution conditions")
+    need(continuation["status"] != "running", errors, "continuation snapshot is still running")
+    need(continuation["plan"] == manifest["ale_plan"], errors, "continuation order differs from freeze")
+    need(continuation["code_sha"] == frozen["code_sha"] and continuation["price_snapshot"] == frozen["pricing"],
+         errors, "continuation code or prices differ")
+    merged = deepcopy(initial)
+    originals = {r["seq"]: r for r in merged["runs"]}
+    need({r["seq"] for r in continuation["runs"]} == {r["seq"] for r in manifest["ale_plan"]},
+         errors, "continuation slots differ from its plan")
+    for row in continuation["runs"]:
+        original = originals[row["seq"]]
+        if original.get("run_id") or original["status"] != "not_run":
+            errors.append(f"continuation attempts to replace an existing run: {row['seq']}")
+            continue
+        original.update(row)
+    copy_bytes(source_path, target / "source-comparison-continuation1.json", errors)
+    copy_bytes(manifest_path, target / "continuation-manifest.json", errors)
+    merged["execution_segments"] = [
+        {"comparison_id": source["comparison_id"], "status": source["status"],
+         "created_at": source["created_at"], "ended_at": source.get("ended_at"),
+         "batch_wall_clock_s": source.get("batch_wall_clock_s")}
+        for source in (initial, continuation)]
+    merged["ended_at"] = continuation.get("ended_at")
+    merged["batch_wall_clock_s"] = seconds(merged["created_at"], merged["ended_at"])
+    merged["active_batch_wall_clock_s"] = sum(s["batch_wall_clock_s"] for s in merged["execution_segments"])
+    merged["interruption_gap_s"] = merged["batch_wall_clock_s"] - merged["active_batch_wall_clock_s"]
+    merged["waves"] += continuation["waves"]
+    states = {r["status"] for r in merged["runs"]}
+    merged["status"] = "interrupted" if states & {"not_run", "running", "interrupted"} else (
+        "completed" if states == {"completed"} else "failed")
+    merged["assembly"] = {"method": "Fill only unopened original slots; preserve all previously started runs.",
+                          "initial_artifact": "source-comparison-initial.json",
+                          "continuation_artifact": "source-comparison-continuation1.json",
+                          "continuation_source_sha256": sha(source_path.read_bytes())}
+    summarize(merged)
+    merged.pop("cost", None)
+    merged["cost"] = comparison_summary(merged)["cost"]
+    return merged
 
 
 def hidden_input(text, number, mode, candidates, code, steps, errors, label):
@@ -405,14 +455,17 @@ def fmt(value, digits=3):
 
 def markdown(summary):
     totals = summary["totals"]
+    cost_text = (f"CNY {fmt(totals['estimated_cny'], 6)}" if totals["estimated_cny"] is not None else
+                 f"总额未知，已报告用量部分 CNY {fmt(totals['estimated_cny_known_subtotal'], 6)}")
     lines = ["# ALE 正式评测结果", "",
              f"源码 `{summary['code_sha']}`；计划 `{summary['plan_id']}`；固定 Qwen3.8-27B、eval/v0。",
              "每轮上限 900 秒 / 20 请求 / 10 候选；每题 5 dev / 15 final。final 在开发选优冻结后执行，不回流模型。", "",
              f"15 个计划位置全部保留；已启动 {totals['started']}，final 通过 {totals['final_correct']}，"
              f"未运行 {totals['not_run']}。审计 {'通过' if summary['audit']['passed'] else '发现问题，见 summary.json 的 audit'}。",
+             f"研究运行状态：{json.dumps(totals['status_counts'], ensure_ascii=False)}；研究终止状态与 final 验收分别记录。",
              f"批次墙钟 {fmt(summary['batch_wall_clock_s'])} 秒；累计 episode 墙钟 {fmt(totals['wall_clock_s'])} 秒；"
              f"请求 {totals['requests']} 次；输入 Token {fmt(totals['input_tokens'])}，输出 Token {fmt(totals['output_tokens'])}；"
-             f"冻结标价估算 CNY {fmt(totals['estimated_cny'], 6)}。", "",
+             f"冻结标价估算：{cost_text}。", "",
              f"累计模型等待 {fmt(totals['model_wait_s'])} 秒，开发评测 {fmt(totals['dev_evaluation_s'])} 秒，"
              f"最终评测 {fmt(totals['final_evaluation_s'])} 秒。API 错误计数：{json.dumps(totals['api_errors'], ensure_ascii=False)}。", "",
              "| 题目 | 模式 | final 通过/计划 | final 原始分数（各重复） | c0 基线差值（各重复） | c0交付 | 候选通过/提出 | CNY |",
@@ -430,10 +483,16 @@ def markdown(summary):
         lines.append(f"| {row['seq']} | {row['problem']} / r{row['repeat']} / {row['mode']} | "
                      f"{row['status']} / {row['final_status']} | {best} | {fmt(row.get('final_score'))} / {fmt(row.get('final_baseline'))} | "
                      f"{fmt(row.get('final_delta'))} | {fmt(row.get('usage', {}).get('requests'))} | {fmt(row.get('timing', {}).get('wall_clock_total_s'))} |")
-    lines += ["", "得分是各题原生裁判分数之和。失败和缺失记为未取得有效 final 分数，保留在计划分母；c0 为零时百分比为 null。"
+    lines += ["", "得分是各题原生裁判分数之和。final 失败或缺失时分数为 null，保留在计划分母；"
+              "研究因接口错误终止但冻结候选通过 final 的，保留真实得分和 failed 运行状态。c0 为零时百分比为 null。"
               "三次重复报告差值及波动，不据此宣称统计显著。费用沿用冻结输入/输出费率，缓存按普通输入价估算；未知用量保持 null。",
               "", "过程曲线使用开发集已保留候选的真实 progress；初始点来自 c0 开发评测，末点仅将最后保留值延续至研究结束。"
               "曲线不含 final 得分，不将批次并行节省的墙钟解释为算法加速。"]
+    if summary.get("execution_segments"):
+        lines += ["", "第 10 个位置因 AIPing HTTP 400 终止，原始失败记录保留。续批仅执行此前未启动的 11–15，"
+                  "沿用原源码、参数和顺序。comparison.json 是两段原始比较文件的派生合并，原文件另存 source-comparison-*.json。",
+                  f"两段执行墙钟合计 {fmt(summary['active_batch_wall_clock_s'])} 秒；"
+                  f"中断间隔 {fmt(summary['interruption_gap_s'])} 秒，计入上述整体批次墙钟。"]
     for filename in summary["plots"]["files"]:
         lines += ["", f"![{filename.removesuffix('.svg')}]({filename})"]
     if summary["plots"]["status"] != "completed":
@@ -467,7 +526,8 @@ def aggregate(records):
         result[f"{key}_unknown_calls"] = unknown
     costs = [r.get("estimated_cny") for r in started]
     result["estimated_cny"] = sum(costs) if all(v is not None for v in costs) else None
-    result["estimated_cny_known_subtotal"] = sum(v for v in costs if v is not None)
+    result["estimated_cny_known_subtotal"] = sum(r.get("known_estimated_cny", r.get("estimated_cny")) or 0
+                                                  for r in started)
     for key in ("wall_clock_total_s", "model_wait_s", "dev_evaluation_s", "final_evaluation_s"):
         values = [r.get("timing", {}).get(key) for r in started]
         name = "wall_clock_s" if key == "wall_clock_total_s" else key
@@ -503,8 +563,10 @@ def main():
     validate_pricing(frozen["pricing"])
     need(frozen["pricing"]["currency"] == "CNY", errors, "price currency is not CNY")
     target.mkdir(parents=True, exist_ok=True)
-    copy_bytes(source_comparison, target / "comparison.json", errors)
+    copy_bytes(source_comparison, target / "source-comparison-initial.json", errors)
     copy_bytes(frozen_path, target / "frozen-manifest.json", errors)
+    comparison = assemble_continuation(root, target, frozen, comparison, errors)
+    write(target / "comparison.json", comparison)
     keyed = {}
     for item in comparison["runs"]:
         key = tuple(item[k] for k in KEYS)
@@ -568,12 +630,17 @@ def main():
                     value, baseline = (objective.get("value"), objective.get("baseline")) if correct else (None, None)
                     delta = value - baseline if value is not None and baseline is not None else None
                     cost = estimate_cost(audit["actual_usage"], frozen["pricing"])
+                    # A failed call can have unknown usage while earlier calls remain fully reported.
+                    known_calls = [c for c in audit["model_call_records"]
+                                   if c["input_tokens"] is not None and c["output_tokens"] is not None]
+                    known_cost = estimate_cost(ledger(known_calls), frozen["pricing"])["amount"]
+                    cost["known_amount"] = known_cost
                     result.update(best_candidate_id=(report.get("best_candidate") or {}).get("candidate_id"),
                         final_correct=correct, final_score=value, final_baseline=baseline, final_delta=delta,
                         final_relative_delta=delta / baseline if delta is not None and baseline else None,
                         final_observed_objective=objective or None, iterations=report.get("iterations", {}),
                         timing=report.get("timing", {}), usage=audit["actual_usage"], cost=cost,
-                        estimated_cny=cost["amount"], audit_passed=audit["passed"])
+                        estimated_cny=cost["amount"], known_estimated_cny=known_cost, audit_passed=audit["passed"])
                     curves.append({"run_id": run_id, "problem": binding["problem"], "task_id": plan["task_id"],
                                    "mode": plan["mode"], "repeat": plan["repeat"],
                                    "points": curve_points(report, evaluations, frozen["pricing"])})
@@ -600,12 +667,16 @@ def main():
         plots = plot_curves(target, curves)
         summary = {"plan_id": PLAN_ID, "code_sha": frozen["code_sha"], "status": comparison["status"],
                    "fair": recalculated["fair"], "batch_wall_clock_s": comparison.get("batch_wall_clock_s"),
+                   "execution_segments": comparison.get("execution_segments"),
+                   "active_batch_wall_clock_s": comparison.get("active_batch_wall_clock_s"),
+                   "interruption_gap_s": comparison.get("interruption_gap_s"),
                    "pricing": frozen["pricing"], "parallel_policy": frozen["parallel_policy"],
                    "judge_affinity": frozen["judge_affinity"], "runs": output, "groups": groups,
                    "pairs": recalculated["summary"]["pairs"], "totals": aggregate(output), "plots": plots,
                    "audit": {"passed": not errors, "errors": errors, "tasks": task_audit,
                              "started_runs_audited": len(run_audits),
                              "source_comparison_sha256": sha(source_comparison.read_bytes()),
+                             "derived_comparison_sha256": sha((target / "comparison.json").read_bytes()),
                              "frozen_manifest_file_sha256": sha(frozen_path.read_bytes()),
                              "export_script_sha256": sha(Path(__file__).read_bytes()),
                              "source_verification": "frozen manifest and recorded configs; host clean-SHA check was performed by run_ale.py before each slot"}}

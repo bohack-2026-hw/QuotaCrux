@@ -1,0 +1,174 @@
+{
+  "candidate_image": {
+    "image_id": "sha256:fed60f772eae5dfbe9b664b26450e6678ff541fe790a37968cde616859cfb5f9",
+    "image_tag": "routeevo-scientific:6251644e51bd"
+  },
+  "control_delay_ms": 3.0,
+  "control_method": "sleep after the original solve; adds at least the requested wall time per case",
+  "created_at": "2026-11-14T07:30:36.196+00:00",
+  "dataset": "dev",
+  "dev_sha256": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37",
+  "ended_at": "2026-11-14T07:30:36.271+00:00",
+  "environment": {
+    "cpu_topology_source": null,
+    "cpus": {},
+    "cpuset_cpu_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "cpuset_scope": "docker_vm_vcpu",
+    "host_affinity": null,
+    "host_affinity_supported": false,
+    "host_logical_cpu_count": 16,
+    "host_python": "3.12.11",
+    "load_average": [
+      25.470703125,
+      28.3623046875,
+      29.93994140625
+    ],
+    "notes": [
+      "Docker VM vCPU affinity does not identify or reserve a physical Apple Silicon core."
+    ],
+    "physical_core_exclusive": false,
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "failure": "RuntimeError: affinity probe failed: sandbox_error: docker: Error response from daemon: create var-algotune-formal-20261114/sandbox/8022718c46a246a993b0ca97a1e01e15: \"var-algotune-formal-20261114/sandbox/8022718c46a246a993b0ca97a1e01e15\" includes invalid characters for a local volume name, only \"[a-zA-Z0-9][a-zA-Z0-9_.-]\" are allowed. If you intended to pass a host directory, use absolute path\n\nRun 'docker run --help' for more information\n",
+  "git_head": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "judge_image": {
+    "image_id": "sha256:80e01b815874ca9173db16763ea48b0ff15d579fa98c77c9ed0397377ae9418e",
+    "image_tag": "routeevo-algotune-convolve_1d:97afbd85999c"
+  },
+  "matrix": [
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "default",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 1
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 1
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 2
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "default",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 2
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "default",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 3
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 3
+    },
+    {
+      "baseline": "delayed",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": true,
+      "kind": "positive_control",
+      "round": 1
+    },
+    {
+      "baseline": "original",
+      "candidate": "delayed",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "negative_control",
+      "round": 1
+    }
+  ],
+  "measures": {
+    "default": {
+      "cpus": 1.0,
+      "cpuset_cpus": null,
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "pinned": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    }
+  },
+  "model_requests": 0,
+  "program_sha256": {
+    "delayed": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+    "original": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+  },
+  "results": [],
+  "schema": "native-calibration-v1",
+  "source_sha256": {
+    "backend/scripts/calibrate_native.py": "d1207fbbe32365595bd6d1ba146137c2510f1da1f984f96e17497da580f0c39a",
+    "backend/src/routeevo/benchmarks/algotune.py": "80f988e1d444fdb8fb07df69808238c1c99f21c601a7e07b26afd634e743efd2",
+    "backend/src/routeevo/benchmarks/native_tools/scientific_harness.py": "374e9544c9a74fe8f664a3d0e72ab8c1f494ddd2ee2eb914ac8e891e970f2e7a",
+    "backend/src/routeevo/config.py": "4094f13e15fbe9899b878a65243ba05b6116b588cb947edcdf473d9bc75b227b",
+    "backend/src/routeevo/sandbox/executor.py": "1ab6fe3a2dd45eb50946462e12bcb50399b4e7fbc2a61f21a0297f03b127b256"
+  },
+  "status": "failed",
+  "task_id": "algotune-convolve_1d-formal-20261114-82a6fac682",
+  "task_manifest_canonical_sha256": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",
+  "task_manifest_sha256": "123c02e69e62aa0794fd71abd363b6c3bee5b93a78739716f42c9407f3d99e68",
+  "task_package_files": {
+    "UPSTREAM_LICENSE.txt": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d",
+    "contract": "e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce",
+    "dev_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "dev_input": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37",
+    "dev_profile": "24665cf1c840cb98c8bc0a553b66542ee01149d5625ddae0f2b54c8a27ed4beb",
+    "examples": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "final_expected": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "final_input": "4a0ec2a5ddee8e49030097f10e26635fdcca85d836041ceb2a94aac6981634d3",
+    "initial": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+    "upstream_task.py": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+  },
+  "warmup_count": 3
+}

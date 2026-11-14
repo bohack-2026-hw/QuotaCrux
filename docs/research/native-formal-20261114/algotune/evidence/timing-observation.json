@@ -1,0 +1,96 @@
+{
+  "accepted_for_freeze": false,
+  "finding": "PageRank repeat index 3 is systematically slower and the host load was high.",
+  "gc_probe": {
+    "file": "evidence/pagerank-gc-probe.json",
+    "final_evaluations": 0,
+    "model_requests": 0,
+    "order": [
+      "original",
+      "gc_disabled",
+      "gc_disabled",
+      "original",
+      "original",
+      "gc_disabled"
+    ],
+    "summary": {
+      "gc_disabled": {
+        "evaluations": 3,
+        "median_range_over_median": 0.03173764030147427,
+        "repeat_3_vs_other_median": 0.9975211692541709,
+        "repeat_index_median_ms": [
+          24.570339000774766,
+          24.626215500120452,
+          24.573131000124704,
+          24.682591499640694,
+          24.6421745000589
+        ],
+        "speedups": [
+          0.9919055715339469,
+          0.9991121046485921,
+          0.9981334557670192
+        ],
+        "strict_false_improvements": 0
+      },
+      "original": {
+        "evaluations": 3,
+        "median_range_over_median": 0.8451659000906102,
+        "repeat_3_vs_other_median": 1.8441818917677777,
+        "repeat_index_median_ms": [
+          27.190877000293767,
+          26.90410449963565,
+          49.64349499982745,
+          26.93385500037948,
+          26.830165999854216
+        ],
+        "speedups": [
+          0.9800035781063867,
+          0.9997270705337421,
+          1.027652069131435
+        ],
+        "strict_false_improvements": 0
+      }
+    }
+  },
+  "interpretation": "An alternating 3x3 diagnostic removes the position effect when automatic GC is disabled only during solve; issue #2 still owns the public protocol change.",
+  "recalibration_required": true,
+  "required_decision": "Issue #2 must freeze the timing-harness treatment before tasks are rebuilt and recalibrated in a quiet window.",
+  "tasks": {
+    "convolve_1d": {
+      "host_load_1m_min_max": [
+        29.57568359375,
+        31.994140625
+      ],
+      "repeat_3_vs_other_median": 1.0133554703486884,
+      "repeat_index_median_ms": [
+        0.4621655000391911,
+        0.45187400007762335,
+        0.4608119999147675,
+        0.44408199994450115,
+        0.4576034999672629
+      ],
+      "self_range_over_median": {
+        "default": 0.07392607362674218,
+        "pinned": 0.08855186660422015
+      }
+    },
+    "pagerank": {
+      "host_load_1m_min_max": [
+        45.4130859375,
+        48.951171875
+      ],
+      "repeat_3_vs_other_median": 1.857399285309215,
+      "repeat_index_median_ms": [
+        5.4680175001067255,
+        5.522579999933441,
+        10.1750974999959,
+        5.454287500015198,
+        5.488266999918778
+      ],
+      "self_range_over_median": {
+        "default": 0.8578630398033864,
+        "pinned": 0.8652020795339517
+      }
+    }
+  }
+}

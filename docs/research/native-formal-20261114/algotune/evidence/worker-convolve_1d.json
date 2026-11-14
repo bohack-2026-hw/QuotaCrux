@@ -1,0 +1,372 @@
+{
+  "affinity_probe": {
+    "elapsed_s": 0.055939208999916445,
+    "ended_at": "2026-11-14T07:31:15.613+00:00",
+    "exit_code": 0,
+    "observed_affinities": [
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ]
+    ],
+    "ready_latency_s": 0.2238825409999663,
+    "requested_affinity": [
+      2
+    ],
+    "started_at": "2026-11-14T07:31:15.332+00:00",
+    "status": "ok",
+    "stderr_tail": "",
+    "stdout_bytes": 257,
+    "warmup_count": 3
+  },
+  "calibration_file": "evidence/calibration-convolve_1d.json",
+  "calibration_program_sha256": {
+    "delayed": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+    "original": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+  },
+  "candidate_image": {
+    "architecture": "arm64",
+    "created": "2026-11-14T15:28:38.146584813+08:00",
+    "digest_note": "Local BuildKit image has no registry RepoDigest; image_id is the immutable local identity.",
+    "image_id": "sha256:fed60f772eae5dfbe9b664b26450e6678ff541fe790a37968cde616859cfb5f9",
+    "os": "linux",
+    "repo_digests": [],
+    "repo_tags": [
+      "routeevo-scientific:6251644e51bd"
+    ],
+    "size_bytes": 383804334
+  },
+  "checker_contract": "Input is a tuple (a, b) of one-dimensional NumPy float64 arrays. Return a NumPy array containing the full linear convolution, with shape (len(a) + len(b) - 1,). The reference is scipy.signal.convolve(a, b, mode='full'). The numerical check requires norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6. The generator scale n produces lengths 30*n and 8*n; see the observed dev shapes in the profile.",
+  "final_evaluations": 0,
+  "judge_image": {
+    "architecture": "arm64",
+    "created": "2026-11-14T15:28:39.226183927+08:00",
+    "digest_note": "Local BuildKit image has no registry RepoDigest; image_id is the immutable local identity.",
+    "image_id": "sha256:80e01b815874ca9173db16763ea48b0ff15d579fa98c77c9ed0397377ae9418e",
+    "os": "linux",
+    "repo_digests": [],
+    "repo_tags": [
+      "routeevo-algotune-convolve_1d:97afbd85999c"
+    ],
+    "size_bytes": 383808173
+  },
+  "manifest": {
+    "adapter_version": "research-benchmarks-v1",
+    "dev_params": {
+      "cases": 5
+    },
+    "family": "algotune",
+    "files": {
+      "UPSTREAM_LICENSE.txt": {
+        "bytes": 1096,
+        "file": "UPSTREAM_LICENSE.txt",
+        "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d"
+      },
+      "contract": {
+        "bytes": 880,
+        "file": "contract.txt",
+        "sha256": "e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce"
+      },
+      "dev_expected": {
+        "bytes": 2,
+        "file": "dev-expected.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dev_input": {
+        "bytes": 2027550,
+        "file": "dev.json",
+        "sha256": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37"
+      },
+      "dev_profile": {
+        "bytes": 1716,
+        "file": "dev_profile.json",
+        "sha256": "24665cf1c840cb98c8bc0a553b66542ee01149d5625ddae0f2b54c8a27ed4beb"
+      },
+      "examples": {
+        "bytes": 2,
+        "file": "examples.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "final_expected": {
+        "bytes": 2,
+        "file": "final-expected.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "final_input": {
+        "bytes": 6082660,
+        "file": "final.json",
+        "sha256": "4a0ec2a5ddee8e49030097f10e26635fdcca85d836041ceb2a94aac6981634d3"
+      },
+      "initial": {
+        "bytes": 533,
+        "file": "initial.py",
+        "sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+      },
+      "upstream_task.py": {
+        "bytes": 1550,
+        "file": "upstream_task.py",
+        "sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+      }
+    },
+    "final_params": {
+      "cases": 15
+    },
+    "native": {
+      "allowed_imports": [
+        "numpy",
+        "scipy",
+        "networkx"
+      ],
+      "candidate_image": {
+        "image_id": "sha256:fed60f772eae5dfbe9b664b26450e6678ff541fe790a37968cde616859cfb5f9",
+        "image_tag": "routeevo-scientific:6251644e51bd"
+      },
+      "candidate_interface": "solve",
+      "judge_image": {
+        "image_id": "sha256:80e01b815874ca9173db16763ea48b0ff15d579fa98c77c9ed0397377ae9418e",
+        "image_tag": "routeevo-algotune-convolve_1d:97afbd85999c"
+      },
+      "seed": 1729,
+      "size": 1000
+    },
+    "notes": "RouteEvo research subset",
+    "problem": {
+      "key": "convolve_1d",
+      "title": "convolve_1d"
+    },
+    "selection": {
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+    },
+    "split": "formal-20261114",
+    "target": {
+      "direction": "maximize",
+      "metric": "speedup",
+      "min_speedup": 1.1
+    },
+    "task_id": "algotune-convolve_1d-formal-20261114-82a6fac682"
+  },
+  "manifest_canonical_sha256": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",
+  "manifest_file_sha256": "123c02e69e62aa0794fd71abd363b6c3bee5b93a78739716f42c9407f3d99e68",
+  "measure": {
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "function_warmups": 3,
+    "max_output_bytes": 67108864,
+    "memory": "1g",
+    "pids_limit": 64,
+    "ready_timeout_s": 30.0,
+    "repeats": 5
+  },
+  "model_requests": 0,
+  "package_files": {
+    "UPSTREAM_LICENSE.txt": {
+      "bytes": 1096,
+      "file": "UPSTREAM_LICENSE.txt",
+      "observed_sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d",
+      "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d"
+    },
+    "contract": {
+      "bytes": 880,
+      "file": "contract.txt",
+      "observed_sha256": "e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce",
+      "sha256": "e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce"
+    },
+    "dev_expected": {
+      "bytes": 2,
+      "file": "dev-expected.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "dev_input": {
+      "bytes": 2027550,
+      "file": "dev.json",
+      "observed_sha256": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37",
+      "sha256": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37"
+    },
+    "dev_profile": {
+      "bytes": 1716,
+      "file": "dev_profile.json",
+      "observed_sha256": "24665cf1c840cb98c8bc0a553b66542ee01149d5625ddae0f2b54c8a27ed4beb",
+      "sha256": "24665cf1c840cb98c8bc0a553b66542ee01149d5625ddae0f2b54c8a27ed4beb"
+    },
+    "examples": {
+      "bytes": 2,
+      "file": "examples.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "final_expected": {
+      "bytes": 2,
+      "file": "final-expected.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "final_input": {
+      "bytes": 6082660,
+      "file": "final.json",
+      "observed_sha256": "4a0ec2a5ddee8e49030097f10e26635fdcca85d836041ceb2a94aac6981634d3",
+      "sha256": "4a0ec2a5ddee8e49030097f10e26635fdcca85d836041ceb2a94aac6981634d3"
+    },
+    "initial": {
+      "bytes": 533,
+      "file": "initial.py",
+      "observed_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+      "sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+    },
+    "upstream_task.py": {
+      "bytes": 1550,
+      "file": "upstream_task.py",
+      "observed_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e",
+      "sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+    }
+  },
+  "package_files_verified": true,
+  "problem": "convolve_1d",
+  "sqlite_manifest_matches_disk": true,
+  "task_id": "algotune-convolve_1d-formal-20261114-82a6fac682",
+  "var_dir": "backend/var-algotune-formal-20261114",
+  "workload_profiles": {
+    "dev": {
+      "cases": [
+        {
+          "a": {
+            "dtype": "float64",
+            "nbytes": 240000,
+            "shape": [
+              30000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "b": {
+            "dtype": "float64",
+            "nbytes": 64000,
+            "shape": [
+              8000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "id": "0",
+          "output_shape": [
+            37999
+          ]
+        },
+        {
+          "a": {
+            "dtype": "float64",
+            "nbytes": 240000,
+            "shape": [
+              30000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "b": {
+            "dtype": "float64",
+            "nbytes": 64000,
+            "shape": [
+              8000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "id": "1",
+          "output_shape": [
+            37999
+          ]
+        },
+        {
+          "a": {
+            "dtype": "float64",
+            "nbytes": 240000,
+            "shape": [
+              30000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "b": {
+            "dtype": "float64",
+            "nbytes": 64000,
+            "shape": [
+              8000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "id": "2",
+          "output_shape": [
+            37999
+          ]
+        },
+        {
+          "a": {
+            "dtype": "float64",
+            "nbytes": 240000,
+            "shape": [
+              30000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "b": {
+            "dtype": "float64",
+            "nbytes": 64000,
+            "shape": [
+              8000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "id": "3",
+          "output_shape": [
+            37999
+          ]
+        },
+        {
+          "a": {
+            "dtype": "float64",
+            "nbytes": 240000,
+            "shape": [
+              30000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "b": {
+            "dtype": "float64",
+            "nbytes": 64000,
+            "shape": [
+              8000
+            ],
+            "wire_dtype": "<f8"
+          },
+          "id": "4",
+          "output_shape": [
+            37999
+          ]
+        }
+      ],
+      "generator_scale": 1000,
+      "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+      "input_sha256": "8861eb557595d19de453081e89ea11bc81d9edef29d37fba34035ccb07f1ac37",
+      "source": "frozen_dev_input_statistics_only"
+    },
+    "final": {
+      "case_count": 15,
+      "details_published": false,
+      "input_sha256": "4a0ec2a5ddee8e49030097f10e26635fdcca85d836041ceb2a94aac6981634d3",
+      "source": "sealed_final_input"
+    }
+  }
+}

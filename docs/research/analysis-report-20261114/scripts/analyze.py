@@ -571,7 +571,7 @@ def main():
        'model_vs_baseline_score_delta':model['final_score']-baseline['final_score'],
        'both_vs_baseline_wall_reduction_pct':100*(1-both['timing']['wall_clock_total_s']/baseline['timing']['wall_clock_total_s'])}
     all_runs=feedback['runs']+routing['runs']+stopped['runs']
-    data={'schema_version':1,'scope':'Desktop archived reports only; Mac issue-only exploration excluded.',
+    data={'schema_version':1,'scope':'Desktop archived reports; Mac exploration is analyzed separately in mac-analysis.json.',
       'definitions':{'final_gain_pct':'100 * (final_score / final_c0_score - 1)',
          'dev_trajectory':'Eligible correct dev validations from report.steps, timestamped at validation end; carry max observed score until loop end.',
          'wall_time':'report.timing.wall_clock_total_s; includes final; startup diagnostic overlaps measured stages.',

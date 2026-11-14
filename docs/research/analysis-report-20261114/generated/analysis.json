@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "Desktop archived reports only; Mac issue-only exploration excluded.",
+  "scope": "Desktop archived reports; Mac exploration is analyzed separately in mac-analysis.json.",
   "definitions": {
     "final_gain_pct": "100 * (final_score / final_c0_score - 1)",
     "dev_trajectory": "Eligible correct dev validations from report.steps, timestamped at validation end; carry max observed score until loop end.",

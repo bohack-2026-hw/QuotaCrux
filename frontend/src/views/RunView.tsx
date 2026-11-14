@@ -228,6 +228,32 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
             v={!o.final_evaluated ? (live ? '—' : '未运行') : score ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)}
             s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : devOnly ? '本次为开发预实验，final 未启用' : '最终测试未运行'} />
         </div>
+        <details className="fold">
+          <summary>模型用量明细（按角色与模型）</summary>
+          {Object.keys(rep.usage.by_model).length === 0 ? <p className="small muted">本次尚无模型调用记录。</p> : (
+            <div className="tbl-wrap">
+              <table className="tbl">
+                <thead><tr><th>角色 / 模型</th><th>请求</th><th>输入 / 输出 Token</th><th>其中推理</th><th>费用</th><th>累计请求耗时</th></tr></thead>
+                <tbody>{Object.entries(rep.usage.by_model).map(([key, usage]) => {
+                  const [role, , ...model] = key.split(':')
+                  const label = role === 'router_action' ? '动作路由' : role === 'router_model' ? '模型路由' : roleName(role)
+                  return (
+                    <tr key={key}>
+                      <td><b>{label}</b><div className="small mono muted">{model.join(':')}</div></td>
+                      <td>{fmt.n(usage.requests)}</td>
+                      <td>{fmt.n(usage.input_tokens)} / {fmt.n(usage.output_tokens)}
+                        {usage.input_tokens_unknown_calls > 0 && <div className="small muted">{usage.input_tokens_unknown_calls} 次调用用量未知</div>}
+                      </td>
+                      <td>{fmt.n(usage.reasoning_tokens)}</td>
+                      <td>{usage.cost_status === 'partial' && usage.cost_usd != null ? '≥' : ''}{fmt.usd(usage.cost_usd)}<div className="small muted">{costNote(usage.cost_status)}</div></td>
+                      <td>{fmt.s(usage.latency_s)}</td>
+                    </tr>
+                  )
+                })}</tbody>
+              </table>
+            </div>
+          )}
+        </details>
       </div>
 
       <div className="grid cols-2">
@@ -364,7 +390,7 @@ function runHeadline(rep: Report, score: boolean, devOnly: boolean, best: number
 }
 
 function costNote(s: string) {
-  return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '脚本模型不计费', no_model_calls: '没有调用模型', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
+  return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '不计费', no_model_calls: '没有调用模型', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
 }
 
 function StepRow({ s, rep }: { s: Step; rep: Report }) {

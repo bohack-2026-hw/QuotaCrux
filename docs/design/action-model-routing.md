@@ -117,7 +117,7 @@ independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 初始分流的 `route_model` 步骤由 `program` 记录，Decisions 的模型选择由 `model` 记录。
 报告的 `route` 只取初始程序分流，逐步 `model_role` 与用途账本保留实际调用角色。
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
-协调入口：[QuotaCrux issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
+协调入口：[QuotaCrux issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1)。
 
 历史回放结果见 [decision-model/README.md](../archive/decisions-experiments/README.md)。
 本适配器提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。

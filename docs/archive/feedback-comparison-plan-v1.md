@@ -99,4 +99,4 @@ QuotaCrux 的试验预算如下。当前 `300s / 6 请求 / 4 候选` 仍是已�
 
 接入分支修改 Runner 的研究模式，不合并其他分支的两层路由或决策 API。正式实验前统一记录选定的 QuotaCrux 提交、适配器版本、上游数据版本、模型配置和运行环境；不能将不同 agent 分支上的结果拼成同一次对照。
 
-截至本次接入核查：`main=f8fbb3e`、`feat/shared-core=efcaa49`、`explore/openai-decisions=49bea6b`。两层路由在其他 agent 分支继续推进，其独立报告不代替本协议的反馈利用对照。协作信息统一更新到 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
+截至本次接入核查：`main=f8fbb3e`、`feat/shared-core=efcaa49`、`explore/openai-decisions=49bea6b`。两层路由在其他 agent 分支继续推进，其独立报告不代替本协议的反馈利用对照。协作信息统一更新到 [issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1)。

@@ -1,0 +1,2842 @@
+{
+  "experiment": {
+    "started_at": "2026-11-14T03:13:13.840+00:00",
+    "code_commit": "6297c0b87b7d6eb4b3247d1880e7a97b05ff3d7d",
+    "mode": "eval",
+    "snapshot_id": "v0",
+    "plan": [
+      {
+        "problem": "codeforces/2104A",
+        "task_id": "ebx-codeforces-2104A-B-5-20",
+        "interface": "io",
+        "selection": {
+          "raw_cases": 100,
+          "unique_cases": 100,
+          "selected_cases": 20,
+          "order": "sha256(input) ascending",
+          "dev_ids": [
+            50,
+            12,
+            77,
+            82,
+            94
+          ],
+          "final_ids": [
+            22,
+            44,
+            89,
+            9,
+            78,
+            71,
+            75,
+            39,
+            65,
+            68,
+            40,
+            31,
+            96,
+            55,
+            48
+          ],
+          "protocol": "routeevo-runtime-optimization-v1"
+        },
+        "files": {
+          "dev_input": {
+            "file": "dev_input.json",
+            "sha256": "e6eb59884cfbcfa67c5381ef5b9c8cb4028ec5d9ebd2839dba18155df9eebfa3",
+            "bytes": 24097
+          },
+          "dev_expected": {
+            "file": "dev_expected.json",
+            "sha256": "46103db4804c95d566dcacfda20b0989361c528a7be4093935beecfa09e24378",
+            "bytes": 3852
+          },
+          "final_input": {
+            "file": "final_input.json",
+            "sha256": "3348c38d4a5ac739cb195afc86f231a46c76c028dc7400efcb910191fb0e58bf",
+            "bytes": 72985
+          },
+          "final_expected": {
+            "file": "final_expected.json",
+            "sha256": "b64b7cb07edbb73cba9a6224a8feb6ed049e289c6f03aeaee7251b25630963dc",
+            "bytes": 11663
+          },
+          "dev_profile": {
+            "file": "dev_profile.json",
+            "sha256": "ee1cf5757866cbf76afcf48d45143918e0b7f6fc791c1bb6414b089d0f5798f3",
+            "bytes": 166
+          },
+          "examples": {
+            "file": "examples.json",
+            "sha256": "61705d1aefeb4bc5e50f308c9cef4c2b1c53b45b2d5b2f7f73752ab5628d0cdf",
+            "bytes": 1183
+          },
+          "contract": {
+            "file": "contract.txt",
+            "sha256": "92f9695c751ebcbdeaba8f0ff17ef5d34e9d540f543995cb51cbd0b9d63a0c63",
+            "bytes": 2187
+          },
+          "initial": {
+            "file": "initial.py",
+            "sha256": "190539550417c1a9983380825d52438e337bcf8eadf62a68d9afeb158d4acd8c",
+            "bytes": 134
+          },
+          "checker": {
+            "file": "checker.py",
+            "sha256": "9b8e3ce89e2fa61d75936aa3f660a5064eb23453c7c2d6b18a95a9f87511b845",
+            "bytes": 956
+          }
+        },
+        "source": {
+          "dataset": "EffiBench/effibench-x",
+          "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+          "shard": "data/test-00009-of-00020.parquet",
+          "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+        }
+      },
+      {
+        "problem": "codeforces/2108A",
+        "task_id": "ebx-codeforces-2108A-B-5-20",
+        "interface": "io",
+        "selection": {
+          "raw_cases": 100,
+          "unique_cases": 100,
+          "selected_cases": 20,
+          "order": "sha256(input) ascending",
+          "dev_ids": [
+            98,
+            74,
+            85,
+            99,
+            38
+          ],
+          "final_ids": [
+            10,
+            12,
+            47,
+            5,
+            11,
+            17,
+            13,
+            76,
+            35,
+            88,
+            79,
+            82,
+            91,
+            8,
+            31
+          ],
+          "protocol": "routeevo-runtime-optimization-v1"
+        },
+        "files": {
+          "dev_input": {
+            "file": "dev_input.json",
+            "sha256": "6e98943e247b09377a4826ace3cfe87610b0315a9d47fddbfec5298ce90b803a",
+            "bytes": 1473
+          },
+          "dev_expected": {
+            "file": "dev_expected.json",
+            "sha256": "a151bc9de333c59a98034b3be1bdc6b7f4da010e0a9f175398d31524f49ce506",
+            "bytes": 1928
+          },
+          "final_input": {
+            "file": "final_input.json",
+            "sha256": "402ab33f2b0eefba772311c43df87b980ea17cdee404389d1847d465a0a01aab",
+            "bytes": 3067
+          },
+          "final_expected": {
+            "file": "final_expected.json",
+            "sha256": "3561bab3b5e1c3ad3f680dc3824bd20f1940d9008feec5639fd1f23a49f05ea7",
+            "bytes": 3935
+          },
+          "dev_profile": {
+            "file": "dev_profile.json",
+            "sha256": "9270e5da5b20147f58b92082e9890230f4187863209ee7ce53178d763c913ae6",
+            "bytes": 165
+          },
+          "examples": {
+            "file": "examples.json",
+            "sha256": "b188cb32508a9d0634867d298535710183e788dec3e25198a029c901c501c98b",
+            "bytes": 1233
+          },
+          "contract": {
+            "file": "contract.txt",
+            "sha256": "f0f791bb37a9788a2b1a733659e00ae3cd57e727eb05b1724bd4cd4948298bf2",
+            "bytes": 1999
+          },
+          "initial": {
+            "file": "initial.py",
+            "sha256": "2d1a26fb9416a1ee0bd25beb484b1a904a28396052a1f42b0951da1e8fb21102",
+            "bytes": 74
+          },
+          "checker": {
+            "file": "checker.py",
+            "sha256": "f7c6b1f26952b3f81004d62fc9af458904865769739e581c7f05dc1d0044adad",
+            "bytes": 1756
+          }
+        },
+        "source": {
+          "dataset": "EffiBench/effibench-x",
+          "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+          "shard": "data/test-00009-of-00020.parquet",
+          "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+        }
+      },
+      {
+        "problem": "leetcode/3188",
+        "task_id": "ebx-leetcode-3188-B-5-20",
+        "interface": "functional",
+        "selection": {
+          "raw_cases": 100,
+          "unique_cases": 92,
+          "selected_cases": 20,
+          "order": "sha256(input) ascending",
+          "dev_ids": [
+            92,
+            51,
+            36,
+            28,
+            99
+          ],
+          "final_ids": [
+            69,
+            20,
+            30,
+            45,
+            72,
+            64,
+            79,
+            29,
+            55,
+            38,
+            24,
+            88,
+            6,
+            9,
+            91
+          ],
+          "protocol": "routeevo-runtime-optimization-v1"
+        },
+        "files": {
+          "dev_input": {
+            "file": "dev_input.json",
+            "sha256": "34d1254cf47310878c0489726cd18eac41d474d2e2c3b717a183bd3d7a2e44c2",
+            "bytes": 2414
+          },
+          "dev_expected": {
+            "file": "dev_expected.json",
+            "sha256": "cd05ba728aa04c46d383dc375a87be4b06b00c1279a510fc88f5f9a4b8f94543",
+            "bytes": 125
+          },
+          "final_input": {
+            "file": "final_input.json",
+            "sha256": "8a92d4949ff4c6f6f41252f1b613651d3db1e44a4869ac653dfff83b36a5db71",
+            "bytes": 4490
+          },
+          "final_expected": {
+            "file": "final_expected.json",
+            "sha256": "4d2c558334e7d876d54f995138211dff538656ee963184db95a72a35cca74f4d",
+            "bytes": 376
+          },
+          "dev_profile": {
+            "file": "dev_profile.json",
+            "sha256": "2544107afd90ee7b518a00cf1e021fb305e3d89d4be69e6813d1f4c658e9e32c",
+            "bytes": 170
+          },
+          "examples": {
+            "file": "examples.json",
+            "sha256": "0be599e6fb46ed55c04c91e104d0a9c3b032e878fac3d237c57ae39cdadc4251",
+            "bytes": 617
+          },
+          "contract": {
+            "file": "contract.txt",
+            "sha256": "e3cd58f7dedc52ff8a71b8c19e86bb3357452389a61f11466e6c7e87918fad73",
+            "bytes": 1690
+          },
+          "initial": {
+            "file": "initial.py",
+            "sha256": "ee9c2462f10950b8589ad41a77540979d0f0ebe33f2fc6f5a7ee1a904e406027",
+            "bytes": 1950
+          },
+          "checker": {
+            "file": "checker.py",
+            "sha256": "f8f0f3ca6fa2e7a9d2252935a9b94ce1f29388fe2646ae1e656bba8048bc146f",
+            "bytes": 427
+          }
+        },
+        "source": {
+          "dataset": "EffiBench/effibench-x",
+          "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+          "shard": "data/test-00009-of-00020.parquet",
+          "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+        }
+      },
+      {
+        "problem": "leetcode/3193",
+        "task_id": "ebx-leetcode-3193-B-5-20",
+        "interface": "functional",
+        "selection": {
+          "raw_cases": 100,
+          "unique_cases": 100,
+          "selected_cases": 20,
+          "order": "sha256(input) ascending",
+          "dev_ids": [
+            43,
+            31,
+            21,
+            79,
+            74
+          ],
+          "final_ids": [
+            40,
+            94,
+            12,
+            26,
+            50,
+            70,
+            19,
+            42,
+            78,
+            9,
+            65,
+            83,
+            35,
+            61,
+            14
+          ],
+          "protocol": "routeevo-runtime-optimization-v1"
+        },
+        "files": {
+          "dev_input": {
+            "file": "dev_input.json",
+            "sha256": "8a66c2c3ce798fc049362a2454c2b9b96beeeb83b42e007d1d1603340b4625b6",
+            "bytes": 445
+          },
+          "dev_expected": {
+            "file": "dev_expected.json",
+            "sha256": "50525a665e2a5edc004898fedfae2801a2ae690623c16bdfdc3307e2bcc0a172",
+            "bytes": 135
+          },
+          "final_input": {
+            "file": "final_input.json",
+            "sha256": "a80ec738d0940b288d9ad97a01f168c45b341a0dbd9b8027670f32163fa62be5",
+            "bytes": 1439
+          },
+          "final_expected": {
+            "file": "final_expected.json",
+            "sha256": "223aece197ec4890b3ab9a3ef3c83af7d73b2382ad16742b21d2a4a1822879fa",
+            "bytes": 403
+          },
+          "dev_profile": {
+            "file": "dev_profile.json",
+            "sha256": "a8b6123b2d1225c6b292aeebf91d59be955dfd25d6a4235e27adb6904c125407",
+            "bytes": 169
+          },
+          "examples": {
+            "file": "examples.json",
+            "sha256": "77e7956d95e4119cb935d3d2de992d3d95130a62018094c434a05ab06d6eddab",
+            "bytes": 169
+          },
+          "contract": {
+            "file": "contract.txt",
+            "sha256": "f8b0fe11f2353a30f21000d73978070a8001731fb5a514e7bc0af90f1c82e9c8",
+            "bytes": 1751
+          },
+          "initial": {
+            "file": "initial.py",
+            "sha256": "e53bf750830263430f0a17b247d968351e505e1d9f645d675f6e41240289a1dd",
+            "bytes": 1891
+          },
+          "checker": {
+            "file": "checker.py",
+            "sha256": "69ef0d8c5b1b3482594b75c0a9a320fb4bacea6f0869916d5585e625a699aa51",
+            "bytes": 310
+          }
+        },
+        "source": {
+          "dataset": "EffiBench/effibench-x",
+          "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+          "shard": "data/test-00009-of-00020.parquet",
+          "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+        }
+      }
+    ],
+    "models": {
+      "small": {
+        "provider": "chat_compat",
+        "model": "Qwen3.8-27B",
+        "role": "small",
+        "base_url": "https://aiping.cn/api/v1",
+        "reasoning_effort": null,
+        "enable_thinking": false,
+        "max_output_tokens": 8192,
+        "temperature": null,
+        "response_format": "json_object",
+        "extra": {}
+      },
+      "large": {
+        "provider": "openai_responses",
+        "model": "gpt-6.1-sol",
+        "role": "large",
+        "base_url": "https://api.openai.com/v1",
+        "reasoning_effort": "xhigh",
+        "enable_thinking": null,
+        "max_output_tokens": 32000,
+        "temperature": null,
+        "response_format": "json_schema",
+        "extra": {}
+      }
+    },
+    "limits": {
+      "max_model_requests": 6,
+      "max_candidates": 4,
+      "wall_clock_s": 300.0,
+      "model_request_timeout_s": 120.0,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "token_budget": null,
+      "max_code_bytes": 20000
+    },
+    "measure": {
+      "repeats": 5,
+      "cpus": 1.0,
+      "memory": "1g",
+      "pids_limit": 64,
+      "max_output_bytes": 67108864,
+      "ready_timeout_s": 30.0
+    },
+    "upgrade_rule": {
+      "id": "upgrade-rule-v2",
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "consecutive_misses": 2,
+      "max_small_requests_without_goal": 3
+    },
+    "environment": {
+      "image_tag": "routeevo-sandbox:d055c99c833a",
+      "image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+      "docker_server": "29.9.3 linux/amd64",
+      "container_python": "3.12-slim (pinned digest in Dockerfile)",
+      "limits": {
+        "cpus": 1.0,
+        "memory": "1g",
+        "pids_limit": 64,
+        "network": "none",
+        "read_only_rootfs": true,
+        "user": "65534:65534"
+      }
+    },
+    "host_platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44",
+    "host_python": "3.12.11",
+    "qwen_pricing": {
+      "currency": "CNY",
+      "unit": "per 1M tokens",
+      "snapshot": {
+        "id": "Qwen3.8-27B",
+        "object": "model",
+        "created": 1787193049,
+        "owned_by": "system",
+        "status": true,
+        "price": {
+          "input_price_range": [
+            3,
+            3
+          ],
+          "output_price_range": [
+            12,
+            12
+          ]
+        },
+        "context_length_range": [
+          1024000,
+          1024000
+        ],
+        "is_foreign": false,
+        "model_type": "llm"
+      },
+      "sources": [
+        "https://aiping.cn/api/v1/models",
+        "https://aiping.cn/docs/UserGuide/pricing-rules"
+      ]
+    },
+    "openai_price_tables": {
+      "openai/gpt-6.1-sol/standard/2026-11-13": {
+        "provider": "openai_responses",
+        "model": "gpt-6.1-sol",
+        "currency": "USD",
+        "unit": "per 1M tokens",
+        "input": 2.0,
+        "cached_input": 0.1,
+        "cache_write": 2.5,
+        "output": 10.0,
+        "long_context_threshold_input_tokens": 272000,
+        "long_context_multiplier": {
+          "input": 2.0,
+          "cached_input": 2.0,
+          "cache_write": 2.0,
+          "output": 1.5
+        },
+        "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        "retrieved": "2026-11-13"
+      }
+    },
+    "selection_note": "Fixed before model calls: cached shard, two io and two functional problems; one run each, 5 dev / 15 final.",
+    "ended_at": "2026-11-14T03:21:44.422+00:00",
+    "host_cpu": "Intel Core Ultra X7 358H; 16 logical CPUs; no CPU pinning"
+  },
+  "preflight": [
+    {
+      "evaluation_id": "a5de926fb19d",
+      "task_id": "ebx-codeforces-2104A-B-5-20",
+      "dataset": "dev",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 1.45,
+      "dataset_sha256": "e6eb59884cfbcfa67c5381ef5b9c8cb4028ec5d9ebd2839dba18155df9eebfa3"
+    },
+    {
+      "evaluation_id": "d27a72e813d7",
+      "task_id": "ebx-codeforces-2104A-B-5-20",
+      "dataset": "final",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 2.848,
+      "dataset_sha256": "3348c38d4a5ac739cb195afc86f231a46c76c028dc7400efcb910191fb0e58bf"
+    },
+    {
+      "evaluation_id": "3ac1f4780533",
+      "task_id": "ebx-codeforces-2108A-B-5-20",
+      "dataset": "dev",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 1.102,
+      "dataset_sha256": "6e98943e247b09377a4826ace3cfe87610b0315a9d47fddbfec5298ce90b803a"
+    },
+    {
+      "evaluation_id": "64a2dd4d530a",
+      "task_id": "ebx-codeforces-2108A-B-5-20",
+      "dataset": "final",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 2.945,
+      "dataset_sha256": "402ab33f2b0eefba772311c43df87b980ea17cdee404389d1847d465a0a01aab"
+    },
+    {
+      "evaluation_id": "2ec73ca27a75",
+      "task_id": "ebx-leetcode-3188-B-5-20",
+      "dataset": "dev",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 1.528,
+      "dataset_sha256": "34d1254cf47310878c0489726cd18eac41d474d2e2c3b717a183bd3d7a2e44c2"
+    },
+    {
+      "evaluation_id": "74c315b1a49f",
+      "task_id": "ebx-leetcode-3188-B-5-20",
+      "dataset": "final",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 3.988,
+      "dataset_sha256": "8a92d4949ff4c6f6f41252f1b613651d3db1e44a4869ac653dfff83b36a5db71"
+    },
+    {
+      "evaluation_id": "74bf2d436147",
+      "task_id": "ebx-leetcode-3193-B-5-20",
+      "dataset": "dev",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 1.436,
+      "dataset_sha256": "8a66c2c3ce798fc049362a2454c2b9b96beeeb83b42e007d1d1603340b4625b6"
+    },
+    {
+      "evaluation_id": "d724bb42d0f8",
+      "task_id": "ebx-leetcode-3193-B-5-20",
+      "dataset": "final",
+      "status": "passed",
+      "correct": true,
+      "duration_s": 3.905,
+      "dataset_sha256": "a80ec738d0940b288d9ad97a01f168c45b341a0dbd9b8027670f32163fa62be5"
+    }
+  ],
+  "totals": {
+    "tasks": 4,
+    "final_correct_tasks": 4,
+    "final_cases": 60,
+    "final_cases_passed": 60,
+    "goal_met_tasks": 2,
+    "retained_initial_tasks": 2,
+    "speedup_geomean_including_initial": 1.5585412998727217,
+    "wall_clock_total_s": 507.532,
+    "batch_wall_clock_s": 510.582,
+    "preflight_s": 19.202,
+    "model_wait_s": 280.231,
+    "requests": 13,
+    "qwen_standard_estimate_cny": 0.10599,
+    "qwen_observed_balance_delta_cny": "0.098002800000001",
+    "openai_known_estimated_usd": 0.123553,
+    "openai_cost_unknown_calls": 1,
+    "candidates_proposed": 9,
+    "candidates_passed_dev": 9,
+    "by_model": {
+      "small": {
+        "requests": 7,
+        "input_tokens": 22486,
+        "output_tokens": 3211,
+        "usage_unknown_calls": 0,
+        "latency_s": 82.808
+      },
+      "large": {
+        "requests": 6,
+        "input_tokens": 18668,
+        "output_tokens": 7689,
+        "usage_unknown_calls": 1,
+        "latency_s": 197.423
+      }
+    }
+  },
+  "runs": [
+    {
+      "problem": "codeforces/2104A",
+      "task_id": "ebx-codeforces-2104A-B-5-20",
+      "run_id": "run-20261114T031314-4f38",
+      "status": "completed",
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "candidates: used 4/4",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": null,
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "无改进：保留初始程序，最终测试正确"
+      },
+      "iterations": {
+        "model_requests": 5,
+        "candidates_proposed": 4,
+        "candidates_passed": 4,
+        "candidates_improved": 0,
+        "candidates_no_gain": 4,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 1,
+        "upgrades": 1,
+        "upgrade_at_step": 6
+      },
+      "timing": {
+        "wall_clock_total_s": 194.992,
+        "agent_loop_s": 192.169,
+        "agent_loop_elapsed_s": 192.169,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 2.823,
+        "model_wait_s": 136.005,
+        "dev_evaluation_s": 55.537,
+        "evidence_tool_s": 0.617,
+        "container_startup_s": 34.06
+      },
+      "final_evaluation": {
+        "evaluation_id": "d80333b3a00b",
+        "candidate_id": "c0",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 2.823,
+        "note": "initial program checked for correctness only; no improvement to measure"
+      },
+      "usage": {
+        "total": {
+          "requests": 5,
+          "ok": 5,
+          "errors": {},
+          "latency_s": 136.005,
+          "input_tokens": 18681,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 5600,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 4191,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.080546,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "requests": 2,
+            "ok": 2,
+            "errors": {},
+            "latency_s": 9.779,
+            "input_tokens": 6873,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 497,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 2,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 2,
+            "price_versions": []
+          },
+          "large:openai_responses:gpt-6.1-sol": {
+            "requests": 3,
+            "ok": 3,
+            "errors": {},
+            "latency_s": 126.226,
+            "input_tokens": 11808,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 5103,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": 4191,
+            "reasoning_tokens_unknown_calls": 0,
+            "cost_usd": 0.080546,
+            "cost_status": "estimated",
+            "cost_unknown_calls": 0,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        "self_hosted_machine_cost": "unknown (not accounted)"
+      },
+      "calls": [
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3034,
+          "cached_input_tokens": 0,
+          "output_tokens": 268,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 5.194,
+          "reported_usage": {
+            "completion_tokens": 268,
+            "completion_tokens_details": {},
+            "prompt_tokens": 3034,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 3034
+            },
+            "total_tokens": 3302
+          }
+        },
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3839,
+          "cached_input_tokens": 0,
+          "output_tokens": 229,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 4.585,
+          "reported_usage": {
+            "completion_tokens": 229,
+            "completion_tokens_details": {},
+            "prompt_tokens": 3839,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 3839
+            },
+            "total_tokens": 4068
+          }
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3650,
+          "cached_input_tokens": 0,
+          "output_tokens": 1342,
+          "reasoning_tokens": 992,
+          "cost_usd": 0.022544,
+          "cost_status": "estimated",
+          "latency_s": 31.865,
+          "reported_usage": {
+            "input_tokens": 3650,
+            "input_tokens_details": {
+              "cache_write_tokens": 3647,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1342,
+            "output_tokens_details": {
+              "reasoning_tokens": 992
+            },
+            "total_tokens": 4992
+          }
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 4089,
+          "cached_input_tokens": 0,
+          "output_tokens": 780,
+          "reasoning_tokens": 619,
+          "cost_usd": 0.018021,
+          "cost_status": "estimated",
+          "latency_s": 22.555,
+          "reported_usage": {
+            "input_tokens": 4089,
+            "input_tokens_details": {
+              "cache_write_tokens": 4086,
+              "cached_tokens": 0
+            },
+            "output_tokens": 780,
+            "output_tokens_details": {
+              "reasoning_tokens": 619
+            },
+            "total_tokens": 4869
+          }
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 4069,
+          "cached_input_tokens": 0,
+          "output_tokens": 2981,
+          "reasoning_tokens": 2580,
+          "cost_usd": 0.039981,
+          "cost_status": "estimated",
+          "latency_s": 71.806,
+          "reported_usage": {
+            "input_tokens": 4069,
+            "input_tokens_details": {
+              "cache_write_tokens": 4066,
+              "cached_tokens": 0
+            },
+            "output_tokens": 2981,
+            "output_tokens_details": {
+              "reasoning_tokens": 2580
+            },
+            "total_tokens": 7050
+          }
+        }
+      ],
+      "qwen_standard_estimate_cny": 0.026583,
+      "qwen_account_balance_delta_cny": {
+        "total_remain": "0.026583000000000",
+        "gift_remain": "0.026583000000000",
+        "recharge_remain": "0"
+      },
+      "qwen_balance_note": "Account balance difference during this run; not a per-request invoice.",
+      "final_speedup_including_initial": 1.0,
+      "config_fingerprint": "2d27463c2ce79351",
+      "frozen_config": {
+        "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+        "evaluator_version": "runtime-suite-eval-3",
+        "experience_extractor": "extractor-v3",
+        "fingerprint": "2d27463c2ce79351",
+        "fingerprint_excludes": [
+          "mode",
+          "snapshot_id",
+          "label",
+          "environment details beyond image id"
+        ],
+        "label": "EffiBench-X real four-task pilot 2026-11-14",
+        "limits": {
+          "max_candidates": 4,
+          "max_code_bytes": 20000,
+          "max_model_requests": 6,
+          "measurement_timeout_s": 10.0,
+          "min_request_window_s": 15.0,
+          "model_request_timeout_s": 120.0,
+          "token_budget": null,
+          "wall_clock_s": 300.0
+        },
+        "measure": {
+          "cpus": 1.0,
+          "max_output_bytes": 67108864,
+          "memory": "1g",
+          "pids_limit": 64,
+          "ready_timeout_s": 30.0,
+          "repeats": 5
+        },
+        "models": {
+          "large": {
+            "base_url": "https://api.openai.com/v1",
+            "enable_thinking": null,
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "small": {
+            "base_url": "https://aiping.cn/api/v1",
+            "enable_thinking": false,
+            "extra": {},
+            "max_output_tokens": 8192,
+            "model": "Qwen3.8-27B",
+            "provider": "chat_compat",
+            "reasoning_effort": null,
+            "response_format": "json_object",
+            "role": "small",
+            "temperature": null
+          }
+        },
+        "prompt": {
+          "system_sha256": "eb3bc995da718c7b58f09089b3b40313e8e4dcbdf05bada913daa830cf6831a4",
+          "version": "agent-prompt-v3"
+        },
+        "retrieval": {
+          "features": "benchmark adapter workload features; compatible task semantics required",
+          "max_per_outcome": {
+            "failure": 2,
+            "no_gain": 1,
+            "success": 3
+          },
+          "rank": "matching features desc, then newest first",
+          "version": "retrieval-v2"
+        },
+        "reuse": {
+          "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+          "learn_target_margin": 0.05,
+          "max_programs": 3,
+          "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+          "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+          "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+          "version": "reuse-v2"
+        },
+        "sandbox_image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+        "scripted": [],
+        "task_manifest_sha256": "022da270a81440b900c9c5380fac23c3e32003bb8c5dc9c57b3f48696b7306a5",
+        "upgrade_rule": {
+          "consecutive_misses": 2,
+          "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+          "id": "upgrade-rule-v2",
+          "max_small_requests_without_goal": 3
+        }
+      },
+      "research": {
+        "definition": {
+          "question": "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 1.1×？",
+          "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+          "workload": "codeforces/2104A · io · 5 个开发用例",
+          "baseline": {
+            "program": "c0：数据集 Python 参考解（functional 题含原始 runner）",
+            "dev_median_s": 0.2290590819902718,
+            "final_median_s": null
+          },
+          "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+          "tools": [
+            {
+              "action": "reuse_candidate",
+              "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+            },
+            {
+              "action": "analyze",
+              "label": "分析：写下推理与计划，不执行"
+            },
+            {
+              "action": "get_evidence",
+              "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+            },
+            {
+              "action": "propose_candidate",
+              "label": "提出候选：提交完整程序，程序立即验证"
+            },
+            {
+              "action": "run_validation",
+              "label": "运行验证：重新评测已有候选"
+            },
+            {
+              "action": "finish",
+              "label": "结束：交付当前最佳已验证候选"
+            }
+          ],
+          "verification": "冻结用例逐例执行 + 数据集 evaluator 在独立沙箱中校验；基线与候选各预热一次、交替计时 5 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善",
+          "budget": {
+            "model_requests": 6,
+            "candidates": 4,
+            "loop_s": 300.0,
+            "request_timeout_s": 120.0,
+            "measurement_timeout_s": 10.0
+          },
+          "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+        },
+        "experiments": [
+          {
+            "candidate_id": "c1",
+            "step": 2,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "原始程序每行都调用input()和print()，批量处理可以显著减少系统调用开销",
+            "purpose": "优化I/O操作，减少函数调用开销",
+            "expected": "通过批量读取和字符串拼接减少I/O开销，获得至少1.1倍加速",
+            "verification": "检查输出正确性并测量运行时间",
+            "result": {
+              "status": "passed",
+              "speedup": 1.0236,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "048832d47238"
+          },
+          {
+            "candidate_id": "c2",
+            "step": 4,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": null,
+            "purpose": "进一步优化I/O和循环，减少不必要的字符串拼接开销，使用更高效的输出方式",
+            "expected": "速度提升超过1.1倍",
+            "verification": "检查正确性和速度提升",
+            "result": {
+              "status": "passed",
+              "speedup": 0.9636,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "upgrade to large model, continue",
+            "evaluation_id": "a640fa25f830"
+          },
+          {
+            "candidate_id": "c3",
+            "step": 7,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "开发集总输入较小，解释器退出清理可能占据可观比例；直接写出完整结果后退出，结合整数迭代器和列表推导，可能比仅调整缓冲输出更有效。",
+            "purpose": "前两次批量输入输出的收益被进程开销淹没，尝试同时压缩解析循环并避免正常解释器退出的清理开销。",
+            "expected": "保持所有合法输入的输出正确，降低每个独立进程的运行时间，争取达到1.1倍加速。",
+            "verification": "通过开发集正确性检查，并比较候选和基线的多次计时区间是否完全分离且加速达到目标。",
+            "result": {
+              "status": "passed",
+              "speedup": 1.0382,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "bad614b541ae"
+          },
+          {
+            "candidate_id": "c4",
+            "step": 10,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "c3 已压缩主要计算循环；直接读取标准输入、避免单块输入的拼接复制，并简化完整写出时的处理，可能进一步减少固定开销。",
+            "purpose": "使用最后一个候选名额，尝试在 c3 的基础上直接读写文件描述符，减少缓冲输入层和输出切片管理的开销。",
+            "expected": "保持所有合法输入的答案不变，并检验直接系统调用能否进一步缩短运行时间；固定启动成本可能限制收益。",
+            "verification": "运行完整开发集的正确性检查与多次计时，检查候选的所有计时样本是否均快于基线，以及加速比是否达到 1.1。",
+            "result": {
+              "status": "passed",
+              "speedup": 1.0655,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "26da631c3872"
+          }
+        ],
+        "verdicts": {
+          "supported": 0,
+          "partial": 0,
+          "refuted": 4,
+          "untestable": 0,
+          "untested": 0
+        },
+        "verdict_labels": {
+          "supported": "得到支持",
+          "partial": "部分支持（改善，但未达目标）",
+          "refuted": "被反驳（正确但没有改善）",
+          "untestable": "未能检验（候选出错）",
+          "untested": "未评测（预算或运行结束）"
+        }
+      },
+      "started_at": "2026-11-14T03:13:14.051+00:00",
+      "ended_at": "2026-11-14T03:16:29.043+00:00",
+      "final_case_count": 15,
+      "final_cases_passed": 15,
+      "best_candidate": {
+        "candidate_id": "c0",
+        "origin": "initial",
+        "code_sha256": "190539550417c1a9983380825d52438e337bcf8eadf62a68d9afeb158d4acd8c",
+        "file": "best/codeforces-2104A.py"
+      },
+      "dev_evaluations": [
+        {
+          "candidate_id": "c0",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "timing": null,
+          "failure": null,
+          "duration_s": 1.139
+        },
+        {
+          "candidate_id": "c1",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.0236,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.01701648599555483,
+              "max": 0.244224170986854,
+              "median": 0.2290590819902718,
+              "min": 0.2172832729993388
+            },
+            "baseline_min_max_s": [
+              0.2172832729993388,
+              0.244224170986854
+            ],
+            "baseline_s": [
+              0.244224170986854,
+              0.2290590819902718,
+              0.22825594399182592,
+              0.23534801799542038,
+              0.2172832729993388
+            ],
+            "candidate": {
+              "iqr": 0.019309183502628002,
+              "max": 0.24565708699810784,
+              "median": 0.22378552300506271,
+              "min": 0.21457318700413452
+            },
+            "candidate_min_max_s": [
+              0.21457318700413452,
+              0.24565708699810784
+            ],
+            "candidate_s": [
+              0.22378552300506271,
+              0.22411770800681552,
+              0.24565708699810784,
+              0.21658324099553283,
+              0.21457318700413452
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.544
+        },
+        {
+          "candidate_id": "c2",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 0.9636,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.016270020500087412,
+              "max": 0.2364463470003102,
+              "median": 0.21812404600495938,
+              "min": 0.21300214101211168
+            },
+            "baseline_min_max_s": [
+              0.21300214101211168,
+              0.2364463470003102
+            ],
+            "baseline_s": [
+              0.22524220100603998,
+              0.2364463470003102,
+              0.21614636599406367,
+              0.21812404600495938,
+              0.21300214101211168
+            ],
+            "candidate": {
+              "iqr": 0.056600695999804884,
+              "max": 0.30214763999538263,
+              "median": 0.22636106400022982,
+              "min": 0.21963868900638772
+            },
+            "candidate_min_max_s": [
+              0.21963868900638772,
+              0.30214763999538263
+            ],
+            "candidate_s": [
+              0.21963868900638772,
+              0.21979431999352528,
+              0.30214763999538263,
+              0.22636106400022982,
+              0.25048676100414013
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.622
+        },
+        {
+          "candidate_id": "c3",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.0382,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.008414126994466642,
+              "max": 0.22760596300213365,
+              "median": 0.21907967099832604,
+              "min": 0.21699582300061593
+            },
+            "baseline_min_max_s": [
+              0.21699582300061593,
+              0.22760596300213365
+            ],
+            "baseline_s": [
+              0.21699582300061593,
+              0.2185296149982605,
+              0.22474772898567608,
+              0.22760596300213365,
+              0.21907967099832604
+            ],
+            "candidate": {
+              "iqr": 0.013194100498367334,
+              "max": 0.22341851799865253,
+              "median": 0.2110168259969214,
+              "min": 0.20940911400248297
+            },
+            "candidate_min_max_s": [
+              0.20940911400248297,
+              0.22341851799865253
+            ],
+            "candidate_s": [
+              0.20961395199992694,
+              0.2110168259969214,
+              0.22199274900049204,
+              0.22341851799865253,
+              0.20940911400248297
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.63
+        },
+        {
+          "candidate_id": "c4",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.0655,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.004755231500894297,
+              "max": 0.23125605800305493,
+              "median": 0.2284017410056549,
+              "min": 0.22497699200175703
+            },
+            "baseline_min_max_s": [
+              0.22497699200175703,
+              0.23125605800305493
+            ],
+            "baseline_s": [
+              0.22556473400618415,
+              0.22879613100667484,
+              0.22497699200175703,
+              0.23125605800305493,
+              0.2284017410056549
+            ],
+            "candidate": {
+              "iqr": 0.016743235508329235,
+              "max": 0.242642644996522,
+              "median": 0.2143698720028624,
+              "min": 0.21200120800494915
+            },
+            "candidate_min_max_s": [
+              0.21200120800494915,
+              0.242642644996522
+            ],
+            "candidate_s": [
+              0.21200120800494915,
+              0.2143698720028624,
+              0.21411520498804748,
+              0.242642644996522,
+              0.2169602390131331
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.602
+        }
+      ],
+      "qwen_standard_estimate_note": "Undiscounted input/output estimate; cached-input discounts are not applied.",
+      "qwen_undiscounted_estimate_minus_balance_delta_cny": "0E-15"
+    },
+    {
+      "problem": "codeforces/2108A",
+      "task_id": "ebx-codeforces-2108A-B-5-20",
+      "run_id": "run-20261114T031630-fe96",
+      "status": "completed",
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "model_requests: used 6/6",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": null,
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "无改进：保留初始程序，最终测试正确"
+      },
+      "iterations": {
+        "model_requests": 6,
+        "candidates_proposed": 3,
+        "candidates_passed": 3,
+        "candidates_improved": 0,
+        "candidates_no_gain": 3,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 1,
+        "evidence_calls": 0,
+        "upgrades": 1,
+        "upgrade_at_step": 6
+      },
+      "timing": {
+        "wall_clock_total_s": 142.715,
+        "agent_loop_s": 139.77,
+        "agent_loop_elapsed_s": 139.77,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 2.944,
+        "model_wait_s": 96.808,
+        "dev_evaluation_s": 42.952,
+        "evidence_tool_s": 0,
+        "container_startup_s": 26.783
+      },
+      "final_evaluation": {
+        "evaluation_id": "e66b5dcc8b1f",
+        "candidate_id": "c0",
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "candidate_median_s": null,
+        "baseline_median_s": null,
+        "timing": null,
+        "failure": null,
+        "duration_s": 2.944,
+        "note": "initial program checked for correctness only; no improvement to measure"
+      },
+      "usage": {
+        "total": {
+          "requests": 6,
+          "ok": 5,
+          "errors": {
+            "timeout": 1
+          },
+          "latency_s": 96.808,
+          "input_tokens": 16872,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 3328,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 3442,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 2067,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.043007,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "requests": 3,
+            "ok": 3,
+            "errors": {},
+            "latency_s": 25.611,
+            "input_tokens": 10012,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 3328,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 856,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 3,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 3,
+            "price_versions": []
+          },
+          "large:openai_responses:gpt-6.1-sol": {
+            "requests": 3,
+            "ok": 2,
+            "errors": {
+              "timeout": 1
+            },
+            "latency_s": 71.197,
+            "input_tokens": 6860,
+            "input_tokens_unknown_calls": 1,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 1,
+            "output_tokens": 2586,
+            "output_tokens_unknown_calls": 1,
+            "reasoning_tokens": 2067,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": 0.043007,
+            "cost_status": "partial",
+            "cost_unknown_calls": 1,
+            "price_versions": [
+              "openai/gpt-6.1-sol/standard/2026-11-13"
+            ]
+          }
+        },
+        "self_hosted_machine_cost": "unknown (not accounted)"
+      },
+      "calls": [
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3059,
+          "cached_input_tokens": 0,
+          "output_tokens": 345,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 9.616,
+          "reported_usage": {
+            "completion_tokens": 345,
+            "completion_tokens_details": {},
+            "prompt_tokens": 3059,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 3059
+            },
+            "total_tokens": 3404
+          }
+        },
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3099,
+          "cached_input_tokens": 1664,
+          "output_tokens": 209,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 5.01,
+          "reported_usage": {
+            "completion_tokens": 209,
+            "completion_tokens_details": {},
+            "prompt_tokens": 3099,
+            "prompt_tokens_details": {
+              "cached_tokens": 1664,
+              "text_tokens": 3099
+            },
+            "total_tokens": 3308
+          }
+        },
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3854,
+          "cached_input_tokens": 1664,
+          "output_tokens": 302,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 10.985,
+          "reported_usage": {
+            "completion_tokens": 302,
+            "completion_tokens_details": {},
+            "prompt_tokens": 3854,
+            "prompt_tokens_details": {
+              "cached_tokens": 1664,
+              "text_tokens": 3854
+            },
+            "total_tokens": 4156
+          }
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3125,
+          "cached_input_tokens": 0,
+          "output_tokens": 902,
+          "reasoning_tokens": 650,
+          "cost_usd": 0.016831,
+          "cost_status": "estimated",
+          "latency_s": 22.074,
+          "reported_usage": {
+            "input_tokens": 3125,
+            "input_tokens_details": {
+              "cache_write_tokens": 3122,
+              "cached_tokens": 0
+            },
+            "output_tokens": 902,
+            "output_tokens_details": {
+              "reasoning_tokens": 650
+            },
+            "total_tokens": 4027
+          }
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": null,
+          "status": "error",
+          "error_kind": "timeout",
+          "usage_source": "unknown",
+          "input_tokens": null,
+          "cached_input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 10.013,
+          "reported_usage": null
+        },
+        {
+          "role": "large",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 3735,
+          "cached_input_tokens": 0,
+          "output_tokens": 1684,
+          "reasoning_tokens": 1417,
+          "cost_usd": 0.026176,
+          "cost_status": "estimated",
+          "latency_s": 39.11,
+          "reported_usage": {
+            "input_tokens": 3735,
+            "input_tokens_details": {
+              "cache_write_tokens": 3732,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1684,
+            "output_tokens_details": {
+              "reasoning_tokens": 1417
+            },
+            "total_tokens": 5419
+          }
+        }
+      ],
+      "qwen_standard_estimate_cny": 0.040308,
+      "qwen_account_balance_delta_cny": {
+        "total_remain": "0.032320799999999",
+        "gift_remain": "0.032320799999999",
+        "recharge_remain": "0"
+      },
+      "qwen_balance_note": "Account balance difference during this run; not a per-request invoice.",
+      "final_speedup_including_initial": 1.0,
+      "config_fingerprint": "4195e45ecb1d99df",
+      "frozen_config": {
+        "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+        "evaluator_version": "runtime-suite-eval-3",
+        "experience_extractor": "extractor-v3",
+        "fingerprint": "4195e45ecb1d99df",
+        "fingerprint_excludes": [
+          "mode",
+          "snapshot_id",
+          "label",
+          "environment details beyond image id"
+        ],
+        "label": "EffiBench-X real four-task pilot 2026-11-14",
+        "limits": {
+          "max_candidates": 4,
+          "max_code_bytes": 20000,
+          "max_model_requests": 6,
+          "measurement_timeout_s": 10.0,
+          "min_request_window_s": 15.0,
+          "model_request_timeout_s": 120.0,
+          "token_budget": null,
+          "wall_clock_s": 300.0
+        },
+        "measure": {
+          "cpus": 1.0,
+          "max_output_bytes": 67108864,
+          "memory": "1g",
+          "pids_limit": 64,
+          "ready_timeout_s": 30.0,
+          "repeats": 5
+        },
+        "models": {
+          "large": {
+            "base_url": "https://api.openai.com/v1",
+            "enable_thinking": null,
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "small": {
+            "base_url": "https://aiping.cn/api/v1",
+            "enable_thinking": false,
+            "extra": {},
+            "max_output_tokens": 8192,
+            "model": "Qwen3.8-27B",
+            "provider": "chat_compat",
+            "reasoning_effort": null,
+            "response_format": "json_object",
+            "role": "small",
+            "temperature": null
+          }
+        },
+        "prompt": {
+          "system_sha256": "eb3bc995da718c7b58f09089b3b40313e8e4dcbdf05bada913daa830cf6831a4",
+          "version": "agent-prompt-v3"
+        },
+        "retrieval": {
+          "features": "benchmark adapter workload features; compatible task semantics required",
+          "max_per_outcome": {
+            "failure": 2,
+            "no_gain": 1,
+            "success": 3
+          },
+          "rank": "matching features desc, then newest first",
+          "version": "retrieval-v2"
+        },
+        "reuse": {
+          "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+          "learn_target_margin": 0.05,
+          "max_programs": 3,
+          "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+          "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+          "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+          "version": "reuse-v2"
+        },
+        "sandbox_image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+        "scripted": [],
+        "task_manifest_sha256": "fc4ff33e19f48b4b8228f51bad1c14fb010a217206a965dedc129c4a414cf801",
+        "upgrade_rule": {
+          "consecutive_misses": 2,
+          "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+          "id": "upgrade-rule-v2",
+          "max_small_requests_without_goal": 3
+        }
+      },
+      "research": {
+        "definition": {
+          "question": "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 1.1×？",
+          "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+          "workload": "codeforces/2108A · io · 5 个开发用例",
+          "baseline": {
+            "program": "c0：数据集 Python 参考解（functional 题含原始 runner）",
+            "dev_median_s": 0.24537702299130615,
+            "final_median_s": null
+          },
+          "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+          "tools": [
+            {
+              "action": "reuse_candidate",
+              "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+            },
+            {
+              "action": "analyze",
+              "label": "分析：写下推理与计划，不执行"
+            },
+            {
+              "action": "get_evidence",
+              "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+            },
+            {
+              "action": "propose_candidate",
+              "label": "提出候选：提交完整程序，程序立即验证"
+            },
+            {
+              "action": "run_validation",
+              "label": "运行验证：重新评测已有候选"
+            },
+            {
+              "action": "finish",
+              "label": "结束：交付当前最佳已验证候选"
+            }
+          ],
+          "verification": "冻结用例逐例执行 + 数据集 evaluator 在独立沙箱中校验；基线与候选各预热一次、交替计时 5 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善",
+          "budget": {
+            "model_requests": 6,
+            "candidates": 4,
+            "loop_s": 300.0,
+            "request_timeout_s": 120.0,
+            "measurement_timeout_s": 10.0
+          },
+          "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+        },
+        "experiments": [
+          {
+            "candidate_id": "c1",
+            "step": 3,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": null,
+            "purpose": "优化I/O操作，使用一次性读取和批量输出来减少系统调用开销",
+            "expected": "程序正确性保持不变，由于减少了多次input()调用和print()调用的开销，运行时间应有所缩短",
+            "verification": "在开发数据上验证输出正确性，并测量运行时间以确认速度提升",
+            "result": {
+              "status": "passed",
+              "speedup": 0.9148,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "5afab327552f"
+          },
+          {
+            "candidate_id": "c2",
+            "step": 7,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "每个输入的计算量极小，进程启动与退出开销可能占主要部分；使用os.write输出后调用os._exit，可省去正常退出时的清理工作。",
+            "purpose": "在保持常数时间公式的同时，合并输入输出，并尝试减少解释器退出清理开销。",
+            "expected": "所有测试输出保持正确；相较仅合并I/O的版本，直接写出并退出可能进一步降低短进程耗时。",
+            "verification": "由开发数据正确性检查及多次完整套件计时验证，确认是否满足严格改进条件和1.1倍目标。",
+            "result": {
+              "status": "passed",
+              "speedup": 1.0553,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "197254f0a8ee"
+          },
+          {
+            "candidate_id": "c3",
+            "step": 10,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "复用标准输入缓冲区、避免重新打开文件描述符，并用列表推导替代生成器，可能小幅降低开销；但解释器启动和计时波动可能仍占主导。",
+            "purpose": "利用最后一次请求，在 c2 基础上减少输入对象构造和生成器迭代开销，同时保留直接写出和立即退出。",
+            "expected": "保持输出正确，争取进一步降低运行时间；能否达到 1.1 倍加速由实际测量决定。",
+            "verification": "执行正确性检查与完整开发集计时，检查所有候选计时是否均快于基线，并核对加速比。",
+            "result": {
+              "status": "passed",
+              "speedup": 1.0472,
+              "improved": false,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "refuted",
+            "then": "continue",
+            "evaluation_id": "3052964b21e2"
+          }
+        ],
+        "verdicts": {
+          "supported": 0,
+          "partial": 0,
+          "refuted": 3,
+          "untestable": 0,
+          "untested": 0
+        },
+        "verdict_labels": {
+          "supported": "得到支持",
+          "partial": "部分支持（改善，但未达目标）",
+          "refuted": "被反驳（正确但没有改善）",
+          "untestable": "未能检验（候选出错）",
+          "untested": "未评测（预算或运行结束）"
+        }
+      },
+      "started_at": "2026-11-14T03:16:30.284+00:00",
+      "ended_at": "2026-11-14T03:18:52.999+00:00",
+      "final_case_count": 15,
+      "final_cases_passed": 15,
+      "best_candidate": {
+        "candidate_id": "c0",
+        "origin": "initial",
+        "code_sha256": "2d1a26fb9416a1ee0bd25beb484b1a904a28396052a1f42b0951da1e8fb21102",
+        "file": "best/codeforces-2108A.py"
+      },
+      "dev_evaluations": [
+        {
+          "candidate_id": "c0",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "timing": null,
+          "failure": null,
+          "duration_s": 1.134
+        },
+        {
+          "candidate_id": "c1",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 0.9148,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.08603933899576077,
+              "max": 0.3335443530086195,
+              "median": 0.24537702299130615,
+              "min": 0.22394531501049642
+            },
+            "baseline_min_max_s": [
+              0.22394531501049642,
+              0.3335443530086195
+            ],
+            "baseline_s": [
+              0.24537702299130615,
+              0.228407716997026,
+              0.22394531501049642,
+              0.3335443530086195,
+              0.29088735699042445
+            ],
+            "candidate": {
+              "iqr": 0.07373235299382941,
+              "max": 0.32407647899526637,
+              "median": 0.2682387649983866,
+              "min": 0.22181126700161258
+            },
+            "candidate_min_max_s": [
+              0.22181126700161258,
+              0.32407647899526637
+            ],
+            "candidate_s": [
+              0.2242221319975215,
+              0.2682387649983866,
+              0.22181126700161258,
+              0.2694216259915265,
+              0.32407647899526637
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 14.83
+        },
+        {
+          "candidate_id": "c2",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.0553,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.01988620249539963,
+              "max": 0.24244830899260705,
+              "median": 0.22579363201657543,
+              "min": 0.21504349400493084
+            },
+            "baseline_min_max_s": [
+              0.21504349400493084,
+              0.24244830899260705
+            ],
+            "baseline_s": [
+              0.24244830899260705,
+              0.21829993100254796,
+              0.21504349400493084,
+              0.230667521005671,
+              0.22579363201657543
+            ],
+            "candidate": {
+              "iqr": 0.024941970503277844,
+              "max": 0.24812471600307617,
+              "median": 0.21395450700219953,
+              "min": 0.20851436600787565
+            },
+            "candidate_min_max_s": [
+              0.20851436600787565,
+              0.24812471600307617
+            ],
+            "candidate_s": [
+              0.21945103300822666,
+              0.20851436600787565,
+              0.24812471600307617,
+              0.21395450700219953,
+              0.2091774419968715
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.568
+        },
+        {
+          "candidate_id": "c3",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.0472,
+          "improved": 0,
+          "goal_met": 0,
+          "timing": {
+            "baseline": {
+              "iqr": 0.03156845199919189,
+              "max": 0.2865008850058075,
+              "median": 0.23025581699766917,
+              "min": 0.22513163500116207
+            },
+            "baseline_min_max_s": [
+              0.22513163500116207,
+              0.2865008850058075
+            ],
+            "baseline_s": [
+              0.2286793330058572,
+              0.23025581699766917,
+              0.22513163500116207,
+              0.23044698699959554,
+              0.2865008850058075
+            ],
+            "candidate": {
+              "iqr": 0.045884117997047724,
+              "max": 0.2842871219909284,
+              "median": 0.21986769400245976,
+              "min": 0.20900795300258324
+            },
+            "candidate_min_max_s": [
+              0.20900795300258324,
+              0.2842871219909284
+            ],
+            "candidate_s": [
+              0.21986769400245976,
+              0.22724524099612609,
+              0.20900795300258324,
+              0.21075617399037583,
+              0.2842871219909284
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 13.42
+        }
+      ],
+      "qwen_standard_estimate_note": "Undiscounted input/output estimate; cached-input discounts are not applied.",
+      "qwen_undiscounted_estimate_minus_balance_delta_cny": "0.007987200000001"
+    },
+    {
+      "problem": "leetcode/3188",
+      "task_id": "ebx-leetcode-3188-B-5-20",
+      "run_id": "run-20261114T031853-da37",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "stop_detail": "c1 dev speedup 2.6447 >= 1.1",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 2.5159,
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "达到目标：c1 最终测试正确，加速比 2.5159"
+      },
+      "iterations": {
+        "model_requests": 1,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 73.741,
+        "agent_loop_s": 31.512,
+        "agent_loop_elapsed_s": 31.512,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 42.228,
+        "model_wait_s": 14.389,
+        "dev_evaluation_s": 17.12,
+        "evidence_tool_s": 0,
+        "container_startup_s": 31.544
+      },
+      "final_evaluation": {
+        "evaluation_id": "bd9e1a28b578",
+        "candidate_id": "c1",
+        "status": "passed",
+        "correct": true,
+        "speedup": 2.5159,
+        "candidate_median_s": 0.6965455510071479,
+        "baseline_median_s": 1.75246252699435,
+        "timing": {
+          "baseline": {
+            "iqr": 0.19866480049313395,
+            "max": 1.9482136079896009,
+            "median": 1.75246252699435,
+            "min": 1.7107044260119437
+          },
+          "baseline_min_max_s": [
+            1.7107044260119437,
+            1.9482136079896009
+          ],
+          "baseline_s": [
+            1.9482136079896009,
+            1.892847907009127,
+            1.7330274880005163,
+            1.75246252699435,
+            1.7107044260119437
+          ],
+          "candidate": {
+            "iqr": 0.2013153684893041,
+            "max": 1.0138950919863419,
+            "median": 0.6965455510071479,
+            "min": 0.6678678140233387
+          },
+          "candidate_min_max_s": [
+            0.6678678140233387,
+            1.0138950919863419
+          ],
+          "candidate_s": [
+            0.7266970830023638,
+            1.0138950919863419,
+            0.6700936239867588,
+            0.6678678140233387,
+            0.6965455510071479
+          ],
+          "cases_per_sample": 15,
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+        },
+        "failure": null,
+        "duration_s": 42.228,
+        "note": null
+      },
+      "usage": {
+        "total": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 14.389,
+          "input_tokens": 2994,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 540,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 1,
+          "price_versions": []
+        },
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 14.389,
+            "input_tokens": 2994,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 540,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 1,
+            "price_versions": []
+          }
+        },
+        "self_hosted_machine_cost": "unknown (not accounted)"
+      },
+      "calls": [
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 2994,
+          "cached_input_tokens": 0,
+          "output_tokens": 540,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 14.389,
+          "reported_usage": {
+            "completion_tokens": 540,
+            "completion_tokens_details": {},
+            "prompt_tokens": 2994,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 2994
+            },
+            "total_tokens": 3534
+          }
+        }
+      ],
+      "qwen_standard_estimate_cny": 0.015462,
+      "qwen_account_balance_delta_cny": {
+        "total_remain": "0.015462000000001",
+        "gift_remain": "0.015462000000001",
+        "recharge_remain": "0"
+      },
+      "qwen_balance_note": "Account balance difference during this run; not a per-request invoice.",
+      "final_speedup_including_initial": 2.5159,
+      "config_fingerprint": "65bef26da8ccf56a",
+      "frozen_config": {
+        "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+        "evaluator_version": "runtime-suite-eval-3",
+        "experience_extractor": "extractor-v3",
+        "fingerprint": "65bef26da8ccf56a",
+        "fingerprint_excludes": [
+          "mode",
+          "snapshot_id",
+          "label",
+          "environment details beyond image id"
+        ],
+        "label": "EffiBench-X real four-task pilot 2026-11-14",
+        "limits": {
+          "max_candidates": 4,
+          "max_code_bytes": 20000,
+          "max_model_requests": 6,
+          "measurement_timeout_s": 10.0,
+          "min_request_window_s": 15.0,
+          "model_request_timeout_s": 120.0,
+          "token_budget": null,
+          "wall_clock_s": 300.0
+        },
+        "measure": {
+          "cpus": 1.0,
+          "max_output_bytes": 67108864,
+          "memory": "1g",
+          "pids_limit": 64,
+          "ready_timeout_s": 30.0,
+          "repeats": 5
+        },
+        "models": {
+          "large": {
+            "base_url": "https://api.openai.com/v1",
+            "enable_thinking": null,
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "small": {
+            "base_url": "https://aiping.cn/api/v1",
+            "enable_thinking": false,
+            "extra": {},
+            "max_output_tokens": 8192,
+            "model": "Qwen3.8-27B",
+            "provider": "chat_compat",
+            "reasoning_effort": null,
+            "response_format": "json_object",
+            "role": "small",
+            "temperature": null
+          }
+        },
+        "prompt": {
+          "system_sha256": "eb3bc995da718c7b58f09089b3b40313e8e4dcbdf05bada913daa830cf6831a4",
+          "version": "agent-prompt-v3"
+        },
+        "retrieval": {
+          "features": "benchmark adapter workload features; compatible task semantics required",
+          "max_per_outcome": {
+            "failure": 2,
+            "no_gain": 1,
+            "success": 3
+          },
+          "rank": "matching features desc, then newest first",
+          "version": "retrieval-v2"
+        },
+        "reuse": {
+          "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+          "learn_target_margin": 0.05,
+          "max_programs": 3,
+          "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+          "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+          "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+          "version": "reuse-v2"
+        },
+        "sandbox_image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+        "scripted": [],
+        "task_manifest_sha256": "6b4febe50e08d4fb5a685947a0c90b79394023c9d169b3d1910b87e37bbda885",
+        "upgrade_rule": {
+          "consecutive_misses": 2,
+          "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+          "id": "upgrade-rule-v2",
+          "max_small_requests_without_goal": 3
+        }
+      },
+      "research": {
+        "definition": {
+          "question": "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 1.1×？",
+          "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+          "workload": "leetcode/3188 · functional · 5 个开发用例",
+          "baseline": {
+            "program": "c0：数据集 Python 参考解（functional 题含原始 runner）",
+            "dev_median_s": 0.5841588479961501,
+            "final_median_s": 1.75246252699435
+          },
+          "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+          "tools": [
+            {
+              "action": "reuse_candidate",
+              "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+            },
+            {
+              "action": "analyze",
+              "label": "分析：写下推理与计划，不执行"
+            },
+            {
+              "action": "get_evidence",
+              "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+            },
+            {
+              "action": "propose_candidate",
+              "label": "提出候选：提交完整程序，程序立即验证"
+            },
+            {
+              "action": "run_validation",
+              "label": "运行验证：重新评测已有候选"
+            },
+            {
+              "action": "finish",
+              "label": "结束：交付当前最佳已验证候选"
+            }
+          ],
+          "verification": "冻结用例逐例执行 + 数据集 evaluator 在独立沙箱中校验；基线与候选各预热一次、交替计时 5 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善",
+          "budget": {
+            "model_requests": 6,
+            "candidates": 4,
+            "loop_s": 300.0,
+            "request_timeout_s": 120.0,
+            "measurement_timeout_s": 10.0
+          },
+          "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+        },
+        "experiments": [
+          {
+            "candidate_id": "c1",
+            "step": 2,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "原始程序的主要瓶颈在于：1) 每行都需要split(',')和map(int,...)操作；2) 对每一行都调用sum()函数。可以通过直接解析数字字符来避免创建列表，或者使用更快的解析方式",
+            "purpose": "优化输入解析和算法，减少Python循环开销，使用更高效的字符串处理来解析网格数据，并简化冠军查找逻辑",
+            "expected": "通过避免逐行split和int转换的开销，以及使用更直接的冠军判定方法，预期获得1.1倍以上的加速",
+            "verification": "验证输出正确性，并在开发数据上测量运行时间",
+            "result": {
+              "status": "passed",
+              "speedup": 2.6447,
+              "improved": true,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "supported",
+            "then": "stop: goal_reached",
+            "evaluation_id": "5c051b5264b1"
+          }
+        ],
+        "verdicts": {
+          "supported": 1,
+          "partial": 0,
+          "refuted": 0,
+          "untestable": 0,
+          "untested": 0
+        },
+        "verdict_labels": {
+          "supported": "得到支持",
+          "partial": "部分支持（改善，但未达目标）",
+          "refuted": "被反驳（正确但没有改善）",
+          "untestable": "未能检验（候选出错）",
+          "untested": "未评测（预算或运行结束）"
+        }
+      },
+      "started_at": "2026-11-14T03:18:53.441+00:00",
+      "ended_at": "2026-11-14T03:20:07.182+00:00",
+      "final_case_count": 15,
+      "final_cases_passed": 15,
+      "best_candidate": {
+        "candidate_id": "c1",
+        "origin": "model",
+        "code_sha256": "688363a216b2fb6067ca246b4806169d434bc7e8f65a48bb61c1a68baead55aa",
+        "file": "best/leetcode-3188.py"
+      },
+      "dev_evaluations": [
+        {
+          "candidate_id": "c0",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "timing": null,
+          "failure": null,
+          "duration_s": 1.466
+        },
+        {
+          "candidate_id": "c1",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 2.6447,
+          "improved": 1,
+          "goal_met": 1,
+          "timing": {
+            "baseline": {
+              "iqr": 0.022657760004221927,
+              "max": 0.590513720009767,
+              "median": 0.5841588479961501,
+              "min": 0.5614837460016133
+            },
+            "baseline_min_max_s": [
+              0.5614837460016133,
+              0.590513720009767
+            ],
+            "baseline_s": [
+              0.5841588479961501,
+              0.5614837460016133,
+              0.5898875960047008,
+              0.5736020500044106,
+              0.590513720009767
+            ],
+            "candidate": {
+              "iqr": 0.024830423499224707,
+              "max": 0.25061053399258526,
+              "median": 0.22088064000126906,
+              "min": 0.21349729600478895
+            },
+            "candidate_min_max_s": [
+              0.21349729600478895,
+              0.25061053399258526
+            ],
+            "candidate_s": [
+              0.21349729600478895,
+              0.25061053399258526,
+              0.21797010099544423,
+              0.23051771000609733,
+              0.22088064000126906
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 15.654
+        }
+      ],
+      "qwen_standard_estimate_note": "Undiscounted input/output estimate; cached-input discounts are not applied.",
+      "qwen_undiscounted_estimate_minus_balance_delta_cny": "-1E-15"
+    },
+    {
+      "problem": "leetcode/3193",
+      "task_id": "ebx-leetcode-3193-B-5-20",
+      "run_id": "run-20261114T032007-ebf5",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "stop_detail": "c1 dev speedup 2.4055 >= 1.1",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 2.3452,
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "达到目标：c1 最终测试正确，加速比 2.3452"
+      },
+      "iterations": {
+        "model_requests": 1,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 96.084,
+        "agent_loop_s": 51.953,
+        "agent_loop_elapsed_s": 51.953,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 44.13,
+        "model_wait_s": 33.029,
+        "dev_evaluation_s": 18.92,
+        "evidence_tool_s": 0,
+        "container_startup_s": 33.614
+      },
+      "final_evaluation": {
+        "evaluation_id": "5b5c6bdf86c9",
+        "candidate_id": "c1",
+        "status": "passed",
+        "correct": true,
+        "speedup": 2.3452,
+        "candidate_median_s": 0.7917327580071287,
+        "baseline_median_s": 1.8567884610019973,
+        "timing": {
+          "baseline": {
+            "iqr": 0.24016770798698417,
+            "max": 2.066745277996233,
+            "median": 1.8567884610019973,
+            "min": 1.7379344760265667
+          },
+          "baseline_min_max_s": [
+            1.7379344760265667,
+            2.066745277996233
+          ],
+          "baseline_s": [
+            1.842734143981943,
+            2.066745277996233,
+            1.9942587579862447,
+            1.8567884610019973,
+            1.7379344760265667
+          ],
+          "candidate": {
+            "iqr": 0.36303909500929876,
+            "max": 1.2154072300108965,
+            "median": 0.7917327580071287,
+            "min": 0.7031615870073438
+          },
+          "candidate_min_max_s": [
+            0.7031615870073438,
+            1.2154072300108965
+          ],
+          "candidate_s": [
+            0.7031615870073438,
+            1.2154072300108965,
+            0.9709505200007698,
+            0.7571179729857249,
+            0.7917327580071287
+          ],
+          "cases_per_sample": 15,
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+        },
+        "failure": null,
+        "duration_s": 44.13,
+        "note": null
+      },
+      "usage": {
+        "total": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 33.029,
+          "input_tokens": 2607,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1318,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 1,
+          "price_versions": []
+        },
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "requests": 1,
+            "ok": 1,
+            "errors": {},
+            "latency_s": 33.029,
+            "input_tokens": 2607,
+            "input_tokens_unknown_calls": 0,
+            "cached_input_tokens": 0,
+            "cached_input_tokens_unknown_calls": 0,
+            "output_tokens": 1318,
+            "output_tokens_unknown_calls": 0,
+            "reasoning_tokens": null,
+            "reasoning_tokens_unknown_calls": 1,
+            "cost_usd": null,
+            "cost_status": "unknown",
+            "cost_unknown_calls": 1,
+            "price_versions": []
+          }
+        },
+        "self_hosted_machine_cost": "unknown (not accounted)"
+      },
+      "calls": [
+        {
+          "role": "small",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "usage_source": "reported",
+          "input_tokens": 2607,
+          "cached_input_tokens": 0,
+          "output_tokens": 1318,
+          "reasoning_tokens": null,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "latency_s": 33.029,
+          "reported_usage": {
+            "completion_tokens": 1318,
+            "completion_tokens_details": {},
+            "prompt_tokens": 2607,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 2607
+            },
+            "total_tokens": 3925
+          }
+        }
+      ],
+      "qwen_standard_estimate_cny": 0.023637,
+      "qwen_account_balance_delta_cny": {
+        "total_remain": "0.023637000000001",
+        "gift_remain": "0.023637000000001",
+        "recharge_remain": "0"
+      },
+      "qwen_balance_note": "Account balance difference during this run; not a per-request invoice.",
+      "final_speedup_including_initial": 2.3452,
+      "config_fingerprint": "1fa5a02130d6a538",
+      "frozen_config": {
+        "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+        "evaluator_version": "runtime-suite-eval-3",
+        "experience_extractor": "extractor-v3",
+        "fingerprint": "1fa5a02130d6a538",
+        "fingerprint_excludes": [
+          "mode",
+          "snapshot_id",
+          "label",
+          "environment details beyond image id"
+        ],
+        "label": "EffiBench-X real four-task pilot 2026-11-14",
+        "limits": {
+          "max_candidates": 4,
+          "max_code_bytes": 20000,
+          "max_model_requests": 6,
+          "measurement_timeout_s": 10.0,
+          "min_request_window_s": 15.0,
+          "model_request_timeout_s": 120.0,
+          "token_budget": null,
+          "wall_clock_s": 300.0
+        },
+        "measure": {
+          "cpus": 1.0,
+          "max_output_bytes": 67108864,
+          "memory": "1g",
+          "pids_limit": 64,
+          "ready_timeout_s": 30.0,
+          "repeats": 5
+        },
+        "models": {
+          "large": {
+            "base_url": "https://api.openai.com/v1",
+            "enable_thinking": null,
+            "extra": {},
+            "max_output_tokens": 32000,
+            "model": "gpt-6.1-sol",
+            "provider": "openai_responses",
+            "reasoning_effort": "xhigh",
+            "response_format": "json_schema",
+            "role": "large",
+            "temperature": null
+          },
+          "small": {
+            "base_url": "https://aiping.cn/api/v1",
+            "enable_thinking": false,
+            "extra": {},
+            "max_output_tokens": 8192,
+            "model": "Qwen3.8-27B",
+            "provider": "chat_compat",
+            "reasoning_effort": null,
+            "response_format": "json_object",
+            "role": "small",
+            "temperature": null
+          }
+        },
+        "prompt": {
+          "system_sha256": "eb3bc995da718c7b58f09089b3b40313e8e4dcbdf05bada913daa830cf6831a4",
+          "version": "agent-prompt-v3"
+        },
+        "retrieval": {
+          "features": "benchmark adapter workload features; compatible task semantics required",
+          "max_per_outcome": {
+            "failure": 2,
+            "no_gain": 1,
+            "success": 3
+          },
+          "rank": "matching features desc, then newest first",
+          "version": "retrieval-v2"
+        },
+        "reuse": {
+          "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+          "learn_target_margin": 0.05,
+          "max_programs": 3,
+          "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+          "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+          "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+          "version": "reuse-v2"
+        },
+        "sandbox_image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+        "scripted": [],
+        "task_manifest_sha256": "cd1de8aab68c8206bf8bac35c37dafbed98d50d95498d06f078ea1a8ed4195de",
+        "upgrade_rule": {
+          "consecutive_misses": 2,
+          "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+          "id": "upgrade-rule-v2",
+          "max_small_requests_without_goal": 3
+        }
+      },
+      "research": {
+        "definition": {
+          "question": "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 1.1×？",
+          "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+          "workload": "leetcode/3193 · functional · 5 个开发用例",
+          "baseline": {
+            "program": "c0：数据集 Python 参考解（functional 题含原始 runner）",
+            "dev_median_s": 0.6107924129973981,
+            "final_median_s": 1.8567884610019973
+          },
+          "scope": "只能整体替换程序文件；仅 Python 标准库；代码不超过 20000 字节；输入经 stdin、输出到 stdout；评测器、参考输出和最终测试数据不可见、不可改",
+          "tools": [
+            {
+              "action": "reuse_candidate",
+              "label": "复用（程序执行）：首次请求前，复验经验快照中条件最接近的已验证程序，不调用模型"
+            },
+            {
+              "action": "analyze",
+              "label": "分析：写下推理与计划，不执行"
+            },
+            {
+              "action": "get_evidence",
+              "label": "取证：在沙箱中对某个候选做 cProfile，返回热点"
+            },
+            {
+              "action": "propose_candidate",
+              "label": "提出候选：提交完整程序，程序立即验证"
+            },
+            {
+              "action": "run_validation",
+              "label": "运行验证：重新评测已有候选"
+            },
+            {
+              "action": "finish",
+              "label": "结束：交付当前最佳已验证候选"
+            }
+          ],
+          "verification": "冻结用例逐例执行 + 数据集 evaluator 在独立沙箱中校验；基线与候选各预热一次、交替计时 5 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善",
+          "budget": {
+            "model_requests": 6,
+            "candidates": 4,
+            "loop_s": 300.0,
+            "request_timeout_s": 120.0,
+            "measurement_timeout_s": 10.0
+          },
+          "final_test": "循环结束后冻结最佳候选，在隐藏的最终数据上测一次；结果不回流到研究过程"
+        },
+        "experiments": [
+          {
+            "candidate_id": "c1",
+            "step": 2,
+            "kind": "model",
+            "target": 1.1,
+            "hypothesis": "对于每个可能的最高位，如果存在两个数在该位不同且满足强对条件，则最大 XOR 值可以在该位为 1。我们可以通过检查 `a ^ (1 << k)` 是否在 `[a, 2*a]` 范围内来快速验证。",
+            "purpose": "利用约束条件（nums[i] <= 100）将暴力双重循环替换为位运算贪心算法，通过构建前缀集合来高效判断强对是否存在，从而大幅减少计算量。",
+            "expected": "程序在开发数据上正确运行，且由于避免了 O(n^2) 的嵌套循环和大量的 XOR 计算，速度提升超过 1.1 倍。",
+            "verification": "检查输出是否与示例及隐藏参考数据一致，并对比 c0 的运行时间。",
+            "result": {
+              "status": "passed",
+              "speedup": 2.4055,
+              "improved": true,
+              "failure": null,
+              "contract_case": null
+            },
+            "verdict": "supported",
+            "then": "stop: goal_reached",
+            "evaluation_id": "7360ef7c672f"
+          }
+        ],
+        "verdicts": {
+          "supported": 1,
+          "partial": 0,
+          "refuted": 0,
+          "untestable": 0,
+          "untested": 0
+        },
+        "verdict_labels": {
+          "supported": "得到支持",
+          "partial": "部分支持（改善，但未达目标）",
+          "refuted": "被反驳（正确但没有改善）",
+          "untestable": "未能检验（候选出错）",
+          "untested": "未评测（预算或运行结束）"
+        }
+      },
+      "started_at": "2026-11-14T03:20:07.981+00:00",
+      "ended_at": "2026-11-14T03:21:44.065+00:00",
+      "final_case_count": 15,
+      "final_cases_passed": 15,
+      "best_candidate": {
+        "candidate_id": "c1",
+        "origin": "model",
+        "code_sha256": "77f399fe51131e931a36a3432f89d0bfe9a75826a534a2b1f5d43802fc9eb6d1",
+        "file": "best/leetcode-3193.py"
+      },
+      "dev_evaluations": [
+        {
+          "candidate_id": "c0",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "timing": null,
+          "failure": null,
+          "duration_s": 1.489
+        },
+        {
+          "candidate_id": "c1",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 2.4055,
+          "improved": 1,
+          "goal_met": 1,
+          "timing": {
+            "baseline": {
+              "iqr": 0.07808569049666403,
+              "max": 0.6783756030054064,
+              "median": 0.6107924129973981,
+              "min": 0.58443705701211
+            },
+            "baseline_min_max_s": [
+              0.58443705701211,
+              0.6783756030054064
+            ],
+            "baseline_s": [
+              0.6783756030054064,
+              0.652084968998679,
+              0.6107924129973981,
+              0.58443705701211,
+              0.5898521339986473
+            ],
+            "candidate": {
+              "iqr": 0.11257399750320474,
+              "max": 0.4345525130047463,
+              "median": 0.25391373800084693,
+              "min": 0.23530125599791063
+            },
+            "candidate_min_max_s": [
+              0.23530125599791063,
+              0.4345525130047463
+            ],
+            "candidate_s": [
+              0.23530125599791063,
+              0.24668161699810298,
+              0.4345525130047463,
+              0.25391373800084693,
+              0.2725783549976768
+            ],
+            "cases_per_sample": 5,
+            "improved_rule": "all candidate samples faster than all baseline samples",
+            "method": "1 warm-up suite each, 5 alternating rounds; each sample sums case runtimes; median ratio"
+          },
+          "failure": null,
+          "duration_s": 17.431
+        }
+      ],
+      "qwen_standard_estimate_note": "Undiscounted input/output estimate; cached-input discounts are not applied.",
+      "qwen_undiscounted_estimate_minus_balance_delta_cny": "-1E-15"
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+[
+  {
+    "problem": "codeforces/2104A",
+    "task_id": "ebx-codeforces-2104A-B-5-20",
+    "interface": "io",
+    "selection": {
+      "raw_cases": 100,
+      "unique_cases": 100,
+      "selected_cases": 20,
+      "order": "sha256(input) ascending",
+      "dev_ids": [
+        50,
+        12,
+        77,
+        82,
+        94
+      ],
+      "final_ids": [
+        22,
+        44,
+        89,
+        9,
+        78,
+        71,
+        75,
+        39,
+        65,
+        68,
+        40,
+        31,
+        96,
+        55,
+        48
+      ],
+      "protocol": "routeevo-runtime-optimization-v1"
+    },
+    "files": {
+      "dev_input": {
+        "file": "dev_input.json",
+        "sha256": "e6eb59884cfbcfa67c5381ef5b9c8cb4028ec5d9ebd2839dba18155df9eebfa3",
+        "bytes": 24097
+      },
+      "dev_expected": {
+        "file": "dev_expected.json",
+        "sha256": "46103db4804c95d566dcacfda20b0989361c528a7be4093935beecfa09e24378",
+        "bytes": 3852
+      },
+      "final_input": {
+        "file": "final_input.json",
+        "sha256": "3348c38d4a5ac739cb195afc86f231a46c76c028dc7400efcb910191fb0e58bf",
+        "bytes": 72985
+      },
+      "final_expected": {
+        "file": "final_expected.json",
+        "sha256": "b64b7cb07edbb73cba9a6224a8feb6ed049e289c6f03aeaee7251b25630963dc",
+        "bytes": 11663
+      },
+      "dev_profile": {
+        "file": "dev_profile.json",
+        "sha256": "ee1cf5757866cbf76afcf48d45143918e0b7f6fc791c1bb6414b089d0f5798f3",
+        "bytes": 166
+      },
+      "examples": {
+        "file": "examples.json",
+        "sha256": "61705d1aefeb4bc5e50f308c9cef4c2b1c53b45b2d5b2f7f73752ab5628d0cdf",
+        "bytes": 1183
+      },
+      "contract": {
+        "file": "contract.txt",
+        "sha256": "92f9695c751ebcbdeaba8f0ff17ef5d34e9d540f543995cb51cbd0b9d63a0c63",
+        "bytes": 2187
+      },
+      "initial": {
+        "file": "initial.py",
+        "sha256": "190539550417c1a9983380825d52438e337bcf8eadf62a68d9afeb158d4acd8c",
+        "bytes": 134
+      },
+      "checker": {
+        "file": "checker.py",
+        "sha256": "9b8e3ce89e2fa61d75936aa3f660a5064eb23453c7c2d6b18a95a9f87511b845",
+        "bytes": 956
+      }
+    },
+    "source": {
+      "dataset": "EffiBench/effibench-x",
+      "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+      "shard": "data/test-00009-of-00020.parquet",
+      "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+    }
+  },
+  {
+    "problem": "codeforces/2108A",
+    "task_id": "ebx-codeforces-2108A-B-5-20",
+    "interface": "io",
+    "selection": {
+      "raw_cases": 100,
+      "unique_cases": 100,
+      "selected_cases": 20,
+      "order": "sha256(input) ascending",
+      "dev_ids": [
+        98,
+        74,
+        85,
+        99,
+        38
+      ],
+      "final_ids": [
+        10,
+        12,
+        47,
+        5,
+        11,
+        17,
+        13,
+        76,
+        35,
+        88,
+        79,
+        82,
+        91,
+        8,
+        31
+      ],
+      "protocol": "routeevo-runtime-optimization-v1"
+    },
+    "files": {
+      "dev_input": {
+        "file": "dev_input.json",
+        "sha256": "6e98943e247b09377a4826ace3cfe87610b0315a9d47fddbfec5298ce90b803a",
+        "bytes": 1473
+      },
+      "dev_expected": {
+        "file": "dev_expected.json",
+        "sha256": "a151bc9de333c59a98034b3be1bdc6b7f4da010e0a9f175398d31524f49ce506",
+        "bytes": 1928
+      },
+      "final_input": {
+        "file": "final_input.json",
+        "sha256": "402ab33f2b0eefba772311c43df87b980ea17cdee404389d1847d465a0a01aab",
+        "bytes": 3067
+      },
+      "final_expected": {
+        "file": "final_expected.json",
+        "sha256": "3561bab3b5e1c3ad3f680dc3824bd20f1940d9008feec5639fd1f23a49f05ea7",
+        "bytes": 3935
+      },
+      "dev_profile": {
+        "file": "dev_profile.json",
+        "sha256": "9270e5da5b20147f58b92082e9890230f4187863209ee7ce53178d763c913ae6",
+        "bytes": 165
+      },
+      "examples": {
+        "file": "examples.json",
+        "sha256": "b188cb32508a9d0634867d298535710183e788dec3e25198a029c901c501c98b",
+        "bytes": 1233
+      },
+      "contract": {
+        "file": "contract.txt",
+        "sha256": "f0f791bb37a9788a2b1a733659e00ae3cd57e727eb05b1724bd4cd4948298bf2",
+        "bytes": 1999
+      },
+      "initial": {
+        "file": "initial.py",
+        "sha256": "2d1a26fb9416a1ee0bd25beb484b1a904a28396052a1f42b0951da1e8fb21102",
+        "bytes": 74
+      },
+      "checker": {
+        "file": "checker.py",
+        "sha256": "f7c6b1f26952b3f81004d62fc9af458904865769739e581c7f05dc1d0044adad",
+        "bytes": 1756
+      }
+    },
+    "source": {
+      "dataset": "EffiBench/effibench-x",
+      "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+      "shard": "data/test-00009-of-00020.parquet",
+      "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+    }
+  },
+  {
+    "problem": "leetcode/3188",
+    "task_id": "ebx-leetcode-3188-B-5-20",
+    "interface": "functional",
+    "selection": {
+      "raw_cases": 100,
+      "unique_cases": 92,
+      "selected_cases": 20,
+      "order": "sha256(input) ascending",
+      "dev_ids": [
+        92,
+        51,
+        36,
+        28,
+        99
+      ],
+      "final_ids": [
+        69,
+        20,
+        30,
+        45,
+        72,
+        64,
+        79,
+        29,
+        55,
+        38,
+        24,
+        88,
+        6,
+        9,
+        91
+      ],
+      "protocol": "routeevo-runtime-optimization-v1"
+    },
+    "files": {
+      "dev_input": {
+        "file": "dev_input.json",
+        "sha256": "34d1254cf47310878c0489726cd18eac41d474d2e2c3b717a183bd3d7a2e44c2",
+        "bytes": 2414
+      },
+      "dev_expected": {
+        "file": "dev_expected.json",
+        "sha256": "cd05ba728aa04c46d383dc375a87be4b06b00c1279a510fc88f5f9a4b8f94543",
+        "bytes": 125
+      },
+      "final_input": {
+        "file": "final_input.json",
+        "sha256": "8a92d4949ff4c6f6f41252f1b613651d3db1e44a4869ac653dfff83b36a5db71",
+        "bytes": 4490
+      },
+      "final_expected": {
+        "file": "final_expected.json",
+        "sha256": "4d2c558334e7d876d54f995138211dff538656ee963184db95a72a35cca74f4d",
+        "bytes": 376
+      },
+      "dev_profile": {
+        "file": "dev_profile.json",
+        "sha256": "2544107afd90ee7b518a00cf1e021fb305e3d89d4be69e6813d1f4c658e9e32c",
+        "bytes": 170
+      },
+      "examples": {
+        "file": "examples.json",
+        "sha256": "0be599e6fb46ed55c04c91e104d0a9c3b032e878fac3d237c57ae39cdadc4251",
+        "bytes": 617
+      },
+      "contract": {
+        "file": "contract.txt",
+        "sha256": "e3cd58f7dedc52ff8a71b8c19e86bb3357452389a61f11466e6c7e87918fad73",
+        "bytes": 1690
+      },
+      "initial": {
+        "file": "initial.py",
+        "sha256": "ee9c2462f10950b8589ad41a77540979d0f0ebe33f2fc6f5a7ee1a904e406027",
+        "bytes": 1950
+      },
+      "checker": {
+        "file": "checker.py",
+        "sha256": "f8f0f3ca6fa2e7a9d2252935a9b94ce1f29388fe2646ae1e656bba8048bc146f",
+        "bytes": 427
+      }
+    },
+    "source": {
+      "dataset": "EffiBench/effibench-x",
+      "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+      "shard": "data/test-00009-of-00020.parquet",
+      "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+    }
+  },
+  {
+    "problem": "leetcode/3193",
+    "task_id": "ebx-leetcode-3193-B-5-20",
+    "interface": "functional",
+    "selection": {
+      "raw_cases": 100,
+      "unique_cases": 100,
+      "selected_cases": 20,
+      "order": "sha256(input) ascending",
+      "dev_ids": [
+        43,
+        31,
+        21,
+        79,
+        74
+      ],
+      "final_ids": [
+        40,
+        94,
+        12,
+        26,
+        50,
+        70,
+        19,
+        42,
+        78,
+        9,
+        65,
+        83,
+        35,
+        61,
+        14
+      ],
+      "protocol": "routeevo-runtime-optimization-v1"
+    },
+    "files": {
+      "dev_input": {
+        "file": "dev_input.json",
+        "sha256": "8a66c2c3ce798fc049362a2454c2b9b96beeeb83b42e007d1d1603340b4625b6",
+        "bytes": 445
+      },
+      "dev_expected": {
+        "file": "dev_expected.json",
+        "sha256": "50525a665e2a5edc004898fedfae2801a2ae690623c16bdfdc3307e2bcc0a172",
+        "bytes": 135
+      },
+      "final_input": {
+        "file": "final_input.json",
+        "sha256": "a80ec738d0940b288d9ad97a01f168c45b341a0dbd9b8027670f32163fa62be5",
+        "bytes": 1439
+      },
+      "final_expected": {
+        "file": "final_expected.json",
+        "sha256": "223aece197ec4890b3ab9a3ef3c83af7d73b2382ad16742b21d2a4a1822879fa",
+        "bytes": 403
+      },
+      "dev_profile": {
+        "file": "dev_profile.json",
+        "sha256": "a8b6123b2d1225c6b292aeebf91d59be955dfd25d6a4235e27adb6904c125407",
+        "bytes": 169
+      },
+      "examples": {
+        "file": "examples.json",
+        "sha256": "77e7956d95e4119cb935d3d2de992d3d95130a62018094c434a05ab06d6eddab",
+        "bytes": 169
+      },
+      "contract": {
+        "file": "contract.txt",
+        "sha256": "f8b0fe11f2353a30f21000d73978070a8001731fb5a514e7bc0af90f1c82e9c8",
+        "bytes": 1751
+      },
+      "initial": {
+        "file": "initial.py",
+        "sha256": "e53bf750830263430f0a17b247d968351e505e1d9f645d675f6e41240289a1dd",
+        "bytes": 1891
+      },
+      "checker": {
+        "file": "checker.py",
+        "sha256": "69ef0d8c5b1b3482594b75c0a9a320fb4bacea6f0869916d5585e625a699aa51",
+        "bytes": 310
+      }
+    },
+    "source": {
+      "dataset": "EffiBench/effibench-x",
+      "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+      "shard": "data/test-00009-of-00020.parquet",
+      "shard_sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+    }
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "id": "Qwen3.8-27B",
+  "object": "model",
+  "created": 1787193049,
+  "owned_by": "system",
+  "status": true,
+  "price": {
+    "input_price_range": [
+      3,
+      3
+    ],
+    "output_price_range": [
+      12,
+      12
+    ]
+  },
+  "context_length_range": [
+    1024000,
+    1024000
+  ],
+  "is_foreign": false,
+  "model_type": "llm"
+}

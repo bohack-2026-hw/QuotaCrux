@@ -2,6 +2,8 @@
 
 日期：2026-11-14。实现提交：`c79dad6`；原始基线：`f8fbb3e`。数据与评测边界见 [适配方案](benchmark-adapters.md)。
 
+后续真实模型评测见 [四题子集结果](research/effibench-x-20261114/README.md)：60/60 final 用例通过，2/4 题达标，含 token、费用和耗时。下文保留首次适配验证记录。
+
 ## 真实数据检查
 
 使用固定 revision `49babbec95f0897d5f06276aaf274f9f1dcd036b` 的第 9 号分片（从 0 编号），7,321,349 bytes，SHA256：

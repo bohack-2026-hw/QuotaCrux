@@ -111,6 +111,10 @@ function groupTasks(ts: TaskSummary[]): [string, TaskSummary[]][] {
 function runOutcome(r: RunRow): { text: string; tone: 'good' | 'bad' | 'muted' | null } {
   if (r.status === 'running') return { text: '运行中', tone: null }
   const stop = STOP[r.stop_reason ?? ''] ?? r.stop_reason ?? r.status
+  // Current API: final_status is decided by the backend; older APIs fall back to the final evaluation row.
+  if (r.final_status === 'disabled') return { text: `仅开发 · ${stop}`, tone: 'muted' }
+  if (r.final_status === 'not_run' || r.final_status === 'pending') return { text: `final ${r.final_status === 'pending' ? '待评测' : '未运行'} · ${stop}`, tone: 'muted' }
+  if (r.final_status === 'failed') return { text: r.final_error ? 'final 异常' : `最终未通过${r.final_speedup != null ? ` ${fmt.x(r.final_speedup)}` : ''}`, tone: 'bad' }
   const finalRan = r.final_goal_met != null || r.final_speedup != null || r.final_score != null
   if (!finalRan) return { text: `${r.dev_only ? '仅开发' : 'final 未运行'} · ${stop}`, tone: 'muted' }
   if (r.final_score != null) return { text: `最终得分 ${fmt.n(r.final_score)}`, tone: null }

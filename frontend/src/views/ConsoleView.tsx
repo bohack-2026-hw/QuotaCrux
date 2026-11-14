@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { BatchFacts, CostText, CostTotal, FinalChip, ModeTag, RunLink, RunStateChip } from '../components/research'
 import { Empty } from '../components/ui'
-import { fmt } from '../labels'
+import { STUDY, fmt } from '../labels'
 import type { RBatch, RRun, RTask } from '../research'
 import { MODES } from '../research'
 import { deltaText, metricText, stopText, sumText } from '../researchFormat'
@@ -27,6 +27,7 @@ export function ConsoleView({ selected, onSelect, onOpenRun }: { selected: strin
             </select>
           )}
           <KV rows={[
+            ['研究', b ? `${STUDY[b.study]}${b.fixture ? ' · FIXTURE' : ''}` : '—'],
             ['名称', b?.label ?? '—'],
             ['ID', <span key="id" className="mono id-wrap">{entry.id}</span>],
             ['状态', b?.status ?? entry.status],
@@ -38,20 +39,29 @@ export function ConsoleView({ selected, onSelect, onOpenRun }: { selected: strin
         </Block>
         <Block title="数据来源"><Source state={apiState} error={apiError} entry={entry} /></Block>
         {b && <Block title="配置"><BatchFacts b={b} /></Block>}
+        {b?.priceSnapshots && <Block title="价格快照">
+          <KV rows={Object.entries(b.priceSnapshots).map(([role, p]) => [role, `${p.model ?? '?'} · ${p.currency} · 入 ${p.input_per_1m} / 出 ${p.output_per_1m} 每百万`])} />
+        </Block>}
+        {b?.fairness && <Block title="一致性">
+          <KV rows={Object.entries(b.fairness).map(([k, v]) => [FAIRNESS[k] ?? k, <span key={k} className="mono">{Array.isArray(v) ? (v.length ? v.join(', ') : '无') : v === true ? '✓ 是' : v === false ? '✕ 否' : v == null ? '—' : String(v)}</span>])} />
+        </Block>}
         {b && <Block title="用量">
-          <KV rows={[
-            ['请求', sumText(b.runs.map((r) => r.requests), String)],
-            ['输入 Token', sumText(b.runs.map((r) => r.inputTokens), fmt.n)],
-            ['输出 Token', sumText(b.runs.map((r) => r.outputTokens), fmt.n)],
-            ['墙钟', sumText(b.runs.map((r) => r.wallS), (v) => fmt.s(v))],
-            ['模型等待', sumText(b.runs.map((r) => r.modelWaitS), (v) => fmt.s(v))],
-            ['开发评测', sumText(b.runs.map((r) => r.devEvalS), (v) => fmt.s(v))],
-            ['费用', <CostTotal key="cost" costs={b.runs.map((r) => r.cost)} />],
-          ]} />
+          <KV rows={usageRows(b)} />
         </Block>}
       </div>
 
       {b && <Ledger b={b} archive={entry.source === 'archive'} onOpenRun={onOpenRun} />}
+      {b && b.study === 'routing' && b.interactions.length > 0 && (
+        <Block title="交互项 · both − action − model + baseline">
+          <div className="tbl-wrap"><table className="tbl">
+            <thead><tr><th>任务</th><th>重复</th><th>状态</th><th>值</th></tr></thead>
+            <tbody>{b.interactions.map((x) => (
+              <tr key={`${x.task_id}-${x.repeat}`}><td className="mono">{b.tasks.find((t) => t.id === x.task_id)?.title ?? x.task_id}</td><td className="mono">r{x.repeat}</td>
+                <td>{x.status === 'completed' ? '完成' : '缺失或失败'}</td><td className="mono">{x.both_minus_action_minus_model_plus_baseline ?? '—'}</td></tr>
+            ))}</tbody>
+          </table></div>
+        </Block>
+      )}
 
       <Block title="口径">
         <ul className="rules">
@@ -61,10 +71,32 @@ export function ConsoleView({ selected, onSelect, onOpenRun }: { selected: strin
           <li><b>score / speedup</b> 分开报告，不跨题、不跨硬件比较。</li>
           <li><b>费用</b> 调用前价格快照 × Token 的标价估算；缺失为未知，不按 0 计，不换算币种。</li>
           <li><b>重复</b> 每组次数少于 3 时只描述单次结果，不推断稳定性。</li>
+          <li><b>study</b> feedback 与 routing 各自成批，组、基线与费用不合并；routing 的 fair 只表示协议可比，完成率与 final 另列。</li>
+          <li><b>≥</b> 部分用量无法计价时只显示已知部分，作为下界，不当总额。</li>
         </ul>
       </Block>
     </div>
   )
+}
+
+const FAIRNESS: Record<string, string> = {
+  tasks_with_mixed_configurations: '配置不一致的题', plan_matches: '计划一致', complete_variant_matrix: '变体矩阵完整',
+  all_planned_runs_recorded: '全部已记录', all_planned_runs_completed: '全部完成', all_final_evaluations_completed: 'final 全部完成',
+}
+
+/** Totals over the runs that actually ran; a slot that never ran is not an unknown amount. */
+function usageRows(b: RBatch): [string, ReactNode][] {
+  const ran = b.runs.filter((r) => r.state !== 'planned')
+  return [
+    ['请求', sumText(ran.map((r) => r.requests), String)],
+    ['输入 Token', sumText(ran.map((r) => r.inputTokens), fmt.n)],
+    ['输出 Token', sumText(ran.map((r) => r.outputTokens), fmt.n)],
+    ['墙钟', sumText(ran.map((r) => r.wallS), (v) => fmt.s(v))],
+    ['模型等待', sumText(ran.map((r) => r.modelWaitS), (v) => fmt.s(v))],
+    ['开发评测', sumText(ran.map((r) => r.devEvalS), (v) => fmt.s(v))],
+    ['费用', <CostTotal key="cost" costs={ran.map((r) => r.cost)} />],
+    ['未运行', `${b.runs.length - ran.length} 轮`],
+  ]
 }
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
@@ -87,6 +119,7 @@ function Source({ state, error, entry }: { state: ApiState; error: string | null
 }
 
 function Ledger({ b, archive, onOpenRun }: { b: RBatch; archive: boolean; onOpenRun: (id: string) => void }) {
+  const routing = b.study === 'routing'
   const rows = b.tasks.flatMap((t) => [...t.runs]
     .sort((x, y) => x.repeat - y.repeat || MODES.indexOf(x.mode as never) - MODES.indexOf(y.mode as never))
     .map((r) => ({ t, r })))
@@ -96,7 +129,9 @@ function Ledger({ b, archive, onOpenRun }: { b: RBatch; archive: boolean; onOpen
       <div className="tbl-wrap">
         <table className="tbl pair-table">
           <thead><tr>
-            <th>任务</th><th>组</th><th>状态</th><th>结束</th><th>开发最佳</th><th>相对基线</th><th>final</th><th>候选</th><th>请求</th><th>Token 入 / 出</th><th>墙钟</th><th>等待</th><th>费用</th><th />
+            <th>任务</th><th>组</th><th>状态</th><th>结束</th><th>开发最佳</th><th>相对基线</th><th>final</th><th>候选</th><th>请求</th>
+            {routing && <><th>路由</th><th>small / large</th><th>路由请求</th><th>升级</th></>}
+            <th>Token 入 / 出</th><th>墙钟</th><th>等待</th><th>费用</th><th />
           </tr></thead>
           <tbody>{rows.map(({ t, r }, i) => (
             <tr key={`${t.id}-${r.seq}`} className={i > 0 && rows[i - 1].t.id !== t.id ? 'group-start' : ''}>
@@ -109,6 +144,12 @@ function Ledger({ b, archive, onOpenRun }: { b: RBatch; archive: boolean; onOpen
               <td className="nowrap"><FinalChip run={r} />{r.final.value != null && <span className="mono small"> {metricText(t.metric, r.final.value)}{r.final.normalized ? ' (c0 归一化)' : ''}</span>}</td>
               <td className="nowrap mono">{r.passed ?? '?'}/{r.proposed ?? '?'}</td>
               <td className="nowrap mono">{r.requests ?? '?'}/{b.limits?.max_model_requests ?? '?'}</td>
+              {routing && <>
+                <td className="nowrap mono small">{r.routing ? `${r.routing.action ?? '?'} / ${r.routing.model ?? '?'}` : '—'}</td>
+                <td className="nowrap mono">{r.calls.small ?? '—'} / {r.calls.large ?? '—'}</td>
+                <td className="nowrap mono">{r.calls.routing ?? '—'}</td>
+                <td className="nowrap mono">{r.calls.upgrades ?? '—'}</td>
+              </>}
               <td className="nowrap mono">{fmt.n(r.inputTokens)} / {fmt.n(r.outputTokens)}</td>
               <td className="nowrap mono">{fmt.s(r.wallS)}</td>
               <td className="nowrap mono">{fmt.s(r.modelWaitS)}</td>

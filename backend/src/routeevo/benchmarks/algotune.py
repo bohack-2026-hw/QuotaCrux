@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ast
+import base64
 import json
 import shutil
 import statistics
@@ -16,6 +17,68 @@ from .native import MIN_MATCHES, buckets, compatible
 
 SOURCE_REVISION = "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906"
 SUPPORTED = ("convolve_1d", "pagerank")
+PROBLEM_CONTRACTS = {
+    "convolve_1d": (
+        "Input is a tuple (a, b) of one-dimensional NumPy float64 arrays. Return a NumPy array containing "
+        "the full linear convolution, with shape (len(a) + len(b) - 1,). The reference is "
+        "scipy.signal.convolve(a, b, mode='full'). The numerical check requires "
+        "norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6. "
+        "The generator scale n produces lengths 30*n and 8*n; see the observed dev shapes in the profile."
+    ),
+    "pagerank": (
+        "Input is {'adjacency_list': list[list[int]]}; row i lists the destinations of outgoing edges from "
+        "node i, with nodes indexed 0 to n-1. Return {'pagerank_scores': list[float | int]} in node-index "
+        "order, with exactly n finite non-negative values. A NumPy array is not accepted in place of that list. "
+        "The reference is networkx.pagerank with alpha=0.85, max_iter=100, tol=1e-6. "
+        "The judge compares scores to that reference using numpy.allclose(rtol=1e-5, atol=1e-8); for n>1 "
+        "it also checks that the sum is 1 with math.isclose(rel_tol=1e-5, abs_tol=1e-8). "
+        "The reference convergence tolerance and the judge comparison tolerance are separate parameters."
+    ),
+}
+
+
+def input_profile(problem: str, records: list[dict], size: int) -> dict:
+    """Summarize only frozen development inputs, without reference or candidate outputs."""
+    cases = []
+    for record in records:
+        value = record["problem"]
+        if problem == "convolve_1d":
+            arrays = value["__tuple__"]
+            if len(arrays) != 2:
+                raise ValueError("convolve_1d generator must return two arrays")
+            observed = []
+            for array in arrays:
+                shape, dtype = array["shape"], array["dtype"]
+                if (array.get("__array__") is not True or dtype not in ("<f8", ">f8", "=f8") or
+                        len(shape) != 1 or type(shape[0]) is not int or shape[0] < 1):
+                    raise ValueError("convolve_1d generator must return one-dimensional float64 arrays")
+                nbytes = len(base64.b64decode(array["data"], validate=True))
+                if nbytes != shape[0] * 8:
+                    raise ValueError("convolve_1d array shape does not match its encoded data")
+                observed.append({"shape": shape, "dtype": "float64", "wire_dtype": dtype, "nbytes": nbytes})
+            cases.append({"id": record["id"], "a": observed[0], "b": observed[1],
+                          "output_shape": [observed[0]["shape"][0] + observed[1]["shape"][0] - 1]})
+        elif problem == "pagerank":
+            adjacency = value["adjacency_list"]
+            if not isinstance(adjacency, list):
+                raise ValueError("pagerank generator must return an adjacency list")
+            n = len(adjacency)
+            if any(not isinstance(row, list) or
+                   any(type(node) is not int or not 0 <= node < n for node in row) or
+                   len(set(row)) != len(row) for row in adjacency):
+                raise ValueError("pagerank adjacency rows must contain unique in-range integer node IDs")
+            degrees = [len(row) for row in adjacency]
+            edges = sum(degrees)
+            cases.append({"id": record["id"], "nodes": n, "directed_edges": edges,
+                          "node_id_type": "int", "dangling_nodes": degrees.count(0),
+                          "out_degree": {"min": min(degrees, default=0), "max": max(degrees, default=0),
+                                         "mean": edges / n if n else 0},
+                          "output_scores": n})
+        else:
+            raise ValueError(f"unsupported AlgoTune profile: {problem}")
+    return {"source": "frozen_dev_inputs", "generator_scale": size,
+            "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+            "cases": cases}
 
 
 def scientific_image() -> dict:
@@ -78,20 +141,23 @@ def import_problem(problem: str, *, split: str, size: int = 1000, dev_cases: int
                 "NumPy, SciPy and NetworkX are available. The initial code defines the exact input and output interface. "
                 "Every result must pass the pinned upstream numerical checker; NaN/Inf and incorrect shapes are rejected. "
                 "Do not read stdin or write stdout. Timing covers the solve call, excluding imports and serialization. "
-                "Every measurement uses fresh candidate globals and a fresh input object.\n")
+                "Every measurement uses fresh candidate globals and a fresh input object.\n\n" +
+                PROBLEM_CONTRACTS[problem] + "\n")
     return native.package("algotune", problem, split, source, contract, reference_program(path.read_text()),
         records[:dev_cases], records[dev_cases:], objective={"metric": "speedup", "direction": "maximize"},
         settings={"candidate_image": candidate_env, "judge_image": judge_env, "size": size, "seed": seed,
             "allowed_imports": ["numpy", "scipy", "networkx"], "candidate_interface": "solve"}, task_id=task_id,
-        extra_files={"upstream_task.py": path.read_bytes(), "UPSTREAM_LICENSE.txt": license_path.read_bytes()})
+        extra_files={"upstream_task.py": path.read_bytes(), "UPSTREAM_LICENSE.txt": license_path.read_bytes()},
+        input_profile=input_profile(problem, records[:dev_cases], size))
 
 
 def presentation(manifest: dict) -> dict:
     return {"title": f"AlgoTune · {manifest['problem']['key']}",
-        "workload": f"{manifest['problem']['key']} · n={manifest['native']['size']} · {manifest['dev_params']['cases']} dev cases",
+        "workload": f"{manifest['problem']['key']} · generator scale={manifest['native']['size']} · {manifest['dev_params']['cases']} dev cases",
         "baseline": "上游 solve 方法；独立函数计时", "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
         "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. "
-                       "NumPy/SciPy/NetworkX are installed. Function timing excludes import/serialization. "
+                       "NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the "
+                       "contract for output types and numerical tolerances. Function timing excludes import/serialization. "
                        "No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."}
 
 
@@ -118,7 +184,8 @@ def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=
                 if timeout <= 0:
                     ev.status = "budget_exhausted"
                     return ev
-                request = {"problem": case["problem"], "repeats": measure.repeats if measure_timing else 1}
+                request = {"problem": case["problem"], "repeats": measure.repeats if measure_timing else 1,
+                           "warmups": measure.function_warmups}
                 sample = executor.run_sample(src, json.dumps(request).encode(), timeout, measure,
                     image=settings["candidate_image"]["image_id"], harness="/opt/routeevo/scientific_harness.py")
                 samples.append({"who": who, "case": case["id"], **sample.summary()})
@@ -130,13 +197,14 @@ def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=
                 try:
                     data = json.loads(sample.stdout)
                     times = data["times_s"]
-                    if len(times) != request["repeats"] or len(data["solutions"]) != request["repeats"] + 1 or any(not native.finite_number(t) or t <= 0 for t in times):
+                    if len(times) != request["repeats"] or len(data["solutions"]) != request["repeats"] + request["warmups"] or any(not native.finite_number(t) or t <= 0 for t in times):
                         raise ValueError("invalid function measurement")
                 except (ValueError, KeyError, TypeError) as exc:
                     ev.status = "format_error" if who == "candidate" else "baseline_failed"
                     ev.detail["failure"] = {"category": ev.status, "message": str(exc)}
                     return ev
                 measured[who].append(times)
+                samples[-1].update(times_s=times, initialization_s=data["initialization_s"], warmup_count=request["warmups"])
                 judged[who].append({"problem": case["problem"], "solutions": data["solutions"]})
         ev.executed = True
         for who in ("candidate", "baseline"):
@@ -165,7 +233,8 @@ def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=
             ev.improved = max(cs) < min(bs)
             ev.goal_met = ev.improved and ev.speedup >= task.target_min_speedup
             ev.detail["timing"] = {"candidate_s": cs, "baseline_s": bs, "candidate_min_max_s": [min(cs), max(cs)],
-                "baseline_min_max_s": [min(bs), max(bs)], "method": "one warm-up + repeated solve calls per case; fresh globals/input; imports and serialization excluded"}
+                "baseline_min_max_s": [min(bs), max(bs)], "warmup_count": measure.function_warmups,
+                "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded"}
         return ev
     except (RuntimeError, ValueError, KeyError) as exc:
         ev.status = "budget_exhausted" if deadline is not None and time.perf_counter() >= deadline else "checker_error"

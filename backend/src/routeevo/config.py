@@ -50,7 +50,9 @@ class RunLimits:
 @dataclass(frozen=True)
 class MeasureConfig:
     repeats: int = 5
+    function_warmups: int = 1
     cpus: float = 1.0
+    cpuset_cpus: str | None = None
     memory: str = "1g"
     pids_limit: int = 64
     max_output_bytes: int = 64 * 1024 * 1024

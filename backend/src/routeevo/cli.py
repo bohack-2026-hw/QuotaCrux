@@ -68,6 +68,7 @@ def cmd_run(args) -> None:
     from .agent.runner import RunOptions, Runner
 
     opts = RunOptions(task_id=args.task_id, mode=args.mode, snapshot_id=args.snapshot, limits=_limits(args),
+                      measure=config.MeasureConfig(cpuset_cpus=args.cpuset_cpus, function_warmups=args.function_warmups),
                       script=Path(args.script).resolve() if args.script else None, label=args.label,
                       research_mode=args.research_mode, fixed_model=args.fixed_model, final_evaluation=not args.dev_only)
     runner = Runner(opts)
@@ -136,7 +137,8 @@ def cmd_stop(args) -> None:
 
 def cmd_check(args) -> None:
     task = taskpkg.load(args.task_id)
-    ev = evaluator.evaluate(task, Path(args.code).read_bytes(), args.dataset, config.MeasureConfig(), config.RunLimits(),
+    measure = config.MeasureConfig(cpuset_cpus=args.cpuset_cpus, function_warmups=args.function_warmups)
+    ev = evaluator.evaluate(task, Path(args.code).read_bytes(), args.dataset, measure, config.RunLimits(),
                             measure_timing=not args.no_timing)
     _print({**ev.public_feedback(), "detail": {k: v for k, v in ev.detail.items() if k != "samples"}})
 
@@ -221,6 +223,7 @@ def cmd_comparison(args) -> None:
 def cmd_research_compare(args) -> None:
     from . import research_compare
     _print(research_compare.execute(args.task_ids, repeats=args.repeats, limits=_limits(args),
+        measure=config.MeasureConfig(cpuset_cpus=args.cpuset_cpus, function_warmups=args.function_warmups),
         fixed_model=args.fixed_model, final_evaluation=not args.dev_only, label=args.label))
 
 
@@ -371,6 +374,8 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--research-mode", choices=["legacy", "feedback", "independent"])
     r.add_argument("--fixed-model", choices=["small", "large"])
     r.add_argument("--dev-only", action="store_true", help="pilot: do not open the private final suite")
+    r.add_argument("--cpuset-cpus", help="pin measurement containers to Docker CPU ids, e.g. 2 or 2-3")
+    r.add_argument("--function-warmups", type=int, choices=range(1, 21), default=1, help="AlgoTune solve warm-ups per case")
     r.set_defaults(fn=cmd_run)
 
     ln = sub.add_parser("learn", help="serial learn-mode runs over tasks (each publishes on top of the last)")
@@ -396,6 +401,8 @@ def main(argv: list[str] | None = None) -> None:
     c.add_argument("code")
     c.add_argument("--dataset", choices=["dev", "final"], default="dev")
     c.add_argument("--no-timing", action="store_true")
+    c.add_argument("--cpuset-cpus", help="pin measurement containers to Docker CPU ids")
+    c.add_argument("--function-warmups", type=int, choices=range(1, 21), default=1, help="AlgoTune solve warm-ups per case")
     c.set_defaults(fn=cmd_check)
 
     cal = sub.add_parser("calibrate", help="time the initial program and fixed overhead on dev data")
@@ -446,6 +453,8 @@ def main(argv: list[str] | None = None) -> None:
     rc.add_argument("--max-candidates", type=int, default=10)
     rc.add_argument("--request-timeout", type=float)
     rc.add_argument("--dev-only", action="store_true")
+    rc.add_argument("--cpuset-cpus", help="pin both arms to the same Docker CPU ids")
+    rc.add_argument("--function-warmups", type=int, choices=range(1, 21), default=1, help="AlgoTune solve warm-ups per case")
     rc.set_defaults(fn=cmd_research_compare)
 
     xr = sub.add_parser("export-run", help="Markdown research record of one run, from stored records")

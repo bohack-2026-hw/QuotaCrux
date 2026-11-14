@@ -680,6 +680,10 @@ class Runner:
             summary["candidate_id"] = candidate_id
         if result and actor == "program":
             summary["result"] = {k: result.get(k) for k in ("status", "correct", "speedup", "objective", "goal_met", "best_candidate_id") if k in result}
+        if self.opts.research_mode == "feedback" and actor == "model" and action == "analyze":
+            summary["result"] = result
+            if hypothesis:
+                summary["hypothesis"] = hypothesis
         self.history.append(summary)
         db.add_event(self.run_id, "step", {**summary, "next_decision": next_decision})
         return self.seq

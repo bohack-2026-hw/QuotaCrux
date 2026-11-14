@@ -22,11 +22,12 @@ def comparable(rep: dict) -> dict:
 
 
 def execute(task_ids: list[str], *, repeats: int, limits: config.RunLimits, fixed_model: str = "small",
-            final_evaluation: bool = True, label: str | None = None) -> dict:
+            final_evaluation: bool = True, label: str | None = None, measure: config.MeasureConfig | None = None) -> dict:
     if repeats < 1 or not task_ids or len(set(task_ids)) != len(task_ids):
         raise ValueError("provide distinct task ids and positive repeats")
     for task_id in task_ids:
         taskpkg.load(task_id)
+    measure = measure or config.MeasureConfig()
     lock = compare._try_lock()
     if lock is None:
         raise RuntimeError("another comparison is executing")
@@ -36,6 +37,7 @@ def execute(task_ids: list[str], *, repeats: int, limits: config.RunLimits, fixe
     steps = [{"seq": s["seq"], "task_id": s["task_id"], "repeat": s["repeat"], "mode": s["snapshot_id"]}
              for s in compare.plan(task_ids, "feedback", "independent", repeats)]
     out = {"comparison_id": cid, "status": "running", "label": label, "limits": limits.to_dict(),
+           "measure": measure.to_dict(),
            "fixed_model": fixed_model, "final_evaluation": final_evaluation, "runs": steps,
            "fair": None, "path": str(path), "protocol": "within-task-feedback-v1"}
     configs = {}
@@ -50,7 +52,7 @@ def execute(task_ids: list[str], *, repeats: int, limits: config.RunLimits, fixe
         for step in steps:
             runner = Runner(RunOptions(task_id=step["task_id"], mode="eval", snapshot_id="v0",
                 research_mode=step["mode"], fixed_model=fixed_model, final_evaluation=final_evaluation,
-                limits=limits, label=f"{cid} #{step['seq']} r{step['repeat']}"))
+                limits=limits, measure=measure, label=f"{cid} #{step['seq']} r{step['repeat']}"))
             step["run_id"] = runner.create()
             save()
             rep = runner.execute()

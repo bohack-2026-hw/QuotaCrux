@@ -1,0 +1,3492 @@
+{
+  "affinity_probe": {
+    "elapsed_s": 0.05635385200002929,
+    "ended_at": "2026-11-14T05:26:44.736+00:00",
+    "exit_code": 0,
+    "observed_affinities": [
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ]
+    ],
+    "ready_latency_s": 0.17483171499770833,
+    "requested_affinity": [
+      2
+    ],
+    "started_at": "2026-11-14T05:26:44.504+00:00",
+    "status": "ok",
+    "stderr_tail": "",
+    "stdout_bytes": 256,
+    "warmup_count": 3
+  },
+  "candidate_image": {
+    "image_id": "sha256:5d36bf4b0fb86cbae9f72dca43154ae3e175c116dab95bc28a46f375b6c40793",
+    "image_tag": "routeevo-scientific:6251644e51bd"
+  },
+  "control_delay_ms": 3.0,
+  "control_method": "sleep after the original solve; adds at least the requested wall time per case",
+  "created_at": "2026-11-14T05:26:44.499+00:00",
+  "dataset": "dev",
+  "dev_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+  "ended_at": "2026-11-14T05:27:04.833+00:00",
+  "environment": {
+    "cpus": {
+      "cpu0": {
+        "cpu_capacity": "1024",
+        "cpufreq/base_frequency": "1900000",
+        "cpufreq/cpuinfo_max_freq": "4800000",
+        "cpufreq/scaling_cur_freq": "1255064",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "0"
+      },
+      "cpu1": {
+        "cpu_capacity": "1005",
+        "cpufreq/base_frequency": "1900000",
+        "cpufreq/cpuinfo_max_freq": "4700000",
+        "cpufreq/scaling_cur_freq": "400749",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "4"
+      },
+      "cpu10": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "22"
+      },
+      "cpu11": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "23"
+      },
+      "cpu12": {
+        "cpu_capacity": "625",
+        "cpufreq/base_frequency": "1500000",
+        "cpufreq/cpuinfo_max_freq": "3300000",
+        "cpufreq/scaling_cur_freq": "1527448",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "32"
+      },
+      "cpu13": {
+        "cpu_capacity": "625",
+        "cpufreq/base_frequency": "1500000",
+        "cpufreq/cpuinfo_max_freq": "3300000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "33"
+      },
+      "cpu14": {
+        "cpu_capacity": "625",
+        "cpufreq/base_frequency": "1500000",
+        "cpufreq/cpuinfo_max_freq": "3300000",
+        "cpufreq/scaling_cur_freq": "1699545",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "34"
+      },
+      "cpu15": {
+        "cpu_capacity": "625",
+        "cpufreq/base_frequency": "1500000",
+        "cpufreq/cpuinfo_max_freq": "3300000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "35"
+      },
+      "cpu2": {
+        "cpu_capacity": "1005",
+        "cpufreq/base_frequency": "1900000",
+        "cpufreq/cpuinfo_max_freq": "4700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "8"
+      },
+      "cpu3": {
+        "cpu_capacity": "1005",
+        "cpufreq/base_frequency": "1900000",
+        "cpufreq/cpuinfo_max_freq": "4700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "12"
+      },
+      "cpu4": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "16"
+      },
+      "cpu5": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "3425513",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "17"
+      },
+      "cpu6": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "18"
+      },
+      "cpu7": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "19"
+      },
+      "cpu8": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "20"
+      },
+      "cpu9": {
+        "cpu_capacity": "701",
+        "cpufreq/base_frequency": "1600000",
+        "cpufreq/cpuinfo_max_freq": "3700000",
+        "cpufreq/scaling_cur_freq": "400000",
+        "cpufreq/scaling_governor": "powersave",
+        "topology/core_id": "21"
+      }
+    },
+    "host_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "host_python": "3.12.11",
+    "load_average": [
+      0.94482421875,
+      0.943359375,
+      0.8212890625
+    ],
+    "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+  },
+  "git_head": "dbc88c46afb09710cc7616321ab1d6bbc908dd62",
+  "judge_image": {
+    "image_id": "sha256:756e7a4eda1c38fb0e855b72ebf7884b9a4e4e8a20f3f91bd568ac68147ae971",
+    "image_tag": "routeevo-algotune-convolve_1d:97afbd85999c"
+  },
+  "matrix": [
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 1
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 2
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "self",
+      "round": 3
+    },
+    {
+      "baseline": "delayed",
+      "candidate": "original",
+      "configuration": "pinned",
+      "expected_improved": true,
+      "kind": "positive_control",
+      "round": 1
+    },
+    {
+      "baseline": "original",
+      "candidate": "delayed",
+      "configuration": "pinned",
+      "expected_improved": false,
+      "kind": "negative_control",
+      "round": 1
+    }
+  ],
+  "measures": {
+    "default": {
+      "cpus": 1.0,
+      "cpuset_cpus": null,
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "pinned": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    }
+  },
+  "model_requests": 0,
+  "program_sha256": {
+    "delayed": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+    "original": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+  },
+  "results": [
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "ended_at": "2026-11-14T05:26:48.720+00:00",
+      "environment_after": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400487",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1763554",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1916309",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "1201825",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3304949",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3255416",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3247685",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400034",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "464602",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3342129",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3433822",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3294525",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3308430",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1405070",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1310569",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          0.94482421875,
+          0.943359375,
+          0.8212890625
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "environment_before": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "3633210",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "776797",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1321126",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1405978",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "496294",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "618621",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "514973",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "648000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "2538151",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "2300558",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "2780422",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3470454",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3482352",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1596234",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1703044",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          0.94482421875,
+          0.943359375,
+          0.8212890625
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "evaluation": {
+        "baseline_median_s": 0.0018514190014684573,
+        "candidate_median_s": 0.0018616279994603246,
+        "correct": true,
+        "dataset": "dev",
+        "detail": {
+          "candidate_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "case_count": 2,
+          "container_ready_latency_s": 0.6024054450026597,
+          "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+          "duration_s": 3.978,
+          "passed_cases": 2,
+          "samples": [
+            {
+              "case": "0",
+              "elapsed_s": 0.47998281600303017,
+              "exit_code": 0,
+              "initialization_s": [
+                0.37969955000153277,
+                0.00044312799582257867,
+                0.00046197899791877717,
+                0.00046012000530026853,
+                0.00046540900075342506,
+                0.000444748999143485,
+                0.0004571020035655238,
+                0.00042366800335003063
+              ],
+              "ready_latency_s": 0.1532422470045276,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243498,
+              "times_s": [
+                0.000918463003472425,
+                0.0008842929964885116,
+                0.0009220319989253767,
+                0.0008781119977356866,
+                0.0009780320033314638
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            },
+            {
+              "case": "0",
+              "elapsed_s": 0.48809890799748246,
+              "exit_code": 0,
+              "initialization_s": [
+                0.380305104998115,
+                0.0004999140001018532,
+                0.0004861819979851134,
+                0.0004942009982187301,
+                0.0005141240035300143,
+                0.0004884169975412078,
+                0.00052386899915291,
+                0.0005104749943711795
+              ],
+              "ready_latency_s": 0.1474908599993796,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243491,
+              "times_s": [
+                0.0009288090004702099,
+                0.0008860130037646741,
+                0.0009566910011926666,
+                0.0008972499999799766,
+                0.0010442060010973364
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.5557461639982648,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3805879459978314,
+                0.0004900179992546327,
+                0.0005135309984325431,
+                0.0004938730053254403,
+                0.0005092520004836842,
+                0.00046527199447155,
+                0.0004815759966732003,
+                0.00046592100261477754
+              ],
+              "ready_latency_s": 0.15073858200048562,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243491,
+              "times_s": [
+                0.0009328189989901148,
+                0.0008842070019454695,
+                0.000919125996006187,
+                0.000880232997587882,
+                0.0009120839968090877
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.47848156999680214,
+              "exit_code": 0,
+              "initialization_s": [
+                0.37928061000275193,
+                0.0005311679997248575,
+                0.0005081170020275749,
+                0.0004922469961456954,
+                0.0004864610018557869,
+                0.00046519599709426984,
+                0.00048172500100918114,
+                0.0004923910018987954
+              ],
+              "ready_latency_s": 0.15093375599826686,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243497,
+              "times_s": [
+                0.0009657029950176366,
+                0.0008968910042312928,
+                0.0009293870025430806,
+                0.0008780799980740994,
+                0.0010014610015787184
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            }
+          ],
+          "timing": {
+            "baseline_min_max_s": [
+              0.001756191995809786,
+              0.001979493004910182
+            ],
+            "baseline_s": [
+              0.0018841659984900616,
+              0.0017811840007198043,
+              0.0018514190014684573,
+              0.001756191995809786,
+              0.001979493004910182
+            ],
+            "candidate_min_max_s": [
+              0.0017702200057101436,
+              0.001956289997906424
+            ],
+            "candidate_s": [
+              0.0018616279994603246,
+              0.0017702200057101436,
+              0.0018758169971988536,
+              0.0017774829975678585,
+              0.001956289997906424
+            ],
+            "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded",
+            "warmup_count": 3
+          }
+        },
+        "ended_at": "2026-11-14T05:26:48.717+00:00",
+        "evaluation_id": "b6c96e698ee1",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "speedup": 0.9945160912949167,
+        "started_at": "2026-11-14T05:26:44.739+00:00",
+        "status": "passed",
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+      },
+      "expected_improved": false,
+      "expected_outcome_observed": true,
+      "kind": "self",
+      "measure": {
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "function_warmups": 3,
+        "max_output_bytes": 67108864,
+        "memory": "1g",
+        "pids_limit": 64,
+        "ready_timeout_s": 30.0,
+        "repeats": 5
+      },
+      "raw_samples": [
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.47998281600303017,
+          "ended_at": "2026-11-14T05:26:45.375+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.37969955000153277,
+            0.00044312799582257867,
+            0.00046197899791877717,
+            0.00046012000530026853,
+            0.00046540900075342506,
+            0.000444748999143485,
+            0.0004571020035655238,
+            0.00042366800335003063
+          ],
+          "ready_latency_s": 0.1532422470045276,
+          "sequence": 1,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:44.740+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243498,
+          "times_s": [
+            0.000918463003472425,
+            0.0008842929964885116,
+            0.0009220319989253767,
+            0.0008781119977356866,
+            0.0009780320033314638
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        },
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.48809890799748246,
+          "ended_at": "2026-11-14T05:26:46.018+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.380305104998115,
+            0.0004999140001018532,
+            0.0004861819979851134,
+            0.0004942009982187301,
+            0.0005141240035300143,
+            0.0004884169975412078,
+            0.00052386899915291,
+            0.0005104749943711795
+          ],
+          "ready_latency_s": 0.1474908599993796,
+          "sequence": 2,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:45.381+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243491,
+          "times_s": [
+            0.0009288090004702099,
+            0.0008860130037646741,
+            0.0009566910011926666,
+            0.0008972499999799766,
+            0.0010442060010973364
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.5557461639982648,
+          "ended_at": "2026-11-14T05:26:46.731+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3805879459978314,
+            0.0004900179992546327,
+            0.0005135309984325431,
+            0.0004938730053254403,
+            0.0005092520004836842,
+            0.00046527199447155,
+            0.0004815759966732003,
+            0.00046592100261477754
+          ],
+          "ready_latency_s": 0.15073858200048562,
+          "sequence": 3,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:46.024+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243491,
+          "times_s": [
+            0.0009328189989901148,
+            0.0008842070019454695,
+            0.000919125996006187,
+            0.000880232997587882,
+            0.0009120839968090877
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.47848156999680214,
+          "ended_at": "2026-11-14T05:26:47.368+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.37928061000275193,
+            0.0005311679997248575,
+            0.0005081170020275749,
+            0.0004922469961456954,
+            0.0004864610018557869,
+            0.00046519599709426984,
+            0.00048172500100918114,
+            0.0004923910018987954
+          ],
+          "ready_latency_s": 0.15093375599826686,
+          "sequence": 4,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:46.738+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243497,
+          "times_s": [
+            0.0009657029950176366,
+            0.0008968910042312928,
+            0.0009293870025430806,
+            0.0008780799980740994,
+            0.0010014610015787184
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        }
+      ],
+      "round": 1,
+      "sequence": 1,
+      "started_at": "2026-11-14T05:26:44.736+00:00"
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "ended_at": "2026-11-14T05:26:52.747+00:00",
+      "environment_after": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "1953022",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "2250919",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "636025",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "601850",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400102",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "399852",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400929",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400576",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "1540529",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400568",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "509086",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "509016",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "507796",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "493850",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1815021",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3291437",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.10986328125,
+          0.9775390625,
+          0.8330078125
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "environment_before": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "1016465",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "398879",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "2796334",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "520062",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2594811",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3234248",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3141402",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2620577",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "399831",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "398882",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3358333",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3431000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3361764",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3333311",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "715643",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "511363",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          0.94482421875,
+          0.943359375,
+          0.8212890625
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "evaluation": {
+        "baseline_median_s": 0.0018577949958853424,
+        "candidate_median_s": 0.0018416059974697419,
+        "correct": true,
+        "dataset": "dev",
+        "detail": {
+          "candidate_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "case_count": 2,
+          "container_ready_latency_s": 0.6744200639950577,
+          "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+          "duration_s": 4.021,
+          "passed_cases": 2,
+          "samples": [
+            {
+              "case": "0",
+              "elapsed_s": 0.4880726860064897,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3818487320022541,
+                0.0005095710002933629,
+                0.0004894419980701059,
+                0.0004897520047961734,
+                0.0004889670017291792,
+                0.0004639769977075048,
+                0.0004911170035484247,
+                0.00046637299965368584
+              ],
+              "ready_latency_s": 0.15681206600129372,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243493,
+              "times_s": [
+                0.0009194629965350032,
+                0.0008810729996184818,
+                0.00094134800019674,
+                0.0008686979999765754,
+                0.0009127469966188073
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            },
+            {
+              "case": "0",
+              "elapsed_s": 0.4949856759994873,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38704672700259835,
+                0.00048411600437248126,
+                0.0004900229978375137,
+                0.00047726399498060346,
+                0.0005023359990445897,
+                0.0004494889944908209,
+                0.0004491260042414069,
+                0.0004491910003707744
+              ],
+              "ready_latency_s": 0.2049220169938053,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243496,
+              "times_s": [
+                0.0009183889997075312,
+                0.0009017000047606416,
+                0.0008742840000195429,
+                0.000994652000372298,
+                0.0009031349982251413
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.503638205002062,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3809812389954459,
+                0.00047845499648246914,
+                0.0004899569976259954,
+                0.0004978880024282262,
+                0.0005066000012448058,
+                0.00048777100164443254,
+                0.0005149520002305508,
+                0.00048728499677963555
+              ],
+              "ready_latency_s": 0.15835455700289458,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243497,
+              "times_s": [
+                0.0009232169977622107,
+                0.0008848590005072765,
+                0.0009077479990082793,
+                0.0009194070007652044,
+                0.0009773290003067814
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.4826496000023326,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38143940799636766,
+                0.0005029109961469658,
+                0.0005134679959155619,
+                0.0004722599987871945,
+                0.0004892450015177019,
+                0.0004908100017928518,
+                0.0004854419967159629,
+                0.0004775240013259463
+              ],
+              "ready_latency_s": 0.15433142399706412,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243495,
+              "times_s": [
+                0.0009383319993503392,
+                0.0008901400069589727,
+                0.0009392479987582192,
+                0.0008829359940136783,
+                0.0009709500009194016
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            }
+          ],
+          "timing": {
+            "baseline_min_max_s": [
+              0.0017516339939902537,
+              0.001883696997538209
+            ],
+            "baseline_s": [
+              0.0018577949958853424,
+              0.0017712130065774545,
+              0.0018805959989549592,
+              0.0017516339939902537,
+              0.001883696997538209
+            ],
+            "candidate_min_max_s": [
+              0.0017820319990278222,
+              0.0019140590011375025
+            ],
+            "candidate_s": [
+              0.0018416059974697419,
+              0.0017865590052679181,
+              0.0017820319990278222,
+              0.0019140590011375025,
+              0.0018804639985319227
+            ],
+            "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded",
+            "warmup_count": 3
+          }
+        },
+        "ended_at": "2026-11-14T05:26:52.746+00:00",
+        "evaluation_id": "58656405e628",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "speedup": 1.0087906959674562,
+        "started_at": "2026-11-14T05:26:48.725+00:00",
+        "status": "passed",
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+      },
+      "expected_improved": false,
+      "expected_outcome_observed": true,
+      "kind": "self",
+      "measure": {
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "function_warmups": 3,
+        "max_output_bytes": 67108864,
+        "memory": "1g",
+        "pids_limit": 64,
+        "ready_timeout_s": 30.0,
+        "repeats": 5
+      },
+      "raw_samples": [
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4880726860064897,
+          "ended_at": "2026-11-14T05:26:49.373+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3818487320022541,
+            0.0005095710002933629,
+            0.0004894419980701059,
+            0.0004897520047961734,
+            0.0004889670017291792,
+            0.0004639769977075048,
+            0.0004911170035484247,
+            0.00046637299965368584
+          ],
+          "ready_latency_s": 0.15681206600129372,
+          "sequence": 1,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:48.726+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243493,
+          "times_s": [
+            0.0009194629965350032,
+            0.0008810729996184818,
+            0.00094134800019674,
+            0.0008686979999765754,
+            0.0009127469966188073
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        },
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4949856759994873,
+          "ended_at": "2026-11-14T05:26:50.081+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38704672700259835,
+            0.00048411600437248126,
+            0.0004900229978375137,
+            0.00047726399498060346,
+            0.0005023359990445897,
+            0.0004494889944908209,
+            0.0004491260042414069,
+            0.0004491910003707744
+          ],
+          "ready_latency_s": 0.2049220169938053,
+          "sequence": 2,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:49.379+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243496,
+          "times_s": [
+            0.0009183889997075312,
+            0.0009017000047606416,
+            0.0008742840000195429,
+            0.000994652000372298,
+            0.0009031349982251413
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.503638205002062,
+          "ended_at": "2026-11-14T05:26:50.749+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3809812389954459,
+            0.00047845499648246914,
+            0.0004899569976259954,
+            0.0004978880024282262,
+            0.0005066000012448058,
+            0.00048777100164443254,
+            0.0005149520002305508,
+            0.00048728499677963555
+          ],
+          "ready_latency_s": 0.15835455700289458,
+          "sequence": 3,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:50.087+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243497,
+          "times_s": [
+            0.0009232169977622107,
+            0.0008848590005072765,
+            0.0009077479990082793,
+            0.0009194070007652044,
+            0.0009773290003067814
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4826496000023326,
+          "ended_at": "2026-11-14T05:26:51.393+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38143940799636766,
+            0.0005029109961469658,
+            0.0005134679959155619,
+            0.0004722599987871945,
+            0.0004892450015177019,
+            0.0004908100017928518,
+            0.0004854419967159629,
+            0.0004775240013259463
+          ],
+          "ready_latency_s": 0.15433142399706412,
+          "sequence": 4,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:50.755+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243495,
+          "times_s": [
+            0.0009383319993503392,
+            0.0008901400069589727,
+            0.0009392479987582192,
+            0.0008829359940136783,
+            0.0009709500009194016
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        }
+      ],
+      "round": 2,
+      "sequence": 2,
+      "started_at": "2026-11-14T05:26:48.723+00:00"
+    },
+    {
+      "baseline": "original",
+      "candidate": "original",
+      "configuration": "pinned",
+      "ended_at": "2026-11-14T05:26:56.713+00:00",
+      "environment_after": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3487096",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3439003",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400540",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "399692",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2774144",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "399661",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3263240",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399212",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399789",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399567",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3470106",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3579032",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.1005859375,
+          0.97802734375,
+          0.833984375
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "environment_before": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "400264",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "4699758",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1583088",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1638965",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "633618",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2188906",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2520500",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3234145",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400288",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "399708",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1692698",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "400453",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "400067",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399800",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1548880",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1616964",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.10986328125,
+          0.9775390625,
+          0.8330078125
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "evaluation": {
+        "baseline_median_s": 0.001838010000938084,
+        "candidate_median_s": 0.0018480940052540973,
+        "correct": true,
+        "dataset": "dev",
+        "detail": {
+          "candidate_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "case_count": 2,
+          "container_ready_latency_s": 0.6073425169961411,
+          "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+          "duration_s": 3.961,
+          "passed_cases": 2,
+          "samples": [
+            {
+              "case": "0",
+              "elapsed_s": 0.4794349669973599,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38147319199924823,
+                0.0005059160030214116,
+                0.000507395998283755,
+                0.000475222994282376,
+                0.0004854579965467565,
+                0.0004894540034001693,
+                0.000504296003782656,
+                0.0004858699976466596
+              ],
+              "ready_latency_s": 0.15478962699853582,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243489,
+              "times_s": [
+                0.000928576999285724,
+                0.0008849399964674376,
+                0.0009189769989461638,
+                0.000876685997354798,
+                0.000929298999835737
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            },
+            {
+              "case": "0",
+              "elapsed_s": 0.5263798199957819,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3807878240040736,
+                0.0004772079992108047,
+                0.0004936859986628406,
+                0.0004767399950651452,
+                0.00048387899732915685,
+                0.000491043996589724,
+                0.0005070339975645766,
+                0.00046618699707323685
+              ],
+              "ready_latency_s": 0.15618419199745404,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243495,
+              "times_s": [
+                0.0009361179982079193,
+                0.0008875569983501919,
+                0.0009277050048694946,
+                0.0008718509998288937,
+                0.0009232660013367422
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.4843277339969063,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38115181499597384,
+                0.00047643699508626014,
+                0.0004659309997805394,
+                0.0004547770004137419,
+                0.00046375900274142623,
+                0.00044755400449503213,
+                0.0004611369949998334,
+                0.00042418100201757625
+              ],
+              "ready_latency_s": 0.14799533900077222,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243498,
+              "times_s": [
+                0.0009232560041709803,
+                0.0008815649998723529,
+                0.0009203890003846027,
+                0.0008727129970793612,
+                0.000963725004112348
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.48335318000317784,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38179967899486655,
+                0.00047571199684171006,
+                0.00048094299563672394,
+                0.00048510299529880285,
+                0.0004890609998255968,
+                0.00045122000301489606,
+                0.0004521109949564561,
+                0.0004506129989749752
+              ],
+              "ready_latency_s": 0.14837335899937898,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243499,
+              "times_s": [
+                0.0009237919948645867,
+                0.0008842770039336756,
+                0.0009190330019919202,
+                0.0008750380002311431,
+                0.0010416060031275265
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            }
+          ],
+          "timing": {
+            "baseline_min_max_s": [
+              0.001751723997585941,
+              0.0019709050029632635
+            ],
+            "baseline_s": [
+              0.0018523689941503108,
+              0.0017692170004011132,
+              0.001838010000938084,
+              0.001751723997585941,
+              0.0019709050029632635
+            ],
+            "candidate_min_max_s": [
+              0.001744563996908255,
+              0.0018869910054490902
+            ],
+            "candidate_s": [
+              0.0018593740023788996,
+              0.0017691219982225448,
+              0.0018480940052540973,
+              0.001744563996908255,
+              0.0018869910054490902
+            ],
+            "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded",
+            "warmup_count": 3
+          }
+        },
+        "ended_at": "2026-11-14T05:26:56.713+00:00",
+        "evaluation_id": "cfa083300fbc",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "speedup": 0.9945435652692208,
+        "started_at": "2026-11-14T05:26:52.751+00:00",
+        "status": "passed",
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+      },
+      "expected_improved": false,
+      "expected_outcome_observed": true,
+      "kind": "self",
+      "measure": {
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "function_warmups": 3,
+        "max_output_bytes": 67108864,
+        "memory": "1g",
+        "pids_limit": 64,
+        "ready_timeout_s": 30.0,
+        "repeats": 5
+      },
+      "raw_samples": [
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4794349669973599,
+          "ended_at": "2026-11-14T05:26:53.387+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38147319199924823,
+            0.0005059160030214116,
+            0.000507395998283755,
+            0.000475222994282376,
+            0.0004854579965467565,
+            0.0004894540034001693,
+            0.000504296003782656,
+            0.0004858699976466596
+          ],
+          "ready_latency_s": 0.15478962699853582,
+          "sequence": 1,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:52.752+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243489,
+          "times_s": [
+            0.000928576999285724,
+            0.0008849399964674376,
+            0.0009189769989461638,
+            0.000876685997354798,
+            0.000929298999835737
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        },
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.5263798199957819,
+          "ended_at": "2026-11-14T05:26:54.075+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3807878240040736,
+            0.0004772079992108047,
+            0.0004936859986628406,
+            0.0004767399950651452,
+            0.00048387899732915685,
+            0.000491043996589724,
+            0.0005070339975645766,
+            0.00046618699707323685
+          ],
+          "ready_latency_s": 0.15618419199745404,
+          "sequence": 2,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:53.391+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243495,
+          "times_s": [
+            0.0009361179982079193,
+            0.0008875569983501919,
+            0.0009277050048694946,
+            0.0008718509998288937,
+            0.0009232660013367422
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4843277339969063,
+          "ended_at": "2026-11-14T05:26:54.712+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38115181499597384,
+            0.00047643699508626014,
+            0.0004659309997805394,
+            0.0004547770004137419,
+            0.00046375900274142623,
+            0.00044755400449503213,
+            0.0004611369949998334,
+            0.00042418100201757625
+          ],
+          "ready_latency_s": 0.14799533900077222,
+          "sequence": 3,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:54.079+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243498,
+          "times_s": [
+            0.0009232560041709803,
+            0.0008815649998723529,
+            0.0009203890003846027,
+            0.0008727129970793612,
+            0.000963725004112348
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.48335318000317784,
+          "ended_at": "2026-11-14T05:26:55.349+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38179967899486655,
+            0.00047571199684171006,
+            0.00048094299563672394,
+            0.00048510299529880285,
+            0.0004890609998255968,
+            0.00045122000301489606,
+            0.0004521109949564561,
+            0.0004506129989749752
+          ],
+          "ready_latency_s": 0.14837335899937898,
+          "sequence": 4,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:54.717+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243499,
+          "times_s": [
+            0.0009237919948645867,
+            0.0008842770039336756,
+            0.0009190330019919202,
+            0.0008750380002311431,
+            0.0010416060031275265
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        }
+      ],
+      "round": 3,
+      "sequence": 3,
+      "started_at": "2026-11-14T05:26:52.750+00:00"
+    },
+    {
+      "baseline": "delayed",
+      "candidate": "original",
+      "configuration": "pinned",
+      "ended_at": "2026-11-14T05:27:00.756+00:00",
+      "environment_after": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "1528057",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "2252842",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1800301",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "622677",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400419",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400213",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "399798",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400058",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "3120373",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "2605157",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3464241",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3483012",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3435905",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3397042",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1694776",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "2116113",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.2529296875,
+          1.01171875,
+          0.845703125
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "environment_before": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "471295",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400384",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3492338",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3374339",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "2201384",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3116047",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3252563",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "3007900",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "542280",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3263240",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "907723",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399913",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "415584",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3517500",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3550403",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.1005859375,
+          0.97802734375,
+          0.833984375
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "evaluation": {
+        "baseline_median_s": 0.008034404010686558,
+        "candidate_median_s": 0.001841106997744646,
+        "correct": true,
+        "dataset": "dev",
+        "detail": {
+          "candidate_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "case_count": 2,
+          "container_ready_latency_s": 0.6371851849908126,
+          "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+          "duration_s": 4.036,
+          "passed_cases": 2,
+          "samples": [
+            {
+              "case": "0",
+              "elapsed_s": 0.5167315020007663,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3821470640032203,
+                0.0005030910033383407,
+                0.0005264470019028522,
+                0.0005074899963801727,
+                0.0005047869999543764,
+                0.00048668700037524104,
+                0.0005107420001877472,
+                0.0004613819983205758
+              ],
+              "ready_latency_s": 0.15152071999909822,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243491,
+              "times_s": [
+                0.004039752995595336,
+                0.0039760509971529245,
+                0.004013898003904615,
+                0.003991717996541411,
+                0.004027971001050901
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            },
+            {
+              "case": "0",
+              "elapsed_s": 0.4882625139944139,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3812587300053565,
+                0.0004997279975214042,
+                0.0004867429961450398,
+                0.0004967380009475164,
+                0.0005094670050311834,
+                0.0004880699998466298,
+                0.0005043510027462617,
+                0.00048694699944462627
+              ],
+              "ready_latency_s": 0.15715509399888106,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243495,
+              "times_s": [
+                0.0009356989976367913,
+                0.0008845580014167354,
+                0.0009187980031128973,
+                0.0008803139935480431,
+                0.0010077609986183234
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.48913189199811313,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38351828700251644,
+                0.0004982629980077036,
+                0.0004968889988958836,
+                0.0004573290061671287,
+                0.0005043929995736107,
+                0.0004692469956353307,
+                0.0004516690023592673,
+                0.0004455519956536591
+              ],
+              "ready_latency_s": 0.1616922839966719,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243494,
+              "times_s": [
+                0.0009233990058419295,
+                0.0008868299992172979,
+                0.0009223089946317486,
+                0.000878703998751007,
+                0.0010004689975176007
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.5152168600034202,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3836860279989196,
+                0.0005143040034454316,
+                0.0004964129984728061,
+                0.0005545809981413186,
+                0.0005096669992781244,
+                0.0005021460019634105,
+                0.0005233580013737082,
+                0.0004412280031829141
+              ],
+              "ready_latency_s": 0.16681708699616138,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243490,
+              "times_s": [
+                0.004152604000410065,
+                0.003963808994740248,
+                0.004020506006781943,
+                0.003974685998400673,
+                0.0040183429955504835
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            }
+          ],
+          "timing": {
+            "baseline_min_max_s": [
+              0.007939859991893172,
+              0.008192356996005401
+            ],
+            "baseline_s": [
+              0.008192356996005401,
+              0.007939859991893172,
+              0.008034404010686558,
+              0.007966403994942084,
+              0.008046313996601384
+            ],
+            "candidate_min_max_s": [
+              0.00175901799229905,
+              0.002008229996135924
+            ],
+            "candidate_s": [
+              0.0018590980034787208,
+              0.0017713880006340332,
+              0.001841106997744646,
+              0.00175901799229905,
+              0.002008229996135924
+            ],
+            "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded",
+            "warmup_count": 3
+          }
+        },
+        "ended_at": "2026-11-14T05:27:00.755+00:00",
+        "evaluation_id": "fe17d01fddeb",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "speedup": 4.363898470066484,
+        "started_at": "2026-11-14T05:26:56.719+00:00",
+        "status": "passed",
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+      },
+      "expected_improved": true,
+      "expected_outcome_observed": true,
+      "kind": "positive_control",
+      "measure": {
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "function_warmups": 3,
+        "max_output_bytes": 67108864,
+        "memory": "1g",
+        "pids_limit": 64,
+        "ready_timeout_s": 30.0,
+        "repeats": 5
+      },
+      "raw_samples": [
+        {
+          "case": "0",
+          "code_sha256": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+          "elapsed_s": 0.5167315020007663,
+          "ended_at": "2026-11-14T05:26:57.390+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3821470640032203,
+            0.0005030910033383407,
+            0.0005264470019028522,
+            0.0005074899963801727,
+            0.0005047869999543764,
+            0.00048668700037524104,
+            0.0005107420001877472,
+            0.0004613819983205758
+          ],
+          "ready_latency_s": 0.15152071999909822,
+          "sequence": 1,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:56.720+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243491,
+          "times_s": [
+            0.004039752995595336,
+            0.0039760509971529245,
+            0.004013898003904615,
+            0.003991717996541411,
+            0.004027971001050901
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        },
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4882625139944139,
+          "ended_at": "2026-11-14T05:26:58.042+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3812587300053565,
+            0.0004997279975214042,
+            0.0004867429961450398,
+            0.0004967380009475164,
+            0.0005094670050311834,
+            0.0004880699998466298,
+            0.0005043510027462617,
+            0.00048694699944462627
+          ],
+          "ready_latency_s": 0.15715509399888106,
+          "sequence": 2,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:57.395+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243495,
+          "times_s": [
+            0.0009356989976367913,
+            0.0008845580014167354,
+            0.0009187980031128973,
+            0.0008803139935480431,
+            0.0010077609986183234
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.48913189199811313,
+          "ended_at": "2026-11-14T05:26:58.699+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38351828700251644,
+            0.0004982629980077036,
+            0.0004968889988958836,
+            0.0004573290061671287,
+            0.0005043929995736107,
+            0.0004692469956353307,
+            0.0004516690023592673,
+            0.0004455519956536591
+          ],
+          "ready_latency_s": 0.1616922839966719,
+          "sequence": 3,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:58.047+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243494,
+          "times_s": [
+            0.0009233990058419295,
+            0.0008868299992172979,
+            0.0009223089946317486,
+            0.000878703998751007,
+            0.0010004689975176007
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+          "elapsed_s": 0.5152168600034202,
+          "ended_at": "2026-11-14T05:26:59.388+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3836860279989196,
+            0.0005143040034454316,
+            0.0004964129984728061,
+            0.0005545809981413186,
+            0.0005096669992781244,
+            0.0005021460019634105,
+            0.0005233580013737082,
+            0.0004412280031829141
+          ],
+          "ready_latency_s": 0.16681708699616138,
+          "sequence": 4,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:26:58.705+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243490,
+          "times_s": [
+            0.004152604000410065,
+            0.003963808994740248,
+            0.004020506006781943,
+            0.003974685998400673,
+            0.0040183429955504835
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        }
+      ],
+      "round": 1,
+      "sequence": 4,
+      "started_at": "2026-11-14T05:26:56.717+00:00"
+    },
+    {
+      "baseline": "original",
+      "candidate": "delayed",
+      "configuration": "pinned",
+      "ended_at": "2026-11-14T05:27:04.829+00:00",
+      "environment_after": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "400501",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "399745",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "399263",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "400232",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400135",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400665",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "611206",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "632602",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "1637550",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3091926",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3535909",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3526953",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3493750",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "2083488",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "400372",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.232421875,
+          1.01123046875,
+          0.8466796875
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "environment_before": {
+        "cpus": {
+          "cpu0": {
+            "cpu_capacity": "1024",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4800000",
+            "cpufreq/scaling_cur_freq": "671685",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "0"
+          },
+          "cpu1": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400363",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "4"
+          },
+          "cpu10": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3385099",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "22"
+          },
+          "cpu11": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "830887",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "23"
+          },
+          "cpu12": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400248",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "32"
+          },
+          "cpu13": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "399851",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "33"
+          },
+          "cpu14": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "398949",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "34"
+          },
+          "cpu15": {
+            "cpu_capacity": "625",
+            "cpufreq/base_frequency": "1500000",
+            "cpufreq/cpuinfo_max_freq": "3300000",
+            "cpufreq/scaling_cur_freq": "400391",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "35"
+          },
+          "cpu2": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "400000",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "8"
+          },
+          "cpu3": {
+            "cpu_capacity": "1005",
+            "cpufreq/base_frequency": "1900000",
+            "cpufreq/cpuinfo_max_freq": "4700000",
+            "cpufreq/scaling_cur_freq": "399227",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "12"
+          },
+          "cpu4": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3440923",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "16"
+          },
+          "cpu5": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3500239",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "17"
+          },
+          "cpu6": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3500365",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "18"
+          },
+          "cpu7": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "3500891",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "19"
+          },
+          "cpu8": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "1091318",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "20"
+          },
+          "cpu9": {
+            "cpu_capacity": "701",
+            "cpufreq/base_frequency": "1600000",
+            "cpufreq/cpuinfo_max_freq": "3700000",
+            "cpufreq/scaling_cur_freq": "528191",
+            "cpufreq/scaling_governor": "powersave",
+            "topology/core_id": "21"
+          }
+        },
+        "host_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "host_python": "3.12.11",
+        "load_average": [
+          1.2529296875,
+          1.01171875,
+          0.845703125
+        ],
+        "platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44"
+      },
+      "evaluation": {
+        "baseline_median_s": 0.0018262110024807043,
+        "candidate_median_s": 0.008044959002290852,
+        "correct": true,
+        "dataset": "dev",
+        "detail": {
+          "candidate_sha256": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+          "case_count": 2,
+          "container_ready_latency_s": 0.6434102729908773,
+          "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+          "duration_s": 4.066,
+          "passed_cases": 2,
+          "samples": [
+            {
+              "case": "0",
+              "elapsed_s": 0.48462742200354114,
+              "exit_code": 0,
+              "initialization_s": [
+                0.383271478000097,
+                0.0005040559990447946,
+                0.0005155750041012652,
+                0.0005156650004209951,
+                0.0005142320005688816,
+                0.000486459000967443,
+                0.0005094389998703264,
+                0.0004891179996775463
+              ],
+              "ready_latency_s": 0.1568582170002628,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243492,
+              "times_s": [
+                0.0009680529983597808,
+                0.0008850939993862994,
+                0.0009098430018639192,
+                0.0008917890008888207,
+                0.0009132880004472099
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            },
+            {
+              "case": "0",
+              "elapsed_s": 0.5179783860003226,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38623714400455356,
+                0.0005104209994897246,
+                0.0005110330021125264,
+                0.000500301001011394,
+                0.0005208919974393211,
+                0.0004888699986622669,
+                0.0005038480012444779,
+                0.0004968080029357225
+              ],
+              "ready_latency_s": 0.15130766499351012,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243489,
+              "times_s": [
+                0.004047098998853471,
+                0.00397384100506315,
+                0.004025057998660486,
+                0.0039762340020388365,
+                0.004070801005582325
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.5275233150023269,
+              "exit_code": 0,
+              "initialization_s": [
+                0.3835666009981651,
+                0.0005410020021372475,
+                0.0005449980017147027,
+                0.0005127699987497181,
+                0.0005131699945195578,
+                0.00045490299817174673,
+                0.00044720000005327165,
+                0.0004479649942368269
+              ],
+              "ready_latency_s": 0.17428346200176748,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243493,
+              "times_s": [
+                0.0040490649989806116,
+                0.004005542999948375,
+                0.004019901003630366,
+                0.004138726995734032,
+                0.0038157829985721037
+              ],
+              "warmup_count": 3,
+              "who": "candidate"
+            },
+            {
+              "case": "1",
+              "elapsed_s": 0.4829824879998341,
+              "exit_code": 0,
+              "initialization_s": [
+                0.38593366499844706,
+                0.0005026789949624799,
+                0.0004895399979432113,
+                0.0004712110021500848,
+                0.0005072440035291947,
+                0.00044574899948202074,
+                0.0004856390005443245,
+                0.0004419980032253079
+              ],
+              "ready_latency_s": 0.16096092899533687,
+              "status": "ok",
+              "stderr_tail": "",
+              "stdout_bytes": 3243496,
+              "times_s": [
+                0.0009246170011465438,
+                0.0008837279965518974,
+                0.0009163680006167851,
+                0.0008806499972706661,
+                0.0009880409998004325
+              ],
+              "warmup_count": 3,
+              "who": "baseline"
+            }
+          ],
+          "timing": {
+            "baseline_min_max_s": [
+              0.0017688219959381968,
+              0.0019013290002476424
+            ],
+            "baseline_s": [
+              0.0018926699995063245,
+              0.0017688219959381968,
+              0.0018262110024807043,
+              0.0017724389981594868,
+              0.0019013290002476424
+            ],
+            "candidate_min_max_s": [
+              0.007886584004154429,
+              0.008114960997772869
+            ],
+            "candidate_s": [
+              0.008096163997834083,
+              0.007979384005011525,
+              0.008044959002290852,
+              0.008114960997772869,
+              0.007886584004154429
+            ],
+            "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded",
+            "warmup_count": 3
+          }
+        },
+        "ended_at": "2026-11-14T05:27:04.828+00:00",
+        "evaluation_id": "aa7adfdbf9be",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "speedup": 0.22700065991146498,
+        "started_at": "2026-11-14T05:27:00.762+00:00",
+        "status": "passed",
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+      },
+      "expected_improved": false,
+      "expected_outcome_observed": true,
+      "kind": "negative_control",
+      "measure": {
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "function_warmups": 3,
+        "max_output_bytes": 67108864,
+        "memory": "1g",
+        "pids_limit": 64,
+        "ready_timeout_s": 30.0,
+        "repeats": 5
+      },
+      "raw_samples": [
+        {
+          "case": "0",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.48462742200354114,
+          "ended_at": "2026-11-14T05:27:01.406+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.383271478000097,
+            0.0005040559990447946,
+            0.0005155750041012652,
+            0.0005156650004209951,
+            0.0005142320005688816,
+            0.000486459000967443,
+            0.0005094389998703264,
+            0.0004891179996775463
+          ],
+          "ready_latency_s": 0.1568582170002628,
+          "sequence": 1,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:27:00.764+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243492,
+          "times_s": [
+            0.0009680529983597808,
+            0.0008850939993862994,
+            0.0009098430018639192,
+            0.0008917890008888207,
+            0.0009132880004472099
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        },
+        {
+          "case": "0",
+          "code_sha256": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+          "elapsed_s": 0.5179783860003226,
+          "ended_at": "2026-11-14T05:27:02.081+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38623714400455356,
+            0.0005104209994897246,
+            0.0005110330021125264,
+            0.000500301001011394,
+            0.0005208919974393211,
+            0.0004888699986622669,
+            0.0005038480012444779,
+            0.0004968080029357225
+          ],
+          "ready_latency_s": 0.15130766499351012,
+          "sequence": 2,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:27:01.411+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243489,
+          "times_s": [
+            0.004047098998853471,
+            0.00397384100506315,
+            0.004025057998660486,
+            0.0039762340020388365,
+            0.004070801005582325
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "7d58ffe84ebd18ddcd5b1c0421fd0805628bab94601f399d407ef12f8172e69e",
+          "elapsed_s": 0.5275233150023269,
+          "ended_at": "2026-11-14T05:27:02.790+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.3835666009981651,
+            0.0005410020021372475,
+            0.0005449980017147027,
+            0.0005127699987497181,
+            0.0005131699945195578,
+            0.00045490299817174673,
+            0.00044720000005327165,
+            0.0004479649942368269
+          ],
+          "ready_latency_s": 0.17428346200176748,
+          "sequence": 3,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:27:02.087+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243493,
+          "times_s": [
+            0.0040490649989806116,
+            0.004005542999948375,
+            0.004019901003630366,
+            0.004138726995734032,
+            0.0038157829985721037
+          ],
+          "warmup_count": 3,
+          "who": "candidate"
+        },
+        {
+          "case": "1",
+          "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "elapsed_s": 0.4829824879998341,
+          "ended_at": "2026-11-14T05:27:03.440+00:00",
+          "exit_code": 0,
+          "initialization_s": [
+            0.38593366499844706,
+            0.0005026789949624799,
+            0.0004895399979432113,
+            0.0004712110021500848,
+            0.0005072440035291947,
+            0.00044574899948202074,
+            0.0004856390005443245,
+            0.0004419980032253079
+          ],
+          "ready_latency_s": 0.16096092899533687,
+          "sequence": 4,
+          "solution_count": 8,
+          "started_at": "2026-11-14T05:27:02.795+00:00",
+          "status": "ok",
+          "stderr_tail": "",
+          "stdout_bytes": 3243496,
+          "times_s": [
+            0.0009246170011465438,
+            0.0008837279965518974,
+            0.0009163680006167851,
+            0.0008806499972706661,
+            0.0009880409998004325
+          ],
+          "warmup_count": 3,
+          "who": "baseline"
+        }
+      ],
+      "round": 1,
+      "sequence": 5,
+      "started_at": "2026-11-14T05:27:00.760+00:00"
+    }
+  ],
+  "schema": "native-calibration-v1",
+  "source_sha256": {
+    "backend/scripts/calibrate_native.py": "74fc58a71935001d03cf3003f628707b413725573e76d5eedf0af90b7edd9301",
+    "backend/src/routeevo/benchmarks/algotune.py": "80f988e1d444fdb8fb07df69808238c1c99f21c601a7e07b26afd634e743efd2",
+    "backend/src/routeevo/benchmarks/native_tools/scientific_harness.py": "374e9544c9a74fe8f664a3d0e72ab8c1f494ddd2ee2eb914ac8e891e970f2e7a",
+    "backend/src/routeevo/config.py": "2fbbe039a177ff214d669c60dd8061e2196e9aef9b7ea12121da0a55dfc969ce",
+    "backend/src/routeevo/sandbox/executor.py": "1ab6fe3a2dd45eb50946462e12bcb50399b4e7fbc2a61f21a0297f03b127b256"
+  },
+  "status": "completed",
+  "summary": {
+    "controls": [
+      {
+        "expected_outcome_observed": true,
+        "kind": "positive_control",
+        "speedup": 4.363898470066484
+      },
+      {
+        "expected_outcome_observed": true,
+        "kind": "negative_control",
+        "speedup": 0.22700065991146498
+      }
+    ],
+    "default": {
+      "median_first_vs_rest": null,
+      "median_range_over_median": null,
+      "passed": 0,
+      "self_comparisons": 0,
+      "speedups": [],
+      "strict_false_improvements": 0
+    },
+    "pinned": {
+      "median_first_vs_rest": 0.023090417152282106,
+      "median_range_over_median": 0.08850855938515766,
+      "passed": 3,
+      "self_comparisons": 3,
+      "speedups": [
+        0.9945160912949167,
+        1.0087906959674562,
+        0.9945435652692208
+      ],
+      "strict_false_improvements": 0
+    }
+  },
+  "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+  "task_manifest_sha256": "041d5ffbbba4c86ca55c7248db847ad70d7454618a5b6294d54be92708dfb09e",
+  "warmup_count": 3
+}

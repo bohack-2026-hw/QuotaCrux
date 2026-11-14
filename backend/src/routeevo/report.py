@@ -201,7 +201,9 @@ def build(run_id: str) -> dict:
         "environment": cfg.get("environment"),
         "reproduce": {
             "run_again": _run_command(run, cfg),
-            "recheck_best": (f"uv run routeevo check {run['task_id']} {next((c['code_path'] for c in cand_out if c['candidate_id'] == best_id), '')} --dataset final"
+            "recheck_best": (shlex.join(["uv", "run", "routeevo", "check", run["task_id"],
+                             next(c["code_path"] for c in cand_out if c["candidate_id"] == best_id),
+                             "--dataset", "final", *_measure_args(cfg)])
                              if best_id else None),
             "report": f"uv run routeevo report {run_id}",
         },
@@ -217,6 +219,15 @@ def build(run_id: str) -> dict:
     return out
 
 
+def _measure_args(cfg: dict) -> list[str]:
+    argv = []
+    if cfg.get("measure", {}).get("cpuset_cpus") is not None:
+        argv += ["--cpuset-cpus", cfg["measure"]["cpuset_cpus"]]
+    if cfg.get("measure", {}).get("function_warmups", 1) != 1:
+        argv += ["--function-warmups", str(cfg["measure"]["function_warmups"])]
+    return argv
+
+
 def _run_command(run, cfg: dict) -> str:
     argv = ["uv", "run", "routeevo", "run", run["task_id"], "--mode", run["mode"], "--snapshot", run["snapshot_id"]]
     protocol = cfg.get("research_protocol", {})
@@ -226,6 +237,7 @@ def _run_command(run, cfg: dict) -> str:
         argv += ["--fixed-model", protocol["fixed_model"]]
     if protocol.get("final_evaluation") is False:
         argv += ["--dev-only"]
+    argv += _measure_args(cfg)
     for flag, key in (("--wall-clock", "wall_clock_s"), ("--max-requests", "max_model_requests"),
                       ("--max-candidates", "max_candidates"), ("--request-timeout", "model_request_timeout_s")):
         argv += [flag, str(cfg["limits"][key])]

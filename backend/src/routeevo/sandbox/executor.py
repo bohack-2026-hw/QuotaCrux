@@ -69,7 +69,7 @@ def environment_info(measure: config.MeasureConfig) -> dict:
     info.update({
         "docker_server": ver.stdout.strip() or None,
         "container_python": "3.12-slim (pinned digest in Dockerfile)",
-        "limits": {"cpus": measure.cpus, "memory": measure.memory, "pids_limit": measure.pids_limit,
+        "limits": {"cpus": measure.cpus, "cpuset_cpus": measure.cpuset_cpus, "memory": measure.memory, "pids_limit": measure.pids_limit,
                    "network": "none", "read_only_rootfs": True, "user": "65534:65534"},
     })
     return info
@@ -89,6 +89,7 @@ def run_sample(code: bytes, input_bytes: bytes, timeout_s: float, measure: confi
         "docker", "run", "--rm", "-i", "--name", name,
         "--network", "none", "--read-only",
         "--cpus", str(measure.cpus), "--memory", measure.memory, "--memory-swap", measure.memory,
+        *(["--cpuset-cpus", measure.cpuset_cpus] if measure.cpuset_cpus is not None else []),
         "--pids-limit", str(measure.pids_limit),
         "--user", "65534:65534", "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
         "-e", "PYTHONHASHSEED=0", "-e", "PYTHONDONTWRITEBYTECODE=1",

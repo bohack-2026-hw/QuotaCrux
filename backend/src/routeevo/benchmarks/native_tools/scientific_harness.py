@@ -11,8 +11,11 @@ print("ROUTEEVO_READY", flush=True)
 request = json.load(sys.stdin)
 if not 1 <= request["repeats"] <= 100:
     raise ValueError("invalid repeat count")
+warmups = request.get("warmups", 1)
+if type(warmups) is not int or not 1 <= warmups <= 20:
+    raise ValueError("invalid warm-up count")
 results, times, initialization = [], [], []
-for i in range(request["repeats"] + 1):
+for i in range(request["repeats"] + warmups):
     # Fresh candidate globals and input object for each measurement; imports are outside the timer.
     namespace = {"__name__": "candidate"}
     start = perf_counter()
@@ -24,6 +27,7 @@ for i in range(request["repeats"] + 1):
     answer = solve(problem)
     elapsed = perf_counter() - start
     results.append(encode(answer))
-    if i:
+    if i >= warmups:
         times.append(elapsed)
-print(json.dumps({"solutions": results, "times_s": times, "initialization_s": initialization}, allow_nan=False))
+print(json.dumps({"solutions": results, "times_s": times, "initialization_s": initialization,
+                  "warmup_count": warmups}, allow_nan=False))

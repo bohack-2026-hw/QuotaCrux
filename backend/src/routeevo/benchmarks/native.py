@@ -44,11 +44,15 @@ def fetch(url: str, path: Path, *, max_bytes: int = 32 * 1024 * 1024) -> Path:
 
 def package(family: str, problem: str, split: str, source: dict, contract: str, initial: str,
             dev: list[dict], final: list[dict], *, objective: dict, settings: dict,
-            task_id: str | None = None, extra_files: dict[str, bytes] | None = None) -> taskpkg.Task:
+            task_id: str | None = None, extra_files: dict[str, bytes] | None = None,
+            input_profile: dict | None = None) -> taskpkg.Task:
     if not dev or not final:
         raise ValueError("dev and final must both contain cases")
-    digest = hashlib.sha256(json.dumps([REVISION, source, settings, dev, final, contract, initial, objective,
-        {name: taskpkg.sha256_bytes(data) for name, data in (extra_files or {}).items()}], sort_keys=True).encode()).hexdigest()[:10]
+    identity = [REVISION, source, settings, dev, final, contract, initial, objective,
+        {name: taskpkg.sha256_bytes(data) for name, data in (extra_files or {}).items()}]
+    if input_profile is not None:
+        identity.append(input_profile)
+    digest = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()[:10]
     task_id = task_id or f"{family}-{problem}-{split}-{digest}"
     if not task_id or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_." for c in task_id):
         raise ValueError("task id must contain only letters, digits, '.', '_' and '-'")
@@ -56,10 +60,13 @@ def package(family: str, problem: str, split: str, source: dict, contract: str, 
         raise ValueError("invalid task id")
     config.TASK_DATA_DIR.mkdir(parents=True, exist_ok=True)
     tmp = Path(tempfile.mkdtemp(prefix=".native-", dir=config.TASK_DATA_DIR))
+    profile = {"problem": problem, "cases": len(dev), "memory_key": digest,
+               "settings": {k: v for k, v in settings.items() if k not in ("seeds",)}}
+    if input_profile is not None:
+        profile["input_profile"] = input_profile
     blobs = {"contract": ("contract.txt", contract.encode()), "initial": ("initial.py", initial.encode()),
              "examples": ("examples.json", b"[]"),
-             "dev_profile": ("dev_profile.json", json.dumps({"problem": problem, "cases": len(dev),
-                 "memory_key": digest, "settings": {k: v for k, v in settings.items() if k not in ("seeds",)}}).encode())}
+             "dev_profile": ("dev_profile.json", json.dumps(profile).encode())}
     for name, cases in (("dev", dev), ("final", final)):
         blobs[f"{name}_input"] = (f"{name}.json", json.dumps(cases, allow_nan=False).encode())
         blobs[f"{name}_expected"] = (f"{name}-expected.json", b"[]")

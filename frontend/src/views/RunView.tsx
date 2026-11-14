@@ -184,7 +184,7 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
             {rep.stop_reason && <Chip tone={rep.stop_reason === 'goal_reached' ? 'good' : 'neutral'}>{STOP[rep.stop_reason] ?? rep.stop_reason}</Chip>}
           </div>
         </div>
-        <div className="headline">{live ? '运行中……' : o.summary}</div>
+        <div className="headline">{live ? '运行中……' : runHeadline(rep, score, devOnly, bestDevValue)}</div>
         <div className="flags">
           {flags.map(([k, v, na]) => (
             <div key={k} className={`flag ${v == null ? 'na' : v ? 'yes' : 'no'}`}>
@@ -193,7 +193,12 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
             </div>
           ))}
         </div>
-        {rep.stop_detail && !live && <p className="small muted" style={{ marginBottom: 0 }}>终止依据：{stopDetail(rep.stop_detail)}</p>}
+        {rep.stop_detail && !live && (
+          <details className="fold">
+            <summary>{rep.stop_reason === 'agent_finished' ? 'Agent 自述的结束理由（模型原文，未验证）' : '终止依据'}</summary>
+            <p className="small muted" style={{ margin: 0 }}>{stopDetail(rep.stop_detail)}</p>
+          </details>
+        )}
       </div>
 
       <TaskDefinition r={rep.research} />
@@ -341,6 +346,19 @@ function Experiments({ r }: { r: Research }) {
   )
 }
 
+/** The headline is written here from the recorded outcome, not taken from the backend's summary string. */
+function runHeadline(rep: Report, score: boolean, devOnly: boolean, best: number | null): string {
+  const o = rep.outcome
+  const cid = rep.best_candidate?.candidate_id
+  if (!cid) return '没有得到有效程序'
+  const value = best == null ? '—' : score ? `${fmt.n(best)} 分` : `${best.toFixed(4)}×`
+  const dev = cid === 'c0' ? `保留初始程序（${value}）` : `开发集最佳 ${value}（${cid}）`
+  if (!o.final_evaluated) return `${dev} · 最终集${devOnly ? '未启用' : '未运行'}`
+  if (!o.final_correct) return `${dev} · 最终集未通过`
+  const fin = score ? `${fmt.n(o.final_objective?.value)} 分` : fmt.x(o.final_speedup)
+  return `最终集通过：${fin}${!score && o.goal_met ? '，达到目标' : ''}`
+}
+
 function costNote(s: string) {
   return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '脚本模型不计费', no_model_calls: '没有调用模型', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
 }
@@ -384,7 +402,7 @@ function feedback(r: Record<string, unknown>) {
   if (f) {
     const ex = (f.examples as Record<string, unknown>[] | undefined)?.[0]
     return (
-      <p className="small" style={{ color: '#8e2424' }}>
+      <p className="small" style={{ color: 'var(--critical-ink)' }}>
         反馈：{String(f.category ?? '')}{f.contract_case ? ` · 用例 ${String(f.contract_case)}` : ''}{f.message ? ` · ${String(f.message).slice(0, 120)}` : ''}
         {ex ? ` · 例：期望 ${String(ex.expected)}，得到 ${String(ex.got)}` : ''}
         {f.stderr_tail ? ` · ${String(f.stderr_tail).split('\n').slice(-1)[0]}` : ''}
@@ -392,7 +410,7 @@ function feedback(r: Record<string, unknown>) {
     )
   }
   if (r.analysis) return <p className="small muted">分析：{String(r.analysis).slice(0, 220)}</p>
-  if (r.error_kind) return <p className="small" style={{ color: '#8e2424' }}>{String(r.error_kind)}：{String(r.message ?? '').slice(0, 160)}</p>
+  if (r.error_kind) return <p className="small" style={{ color: 'var(--critical-ink)' }}>{String(r.error_kind)}：{String(r.message ?? '').slice(0, 160)}</p>
   if (r.finish_reason) return <p className="small muted">结束理由：{String(r.finish_reason)}</p>
   if (r.to) return <p className="small">切换到 {String(r.to)}（连续 {String(r.misses)} 次未达标）</p>
   return null

@@ -1,16 +1,12 @@
 import { api } from '../api'
 import type { Comparison, SideSummary, Stream } from '../api'
-import { ResearchHeadline } from '../components/ResearchHeadline'
 import { SessionCard } from '../components/SessionCard'
 import { Chip, Empty } from '../components/ui'
 import { usePoll } from '../hooks'
 import { ROUTE, STOP, fmt } from '../labels'
 
-/* The first screen: the latest within-task research batch first; the experience snapshots, held-out comparisons and
-   the task stream from the earlier phase stay below with their links. */
-export function OverviewView({ onOpenRun, onOpenComparison, onOpenResearch }: {
-  onOpenRun: (id: string) => void; onOpenComparison: (id: string) => void; onOpenResearch: (id: string) => void
-}) {
+/* The experience phase: task stream, router, learning runs and held-out comparisons, kept with their links. */
+export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: (id: string) => void }) {
   const runs = usePoll(() => api.runs(), [], 5000)
   const list = usePoll(api.comparisons, [], 5000)
   const snaps = usePoll(api.snapshots, [], 5000)
@@ -41,11 +37,6 @@ export function OverviewView({ onOpenRun, onOpenComparison, onOpenResearch }: {
 
   return (
     <div className="stack">
-      <ResearchHeadline onOpenResearch={onOpenResearch} />
-      <div className="section-head">
-        <h2>经验快照与历史对照</h2>
-        <span className="small muted">跨任务经验复用阶段的记录：快照、留出对照与任务流，入口与链接保持不变</span>
-      </div>
       <div className="grid cols-2">
         <StreamStrip s={st.data} onOpen={onOpenComparison} />
         <div className="card" style={{ borderTop: '3px solid var(--accent)' }}>

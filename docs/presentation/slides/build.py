@@ -7,7 +7,7 @@ Numbers mirror the sources listed in each slide's speaker notes.
 import os
 import sys
 
-from PIL import Image, ImageFilter
+from PIL import Image
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Emu
@@ -27,19 +27,10 @@ L, R, W = 76, 1844, 1768
 SECTIONS = ["为什么", "怎么做", "效果", "总结"]
 
 # a quiet paper background (slide background, so morph never touches it)
-PAPER = os.path.join(HERE, "build", "paper.png")
+PAPER = os.path.join(HERE, "build", "paper-flat.png")
 os.makedirs(os.path.dirname(PAPER), exist_ok=True)
-if not os.path.exists(PAPER):
-    import random
-    img = Image.new("RGB", (1920, 1080), BG)
-    px_ = img.load()
-    rnd = random.Random(7)
-    for _ in range(140000):
-        x, y = rnd.randrange(1920), rnd.randrange(1080)
-        d = rnd.choice((-5, -4, 3))
-        r, g, b = px_[x, y]
-        px_[x, y] = (r + d, g + d, b + d)
-    img.filter(ImageFilter.GaussianBlur(0.6)).save(PAPER)
+Image.new("RGB", (192, 108), BG).save(PAPER)
+LOCKUP = (63, 25, 218, 52)  # where the bohack.top intro lands; the same spot on every slide
 
 prs = Presentation()
 prs.slide_width, prs.slide_height = Emu(12192000), Emu(6858000)
@@ -50,6 +41,8 @@ TLS = []
 def T(s, x, y, w, h, paras, size=16, **kw):
     if isinstance(paras, str) and "\n" in paras:
         paras = paras.split("\n")
+    elif isinstance(paras, str) and len(paras) <= 16:
+        kw.setdefault("wrap", False)
     return text(s, x, y, w, h, paras, size=size, **kw)
 
 
@@ -70,14 +63,18 @@ def new(section=None, title=None, kicker=None, notes=""):
     TLS.append(tl)
     if section is not None:
         # header: brand left, section route right; same names on every slide so morph keeps them still
-        T(s, L, 34, 400, 48, [[("QuotaCrux", {"color": BLUE, "bold": True}), ("  枢决", {"color": INK, "bold": True})]], size=17, anchor="m", name="!!brand")
+        pic(s, A("bohack-lockup.png"), *LOCKUP, name="!!bohack")
+        line(s, 306, 36, 306, 72, RULE, 2, name="!!divider")
+        T(s, 326, 30, 400, 48, [[("QuotaCrux", {"color": BLUE, "bold": True}), ("  枢决", {"color": INK, "bold": True})]], size=17, anchor="m", name="!!brand")
         line(s, L, 88, R, 88, INK, 2, name="!!rule")
-        x0 = 1250
-        line(s, x0 + 10, 60, x0 + 3 * 160 + 10, 60, RULE, 2, name="!!navline")
+        x0, labw = 1250, [84, 84, 56, 56]
         for i, nm in enumerate(SECTIONS):
             on = i == section
-            oval(s, x0 + 10 + i * 160, 60, 9 if on else 6, BLUE if on else BG, line=BLUE if on else MUTE, line_w=2, name=f"!!navdot{i}")
-            T(s, x0 + 26 + i * 160, 40, 130, 40, nm, size=14, bold=on, color=BLUE if on else MUTE, anchor="m", name=f"!!nav{i}")
+            cx = x0 + 10 + i * 160
+            oval(s, cx, 56, 9 if on else 6, BLUE if on else BG, line=BLUE if on else MUTE, line_w=2, name=f"!!navdot{i}")
+            T(s, cx + 16, 36, 130, 40, nm, size=14, bold=on, color=BLUE if on else MUTE, anchor="m", name=f"!!nav{i}")
+            if i < 3:
+                line(s, cx + 22 + labw[i], 56, cx + 160 - 16, 56, RULE, 2, name=f"!!navseg{i}")
     if kicker:
         tl.fade(T(s, L, 116, 1400, 36, kicker, size=15, color=ORANGE, bold=True, name="hdr_kicker"), 0, 500)
     if title:
@@ -95,12 +92,18 @@ def each(tl, shapes, kind, delay, dur=600, step=0, **kw):
 
 def box(s, x, y, w, h, title, sub=None, hot=False, ts=17, ss=12, fill=CARD):
     out = [shape(s, MSO_SHAPE.SNIP_1_RECTANGLE, x, y, w, h, fill, line=BLUE if hot else "#BDBAB2", line_w=3 if hot else 1.5, adj=[0.12])]
+    paras = [[(title, {"size": ts, "bold": True, "color": BLUE if hot else INK})]]
     if sub:
-        out.append(T(s, x, y + h / 2 - 42, w, 42, title, size=ts, bold=True, color=BLUE if hot else INK, align="c", anchor="b"))
-        out.append(T(s, x + 8, y + h / 2 + 4, w - 16, 34, sub, size=ss, color=INK2, align="c"))
-    else:
-        out.append(T(s, x, y, w, h, title, size=ts, bold=True, color=BLUE if hot else INK, align="c", anchor="m"))
+        paras.append([(sub, {"size": ss, "bold": False, "color": INK2})])
+    out.append(T(s, x + 6, y, w - 12, h, paras, size=ts, align="c", anchor="m", spacing=1.15, wrap=False))
     return out
+
+
+def card2(s, x, y, w, h, k, v, hot=False, ks=14, vs=17):
+    """Rounded card with a small label over a value, vertically centred."""
+    return [rect(s, x, y, w, h, BLUE_L if hot else CARD, radius=10, line=BLUE if hot else RULE, line_w=1.5),
+            T(s, x + 20, y, w - 40, h, [[(k, {"size": ks, "color": INK2, "bold": False})], [(v, {"size": vs, "bold": True, "color": BLUE if hot else INK})]],
+              size=vs, anchor="m", spacing=1.2, wrap=False)]
 
 
 def arrow(s, x1, y1, x2, y2, color=INK2, w=2, dash=None):
@@ -114,8 +117,8 @@ def pill(s, x, y, w, h, label, fill, color, size=12, font=CJK):
 
 def stat(s, x, y, w, label, value, desc, color=BLUE, vs=60):
     return [T(s, x, y, w, 36, label, size=15, bold=True, color=color),
-            T(s, x, y + 38, w, vs * 2.2, value, size=vs, bold=True, color=color, latin=NUM),
-            T(s, x, y + 46 + vs * 2.2, w, 90, desc, size=15, color=INK2, spacing=1.2)]
+            T(s, x, y + 36, w, vs * 2.6, value, size=vs, bold=True, color=color, latin=NUM, anchor="m"),
+            T(s, x, y + 44 + vs * 2.6, w, 90, desc, size=15, color=INK2, spacing=1.2)]
 
 
 def table(s, x, y, cols, rows, rh=64, head_size=13, size=15, hot_col=None, aligns=None):
@@ -146,17 +149,17 @@ def table(s, x, y, cols, rows, rh=64, head_size=13, size=15, hot_col=None, align
 B_ = {"bold": True, "color": BLUE}
 
 # ============================================================== 1 cover
-s, tl = new(notes="开场：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
-bar = rect(s, L, 47, 10, 26, ORANGE)
-t0 = T(s, 96, 40, 600, 40, "BoHack 2026", size=14, bold=True, anchor="m")
-t1 = T(s, 1144, 40, 700, 40, "倍漾量化 · Research Agent 赛道", size=14, align="r", anchor="m")
+s, tl = new(notes="开场（先播放 BoHack 开场动画）：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
+COVER = tl
+pic(s, A("bohack-intro.gif"), 0, 0, 1300, 640, name="!!bohack")
+t1 = T(s, 1144, 34, 700, 48, "倍漾量化 · Research Agent 赛道", size=15, align="r", anchor="m")
 rule = line(s, L, 88, R, 88, INK, 2, name="!!rule")
 brand = T(s, 60, 120, 1300, 240, "QuotaCrux", size=118, bold=True, color=BLUE, latin=NUM, name="!!brand")
 cn = T(s, 76, 360, 400, 170, "枢决", size=80, bold=True)
 tag = T(s, 420, 420, 900, 60, "预算感知的 Research Agent", size=24, color=INK2)
 slogan = T(s, 76, 560, 1400, 96, [[("把有限预算，用在", {}), ("关键节点", {"color": BLUE})]], size=40, bold=True)
 uline = line(s, 76 + 8 * 80, 666, 76 + 12 * 80, 666, ORANGE, 5)
-tl.fade(bar, 0, 400).fade(t0, 0, 400).fade(t1, 0, 400).wipe(rule, 0, 700)
+tl.fade(t1, 0, 400).wipe(rule, 0, 700)
 tl.add(brand, "rise", 200, 500, letters=True, lt_pct=9000, off=0.04)
 tl.fade(cn, 900, 600).rise(tag, 1000, 600).rise(slogan, 1200, 700).wipe(uline, 1700, 500)
 steps = ["规划", "取证", "假设", "实验", "验证", "修正"]
@@ -180,7 +183,7 @@ tl.pop(oval(s, 1844, 360, 14, ORANGE), 2200, 500)
 s, tl = new(0, hi("五个数字看懂 ", ("QuotaCrux",)), "一页看懂",
             notes="先给结论。最大的数字来自 AtCoder 启发式竞赛真题 ahc026：15 个隐藏用例总能耗降 44.7%。其余四个数字分别代表函数级优化、经验复用、在线任务流和交付可靠性。\n\n来源：docs/research/native-routing/20261114 · docs/archive/memory-learning-results.md · README 核心实测成果")
 lab = T(s, L, 300, 840, 36, "ALE-Bench ahc026 搬箱子 · 15 个隐藏用例总能耗", size=16, bold=True, color=ORANGE)
-big = T(s, L - 6, 340, 900, 250, "−44.7%", size=118, bold=True, color=ORANGE, latin=NUM)
+big = T(s, L - 6, 336, 900, 290, "−44.7%", size=110, bold=True, color=ORANGE, latin=NUM, anchor="m")
 tl.fade(lab, 300, 500).zoom(big, 400, 700)
 for i, (lb, v, w, c) in enumerate([("初始程序", "18,136", 560, GREY_BAR), ("QuotaCrux", "10,028", 310, BLUE)]):
     y = 630 + i * 74
@@ -194,7 +197,7 @@ each(tl, p_, "pop", 1900, 450).fade(pt, 2000, 500)
 for ln in [line(s, 960, 300, 960, 940, RULE, 1.5), line(s, 1000, 625, R, 625, RULE, 1.5), line(s, 1422, 300, 1422, 940, RULE, 1.5)]:
     tl.fade(ln, 600, 600)
 cells = [("AlgoTune · 函数级", "25.0×", "PageRank 提速\n稀疏矩阵直接幂迭代", BLUE), ("D 封存留出 · 经验复用", "18/18", "零模型调用直接交付\n加速比 1.20× → 1.73×", BLUE),
-         ("S 在线任务流 · 分流器", "−78%", "大模型请求 27 → 6\n费用 $0.402 → $0.086", ORANGE), ("ALE 正式消融 · 交付", "15/15", "交付候选全部通过\n隐藏测试", BLUE)]
+         ("S 在线任务流 · 分流器", "−78%", "大模型请求 27 → 6 次\n费用 $0.402 → $0.086", ORANGE), ("ALE 正式消融 · 交付", "15/15", "交付候选全部通过\n隐藏测试", BLUE)]
 for i, (lb, v, d, c) in enumerate(cells):
     g = stat(s, 1000 + (i % 2) * 462, 310 + (i // 2) * 345, 430, lb, v, d, color=c, vs=54)
     each(tl, g, "rise", 900 + i * 220, 600, 60, off=0.03)
@@ -323,14 +326,14 @@ tl.fade(T(s, 690, 280, 300, 36, "需要生成 → 交给模型", size=13, color=
 tl.fade(T(s, 690, 636, 300, 36, "程序直接执行", size=13, color=INK2, align="c"), 1700, 400)
 tl.wipe(arrow(s, 840, 442, 840, 482, BLUE), 1900, 250, direction="up")
 each(tl, box(s, 690, 482, 300, 100, "ModelRouter", "small → large 单向升级", hot=True, ts=18), "pop", 2000, 450)
-tl.fade(T(s, 1080, 290, 760, 36, "ahc026 · 同预算四组 · 相对 c0 的 final 提升", size=15, bold=True, color=MUTE), 2200, 400)
-for i, (nm, v, ln_, hot) in enumerate([("LLM / rule · 基线", "+5.97%", "392 秒", False), ("Decisions / rule", "+6.15%", "389 秒", True),
-                                       ("LLM / Decisions", "+5.84%", "390 秒", False), ("双 Decisions", "+0.51%", "113 秒 · 全程小模型", False)]):
+tl.fade(T(s, 1080, 290, 760, 36, "ahc026 · 同预算四组 · 最终得分提升", size=15, bold=True, color=MUTE), 2200, 400)
+for i, (nm, v, ln_, hot) in enumerate([("LLM / rule · 基线", "+5.97%", "用时 392 秒", False), ("Decisions / rule", "+6.15%", "用时 389 秒", True),
+                                       ("LLM / Decisions", "+5.84%", "用时 390 秒", False), ("双 Decisions", "+0.51%", "用时 113 秒", False)]):
     x, y = 1080 + (i % 2) * 390, 346 + (i // 2) * 270
     g = [rect(s, x, y, 370, 250, ORANGE_L if hot else CARD, radius=12, line=ORANGE if hot else RULE, line_w=2 if hot else 1.5),
-         mono(s, x + 26, y + 24, 330, 34, nm, size=14, color=INK2),
-         T(s, x + 22, y + 68, 340, 100, v, size=46, bold=True, color=ORANGE if hot else INK, latin=NUM),
-         T(s, x + 26, y + 180, 330, 40, ln_, size=15, color=INK2)]
+         mono(s, x + 26, y + 22, 330, 36, nm, size=14, color=INK2, wrap=False),
+         T(s, x + 22, y + 66, 340, 118, v, size=46, bold=True, color=ORANGE if hot else INK, latin=NUM, anchor="m"),
+         T(s, x + 26, y + 192, 330, 36, ln_, size=15, color=INK2)]
     tl.rise(g[0], 2300 + i * 180, 600, off=0.03)
     each(tl, g[1:], "fade", 2450 + i * 180, 500)
 
@@ -390,20 +393,20 @@ for k, (nm, v, c) in enumerate([("支持", 371, BLUE), ("部分支持", 36, BLUE
 for i, (nm, v, c) in enumerate([("支持", "371", BLUE), ("部分支持", "36", BLUE_M), ("反驳", "100", GREY_BAR), ("未能检验", "29", "#6E6C67")]):
     xx = 960 + i * 221
     g = [rect(s, xx, 442, 16, 16, c), T(s, xx + 26, 432, 190, 36, nm, size=15, color=INK2),
-         T(s, xx, 470, 200, 70, v, size=34, bold=True, color=BLUE if i == 0 else INK, latin=NUM)]
+         T(s, xx, 470, 210, 76, [[(v, {}), (" 个", {"size": 16, "bold": False, "color": INK2})]], size=34, bold=True, color=BLUE if i == 0 else INK, latin=NUM, anchor="m", wrap=False)]
     each(tl, g, "pop", 1500 + i * 150, 400)
 tl.fade(T(s, 960, 590, 884, 36, "一条真实的修正链 · 任务 A-01", size=15, bold=True, color=MUTE), 2100, 400)
 for i, (cid, v, verdict, who, kind) in enumerate([("c1", "0.90×", "反驳", "Qwen", "n"), ("c2", "格式错误", "未能检验", "Qwen", "n"), ("升级", "", "", "rule", "up"), ("c3", "1.45×", "支持", "GPT", "hot")]):
     xx, dd = 960 + i * 226, 2250 + i * 300
     if kind == "up":
         g = [shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, xx, 640, 196, 200, ORANGE_L, line=ORANGE, line_w=2, dash="dash", adj=[0.08]),
-             T(s, xx, 664, 196, 44, "↑ 升级", size=18, bold=True, color=ORANGE, align="c"),
-             T(s, xx + 6, 720, 184, 100, ["大模型接手", "读取具体反馈"], size=14, color=INK2, align="c", space_after=6)]
+             T(s, xx + 6, 640, 184, 200, [[("↑ 升级", {"size": 18, "bold": True, "color": ORANGE})], [("大模型接手", {"size": 14, "color": INK2})], [("读取具体反馈", {"size": 14, "color": INK2})]],
+               size=14, align="c", anchor="m", spacing=1.3, wrap=False)]
     else:
         g = [rect(s, xx, 640, 196, 200, BLUE_L if kind == "hot" else CARD, radius=10, line=BLUE if kind == "hot" else RULE, line_w=2 if kind == "hot" else 1.5),
-             mono(s, xx + 18, 654, 100, 32, cid, size=14, color=INK2), mono(s, xx + 90, 654, 90, 32, who, size=12, color=MUTE, align="r"),
-             T(s, xx + 14, 700, 180, 70, v, size=20 if v == "格式错误" else 32, bold=True, color=BLUE if kind == "hot" else INK, latin=NUM),
-             T(s, xx + 18, 784, 170, 36, verdict, size=15, color=BLUE if kind == "hot" else INK2, bold=kind == "hot")]
+             mono(s, xx + 18, 656, 170, 32, f"{cid} · {who}", size=14, color=INK2, anchor="m", wrap=False),
+             T(s, xx + 16, 696, 172, 76, v, size=20 if v == "格式错误" else 32, bold=True, color=BLUE if kind == "hot" else INK, latin=NUM, anchor="m", wrap=False),
+             T(s, xx + 18, 792, 170, 32, ("加速比 · " if v != "格式错误" else "") + verdict, size=13, color=BLUE if kind == "hot" else INK2, bold=kind == "hot", anchor="m")]
     tl.rise(g[0], dd, 500, off=0.03)
     each(tl, g[1:], "fade", dd + 150, 400)
     if i < 3:
@@ -439,8 +442,7 @@ each(tl, box(s, 1000, 494, 300, 90, "经验覆盖如何？", "同族记录 · �
 for i, (k_, a_, hot) in enumerate([("相近成功", "先用本地小模型", False), ("全新任务族", "直接交给大模型", True), ("新条件", "直接交给大模型", True)]):
     x = 1000 + i * 284
     tl.fade(arrow(s, 1150, 584, x + 130, 624, BLUE if hot else INK2, 1.5), 3250 + i * 150, 300)
-    g = [rect(s, x, 624, 260, 100, BLUE_L if hot else CARD, radius=10, line=BLUE if hot else RULE, line_w=1.5),
-         T(s, x + 16, 632, 230, 34, k_, size=14, color=INK2), T(s, x + 16, 666, 236, 44, a_, size=16, bold=True, color=BLUE if hot else INK, wrap=False)]
+    g = card2(s, x, 624, 260, 100, k_, a_, hot=hot, ks=14, vs=16)
     each(tl, g, "pop", 3300 + i * 150, 400)
 trows = [["新任务族 · 4 任务 × 3 次", "先用 Qwen", "直接 GPT"], ["达标", "12/12", "12/12"], ["加速比中位数", "2.11×", ("2.18×", B_)], ["循环时长中位数", "49 s", ("33 s", B_)]]
 hd, body, _ = table(s, 1000, 756, [380, 220, 244], trows, rh=54, size=16, aligns=["l", "r", "r"])
@@ -463,7 +465,7 @@ bx = rect(s, 980, 350, 864, 320, CARD, radius=12, line=RULE, line_w=1.5)
 bt = mono(s, 1010, 368, 820, 300, ["bundle/", "├── README.md       # 研究记录", "├── best.py         # 最佳程序", "├── candidates/     # 全部候选", "├── model_calls/    # 原始模型调用",
                                     "├── report.json     # 结构化报告", "└── reproduce.sh    # 一键复核"], size=15, spacing=1.1)
 tl.rise(bx, 1300, 600, off=0.03).wipe(bt, 1500, 900, direction="up")
-rrows = [["样例", "记录值", "复核"], ["v1 · A-01", "1.4367×", ("1.44×", B_)], ["v2 · D-01", "1.4481×", ("1.4473×", B_)], ["v3 · S-01 新任务族", "6.35×", ("6.69×", B_)]]
+rrows = [["样例", "记录加速比", "复核加速比"], ["v1 · A-01", "1.4367×", ("1.44×", B_)], ["v2 · D-01", "1.4481×", ("1.4473×", B_)], ["v3 · S-01 新任务族", "6.35×", ("6.69×", B_)]]
 hd, body, _ = table(s, 980, 710, [400, 232, 232], rrows, rh=62, size=17, aligns=["l", "r", "r"])
 each(tl, hd, "fade", 2300, 400)
 for i, g in enumerate(body):
@@ -472,7 +474,7 @@ for i, g in enumerate(body):
 # ============================================================== 13 ahc026
 s, tl = new(2, hi("测试难题：", ("搬箱子",)), "实测 · ALE-Bench ahc026",
             notes="测试难题是 AtCoder 启发式竞赛第 26 题：200 个箱子分在 10 堆，按编号顺序搬出。搬一摞 k 个箱子耗 k+1 份力气。初始程序的真实操作里，第一步就把 19 个箱子压在了箱子 8 上，后面要为此再付 29 份力气。\n\n来源：ALE-Bench ahc026 题面 · video/data/make_replay.py")
-im1 = pic(s, A("still-warehouse.png"), L - 20, 280, 900, 590)
+im1 = pic(s, A("still-warehouse.png"), L - 20, 300, 820, 537)
 tl.zoom(im1, 300, 800)
 for i, (k_, v) in enumerate([("规模", "200 个箱子 · 10 堆 · 每堆 20"), ("目标", "按 1、2、3… 的顺序搬出仓库"), ("搬动", "搬走一摞 k 个箱子，耗 k+1 份力气"), ("搬出", "最小编号的箱子在顶上时搬出，不耗力气"), ("得分", "10000 − 总能耗，越省越高")]):
     y = 300 + i * 100
@@ -495,6 +497,7 @@ for v in [44000, 45000, 46000, 47000]:
 for t_ in [0, 60, 120, 180, 240, 300]:
     axes.append(T(s, X(t_) - 60, y1 + 14, 120, 36, f"{t_}s", size=14, color=MUTE, align="c", font=MONO, latin=MONO))
 axes += [line(s, x0, y1, x1, y1, INK, 2), line(s, X(360), y0, X(360), y1, INK, 2, dash="dash"), T(s, X(360) - 120, y1 + 14, 240, 36, "360s 预算", size=14, bold=True, align="c")]
+axes += [T(s, x0 - 180, y0 - 50, 300, 36, "开发集得分（分）", size=14, bold=True, color=INK2), T(s, x1 - 300, y1 + 52, 300, 36, "已用研究时间", size=14, bold=True, color=INK2, align="r")]
 each(tl, axes, "fade", 300, 500)
 C = [(12.851, 44120, "s"), (22.792, 44120, "s"), (94.286, 46506, "l"), (178.438, 46798, "l"), (244.796, 46725, "x"), (311.463, 46800, "l"), (357.026, 46849, "l")]
 TIMES = [700, 1100, 2500, 3300, 3900, 4500, 5000]  # when each candidate appears
@@ -513,40 +516,41 @@ for (t_, v, m), at in zip(C, TIMES):
     cx, cy = X(t_), Y(v)
     if m == "x":
         tl.pop(oval(s, cx, cy, 16, CARD, line=ORANGE, line_w=3), at, 400)
-        tl.pop(T(s, cx - 16, cy - 17, 32, 34, "×", size=17, bold=True, color=ORANGE, align="c", anchor="m"), at, 400)
+        tl.pop(line(s, cx - 7, cy - 7, cx + 7, cy + 7, ORANGE, 3), at, 400)
+        tl.pop(line(s, cx - 7, cy + 7, cx + 7, cy - 7, ORANGE, 3), at, 400)
     else:
         tl.pop(oval(s, cx, cy, 13, "#A9A69E" if m == "s" else BLUE, line=BG, line_w=3), at, 400)
 tl.fade(T(s, X(0) + 20, Y(44120) - 88, 420, 40, "c1 · c2  同一份代码", size=17, bold=True), 1300, 400)
-tl.fade(T(s, X(0) + 20, Y(44120) - 50, 420, 36, "44,120", size=15, color=INK2, latin=NUM), 1300, 400)
+tl.fade(T(s, X(0) + 20, Y(44120) - 50, 420, 36, "44,120 分", size=15, color=INK2, latin=NUM), 1300, 400)
 tl.wipe(line(s, X(26), y0, X(26), y1, ORANGE, 3, dash="dash"), 1600, 600, direction="up")
 tl.fade(T(s, X(26) + 18, Y(46200), 440, 92, [[("连续两次没进步", {})], [("→ 按规则升级大模型", {"color": ORANGE})]], size=18, bold=True), 1900, 500)
-tl.pop(T(s, X(108), Y(45300), 600, 140, "+2,386", size=64, bold=True, color=ORANGE, latin=NUM), 2700, 600)
-tl.fade(T(s, X(94.286) - 230, Y(46506) - 56, 460, 40, "分段规划 · 46,506", size=16, bold=True, align="c"), 2600, 400)
-tl.fade(T(s, X(178.438) - 230, Y(46798) - 56, 460, 40, "局部搜索 · 46,798", size=16, bold=True, align="c"), 3400, 400)
+tl.pop(T(s, X(108), Y(45300), 700, 150, [[("+2,386", {}), (" 分", {"size": 28})]], size=64, bold=True, color=ORANGE, latin=NUM, anchor="m", wrap=False), 2700, 600)
+tl.fade(T(s, X(94.286) - 230, Y(46506) - 56, 460, 40, "分段规划 · 46,506 分", size=16, bold=True, align="c"), 2600, 400)
+tl.fade(T(s, X(178.438) - 230, Y(46798) - 56, 460, 40, "局部搜索 · 46,798 分", size=16, bold=True, align="c"), 3400, 400)
 tl.fade(line(s, X(244.796), Y(46725) + 18, X(244.796), Y(46725) + 70, ORANGE, 1.5), 4000, 300)
 tl.fade(T(s, X(244.796) - 200, Y(46725) + 72, 400, 40, "c5 下降 · 被裁判拦下", size=16, bold=True, color=ORANGE, align="c"), 4000, 400)
-tl.fade(T(s, X(311.463) - 120, Y(46800) + 22, 240, 40, "46,800", size=16, bold=True, align="c"), 4600, 400)
-tl.fade(T(s, X(357.026) - 420, Y(46849) - 58, 440, 40, "复用后缀 · 46,849", size=16, bold=True, align="r", color=BLUE), 5100, 400)
+tl.fade(T(s, X(311.463) - 120, Y(46800) + 22, 240, 40, "46,800 分", size=16, bold=True, align="c"), 4600, 400)
+tl.fade(T(s, X(357.026) - 420, Y(46849) - 58, 440, 40, "复用后缀 · 46,849 分", size=16, bold=True, align="r", color=BLUE), 5100, 400)
 
 # ============================================================== 15 result
 s, tl = new(2, hi("冻结最好的版本，", ("只测一次",)), "实测 · 隐藏测试",
             notes="冻结最好的版本，在 15 个没见过的用例上只测一次：全部通过，总能耗从 18,136 降到 10,028。右边是同一个用例、同样进度时两个程序的仓库：最终版本把不急用的箱子码成高堆，给后面要拿的箱子让路；这个用例的能耗从 1,158 降到 649。\n\n来源：研究报告 deep-analysis.json · ahc026_movement_energy · video/data/replay.json")
 lb = T(s, L, 300, 640, 36, "15 个隐藏用例 · 总能耗", size=16, bold=True, color=ORANGE)
-bg_ = T(s, L - 6, 340, 700, 200, "−44.7%", size=100, bold=True, color=ORANGE, latin=NUM)
-nm = T(s, L, 560, 700, 90, [[("18,136", {"color": MUTE}), ("  →  ", {"color": MUTE}), ("10,028", {})]], size=40, bold=True, latin=NUM)
+bg_ = T(s, L - 6, 340, 720, 230, "−44.7%", size=88, bold=True, color=ORANGE, latin=NUM, anchor="m")
+nm = T(s, L, 590, 720, 90, [[("总能耗  ", {"size": 18, "bold": False, "color": INK2}), ("18,136", {"color": MUTE}), ("  →  ", {"color": MUTE}), ("10,028", {})]], size=30, bold=True, latin=NUM, anchor="m", wrap=False)
 tl.fade(lb, 300, 400).zoom(bg_, 400, 700).rise(nm, 900, 600, off=0.02)
-each(tl, pill(s, L, 700, 170, 50, "15/15 通过", BLUE, "#FFFFFF", size=15), "pop", 1300, 400)
-tl.fade(T(s, L + 190, 700, 500, 50, "总分 131,864 → 139,972", size=18, anchor="m"), 1400, 400)
+each(tl, pill(s, L, 720, 170, 50, "15/15 通过", BLUE, "#FFFFFF", size=15), "pop", 1300, 400)
+tl.fade(T(s, L + 190, 720, 520, 50, "总分 131,864 → 139,972 分", size=18, anchor="m"), 1400, 400)
 for i, (f, lab_, v, c) in enumerate([("still-c0.png", "初始程序", "1,158", INK), ("still-c7.png", "最终版本", "649", BLUE)]):
     x = 820 + i * 520
-    im = pic(s, A(f), x, 330, 500, 638)
-    hd_ = T(s, x, 280, 500, 44, [[(lab_ + "  ", {"color": INK2, "size": 17}), (v, {"color": c, "bold": True, "size": 26})]], size=17, anchor="m", align="c")
+    im = pic(s, A(f), x, 290, 500, 638)
+    hd_ = T(s, x, 936, 500, 50, [[(lab_ + " · 本用例总能耗  ", {"color": INK2, "size": 16}), (v, {"color": c, "bold": True, "size": 24})]], size=16, anchor="m", align="c", wrap=False)
     tl.rise(im, 1500 + i * 300, 700, off=0.03).fade(hd_, 1700 + i * 300, 500)
 
 # ============================================================== 16 routing
 s, tl = new(2, hi("谁来决定下一步，", ("同样影响结果",)), "实测 · 调度对照",
             notes="左：四组路由组合，同一预算。仅动作 Decisions 得分最高；双 Decisions 全程没升级大模型、主动提前结束，用时少七成，提升只有 0.5%。决策层费用只占 2.26%，单次决策中位 1.34 秒。右：补充实验在两台机器上各跑四种策略：固定小模型没有提升，有大模型参与的策略都在 5.4% 到 6.4%。\n\n来源：docs/research/native-routing/20261114/RESULTS.md · docs/research/onehour-20261114/README.md")
-tl.fade(T(s, L, 300, 700, 36, "四组路由 · 同预算 · final 提升", size=15, bold=True, color=MUTE), 300, 400)
+tl.fade(T(s, L, 300, 700, 36, "四组路由 · 同预算 · 最终得分提升", size=15, bold=True, color=MUTE), 300, 400)
 tl.fade(T(s, 830, 300, 200, 36, "用时", size=15, bold=True, color=MUTE, align="r"), 300, 400)
 for i, (nm_, k_, g_, sec) in enumerate([("LLM / rule", "基线", 5.970, 392), ("Decisions / rule", "仅动作", 6.149, 389), ("LLM / Decisions", "仅模型", 5.836, 390), ("双 Decisions", "两层都交给决策模型", 0.513, 113)]):
     y = 352 + i * 112
@@ -561,8 +565,8 @@ for i, (v, d_) in enumerate([("2.26%", "决策层费用占比"), ("1.34 s", "单
     tl.pop(T(s, x, 806, 320, 76, v, size=36, bold=True, color=BLUE, latin=NUM), 2000 + i * 150, 450)
     tl.fade(T(s, x, 884, 320, 40, d_, size=15, color=INK2), 2050 + i * 150, 400)
 tl.fade(line(s, 1080, 300, 1080, 960, RULE, 1.5), 300, 400)
-tl.fade(T(s, 1120, 300, 720, 36, "双机补充对照 · final 提升", size=15, bold=True, color=MUTE), 2400, 400)
-hrows = [["策略", "desktop", "laptop"], ["固定小模型", "+0.00%", "+0.00%"], ["固定大模型", "+5.73%", "+5.50%"], ["规则自适应", ("+6.37%", B_), "+5.43%"], ["Decisions 动作", "+5.82%", ("+6.34%", B_)]]
+tl.fade(T(s, 1120, 300, 720, 36, "双机补充对照 · 最终得分提升", size=15, bold=True, color=MUTE), 2400, 400)
+hrows = [["策略", "台式机", "笔记本"], ["固定小模型", "+0.00%", "+0.00%"], ["固定大模型", "+5.73%", "+5.50%"], ["规则自适应", ("+6.37%", B_), "+5.43%"], ["Decisions 动作", "+5.82%", ("+6.34%", B_)]]
 hd, body, _ = table(s, 1120, 350, [330, 195, 199], hrows, rh=74, size=17, aligns=["l", "r", "r"])
 each(tl, hd, "fade", 2500, 400)
 for i, g in enumerate(body):
@@ -606,7 +610,7 @@ for i, (v, h, a_, b_) in enumerate([("v1", "只存文字经验", "更省，但�
 # ============================================================== 19 algotune + benchmarks
 s, tl = new(2, hi("同一套闭环，", ("换一个优化对象",)), "实测 · 函数级优化与支持的基准",
             notes="同一套闭环也能做函数级优化：PageRank 绕过 NetworkX 图对象，直接用 SciPy 稀疏矩阵做幂迭代，快了 25 倍；一维卷积在误差容限内改用 float32 实数 FFT，快了 2.67 倍。固定 gpt-6.1-sol，每项 180 秒 / 5 次请求。右边是通过任务与评测 adapter 接入的五类基准。\n\n来源：README 核心实测成果第 2 节 · README「支持的 Benchmark 与任务族」")
-tl.fade(T(s, L, 300, 840, 36, "AlgoTune · 相对参考实现的提速", size=15, bold=True, color=MUTE), 300, 400)
+tl.fade(T(s, L, 300, 840, 36, "AlgoTune · 相对参考实现的提速倍数", size=15, bold=True, color=MUTE), 300, 400)
 for i, (t_, st_, v, how) in enumerate([("PageRank", "feedback", 25.04, "稀疏矩阵直接幂迭代"), ("PageRank", "independent", 23.05, "邻接表直接建稀疏表示"),
                                        ("一维卷积", "independent", 2.67, "float32 实数 FFT"), ("一维卷积", "feedback", 1.30, "实数 FFT 批处理")]):
     y = 356 + i * 145
@@ -624,7 +628,7 @@ for i, (n_, scope, judge) in enumerate([("自建任务族", "分组聚合 · 访
                                         ("EffiBench-X", "623 道 Python 题", "独立容器校验"),
                                         ("KernelBench", "Level 1 方阵乘法", "远端 GPU worker · CUDA events")]):
     y = 352 + i * 124
-    g = [T(s, 1000, y, 300, 42, n_, size=19, bold=True, color=BLUE), T(s, 1000, y + 44, 844, 36, scope, size=16), T(s, 1000, y + 80, 844, 34, judge, size=14, color=INK2)]
+    g = [T(s, 1000, y, 300, 40, n_, size=18, bold=True, color=BLUE), T(s, 1000, y + 42, 844, 32, scope, size=15), T(s, 1000, y + 74, 844, 30, judge, size=13, color=INK2)]
     each(tl, g, "rise", 2100 + i * 160, 500, 50, off=0.02)
     tl.wipe(line(s, 1000, y + 116, R, y + 116, RULE, 1), 2150 + i * 160, 400)
 
@@ -678,6 +682,8 @@ qt = T(s, 1494, 668, 350, 40, "扫码查看代码与报告", size=16, color=INK2
 tl.zoom(qf, 2900, 600).zoom(qi, 3000, 600).fade(qt, 3300, 400)
 tl.fade(T(s, L, 930, 1000, 44, "github.com/bohack-2026-hw/QuotaCrux", size=17, color=INK2, latin=NUM), 3300, 500)
 
+for f in COVER.fx:
+    f["delay"] += 2300
 for t in TLS:
     t.build()
 prs.core_properties.title = "QuotaCrux 枢决 · 技术演示"

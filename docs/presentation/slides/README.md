@@ -7,4 +7,4 @@
 ./preview.sh    # -> preview/m*.jpg，检查版式用
 ```
 
-需要 uv、LibreOffice（`soffice`）和 Homebrew fontconfig（`/opt/homebrew/etc/fonts/fonts.conf`，让 LibreOffice 用上本机字体）。字体：中文 PingFang SC，英文与数字 Arial，代码 Menlo；在 Windows 上中文会替换为系统自带黑体。控制台截图裁自 `frontend/docs/screenshots/`。
+需要 uv、LibreOffice（`soffice`）和 Homebrew fontconfig（`/opt/homebrew/etc/fonts/fonts.conf`，让 LibreOffice 用上本机字体）。字体：中文 PingFang SC，英文与数字 Arial，代码 Menlo；在 Windows 上中文会替换为系统自带黑体。左上角 BoHack 标志与第 1 页开场动画逐帧截取自 bohack.top 的开场动画（`assets/bohack-intro.gif` 只播放一次，落点与各页左上角的 `bohack-lockup.png` 重合）。控制台截图裁自 `frontend/docs/screenshots/`。

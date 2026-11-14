@@ -262,40 +262,50 @@ const SUBS = [
   [18.8, 22.6, '可第一步放下的那一摞，正好压住了箱子 8：现在得再花 29 份力气把它挪开。'],
   [22.8, 27.6, '每个用例的得分是 10000 减去总能耗：放法越聪明，力气越省。'],
   [27.8, 36.4, '题目给的初始程序能把箱子搬完，但 15 个用例一共耗了一万八千多份力气。'],
-  [37.4, 43.4, 'QuotaCrux 把研究拆成一圈：定计划、看数据、提假设，再写成程序。'],
+  [38.2, 43.4, 'QuotaCrux 把研究拆成一圈：定计划、看数据、提假设，再写成程序。'],
   [43.6, 49.2, '每版程序都交给外部裁判：在隔离环境里验对错、计时打分，好的才留下。'],
   [49.4, 54.4, '本地小模型干主力，只在关键节点请云端大模型，整轮都在预算之内。'],
-  [55.2, 61.6, '这是一轮真实的研究。小模型连续两次交了同一份代码，分数原地不动。'],
+  [56.0, 61.6, '这是一轮真实的研究。小模型连续两次交了同一份代码，分数原地不动。'],
   [61.8, 66.6, '连续两次没有进步，系统按规则换上云端大模型。'],
   [66.8, 71.6, '大模型学会提前看后面要拿哪个箱子，分段规划放法，分数一下涨了 2,386。'],
   [71.8, 76.6, '接着加入局部搜索，再往上一步。'],
   [76.8, 81.6, '有一版改坏了，分数下降，裁判当场拦下，系统回到上一个最好的版本。'],
   [81.8, 86.4, '从最好的版本重新出发，又小涨了 2 分。'],
   [86.6, 92.0, '最后复用相同的搬运后缀，拿到这一轮的最高分：46,849。'],
-  [92.6, 99.0, '冻结最好的版本。左边是初始程序，右边是最终版本，在同一个用例上同时回放。'],
+  [93.6, 99.0, '冻结最好的版本。左边是初始程序，右边是最终版本，在同一个用例上同时回放。'],
   [99.2, 106.1, '右边每次搬得更少、放得更准：这个用例的能耗从 1,158 降到 649。'],
   [106.4, 114.0, '再到从没见过的 15 个用例上只测一次：全部通过，总能耗从 18,136 降到 10,028。'],
-  [114.6, 120.6, '谁来决定下一步，同样影响结果：让决策模型挑动作，这一轮得分最高。'],
+  [115.6, 120.6, '谁来决定下一步，同样影响结果：让决策模型挑动作，这一轮得分最高。'],
   [120.8, 126.6, '全部交给决策模型，它一直没请大模型：用时少了七成，提升却只剩 0.5%。'],
   [126.8, 132.0, '在预算里做研究，就是在质量和成本之间取舍。每组只跑一次，这是探索性的观察。'],
-  [132.6, 137.2, '同一套闭环也能优化单个函数：PageRank 改用稀疏矩阵直接迭代，快了 25 倍。'],
+  [133.6, 137.2, '同一套闭环也能优化单个函数：PageRank 改用稀疏矩阵直接迭代，快了 25 倍。'],
   [137.4, 142.0, '一维卷积改用 float32 实数 FFT，快了 2.67 倍。'],
-  [142.6, 148.0, '每一次调用都记账：15 次交付全部通过最终测试，96 个候选里 60 个通过验证。'],
+  [143.6, 148.0, '每一次调用都记账：15 次交付全部通过最终测试，96 个候选里 60 个通过验证。'],
   [148.2, 154.0, '而大部分时间，都花在等模型回复上，这正是最值得省下来的地方。'],
 ]
 const TAGS = [
   [6.0, 36.6, '01', '测试难题', 'AtCoder 启发式竞赛 · 搬箱子'],
-  [37.2, 54.4, '02', '研究闭环', '规划、实验、验证，一圈一圈地改'],
-  [55.0, 92.0, '03', '一轮研究', '360 秒里的 7 个候选'],
-  [92.6, 114.0, '04', '隐藏测试', '冻结最好的版本'],
-  [114.4, 132.0, '05', '调度对照', '谁来决定下一步'],
-  [132.4, 142.0, '06', '函数级优化', '同一套闭环，换一个对象'],
-  [142.4, 154.0, '07', '账本', '每一次调用都记账'],
+  [38.1, 54.4, '02', '研究闭环', '规划、实验、验证，一圈一圈地改'],
+  [56.0, 92.0, '03', '一轮研究', '360 秒里的 7 个候选'],
+  [93.5, 114.0, '04', '隐藏测试', '冻结最好的版本'],
+  [115.5, 132.0, '05', '调度对照', '谁来决定下一步'],
+  [133.5, 142.0, '06', '函数级优化', '同一套闭环，换一个对象'],
+  [143.5, 154.0, '07', '账本', '每一次调用都记账'],
 ]
+// full-bleed chapter cards; every scene switch happens while one of these covers the screen
+const CHAPTERS = [
+  [36.8, '02', '研究闭环', '让 AI 自己跑完一圈研究', 'ink'],
+  [54.6, '03', '一轮研究', '360 秒，7 个候选', 'ink'],
+  [92.2, '04', '隐藏测试', '冻结最好的版本，只测一次', 'accent'],
+  [114.2, '05', '调度对照', '谁来决定下一步', 'ink'],
+  [132.2, '06', '函数级优化', '同一套闭环，换一个对象', 'ink'],
+  [142.2, '07', '账本', '每一次调用都记账', 'ink'],
+]
+const WIPE = { in: [-0.5, -0.15], out: [0.9, 1.3] }
 const CANDS = [
   { x: 12.851, y: 44120, m: 's', t: 57.5, label: '44,120', pos: 'below' },
   { x: 22.792, y: 44120, m: 's', t: 60.0, label: '同一份代码', pos: 'aboveEnd' },
-  { x: 94.286, y: 46506, m: 'l', t: 67.0, label: '+2,386 · 分段规划', pos: 'above' },
+  { x: 94.286, y: 46506, m: 'l', t: 67.0, label: '分段规划 · 46,506', pos: 'above' },
   { x: 178.438, y: 46798, m: 'l', t: 72.0, label: '局部搜索 · 46,798', pos: 'above' },
   { x: 244.796, y: 46725, m: 'x', t: 77.0, label: '46,725 · 下降，拦下', pos: 'below' },
   { x: 311.463, y: 46800, m: 'l', t: 82.0, label: '46,800', pos: 'below' },
@@ -342,7 +352,8 @@ const Y = (v) => SV.y1 - ((v - SV.lo) / (SV.hi - SV.lo)) * (SV.y1 - SV.y0)
   g += `<line id="ch-up" x1="${X(UPGRADE.x)}" x2="${X(UPGRADE.x)}" y1="${SV.y0 - 10}" y2="${SV.y1}" stroke="#FF4D1F" stroke-width="3" stroke-dasharray="10 8"/>`
   g += `<g id="ch-uptext"><text x="${X(UPGRADE.x) + 22}" y="${Y(45300)}" font-size="30" font-weight="700" fill="#111113">连续两次没进步</text><text x="${X(UPGRADE.x) + 22}" y="${Y(45300) + 40}" font-size="30" font-weight="700" fill="#FF4D1F">→ 换云端大模型</text></g>`
   g += `<line id="ch-head" y1="${SV.y0 - 10}" y2="${SV.y1}" stroke="#8E8D88" stroke-width="2"/>`
-  g += `<path id="ch-path" fill="none" stroke="#111113" stroke-width="4" stroke-linejoin="round"/>`
+  g += `<path id="ch-path" fill="none" stroke="#FF4D1F" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>`
+  g += `<text id="ch-jump" x="${X(102)}" y="${Y(45250)}" font-size="104" font-weight="800" fill="#FF4D1F" style="font-family:'Avenir Next';letter-spacing:-3px">+2,386</text>`
   CANDS.forEach((c, i) => {
     const cx = X(c.x), cy = Y(c.y)
     const mark = c.m === 'x'
@@ -368,6 +379,20 @@ P.func.innerHTML = tile('fn-a', 'PageRank', '稀疏矩阵直接迭代') + tile('
 P.ledger.innerHTML = tile('lg-a', '次交付', '全部通过最终测试') + tile('lg-b', '个候选', '通过外部裁判的验证') + tile('lg-c', '的时间', '花在等模型回复上')
 P.end.innerHTML = '<div class="url card"><div class="a">在预算里做研究，每一步都有据可查</div><div class="b">github.com/bohack-2026-hw/QuotaCrux</div></div><div class="qr card"><img src="./data/qr.svg"></div>'
 const routeRows = [...P.routing.querySelectorAll('.rrow')]
+const wipe = $('wipe'), ui = $('ui')
+let wipeKey = null
+function wipeAt(t) {
+  const cur = CHAPTERS.find(([b]) => t >= b + WIPE.in[0] && t < b + WIPE.out[1])
+  if (!cur) { wipe.style.visibility = 'hidden'; return }
+  const [b, n, k, v, tone] = cur
+  if (wipeKey !== n) { wipe.innerHTML = `<div class="in"><div class="n">${n}</div><div class="k">${k}</div><div class="v">${v}</div></div>`; wipe.className = tone; wipeKey = n }
+  const gi = ease(seg(t, b + WIPE.in[0], b + WIPE.in[1])), go = ease(seg(t, b + WIPE.out[0], b + WIPE.out[1]))
+  wipe.style.visibility = 'visible'
+  wipe.style.clipPath = `inset(0 ${(1 - gi) * 100}% 0 ${go * 100}%)`
+  const tg = easeOut(seg(t, b - 0.25, b + 0.35))
+  wipe.firstChild.style.transform = `translateX(${(1 - tg) * 80 - go * 120}px)`
+  wipe.firstChild.style.opacity = tg
+}
 
 function brandAt(t) {
   letters.forEach((el, i) => {
@@ -427,6 +452,11 @@ function halfFrame(h) {
   return { pos: [-0.16 * d, top * 0.45 + 5, d], look: [0, top * 0.36, 0] }
 }
 const LOOP_CAM = (t) => { const a = Math.sin(t * 0.07) * 0.22; return { pos: [Math.sin(a) * 13, 20.5, Math.cos(a) * 13], look: [0, 0, -0.9] } }
+const rotY = (c, a) => {
+  const r = (v) => [v[0] * Math.cos(a) + v[2] * Math.sin(a), v[1], -v[0] * Math.sin(a) + v[2] * Math.cos(a)]
+  return { pos: r(c.pos), look: r(c.look) }
+}
+const FF_TURN = 0.5
 const mix = (A, B, g) => ({ pos: A.pos.map((v, i) => lerp(v, B.pos[i], g)), look: A.look.map((v, i) => lerp(v, B.look[i], g)) })
 const orbit = (a, rad, y, ly) => ({ pos: [Math.sin(a) * rad, y, Math.cos(a) * rad], look: [0, ly, 0] })
 function setCam(c) {
@@ -440,12 +470,12 @@ function cameraAt(t, p) {
     return setCam(orbit(lerp(0.95, 0.4, a), lerp(34, 31, a), lerp(10, 13, a), lerp(5.2, 5.8, a)))
   }
   if (t >= T.chart[0]) return setCam(LOOP_CAM(t))
-  if (t >= 33.5) return setCam(mix(frame(20), LOOP_CAM(t), ease(seg(t, 34.6, 38.6))))
+  if (t >= 33.5) return setCam(mix(rotY(frame(20), FF_TURN), LOOP_CAM(t), ease(seg(t, 34.6, 37.0))))
   // opening: a slow orbit from the right while the boxes land, settling into the 3/4 view
   const a = ease(seg(t, 0, 6.0))
   const open = orbit(lerp(0.95, -0.4, a), lerp(34, 30, a), lerp(10, 15, a), lerp(5.6, 6.2, a))
   const near = mix(open, frame(heightAround(R0, p, 8, 24)), ease(seg(t, 6.0, 10.5)))
-  setCam(mix(near, frame(heightAround(R0, p, 40)), ease(seg(t, 21.5, 24.5))))
+  setCam(rotY(mix(near, frame(heightAround(R0, p, 40)), ease(seg(t, 21.5, 24.5))), FF_TURN * ease(seg(t, 22.5, 33.5))))
 }
 
 // ---------- render(t) ----------
@@ -537,6 +567,9 @@ function chartAt(t) {
   beam.setAttribute('height', (SV.y1 - SV.y0 + 20) * easeOut(bg))
   beam.style.opacity = 1 - seg(t, UPGRADE.t + 1.0, UPGRADE.t + 2.0)
   $('ch-up').style.opacity = seg(t, UPGRADE.t + 0.6, UPGRADE.t + 1.0)
+  const jg = seg(t, CANDS[2].t + 0.3, CANDS[2].t + 0.8)
+  $('ch-jump').style.opacity = jg
+  $('ch-jump').setAttribute('transform', `translate(0 ${(1 - easeOut(jg)) * 40})`)
   $('ch-uptext').style.opacity = seg(t, UPGRADE.t + 0.8, UPGRADE.t + 1.3)
   $('ch-best').textContent = best == null ? '—' : fmt(best)
   const large = t >= UPGRADE.t + 0.9
@@ -548,8 +581,10 @@ function panelsAt(t) {
   show(P.cost, fade(t, ca, cb, 0.5, 0.5), `translate(-50%, -50%) scale(${0.94 + 0.06 * easeOut(seg(t, ca, ca + 0.5))})`)
   $('cost-n').textContent = fmt(18136 * ease(seg(t, ca + 0.3, ca + 1.8)))
   // the frosted backdrop: on for the chart, after the split replay, and through the closing cards
-  const bgOn = Math.max(fade(t, T.chart[0], T.chart[1], 0.6, 0.6), fade(t, T.result[0], T.end[0] + 0.9, 0.5, 0.9))
+  const bgOn = Math.max(t >= T.chart[0] - 0.1 && t < T.chart[1] ? 1 : 0, fade(t, T.result[0], T.end[0] + 0.9, 0.5, 0.9))
   show(panel, bgOn)
+  // dark scenes for the two payoffs: the hidden-test result and the ledger
+  ui.classList.toggle('dark', (t >= T.result[0] && t < T.routing[0]) || (t >= T.ledger[0] && t < T.end[0] + 0.5))
   const pane = (el, [a, b], fi = 0.6, fo = 0.4) => { const g = fade(t, a, b, fi, fo); show(el, g, `translateY(${(1 - easeOut(seg(t, a, a + fi))) * 30}px)`); return g }
   if (pane(P.chart, [T.chart[0] + 0.2, T.chart[1]]) > 0) chartAt(t)
   const r = fade(t, T.result[0], T.result[1], 0.5, 0.4)
@@ -561,7 +596,7 @@ function panelsAt(t) {
     $('rs-f').style.opacity = seg(t, T.result[0] + 2.8, T.result[0] + 3.3)
   }
   if (pane(P.routing, T.routing) > 0) {
-    const hot = t >= 114.6 && t < 120.6 ? 1 : t >= 120.8 && t < 126.6 ? 3 : t >= 126.8 ? 1 : -1
+    const hot = t >= 115.6 && t < 120.6 ? 1 : t >= 120.8 && t < 126.6 ? 3 : t >= 126.8 ? 1 : -1
     routeRows.forEach((el) => {
       const i = +el.dataset.i
       el.classList.toggle('hot', i === hot)
@@ -570,21 +605,21 @@ function panelsAt(t) {
       if (!b) return
       const isTime = el.previousElementSibling.classList.contains('bar')
       const v = isTime ? ROUTES[i][3] / 520 : ROUTES[i][2] / 8
-      const w = el.clientWidth * v * easeOut(seg(t, 115.0 + i * 0.35 + (isTime ? 0.2 : 0), 116.0 + i * 0.35 + (isTime ? 0.2 : 0)))
+      const w = el.clientWidth * v * easeOut(seg(t, 115.7 + i * 0.35 + (isTime ? 0.2 : 0), 116.7 + i * 0.35 + (isTime ? 0.2 : 0)))
       b.style.width = `${w}px`; span.style.left = `${w + 16}px`
-      span.style.opacity = seg(t, 115.6 + i * 0.35, 116.0 + i * 0.35)
+      span.style.opacity = seg(t, 116.3 + i * 0.35, 116.7 + i * 0.35)
     })
   }
   if (pane(P.func, T.func) > 0) {
-    $('fn-a').innerHTML = `${(1 + 24 * ease(seg(t, 132.8, 134.4))).toFixed(1)}<small>×</small>`
+    $('fn-a').innerHTML = `${(1 + 24 * ease(seg(t, 133.7, 135.2))).toFixed(1)}<small>×</small>`
     $('fn-b').innerHTML = `${(1 + 1.67 * ease(seg(t, 137.4, 138.6))).toFixed(2)}<small>×</small>`
     P.func.children[1].style.opacity = seg(t, 137.2, 137.7) * 0.75 + 0.25
   }
   if (pane(P.ledger, T.ledger) > 0) {
-    $('lg-a').innerHTML = `${Math.round(15 * ease(seg(t, 142.8, 143.8)))}<small>/15</small>`
-    $('lg-b').innerHTML = `${Math.round(60 * ease(seg(t, 144.4, 145.6)))}<small>/96</small>`
+    $('lg-a').innerHTML = `${Math.round(15 * ease(seg(t, 143.7, 144.7)))}<small>/15</small>`
+    $('lg-b').innerHTML = `${Math.round(60 * ease(seg(t, 144.8, 146.0)))}<small>/96</small>`
     $('lg-c').innerHTML = `${Math.round(94 * ease(seg(t, 148.4, 149.8)))}<small>%</small>`
-    ;[142.6, 144.2, 148.2].forEach((a, i) => { P.ledger.children[i].style.opacity = seg(t, a, a + 0.5) * 0.8 + 0.2 })
+    ;[143.5, 144.6, 148.2].forEach((a, i) => { P.ledger.children[i].style.opacity = seg(t, a, a + 0.5) * 0.8 + 0.2 })
   }
   show(P.end, seg(t, 156.4, 157.2), `translateY(${(1 - easeOut(seg(t, 156.4, 157.2))) * 30}px)`)
 }
@@ -612,7 +647,7 @@ function renderSplit(t) {
 }
 
 window.render = (t) => {
-  brandAt(t); tagAt(t); subAt(t); panelsAt(t)
+  brandAt(t); tagAt(t); subAt(t); panelsAt(t); wipeAt(t)
   const split = t >= T.split[0] && t < T.routing[0] + 0.3
   show(divider, split ? fade(t, T.split[0], T.routing[0] + 0.3, 0.4, 0.3) : 0)
   pin.style.visibility = 'hidden'; delta.style.opacity = 0
@@ -620,7 +655,7 @@ window.render = (t) => {
     applyHot(new Set())
     loopProps(t)
     const [e0, e7] = renderSplit(t)
-    const g = fade(t, 93.0, T.routing[0], 0.6, 0.4)
+    const g = fade(t, 93.5, T.routing[0], 0.6, 0.4)
     sideL.innerHTML = `<div class="k">累计能耗</div><div class="num">${fmt(e0)}</div><div class="who">初始程序</div>`
     sideR.innerHTML = `<div class="k">累计能耗</div><div class="num acc">${fmt(e7)}</div><div class="who">最终版本</div>`
     show(sideL, g); show(sideR, g); show(hud, 0)
@@ -679,7 +714,9 @@ window.sfxEvents = () => {
   drops(0, 0.13)
   drops(END_DROP, 0.1)
   drops(T.split[0] + 0.2, 0.07)
-  TAGS.forEach(([a]) => add(a, 'whoosh', { gain: 0.14, dur: 0.6 }))
+  add(TAGS[0][0], 'whoosh', { gain: 0.14, dur: 0.6 })
+  CHAPTERS.forEach(([b]) => { add(b + WIPE.in[0] - 0.05, 'whoosh', { gain: 0.3, dur: 0.45, pan: -0.4 }); add(b - 0.12, 'impact', { gain: 0.42 }); add(b + WIPE.out[0], 'whoosh', { gain: 0.22, dur: 0.45, pan: 0.4 }) })
+  add(CANDS[2].t + 0.3, 'impact', { gain: 0.3 })
   add(8.25, 'blip', { gain: 0.3, f: 660 })
   const steps = (R, K, scale, pan, gainMul) => R.steps.forEach((s, k) => {
     const a = tAt(K, k / scale), b = tAt(K, (k + 1) / scale), dur = b - a
@@ -693,7 +730,6 @@ window.sfxEvents = () => {
   })
   steps(R0, K0, 1, 0, 1)
   add(T.costCard[0], 'impact', { gain: 0.5 }); add(T.costCard[0] + 1.8, 'chime', { gain: 0.3, f: [523.3, 784] })
-  add(36.9, 'whoosh', { gain: 0.25, dur: 1.4 })
   STATIONS.forEach((_, i) => add(38.3 + i * 0.35, 'blip', { gain: 0.22, f: [523.3, 587.3, 659.3, 784, 880, 1046.5][i] }))
   add(41.1, 'blip', { gain: 0.3, f: 392 })
   for (let n = 0; ; n++) {
@@ -705,7 +741,6 @@ window.sfxEvents = () => {
   }
   add(CHIP.upgradeAt, 'rise', { gain: 0.25, dur: 0.8 })
   add(49.8, 'blip', { gain: 0.25, f: 740 })
-  add(T.chart[0], 'whoosh', { gain: 0.25, dur: 1.0 })
   CANDS.forEach((c, i) => {
     if (c.m === 's') add(c.t, 'blip', { gain: 0.35, f: i ? 330 : 392 })
     else if (c.m === 'x') add(c.t, 'buzz', { gain: 0.35 })
@@ -713,16 +748,14 @@ window.sfxEvents = () => {
   })
   add(60.3, 'blip', { gain: 0.25, f: 330 })
   add(UPGRADE.t, 'rise', { gain: 0.4, dur: 1.0 }); add(UPGRADE.t + 0.95, 'impact', { gain: 0.3 })
-  add(T.split[0], 'whoosh', { gain: 0.3, dur: 1.2 })
   steps(R0, KS, R0.steps.length, -0.6, 0.8)
   steps(R7, KS, R7.steps.length, 0.6, 0.8)
   add(T.result[0], 'impact', { gain: 0.5 }); add(T.result[0] + 2.6, 'chime', { gain: 0.5, f: [523.3, 784, 1046.5, 1318.5] })
-  add(T.routing[0], 'whoosh', { gain: 0.2, dur: 0.8 })
-  ROUTES.forEach((_, i) => add(115.0 + i * 0.35, 'whoosh', { gain: 0.12, dur: 0.6, pan: -0.3 + i * 0.2 }))
-  add(114.6, 'blip', { gain: 0.25, f: 880 }); add(120.8, 'blip', { gain: 0.25, f: 523.3 })
-  add(132.8, 'impact', { gain: 0.35 }); add(134.4, 'chime', { gain: 0.3, f: [880, 1318.5] })
+  ROUTES.forEach((_, i) => add(115.7 + i * 0.35, 'whoosh', { gain: 0.12, dur: 0.6, pan: -0.3 + i * 0.2 }))
+  add(115.6, 'blip', { gain: 0.25, f: 880 }); add(120.8, 'blip', { gain: 0.25, f: 523.3 })
+  add(133.7, 'impact', { gain: 0.35 }); add(135.2, 'chime', { gain: 0.3, f: [880, 1318.5] })
   add(137.4, 'impact', { gain: 0.3 }); add(138.6, 'chime', { gain: 0.25, f: [784, 1174.7] })
-  ;[142.8, 144.4, 148.4].forEach((a) => add(a, 'impact', { gain: 0.35 }))
+  ;[143.7, 144.8, 148.4].forEach((a) => add(a, 'impact', { gain: 0.35 }))
   add(T.end[0], 'whoosh', { gain: 0.3, dur: 1.2 })
   add(156.4, 'chime', { gain: 0.55, f: [523.3, 659.3, 784, 1046.5, 1568] })
   return ev.sort((a, b) => a.t - b.t)

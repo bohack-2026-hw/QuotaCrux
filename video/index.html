@@ -72,7 +72,20 @@
   #sideL { right: 1004px; }
   #sideR { right: 44px; }
 
-  #panel { position: absolute; inset: 0; background: rgba(241, 239, 233, 0.78); backdrop-filter: blur(14px) saturate(0.9); }
+  #panel { position: absolute; inset: 0; background: var(--bg); }
+  #ui.dark #panel { background: var(--ink); }
+  #ui.dark #brand { color: #fff; }
+  #ui.dark #p-result { background: transparent; box-shadow: none; color: #fff; }
+  #ui.dark #p-result .pct { font-size: 260px; }
+  #ui.dark .tile { background: #1D1D20; box-shadow: none; color: #fff; }
+
+  #wipe { position: absolute; inset: 0; background: var(--ink); color: #fff; display: flex; align-items: center; padding-left: 150px; }
+  #wipe.accent { background: var(--accent); }
+  #wipe .n { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 120px; color: var(--accent); letter-spacing: -2px; line-height: 1; }
+  #wipe.accent .n { color: var(--ink); }
+  #wipe .k { font-size: 170px; font-weight: 700; line-height: 1.15; margin-top: 18px; letter-spacing: 4px; }
+  #wipe .v { font-size: 52px; font-weight: 600; color: rgba(255,255,255,0.62); margin-top: 18px; }
+  #wipe.accent .v { color: rgba(17,17,19,0.75); }
   .pane { position: absolute; }
   .center { left: 50%; top: 47%; transform: translate(-50%, -50%); text-align: center; padding: 44px 80px 52px; }
   .center .k { font-size: 36px; font-weight: 600; color: var(--grey); }
@@ -142,7 +155,7 @@
 <div class="pane tiles" id="p-ledger"></div>
 <div class="pane" id="p-end"></div>
 <div id="budget" class="card"></div>
-<div id="brand"></div><div id="tag"></div><div id="hud"></div><div id="sub"><i></i><span></span></div><div class="float" id="delta"></div></div>
+<div id="brand"></div><div id="tag"></div><div id="hud"></div><div id="sub"><i></i><span></span></div><div class="float" id="delta"></div><div id="wipe"></div></div>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

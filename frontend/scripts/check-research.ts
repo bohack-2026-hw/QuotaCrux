@@ -2,7 +2,7 @@
 //   node --experimental-strip-types scripts/check-research.ts
 import { readFileSync } from 'node:fs'
 import { strict as assert } from 'node:assert'
-import { costTotals, fairLabel, finalState, normalize, runState } from '../src/research.ts'
+import { VARIANTS, costTotals, fairLabel, finalState, normalize, runState } from '../src/research.ts'
 import type { RawBatch, RawRun } from '../src/research.ts'
 
 const sample: RawBatch = JSON.parse(readFileSync(new URL('../src/samples/research-native-r2.json', import.meta.url), 'utf8'))
@@ -57,7 +57,7 @@ check('running batch: fair null is "pending", planned and running runs have no f
   const b = normalize(raw)
   assert.deepEqual(b.runs.map((r) => r.state), ['completed', 'running', 'planned'])
   assert.deepEqual(b.runs.map((r) => r.final.state), ['missing', 'pending', 'pending'])
-  assert.equal(b.runs[2].cost.kind, 'unknown')
+  assert.equal(b.runs[2].cost.kind, 'not_run')
   assert.equal(b.runs[2].cost.amount, null)
   assert.equal(fairLabel(b.fair, b.running).tone, 'warn')
   assert.equal(fairLabel(false, false).tone, 'bad')
@@ -115,6 +115,47 @@ check('unknown usage cost is never zero and currencies are never merged', () => 
   const t = costTotals(normalize(raw).runs.map((r) => r.cost))
   assert.deepEqual(t.byCurrency, { USD: 0.02, CNY: 0.3 })
   assert.equal(t.unknown, 2)
+})
+
+const routing: RawBatch = JSON.parse(readFileSync(new URL('./fixtures/routing-fixture.json', import.meta.url), 'utf8'))
+
+check('routing study: runs group by variant, never into the feedback mode', () => {
+  const b = normalize(routing)
+  assert.equal(b.study, 'routing')
+  assert.equal(b.fixture, true)
+  assert.deepEqual(b.modes, VARIANTS)
+  assert.ok(b.runs.every((r) => VARIANTS.includes(r.mode)))
+  assert.ok(b.tasks.every((t) => t.modes.join() === VARIANTS.join()))
+  assert.equal(fairLabel(b.fair, b.running).tone, 'warn')
+})
+
+check('routing study: final failed and not_run slots stay visible', () => {
+  const b = normalize(routing)
+  const ale = b.runs.find((r) => r.taskId.startsWith('ale') && r.mode === 'model_decisions')!
+  assert.equal(ale.final.state, 'failed')
+  const skipped = b.runs.find((r) => r.taskId.startsWith('algotune') && r.mode === 'both_decisions')!
+  assert.deepEqual([skipped.state, skipped.final.state, skipped.cost.kind], ['planned', 'pending', 'not_run'])
+  assert.equal(costTotals(b.runs.map((r) => r.cost)).unknown, 0)
+  assert.equal(b.finished, 7)
+})
+
+check('routing study: CNY and USD stay apart; partial USD is a lower bound, not a total', () => {
+  const b = normalize(routing)
+  const t = costTotals(b.runs.map((r) => r.cost))
+  assert.deepEqual(Object.keys(t.byCurrency).sort(), ['CNY', 'USD'])
+  assert.ok(t.partial.has('USD') && !t.partial.has('CNY'))
+  assert.equal(t.byCurrency.CNY.toFixed(3), (routing as unknown as { cost: { by_currency: Record<string, { known_amount: number }> } }).cost.by_currency.CNY.known_amount.toFixed(3))
+  const action = b.runs.find((r) => r.mode === 'action_decisions')!
+  assert.equal(action.cost.kind, 'partial')
+  assert.ok(action.cost.purpose?.routing?.some((p) => p.amount == null))
+})
+
+check('routing study: small/large and routing/generation calls are read per run', () => {
+  const b = normalize(routing)
+  const both = b.runs.find((r) => r.taskId.startsWith('ale') && r.mode === 'both_decisions')!
+  assert.deepEqual(both.calls, { small: 7, large: 3, routing: 7, generation: 10, upgrades: 1 })
+  assert.deepEqual(both.routing, { action: 'decisions', model: 'decisions' })
+  assert.equal(b.model?.name, 'Qwen3.8-27B → gpt-fixture-large')
 })
 
 console.log(`${n} checks passed`)

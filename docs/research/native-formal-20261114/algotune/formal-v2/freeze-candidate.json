@@ -1,9 +1,11 @@
 {
-  "freeze_status": "candidate-awaiting-timing-v2-calibration-and-issue-2-acceptance",
+  "freeze_status": "candidate-awaiting-timing-v2-calibration-and-central-binding",
   "plan_id": "research-algotune-formal-20261114-v2",
   "protocol": "within-task-feedback-v2",
-  "code_sha": "e8c5fbe748116993297ed0e195c2adf09c37c37d",
-  "executor_sha256": "6871c1ea3a7d72829fb41661964610cd6b116c624da07777976804f237c3533a",
+  "code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "python_version": "3.12.11",
+  "uv_version": "uv 0.8.19 (Homebrew 2025-09-19)",
+  "executor_sha256": "2fd9dcc8bee5f39542e48fb60c7dfb5bdc076e1e4f028bdb098192127ff9e2af",
   "central_plan_path": "docs/research/native-formal-20261114/central-plan.json",
   "central_plan_sha256": "b8dddb6e21f00ac7af2297f4c2198b49b0c925b3130171e8a201cefdc842bcc3",
   "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
@@ -73,9 +75,9 @@
     "evidence_sha256": null
   },
   "tasks": {
-    "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1": {
+    "algotune-convolve_1d-formal-912b20a-20261114": {
       "task_key": "algotune/convolve_1d",
-      "manifest_sha256": "50918575680656c420cd98828d61e131bf39a949a6c449354421a6366dfc3b59",
+      "manifest_sha256": "de2e8d641d374f4eb1fec0afe7bd55f0334bd5a9337dbee6516d8315d47caae2",
       "environment": {
         "image_tag": "routeevo-scientific:9df8e32a4952",
         "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
@@ -103,9 +105,9 @@
         "no_feedback": "c0bf4f3a3ef4b926f9c0cf2e9d327bfd75a8fe982408bdb9e99143551c2c34aa"
       }
     },
-    "algotune-pagerank-formal-v2-20261114-650c457660": {
+    "algotune-pagerank-formal-912b20a-20261114": {
       "task_key": "algotune/pagerank",
-      "manifest_sha256": "ece7e28cb604ca9cf8ba93f1f668a60d6a162cb8540120badd344e2eeefa39b1",
+      "manifest_sha256": "ea18a6214bc36eb6f6e7d09288f5bd9bde3bb197c914e19e3ad6b46fb6d456c1",
       "environment": {
         "image_tag": "routeevo-scientific:9df8e32a4952",
         "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d",
@@ -135,20 +137,20 @@
     }
   },
   "algotune_plan": [
-    {"seq": 16, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "feedback"},
-    {"seq": 17, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "no_feedback"},
-    {"seq": 18, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 1, "mode": "independent"},
-    {"seq": 19, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "no_feedback"},
-    {"seq": 20, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "independent"},
-    {"seq": 21, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 2, "mode": "feedback"},
-    {"seq": 22, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "independent"},
-    {"seq": 23, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "feedback"},
-    {"seq": 24, "task_id": "algotune-convolve_1d-formal-v2-20261114-0b8e6214c1", "repeat": 3, "mode": "no_feedback"},
-    {"seq": 25, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 1, "mode": "feedback"},
-    {"seq": 26, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 1, "mode": "independent"},
-    {"seq": 27, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 2, "mode": "independent"},
-    {"seq": 28, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 2, "mode": "feedback"},
-    {"seq": 29, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 3, "mode": "feedback"},
-    {"seq": 30, "task_id": "algotune-pagerank-formal-v2-20261114-650c457660", "repeat": 3, "mode": "independent"}
+    {"seq": 1, "central_slot": 16, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 1, "mode": "feedback"},
+    {"seq": 2, "central_slot": 26, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 1, "mode": "independent"},
+    {"seq": 3, "central_slot": 17, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 1, "mode": "no_feedback"},
+    {"seq": 4, "central_slot": 25, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 1, "mode": "feedback"},
+    {"seq": 5, "central_slot": 18, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 1, "mode": "independent"},
+    {"seq": 6, "central_slot": 28, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 2, "mode": "feedback"},
+    {"seq": 7, "central_slot": 19, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 2, "mode": "no_feedback"},
+    {"seq": 8, "central_slot": 27, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 2, "mode": "independent"},
+    {"seq": 9, "central_slot": 20, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 2, "mode": "independent"},
+    {"seq": 10, "central_slot": 30, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 3, "mode": "independent"},
+    {"seq": 11, "central_slot": 21, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 2, "mode": "feedback"},
+    {"seq": 12, "central_slot": 29, "task_id": "algotune-pagerank-formal-912b20a-20261114", "repeat": 3, "mode": "feedback"},
+    {"seq": 13, "central_slot": 22, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 3, "mode": "independent"},
+    {"seq": 14, "central_slot": 23, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 3, "mode": "feedback"},
+    {"seq": 15, "central_slot": 24, "task_id": "algotune-convolve_1d-formal-912b20a-20261114", "repeat": 3, "mode": "no_feedback"}
   ]
 }

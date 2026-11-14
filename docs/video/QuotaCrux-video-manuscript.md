@@ -24,7 +24,7 @@
 
 ## 成片时间轴（v1.0）
 
-成片 2 分 43 秒，无配音，中文字幕，配有程序合成的小音效（`video/sfx.py`，音效时刻由页面时间轴 `window.sfxEvents()` 导出，与画面同步）。
+成片 2 分 43 秒，无配音，中文字幕；02–07 每段以整屏章节卡切入（场景切换都在卡片遮挡时完成），隐藏测试结果与账本为黑底；配有程序合成的小音效（`video/sfx.py`，音效时刻由页面时间轴 `window.sfxEvents()` 导出，与画面同步）。
 
 | 时间 | 段落 | 画面 |
 |---|---|---|
@@ -40,7 +40,7 @@
 | 2:22–2:34 | 07 账本 | 15/15 · 60/96 · 94% |
 | 2:34–2:43 | 片尾 | 箱子重新落下，字标回到中央，仓库地址与二维码 |
 
-复现：`cd video && npm install && python3 -m http.server 8765`，然后 `node capture.cjs 30 0 163.5 out/video-only.mp4`、`node events.cjs out/events.json`、`uv run --with numpy --with scipy python sfx.py out/events.json 163.5 out/sfx.wav`，最后用 ffmpeg 合并音轨。
+复现：`cd video && npm install && python3 -m http.server 8765`，然后 `./render.sh`（三路并行截帧、合成音效并合并音轨，约 9 分钟，进度见 `out/progress-*.log`）。
 
 ## 3D 与真实数据怎么做
 

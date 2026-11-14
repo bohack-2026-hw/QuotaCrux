@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 
 import matplotlib
+import matplotlib.ticker  # noqa: F401
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -291,6 +292,56 @@ def dots_chart(c: dict, out: Path, title: str) -> Path:
     return out
 
 
+FAM_LETTER = {"groupagg": "G", "logstats": "L", "intervals": "I"}
+FAM_ZH = {"groupagg": "分组聚合", "logstats": "访问日志", "intervals": "区间合并"}
+
+
+def stream_chart(st: dict, out: Path, metric: str = "cost_usd") -> Path:
+    """Cumulative large-model cost along the S stream: one thin line per repeat and arm; dots where GPT was used."""
+    pos = st["positions"]
+    fig, ax = plt.subplots(figsize=(10, 4.2), dpi=200)
+    fig.patch.set_facecolor("#" + CARD)
+    ax.set_facecolor("#" + CARD)
+    xs = list(range(1, len(pos) + 1))
+    for arm, col, name in (("fresh", "#" + OLD, "不带记忆（每个任务都从起点出发）"), ("memory", "#" + NEW, "带记忆（在线写入，下一个任务读取）")):
+        for rep in range(1, st["repeats"] + 1):
+            ser = st["series"][arm].get(str(rep))
+            if not ser or not ser[metric]:
+                continue
+            ys = ser[metric]
+            ax.plot(xs[:len(ys)], ys, color=col, lw=1.8, alpha=0.85, label=name if rep == 1 else None)
+            used = [i for i in range(len(ys)) if ser["large_model_requests"][i] > (ser["large_model_requests"][i - 1] if i else 0)]
+            ax.scatter([xs[i] for i in used], [ys[i] for i in used], s=28, color=col, zorder=3, edgecolors="#" + CARD, linewidths=1)
+    ax.set_xticks(xs)
+    ax.set_xticklabels([f"{p['task_id'].replace('S-', '')}\n{FAM_LETTER.get(p['family'], '?')}{'*' if p['first_of_family'] else ''}" for p in pos], fontsize=9.5)
+    ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"${v:.2f}" if metric == "cost_usd" else f"{v:.0f}"))
+    ax.grid(axis="y", color="#" + RULE, lw=0.7)
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
+    for sp in ("left", "bottom"):
+        ax.spines[sp].set_color("#" + RULE)
+    ax.tick_params(colors="#" + INK2, length=0)
+    ax.set_title("沿任务流累计的大模型费用（每条线是一次重放；圆点 = 该任务用了大模型）", loc="left", fontsize=12, color="#" + INK, pad=10)
+    ax.text(0, -0.25, "G 分组聚合 · L 访问日志 · I 区间合并 · * 该任务族在任务流中首次出现", transform=ax.transAxes, fontsize=9, color="#" + INK3)
+    ax.legend(loc="upper left", frameon=False, fontsize=10)
+    fig.tight_layout()
+    fig.savefig(out, facecolor=fig.get_facecolor())
+    plt.close(fig)
+    return out
+
+
+def ablation_sides() -> dict | None:
+    out = {}
+    for arm in ("on", "off"):
+        ids = [r["run_id"] for r in db.all_rows("SELECT run_id FROM runs WHERE json_extract(config_json, '$.label') = ? AND status != 'running'"
+                                                " ORDER BY started_at", (f"router ablation · {arm}",))]
+        if not ids:
+            return None
+        reps = [report.build(i) for i in ids]
+        out[arm] = {**compare._side(reps), "small": sum(r["iterations"].get("small_model_requests", 0) for r in reps)}
+    return out
+
+
 def side_rows(c: dict) -> list[list[str]]:
     a, b = c["snapshot_a"], c["snapshot_b"]
     A, B = c["sides"][a], c["sides"][b]
@@ -337,13 +388,20 @@ def build(out: Path, shots: Path) -> None:
     evo.font.size, evo.font.italic, evo.font.name = Pt(80), True, "Georgia"
     evo.font.color.rgb = rgb(ACCENT)
     d.text(s, "把已验证的研究成果，变成下一次研究的起点", 0.95, 3.5, 11.5, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
-    d.text(s, "取证 → 假设 → 实验 → 验证 → 修正 → 已验证成果入库 → 下一次先复验、再超越", 0.95, 4.3, 11, 0.5, size=16, color="B8B2A3")
+    d.text(s, "取证 → 假设 → 实验 → 验证 → 修正 → 已验证成果入库 → 熟悉的复用，全新的交给大模型，做完都记下来", 0.95, 4.3, 11.5, 0.5, size=16, color="B8B2A3")
+    st0 = find_comparison("S online stream")
+    if st0 and st0["finished_runs"]:
+        F0, M0 = st0["sides"]["fresh"], st0["sides"]["memory"]
+        d.text(s, (f"S 任务流（3 个任务族 × {st0['repeats']} 次重放）：带记忆 vs 不带记忆 · 大模型请求 {F0['large_model_requests_total']} → {M0['large_model_requests_total']} · "
+                   f"费用 {usd(F0['cost_usd_total'])} → {usd(M0['cost_usd_total'])} · 总耗时 {F0['wall_clock_s_total']:.0f}s → {M0['wall_clock_s_total']:.0f}s · "
+                   f"达标 {F0['goal_met']}/{F0['runs']} → {M0['goal_met']}/{M0['runs']}"),
+               0.95, 4.85, 11.5, 0.5, size=14, color=PAPER)
     if headline and headline["finished_runs"]:
         A, B = headline["sides"][headline["snapshot_a"]], headline["sides"][headline["snapshot_b"]]
         d.text(s, (f"{'D 封存留出' if headline is cmp_d else 'B 开发对照'}：最终加速比中位数 {x(A['final_speedup_median'])} → {x(B['final_speedup_median'])} · "
                    f"模型请求中位数 {g(A['model_requests_median'])} → {g(B['model_requests_median'])} · GPT 费用 {usd(A['cost_usd_total'])} → {usd(B['cost_usd_total'])} · "
                    f"循环时长中位数 {A['agent_loop_s_median']:.0f}s → {B['agent_loop_s_median']:.0f}s"),
-               0.95, 5.0, 11.5, 0.5, size=14, color=PAPER)
+               0.95, 5.3, 11.5, 0.5, size=14, color=PAPER)
     d.text(s, "BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
 
     # 2 questions
@@ -358,21 +416,21 @@ def build(out: Path, shots: Path) -> None:
                   "结论只来自留出任务上的对照数据，全部运行（包括失败与无收益）都计入"], 0.6, 4.8, 12, 2, size=16)
 
     # 3 task
-    n_tasks = db.one("SELECT COUNT(*) AS n FROM tasks WHERE split IN ('A','B','C','D','smoke') AND task_id NOT LIKE 't-%'")["n"]
-    s = d.slide("研究任务：在正确性约束下优化程序", "研究任务")
-    d.bullets(s, ["按字符串 key 分组 CSV，输出每组数量与整数和，按 key 升序",
-                  "初始程序：csv + 两个 dict + sorted，正确、正常，不人为削弱",
-                  "主指标：加速比 = 初始程序耗时中位数 / 候选耗时中位数",
-                  "达标：输出全对 + 5 次候选样本全部快于 5 次基线样本 + 加速比 ≥ 1.10",
-                  f"{n_tasks} 个冻结任务包（哈希锁定）：A 学习 · B 开发对照 · C 第一版留出 · D 第二版封存留出（各 6 个）· smoke",
-                  "  覆盖随机、有序、成簇、几乎有序陷阱、低基数、高基数、小输入——A 的经验不必处处成立"], 0.6, 1.75, 7.2, 5, size=16)
+    n_tasks = db.one("SELECT COUNT(*) AS n FROM tasks WHERE task_id NOT LIKE 't-%'")["n"]
+    s = d.slide("研究任务：在正确性约束下优化程序（3 个任务族）", "研究任务")
+    d.bullets(s, ["分组聚合：按字符串 key 分组 CSV，输出每组数量与整数和（csv + dict + sorted）",
+                  "访问日志统计：按小时 × 接口统计请求数、5xx 数、延迟和与最大值（正则 + strptime）",
+                  "区间合并：合并重叠或相接的闭区间，取值跨 ±10¹²（csv + 元组排序）",
+                  "  初始程序都正确、正常，不人为削弱；每族 7 个公开契约用例挡住只对当前数据正确的程序",
+                  "主指标：加速比 = 初始程序耗时中位数 / 候选耗时中位数；达标：输出全对 + 5 次候选样本全部快于基线 + ≥ 1.10",
+                  f"{n_tasks} 个冻结任务包（哈希锁定）：分组聚合 A/B/C/D 各 6 · 新任务族调优 T 4 · 封存任务流 S 12（混合 3 族）· smoke"], 0.6, 1.75, 7.2, 5, size=15)
     d.card(s, 8.1, 1.8, 4.6, 4.6)
     d.text(s, "同一个优化，效果相反", 8.35, 1.95, 4.2, 0.4, size=14, bold=True, color=ACCENT)
     d.text(s, "按字节解析 + 单字典：\n  中等基数（A-01）≈ 1.44×\n  高基数（A-05）≈ 0.82×\n\n带有序检查的 groupby：\n  所有 A 任务 ≈ 0.7×\n\n只用 groupby 不检查：\n  有序数据上正确，\n  但违反契约用例 → 判失败", 8.35, 2.45, 4.2, 3.9, size=14, color=INK2)
 
     # 4 loop
-    s = d.slide("研究循环：先复验已知成果，再由模型研究", "架构")
-    steps = [("复验已知成果", "经验中条件最接近的\n已验证程序 ≤ 3 个\n不调用模型"), ("模型选行动", "分析 · 取证 · 提出候选\n验证 · 结束"),
+    s = d.slide("研究循环：先复验已知成果，再分流给合适的模型", "架构")
+    steps = [("复验已知成果", "经验中条件最接近的\n已验证程序 ≤ 3 个\n不调用模型"), ("分流 · 模型选行动", "相近 → Qwen；全新 → GPT\n分析 · 取证 · 提出候选\n验证 · 结束"),
              ("程序检查", "动作参数 · 预算\n仅标准库 · 代码大小"), ("沙箱 + 评测器", "正确性 · 契约用例\n交替计时 · 最佳产物"),
              ("反馈", "状态 · 加速比 · 反例\n→ 下一步")]
     for i, (k, v) in enumerate(steps):
@@ -383,14 +441,14 @@ def build(out: Path, shots: Path) -> None:
         if i < 4:
             d.text(s, "→", xx + 2.2, 2.6, 0.3, 0.5, size=20, color=ACCENT, bold=True)
     d.bullets(s, ["评测运行：复验已达标就交付，不调用模型；没达标，复验结果作为证据交给模型。学习运行：复验已达标时把本次目标提高到超过已知最佳 5%",
-                  "本地 Qwen（qwen3.8:27b，关闭思考）先执行；连续两个候选未达标，或 Qwen 请求 3 次仍无达标候选 → 固定规则升级到 GPT-6.1 Sol（xhigh）",
+                  "分流（第三版）：有相近成功经验 → 本地 Qwen（qwen3.8:27b）先做，连续未达标按规则升级到 GPT-6.1 Sol（xhigh）；全新任务族或新条件 → 直接交给 GPT",
                   "每次运行最多 6 次模型请求、4 个模型候选、300 秒（复验也计时）；预算耗尽后不再为总结调用模型"], 0.6, 4.2, 12.1, 2.7, size=15)
 
     # 5 trust
     s = d.slide("可信的验证：模型碰不到裁判", "验证")
     d.bullets(s, ["每个样本一个全新容器：禁网、只读根文件系统、非 root、1 CPU / 1 GB、64 进程；只挂载候选文件，输入走 stdin",
                   "参考输出、最终测试数据、评测程序都留在宿主机；候选自报的“通过”或“耗时”不算数",
-                  "7 个公开契约用例：空输入、交错重复 key、ASCII 排序、超大整数、几乎有序陷阱、32 字符 key",
+                  "每个任务族 7 个公开契约用例：分组聚合（交错重复 key、ASCII 排序、几乎有序陷阱…）、访问日志（跨小时与跨日、乱序、状态码 499/500）、区间合并（相接与间隔 1、嵌套传递、±10¹²）",
                   "计时：容器内启动器就绪后才开始；基线与候选各预热一次，交替 5 轮，取中位数之比",
                   "“改善”= 全部候选样本快于全部基线样本（单侧 Mann-Whitney U=0，p≈0.004）；同一程序靠噪声测出 1.05× 也不算",
                   "复用的程序和模型候选走同一个评测器；循环结束后最佳候选冻结，在隐藏最终数据上测一次，结果不回流"], 0.6, 1.75, 12.1, 5, size=16)
@@ -683,6 +741,73 @@ def build(out: Path, shots: Path) -> None:
         txt += "费用是 GPT 按官方价表的估算；本地 Qwen 没有 API 费用，机器成本未核算；复验的评测时间计入循环时长。"
         d.text(s, txt, 0.6, 1.8 + 0.36 * len(rows) + 0.3, 12.1, 1.6, size=13.5, color=INK2)
 
+    # v3: router, the online stream, the router ablation, boundaries
+    st = find_comparison("S online stream")
+    s = d.slide("第三版：遇到全新问题怎么办——分流器", "第三版 · 分流")
+    rows = [["路线", "什么时候走", "怎么做", "留下什么"],
+            ["↺ 复用直接交付", "经验里有同族已验证程序，在本任务上复验达标", "不调用模型，直接交付", "复验结果写入经验"],
+            ["○ 相近 → 本地小模型", "复验未达标，但有同族成功经验与本任务 ≥ 3/5 项条件相同", "先用 Qwen，连续未达标按规则升级到 GPT", "验证过的候选写入经验"],
+            ["★ 全新任务族 → 大模型", "经验里没有这个任务族的任何记录", "直接交给 GPT，全部预算给它", "首次结果写入经验，下次同类先复用"],
+            ["◆ 新条件 → 大模型", "有同族记录，但没有条件相近的成功经验", "直接交给 GPT", "同上"]]
+    d.table(s, rows, 0.6, 1.8, 12.1, [2.5, 4.3, 3.0, 2.3], size=13)
+    d.bullets(s, ["判断只用记录中的事实（任务族、5 个条件分桶的匹配数、结果是成功 / 无收益 / 失败），由程序执行，不交给模型自评；分流原因写进账本",
+                  "新增两个任务族：访问日志统计（正则 + strptime 的旧式实现）、区间合并（取值跨 ±10¹²）；其他任务族的经验不算数",
+                  "新增在线模式：像评测一样交付，交付后把验证过的结果写入经验——全新问题第一次付费做对，之后的相似任务免费复用",
+                  "规则版本 router-v1 写进配置指纹；分流器可以关闭做对照，关闭后指纹改变"], 0.6, 3.95, 12.1, 3, size=14.5)
+
+    if st and st["finished_runs"]:
+        F, M = st["sides"]["fresh"], st["sides"]["memory"]
+        lf, lm = st["repeats_of_family"]["fresh"], st["repeats_of_family"]["memory"]
+        s = d.slide(f"S 任务流：同一串任务，带记忆 vs 不带记忆（{len(st['tasks'])} 任务 × {st['repeats']} 次重放）", "第三版 · 封存任务流")
+        d.image(s, stream_chart(st, charts / "S-stream.png"), 0.5, 1.65, 7.7)
+        rows = [["", "不带记忆", "带记忆"],
+                ["达标", f"{F['goal_met']}/{F['runs']}", f"{M['goal_met']}/{M['runs']}"],
+                ["大模型请求", str(F["large_model_requests_total"]), str(M["large_model_requests_total"])],
+                ["模型费用", usd(F["cost_usd_total"]), usd(M["cost_usd_total"])],
+                ["未调用模型", f"{F['runs_without_model_request']} 次", f"{M['runs_without_model_request']} 次"],
+                ["循环时长中位数", f"{F['agent_loop_s_median']:.0f}s", f"{M['agent_loop_s_median']:.0f}s"],
+                ["总耗时", f"{F['wall_clock_s_total']:.0f}s", f"{M['wall_clock_s_total']:.0f}s"],
+                ["最终加速比中位数", x(F["final_speedup_median"]), x(M["final_speedup_median"])]]
+        d.table(s, rows, 8.4, 1.75, 4.3, [1.7, 1.3, 1.3], size=12)
+        g0 = st["growth"][0]
+        d.text(s, (f"从 {st['start_snapshot']} 出发（只有分组聚合的经验）；每次重放都从起点重新学起，重复的是学习过程本身；"
+                   f"每个任务都在从它学到东西之前运行。任务族首次出现时两侧条件相同；之后的任务带记忆时 "
+                   f"{lm['runs_without_model_request']}/{lm['runs']} 次没有调用模型（不带记忆 {lf['runs_without_model_request']}/{lf['runs']}）。"
+                   f"经验 {g0['experiences_start']} → {'/'.join(str(x_['experiences_end']) for x_ in st['growth'])} 条。配置指纹{'一致' if st['fair'] else '不一致'}。"),
+               0.6, 5.75, 12.1, 1.2, size=12.5, color=INK2)
+
+    ab = ablation_sides()
+    if ab:
+        on, off = ab["on"], ab["off"]
+        s = d.slide("为什么全新问题直接交给大模型：分流器开 / 关对照", "第三版 · 分流器对照")
+        rows = [["指标", "分流关闭（先用本地 Qwen）", "分流开启（直接用 GPT）"],
+                ["达标 / 运行", f"{off['goal_met']}/{off['runs']}", f"{on['goal_met']}/{on['runs']}"],
+                ["最终加速比中位数", x(off["final_speedup_median"]), x(on["final_speedup_median"])],
+                ["模型请求（小 / 大）", f"{off['small']} / {off['large_model_requests_total']}", f"{on['small']} / {on['large_model_requests_total']}"],
+                ["失败候选", str(off["candidates_failed_total"]), str(on["candidates_failed_total"])],
+                ["模型费用", usd(off["cost_usd_total"]), usd(on["cost_usd_total"])],
+                ["循环时长中位数", f"{off['agent_loop_s_median']:.0f}s", f"{on['agent_loop_s_median']:.0f}s"],
+                ["总耗时", f"{off['wall_clock_s_total']:.0f}s", f"{on['wall_clock_s_total']:.0f}s"]]
+        d.table(s, rows, 0.6, 1.8, 8.0, [2.4, 2.8, 2.8], size=13)
+        d.text(s, ("4 个 T 任务（两个新任务族，相近条件与新条件各一），都从 v19 出发、没有该族经验；评测模式不写经验；"
+                   f"开 / 关各 {on['runs']} 次，按任务交替先后。两侧配置只差分流器一项。\n\n"
+                   "全新问题的第一个答案会成为之后所有相似任务复用的起点，所以第一次值得交给更强的模型。"),
+               8.9, 1.8, 3.8, 4.5, size=13, color=INK2)
+
+    s = d.slide("边界条件：每种情况系统怎么做", "边界")
+    rows = [["情况", "系统行为"],
+            ["无法用程序验证的任务（开放问答等）", "不做：经验只存经过评测器验证的事实"],
+            ["其他任务族的经验", "不算数：检索、复用、分流都只看同族记录"],
+            ["留出批次", "只能评测；对照前检查任务是否为快照贡献过经验"],
+            ["复验达标", "评测 / 在线：直接交付；学习：目标提高 5% 继续超越"],
+            ["模型请求 6 次 / 候选 4 个 / 300 s 用完", "停止，交付当前最佳，不再为总结调用模型"],
+            ["连续 2 次接口错误、配置错误或 4xx", "停止（model_api_error）"],
+            ["输出错误、违反契约、超时、内存超限", "不替换最佳，候选与反例保留，计一次未达标"],
+            ["沙箱或基线自身失败", "停止（environment_error），不发布经验"],
+            ["学习 / 在线运行进行中", "拒绝切换生效版本；快照不可变，回退只切指针"]]
+    d.table(s, rows, 0.6, 1.75, 12.1, [4.6, 7.5], size=12.5)
+    d.text(s, "完整列表与对应测试见 docs/boundaries.md", 0.6, 6.55, 12, 0.4, size=11, color=INK3)
+
     # 19 self-iteration: one real two-round session, end to end
     ses = db.one("SELECT * FROM sessions WHERE status = 'completed' AND comparison_id IS NOT NULL ORDER BY created_at DESC LIMIT 1")
     if ses:
@@ -730,22 +855,23 @@ def build(out: Path, shots: Path) -> None:
             ["RA-AC-05", "独立最终评价，通过与未通过都报告", "开发达标但最终未达标的运行如实记为未达标"],
             ["RA-AC-06", "总成本覆盖全过程，预算不足正确结束", "逐调用账本，未知不记 0；复验时间计入循环；学习成本单列"],
             ["RA-AC-07", "从固定输入重跑方案与评价", "reproduce.sh 复核 A-01 1.44×、D-01 1.4473×，与记录一致；scripts/experiment.sh 重跑全流程"],
-            ["RA-AC-08", "有无经验的完整对照", "第二版 B、D 与第一版 B、C 各 36 次，配置一致，全部计入，学习成本单列"]]
+            ["RA-AC-08", "有无经验的完整对照", "第三版 S 任务流带 / 不带记忆各 36 次（重放 3 次学习过程）；第二版 B、D 与第一版 B、C 各 36 次；配置一致，全部计入"]]
     d.table(s, rows, 0.6, 1.75, 12.1, [1.4, 4.0, 6.7], size=12)
 
     # 22 limits
     s = d.slide("诚实声明与下一步", "边界")
-    d.bullets(s, ["单一任务族：复用已验证程序之所以有效，是因为同族任务共享契约；结论只适用于同族任务之间的迁移",
-                  "复用的上限就是方案库：经验覆盖不到的工作负载（如高基数）仍要靠模型研究，复用帮不上",
+    d.bullets(s, ["3 个任务族，都是单文件、仅标准库、stdin 输入的程序；经验只在同族内复用，跨族迁移不做",
+                  "复用达标即交付，不再为单个任务追求最优；想继续提高用学习模式。条件分桶是人工定义的 5 个特征，阈值固定",
+                  "无法用程序验证的任务（开放问答等）刻意不做：没有验证器就没有可信的经验",
                   "计时在一台 Mac（OrbStack 虚拟化）上；交替测量与“全部样本更快”规则压低噪声，小输入任务固定开销仍占约一半",
                   "模型不支持固定种子：每个配置重复 3 次，报告全部结果；3 次重复衡量运行波动，不等于学习过程被重复验证",
                   "Qwen 自部署机器成本未核算；GPT 费用按 2026-11-13 官方价表估算",
-                  "后置：专用决策模型对照、多个独立 Agent、开放式文献检索；下一步：更多任务族、程序库的合并与淘汰"], 0.6, 1.75, 12.1, 5, size=15.5)
+                  "后置：专用决策模型对照、多个独立 Agent、开放式文献检索；下一步：自动学习条件分桶、程序库的合并与淘汰"], 0.6, 1.75, 12.1, 5, size=15)
 
     # 23 reproduce
     s = d.slide("复现与界面", "交付")
     d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
-                  "scripts/experiment.sh   # 重建任务包 → A 学习两轮 → B 对照 → D 对照",
+                  "scripts/experiment.sh   # 重建任务包 → A 学习两轮 → B、D 对照 → S 任务流",
                   "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理",
                   "uv run routeevo export-run <run_id> --bundle <目录>   # 研究成果交付包",
                   "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)

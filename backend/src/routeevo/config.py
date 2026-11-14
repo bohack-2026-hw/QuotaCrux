@@ -67,6 +67,7 @@ class ModelConfig:
     role: str  # "small" | "large"
     base_url: str | None = None
     reasoning_effort: str | None = None
+    enable_thinking: bool | None = None
     max_output_tokens: int = 4096
     temperature: float | None = None
     response_format: str = "json_schema"  # chat_compat: none | json_object | json_schema
@@ -79,6 +80,9 @@ class ModelConfig:
 
 def default_model_configs() -> dict[str, ModelConfig]:
     load_dotenv()
+    thinking = os.environ.get("QWEN_ENABLE_THINKING")
+    if thinking is not None and thinking.lower() not in ("true", "false"):
+        raise ValueError("QWEN_ENABLE_THINKING must be true or false")
     small = ModelConfig(
         provider="chat_compat",
         role="small",
@@ -86,6 +90,7 @@ def default_model_configs() -> dict[str, ModelConfig]:
         base_url=os.environ.get("QWEN_BASE_URL", "http://127.0.0.1:11434/v1"),
         # Thinking makes local Qwen latency unpredictable (89-172 s for one request); "none" keeps it ~10-15 s.
         reasoning_effort=os.environ.get("QWEN_REASONING_EFFORT") or None,
+        enable_thinking=thinking.lower() == "true" if thinking is not None else None,
         max_output_tokens=int(os.environ.get("QWEN_MAX_OUTPUT_TOKENS", "8192")),
         temperature=float(os.environ["QWEN_TEMPERATURE"]) if os.environ.get("QWEN_TEMPERATURE") else None,
         response_format=os.environ.get("QWEN_RESPONSE_FORMAT", "none"),

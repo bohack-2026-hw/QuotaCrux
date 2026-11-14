@@ -394,7 +394,7 @@ class Runner:
         if self.role == "small":
             self.small_requests += 1
         cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
-                                                         res.error_kind not in NOT_BILLED_ERRORS)
+                                                         res.error_kind not in NOT_BILLED_ERRORS, base_url=cfg.base_url)
         u = res.usage
         if u.input_tokens is not None and u.output_tokens is not None:
             self.tokens_used += u.input_tokens + u.output_tokens

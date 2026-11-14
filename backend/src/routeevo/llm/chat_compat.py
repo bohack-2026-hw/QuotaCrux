@@ -1,4 +1,4 @@
-"""Chat Completions-compatible client for the self-hosted Qwen service (Ollama, LM Studio, llama.cpp, mlx)."""
+"""Chat Completions-compatible client for local and hosted Qwen services."""
 
 from __future__ import annotations
 
@@ -28,6 +28,8 @@ class ChatCompatClient:
         }
         if cfg.reasoning_effort:
             body["reasoning_effort"] = cfg.reasoning_effort
+        if cfg.enable_thinking is not None:
+            body["enable_thinking"] = cfg.enable_thinking
         if cfg.temperature is not None:
             body["temperature"] = cfg.temperature
         if cfg.response_format == "json_object":

@@ -2,9 +2,9 @@
 
 > 历史准备档案：本轮原固定Qwen15轮与routing12轮已取消启动。下文保留当时的环境、校准与待冻结状态；当前完成范围、独立探索结果及交付状态见[本轮数据汇总](../../20261114-summary.md)。GC修复已进入main，旧准备命令仅供追溯。
 
-2026-11-14，负责人 SnowballXueQiu，执行机为本机 Mac。关联 [AlgoTune #4](https://github.com/bohack-2026-hw/RouteEvo/issues/4) 与 [公共协议 #2](https://github.com/bohack-2026-hw/RouteEvo/issues/2)。
+2026-11-14，执行机为本机 Mac，关联 [AlgoTune issue #4](https://github.com/bohack-2026-hw/QuotaCrux/issues/4) 与 [公共协议 issue #2](https://github.com/bohack-2026-hw/QuotaCrux/issues/2)。
 
-**状态：环境与两题 5 dev / 15 final 任务包已完成；当前校准为有保留的预检，尚未冻结；正式批次为 0/15。** 本目录没有正式模型回复或 final 评测。SQLite 记录 `runs=0`、`model_calls=0`、`final evaluations=0`，API 支出为 0。正式调用仍等待 #2 冻结计时处理、唯一实验 SHA、完整三模式提示与哈希、价格快照和中央 run plan，并须在安静窗口重新校准。
+**本阶段状态：环境与两题 5 dev / 15 final 任务包已完成；当前校准为带保留观测的预检，尚未冻结；正式批次为 0/15。** 本目录不包含正式模型回复或 final 评测，SQLite 记录 `runs=0`、`model_calls=0`、`final evaluations=0`，API 支出为 0。正式批次启动需在公共协议冻结计时修订、唯一实验 SHA、三模式提示与哈希、价格快照和中央 run plan 后于安静窗口重校准。
 
 ## 执行环境
 
@@ -29,7 +29,7 @@
 
 本机 Ollama 0.33.3 已有 `qwen3.8:27b-mlx`：model ID `5642e97495e1`、Qwen 3.5 架构、27.8B 参数、NVFP4、18 GB、context 262144，支持 completion/tools/thinking；采集证据时未加载，也没有发送请求。
 
-它只证明本地可行性。其运行时、量化和准确模型标识与计划中的托管 `Qwen3.8-27B` 不同，不能合并为同一反馈消融批次。本地 API 费用为 0，但机器运行成本尚未测量，不能写成总成本为 0。正式主批仍以 #2 冻结的托管模型、endpoint、凭据和价格快照为准；凭据不进入产物。
+本地 Ollama 0.33.3 仅用于验证本地运行可行性，其运行时、量化及模型标识与计划中的托管 `Qwen3.8-27B` 不同，且仅产生了 `0` 元 API 费用（本地算力成本未另行折算）。正式主批仍以统一冻结的托管模型、endpoint、凭据与价格快照为准，凭据不进入产物。
 
 ## 冻结任务包
 
@@ -59,7 +59,7 @@
 
 独立临时账本上的 3×3 交替诊断再次得到原始 harness 的第 3 样本比值 1.8442、样本极差/中位数 84.52%；仅在 `solve(problem)` 计时期间关闭 Python 自动 GC 后，比值变为 0.9975、波动降至 3.17%，三次自比仍零误入选。完整结果和每次评测见 [pagerank-gc-probe.json](evidence/pagerank-gc-probe.json)，复现脚本为 [probe_pagerank_gc.py](probe_pagerank_gc.py)。该诊断不修改正式任务或账本，但把公共修订方向缩小到计时窗口的 GC 处理。
 
-因此必须由 #2 冻结 timing harness 对该周期效应的处理；若 harness 变化，candidate image 与任务 manifest 都要重建。随后在安静窗口重跑 3 预热 / 5 计时和正反控制。正式 15 个 episode 保持串行，measurement window 不重叠。用户允许的并行仅用于只读分析和环境准备。
+上述诊断明确了计时窗口内的 GC 修订方向；后续在冻结新版 `timing harness` 并重建候选镜像及任务 manifest 后，应在安静窗口串行重跑 3 预热 / 5 计时与正反控制校准。正式 15 个 episode 保持串行执行。
 
 完整逐例时间、初始化时间、顺序、镜像、程序 SHA 和环境快照见 [calibration-convolve_1d.json](evidence/calibration-convolve_1d.json) 与 [calibration-pagerank.json](evidence/calibration-pagerank.json)。首次相对 VAR_DIR 失败和 PageRank 弱控制结果均原样保留。SQLite 共记录 24 条通过的 dev calibration evaluations；[ledger-audit.json](evidence/ledger-audit.json) 记录数据库完整性、外键、锁和容器清理结果。
 
@@ -67,11 +67,11 @@
 
 [proposed-run-plan.json](proposed-run-plan.json) 包含完整 15 项提案：convolve_1d 的 feedback / independent / no_feedback 各 3 次，pagerank 的 feedback / independent 各 3 次。卷积三组按 F-N-I、N-I-F、I-F-N 轮换，任务与两组顺序交错；每题固定同一任务包、VM vCPU 与测量参数。
 
-该文件仍是提案，状态明确等待公共 freeze 与计时重校准，`experiment_sha`、`prompt_hashes` 和 `price_snapshot` 为 null。公共 freeze 后应将中央计划映射覆盖进本地执行清单，不能用旧 feedback/independent 结果补本批，也不能先看 F/I 再决定 N。
+该文件仍为提案状态，`experiment_sha`、`prompt_hashes` 与 `price_snapshot` 为 null；实际执行应在公共 freeze 与重校准后由中央计划完整映射至本地执行清单并顺序推进。
 
 ## 复现与审计
 
-首次准备应使用新的绝对 VAR_DIR；Docker bind mount 不接受此处的相对路径。下列命令记录本次预检参数。importer 会打印实际 task ID；若重建镜像得到不同 image ID，必须使用新输出的 task ID 和 manifest，不能沿用本批 ID 或哈希。
+首次准备应使用新的绝对 `VAR_DIR`（Docker bind mount 需绝对路径）。下列命令记录本次预检参数；若重建镜像产生不同 image ID，应采用对应生成的新 task ID 与 manifest。
 
 ```bash
 cd backend

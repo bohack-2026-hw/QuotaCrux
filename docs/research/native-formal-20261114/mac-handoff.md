@@ -1,14 +1,16 @@
 # Mac AlgoTune：v2 计时协议交接
 
-2026-11-14。负责人 SnowballXueQiu，公共协调 #2。**固定Qwen正式评测0/15，路由实验0/12；等待新版本的任务、镜像和校准记录。** 用户已授权：校准和配置检查通过后直接运行。
+> 历史交接档案：本交接对应的 Mac 固定 Qwen 15 项与路由 12 项正式批次最终未启动（0/15、0/12）。后续在同一硬件上完成的非正式 dev-only 探索归档于 [Mac 探索结果包](../mac-exploratory-20261114/README.md)。
+
+2026-11-14，关联 [issue #2](https://github.com/bohack-2026-hw/QuotaCrux/issues/2) 与 [issue #4](https://github.com/bohack-2026-hw/QuotaCrux/issues/4)。该交接版本记录了正式批次启动前的配置、计时修正与检查清单（当时正式评测处于 `0/15`、路由实验处于 `0/12` 待启动状态）。
 
 ## 机器、计时方法和代码版本
 
 - [bdd78b8](https://github.com/bohack-2026-hw/QuotaCrux/commit/bdd78b85e448f591dab13babdc279ec7cd6cefe5) 已交付 M4 Max（12P+4E）/128 GiB、macOS 26.6.2、OrbStack 2.2.5 / Docker 29.8.2、原生 arm64 VM（16 vCPU、约15.66 GiB）及两题5 dev/15 final材料。候选固定使用 **Docker VM vCPU 2**，实际运行在哪个 Apple 核心由虚拟机调度。
-- [64c64b0 的交替 GC 对照](https://github.com/bohack-2026-hw/QuotaCrux/blob/64c64b0/docs/research/native-formal-20261114/algotune/evidence/pagerank-gc-probe.json) 保留原始与 gc-disabled 各3次自比：PageRank第3样本/其余样本中位数从1.84418降至0.99752，组内极差/中位数从84.52%降至3.17%，均无误入选。该诊断已完成，无需重复。
-- #2 已在[接受记录](https://github.com/bohack-2026-hw/QuotaCrux/issues/4#issuecomment-6874329133)接受 [e28ce9d](https://github.com/bohack-2026-hw/QuotaCrux/commit/e28ce9dbadec01bc855345c40a2a9014a87ac022)：`isolated-function-timing-v2`，`gc_policy=automatic_gc_disabled_during_solve`。仅在solve计时内关闭自动循环GC，finally恢复；正常和异常恢复路径已有检查。基线/候选、预热/正式计时使用同一方法，候选选择标准不变。
+- [64c64b0 的交替 GC 对照](https://github.com/bohack-2026-hw/QuotaCrux/blob/64c64b0/docs/research/native-formal-20261114/algotune/evidence/pagerank-gc-probe.json) 保留原始与 gc-disabled 各3次自比：PageRank第3样本/其余样本中位数从1.84418降至0.99752，组内极差/中位数从84.52%降至3.17%，均无误入选。该诊断已完成。
+- 已在[验收评论](https://github.com/bohack-2026-hw/QuotaCrux/issues/4#issuecomment-6874329133)确认合入 [e28ce9d](https://github.com/bohack-2026-hw/QuotaCrux/commit/e28ce9dbadec01bc855345c40a2a9014a87ac022)：`isolated-function-timing-v2`，`gc_policy=automatic_gc_disabled_during_solve`。仅在solve计时内关闭自动循环GC，finally恢复；正常和异常恢复路径已有检查。基线/候选、预热/正式计时使用同一方法，候选选择标准不变。
 - **Mac 执行 SHA：`912b20a4cfeb51af9c36d0679b23f0990abe862f`**，已由[PR #11](https://github.com/bohack-2026-hw/QuotaCrux/pull/11)合入main并核对远端ref。以此公共 checkout 内的原生导入器、计时器和 Mac 便携校准脚本准备；执行目录保持干净，正式期间不再更新。
-- ALE 已实际使用 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`，不改写其来源。原“统一执行 SHA”在本次计时修订后改为分别记录 ALE 与 Mac 的实际 SHA；仍按题、同机、同源码/镜像比较各模式。Mac旧v1预检只作为修复证据，不进入v2正式计时汇总。
+- ALE 已实际使用 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`。两端的实际执行 SHA 分别记录，仍按同题、同机、同源码/镜像口径比较各模式；Mac 旧 v1 预检保留为历史修复证据。
 
 ## 评测设置与待填信息
 
@@ -18,7 +20,7 @@
 
 Mac保持 **concurrency=1、VM vCPU 2、3次预热/5次函数计时**。重新导入必须生成新的candidate/judge image ID和任务ID，旧 `82a6fac682` / `b2ad8ba1c8` 任务包不直接用于正式批次。新输入仍使用原生成参数；对照记录dev/final文件hash，final只核验文件，不执行评测。
 
-[mac-binding-prepared.json](mac-binding-prepared.json) 已保留原提案hash、模型/预算、15项顺序与中央映射，状态为`prepared_not_executable`。#4重校准后补齐：
+[mac-binding-prepared.json](mac-binding-prepared.json) 已保留原提案 hash、模型/预算、15 项顺序与中央映射，状态为 `prepared_not_executable`。重校准后需补齐以下条目：
 
 | 待填项 | 要求 |
 | --- | --- |
@@ -57,7 +59,7 @@ done
 
 控制强度沿用已登记的3ms/20ms，不删除慢点或临时调统计门槛。只需要本次镜像/任务重建和这轮校准；正常/异常GC恢复检查与全量pytest不重复。
 
-新证据回传 #4/#2 后，将prepared文件补全并另存为`mac-freeze.json`。首次付费请求前做一次最小核对：实际HEAD与清洁状态、冻结模型公开配置、两题包/SQLite/hash、镜像及v2环境字段、校准状态、模式提示hash和15项映射均一致即启动，无需等待再次确认。凭据由环境提供，取消准备阶段的`QUOTACRUX_NO_DOTENV`或显式加载所需模型环境，不将密钥写入冻结文件。按同一checkout/VAR_DIR串行运行：
+证据补齐并汇总后，将 prepared 文件补全并另存为 `mac-freeze.json`。首次付费请求前执行最小核对：实际 HEAD 与干净状态、冻结模型公开配置、两题包/SQLite/hash、镜像及 v2 环境字段、校准状态、模式提示 hash 和 15 项映射一致后启动。凭据由环境提供，取消准备阶段的 `QUOTACRUX_NO_DOTENV` 或显式加载所需模型环境，凭据不写入冻结文件。按同一 checkout/VAR_DIR 串行运行：
 
 ```bash
 .venv/bin/quotacrux research-compare \
@@ -93,7 +95,7 @@ QUOTACRUX_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/quotacrux ablate-routing "$CONVOL
 
 ## Mac执行序号与中央身份
 
-沿用 #4 在`bdd78b8`事前发布的交错顺序。`seq`是Mac执行顺序，`central_slot`仅按`task_key + repeat + mode`映射[总运行计划](central-plan.json)，**不按central_slot重新排序**。新任务ID替换占位时，模式、repeat和顺序保持不变。
+沿用 `bdd78b8` 事前确定的交错顺序。`seq` 为 Mac 执行顺序，`central_slot` 仅按 `task_key + repeat + mode` 映射[总运行计划](central-plan.json)（保持原顺而不按 `central_slot` 重排）。新任务 ID 替换占位符时，模式、repeat 与顺序不变。
 
 | seq | central_slot | 任务 | repeat | mode |
 | ---: | ---: | --- | ---: | --- |
@@ -113,4 +115,4 @@ QUOTACRUX_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/quotacrux ablate-routing "$CONVOL
 | 14 | 23 | convolve_1d | 3 | feedback |
 | 15 | 24 | convolve_1d | 3 | no_feedback |
 
-交接依据：[#4最终代码版本与27轮启动授权](https://github.com/bohack-2026-hw/QuotaCrux/issues/4#issuecomment-6874435562)。
+交接依据：[issue #4 执行说明](https://github.com/bohack-2026-hw/QuotaCrux/issues/4#issuecomment-6874435562)。

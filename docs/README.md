@@ -2,7 +2,7 @@
 
 第一次了解项目，从[项目介绍](presentation/project-overview.md)开始。开发时按“赛题 → 产品需求 → 核心需求 → 设计 → 评测 → 结果 → 验收”查阅。
 
-项目名称统一为 **QuotaCrux（枢决）**，包名与命令使用 `quotacrux`。当前仓库链接使用 `QuotaCrux`。历史实验目录、冻结记录（含原始仓库地址）和旧配置兼容说明中保留 `RouteEvo` / `routeevo`，用于追溯原始证据；文档截图只同步品牌名称，保留原有实验数据。
+项目名称统一为 **QuotaCrux（枢决）**，包名与命令使用 `quotacrux`；当前仓库链接使用 `QuotaCrux`。
 
 ## 文档之间的关系
 
@@ -36,7 +36,7 @@ flowchart TD
 ## 按工作查找
 
 - 运行项目：[仓库首页](../README.md)、[后端命令与 API](../backend/README.md)。
-- 正式对照：[协议 v2](research/native-formal-20261114/protocol.md)、[30项计划](research/native-formal-20261114/central-plan.json)、[Mac执行交接](research/native-formal-20261114/mac-handoff.md)。
+- 正式对照：[协议 v2](research/native-formal-20261114/protocol.md)、[30 项计划](research/native-formal-20261114/central-plan.json)、[跨机执行说明](research/native-formal-20261114/mac-handoff.md)。
 - 查看研究过程：[案例索引](research/case-studies.md)；查看总体结果：[实验批次索引](research/README.md)。
 - 提交材料：[展示材料](presentation/README.md)、[海报](poster/)、[第三方说明](../THIRD_PARTY_NOTICES.md)与[许可文本](licenses/)。
 
@@ -44,4 +44,4 @@ flowchart TD
 
 需求写目标和规则，设计写实现方法，批次记录写实际设置和结果，验收表引用这些记录。展示材料从它们提炼内容，旧方案统一进入 `archive/`。
 
-新文档按上述职责放置，文件名说明主题。实验批次按日期保存，保留原始文件和 `SHA256SUMS`。重命名时同步更新引用和生成脚本；修改 Markdown 后按需重新导出 PDF/PPTX。
+新文档按上述职责放置，文件名说明主题。实验批次按日期保存，保留原始文件和 `SHA256SUMS`（历史归档记录中保留原名 `RouteEvo` / `routeevo` 以维持原始数据可追溯性）。重命名时同步更新引用和生成脚本；修改 Markdown 后按需重新导出 PDF/PPTX。

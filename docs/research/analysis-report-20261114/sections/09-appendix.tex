@@ -10,7 +10,7 @@ ahc026 & I & 133031 & 135088 & 131864 & 1\\
 ahc026 & N & 132015 & 135718 & 132428 & 0\\\bottomrule
 \end{tabularx}
 \end{smalltable}
-ahc026 的初始最终得分为 131864，ahc024 为 15。I/r2 因 HTTP 400 终止，研究状态为 failed；已有候选通过最终测试，得分 135088。续批只执行此前未启动的位置。
+ahc026 的初始最终得分为 131864，ahc024 为 15。I/r2 因 HTTP 400 中止研究循环，研究状态为 failed；此前已通过开发验证的候选完成最终测试并取得 135088 分。断点恢复仅补齐此前未启动的条目。
 
 \subsection{本轮各批费用与完成范围}
 \begin{smalltable}
@@ -25,22 +25,18 @@ Mac OpenAI & --- & 0.3356500 & 4 轮开发探索完成\\\bottomrule
 
 上述批次的已知小计为 CNY 8.015241 与 USD 1.9116092。固定 Qwen 有一次 HTTP 400、路由两批各有一次 Sol timeout 未返回用量，合计三次调用保留未知费用。费用范围为表中四个批次的模型服务估算。
 
-原 900 秒路由长批有 12 个计划位置，完成的 baseline 最终得分为 139950；action 轮由用户停止，其余位置未启动。该批墙钟为 1036.929 秒，comparison 中 fair 为 null。短批另用 360 秒预算、独立计划与账本记录。
+原 900 秒路由长批计划运行 12 轮，其中 baseline 轮完成并取得最终得分 139950，action 轮由人工中止，其余 10 轮未启动（整批墙钟 1036.929 秒）。由于未能构成完整对照，后续另以 360 秒预算独立执行了路由短批并单独建账。
 
 \subsection{版本与数据来源}
 固定 Qwen 执行源码为 \texttt{990f598}，路由与 Mac 最终执行源码为 \texttt{912b20a}。desktop 分析来自仓库快照 \texttt{cd9cc4f} 的归档。报告重算 439 个输入文件，保存对应 SHA256；另外核验三批完整清单的 356、114、54 个条目，共 524 项。
 
-本轮复核覆盖归档文件、调用用量、候选哈希与运行记录。重新执行完整裁判还需要原 benchmark 输入及运行环境。样本配置包括固定模型各组三次重复、路由各组一次、Mac 每题两个开发用例；本报告据此给出逐次观测、过程分析和后续可检验的假设。
+本报告的脚本校验覆盖归档完整性、调用账本重算与候选哈希核对；完整重现评测另需原始 benchmark 数据与容器运行环境。
 
-\subsection{Mac 补交材料的复核状态}
-Mac 归档以 \texttt{5962203} 为准。旧导出器的 IP 脱敏规则误删了代码方括号；现已修复规则，并按原有运行报告与任务身份的 SHA256 恢复 25 份受损程序文件。189 个清单条目、24 份候选、12 份 best 与 16 份任务源码通过一致性核对，53 份归档程序通过语法检查。
+\subsection{Mac 归档校验与恢复记录}
+Mac 归档以提交 \texttt{5962203} 为准。早期导出器中的正则脱敏规则曾误删代码方括号，归档在修复导出逻辑后依据原始运行报告与 SHA256 校验码恢复了 25 份受损候选源码（恢复记录见 \texttt{recovery.json}），其余脱敏标记与截断响应保持原样。经核验，189 个清单条目、24 份候选、12 份最优程序及 16 份任务源码哈希一致，53 份归档程序通过 Python 语法检查，完整检验结果记录于 \texttt{mac-analysis.json}（状态为 \texttt{verified\_archive}）。
 
-本次修复没有追加模型或性能实验；Mac 按现有材料收尾，原正式 15+12 计划保持取消。调用中匹配的完整程序副本同步恢复，其他脱敏说明与截断响应保留原导出内容。恢复依据见 \texttt{recovery.json}；计时、候选身份、人工协助分类及来源哈希见 \texttt{mac-analysis.json}，复核状态为 \texttt{verified\_archive}。
-
-\subsection{远端 Qwen 与人工协助记录}
-远端 LM Studio 运行 \texttt{qwen3.8-27b-uncensored-mlx}。代理配置导致前三个失败批次分别产生 12、6、1 次 HTTP 503，共 19 次；绕过代理后的直连请求耗时 120.193 秒，返回 2327 输入、2047 输出 tokens，其中 1707 为 reasoning，响应因长度上限截断，记录为 incomplete。
-
-另有一份人工语义重建程序：作者根据模型可见推理补全实现，整理导入并调整变量名。它在独立两例开发检查中取得 1.225486 倍加速，参考与候选中位时间分别为 0.947241 和 0.772951 ms。该程序在元数据中归为人工协助产物。
+\subsection{远端本地模型尝试与人工补全记录}
+归档另收录远端 LM Studio（\texttt{qwen3.8-27b-uncensored-mlx}）的预备测试记录：经代理发起的前三组请求累计出现 19 次 HTTP 503（12、6、1 次）；直连单次请求耗时 120.193 秒，在输出达到 2047 tokens（含 1707 reasoning tokens，输入 2327 tokens）上限后截断并记为 \texttt{incomplete}。随附的一份基于截断推理输出的人工补全验证程序（两例开发检查加速比 1.225486$\times$，参考与候选中位耗时分别为 0.947241 和 0.772951 ms）在元数据中单独标为人工协助产物。上述记录均未计入第 \ref{sec:mac} 节的模型自动化评测。
 
 \subsection{证据索引与图表重建}
 报告目录包含 LaTeX 正文、按章节组织的源文件、可重算 JSON 和独立矢量图。desktop 分析通过 \texttt{scripts/analyze.py} 重算；Mac 分析使用 \texttt{scripts/analyze\_mac.py} 读取对应结果目录。构建命令、字体依赖和源数据获取方式见同目录 README。
@@ -50,6 +46,6 @@ Mac 归档以 \texttt{5962203} 为准。旧导出器的 IP 脱敏规则误删了
 \item[S2] \href{\repo/tree/\snap/docs/research/native-formal-20261114/ale/results}{固定 Qwen 归档}：冻结计划、summary、comparison、15 轮候选与报告、模型调用、SHA256SUMS。
 \item[S3] \href{\repo/tree/\snap/docs/research/native-routing/20261114/short-results}{路由短批归档}：四种组合、原始提示、逐例最终得分、研究步骤和用量。
 \item[S4] \href{\repo/tree/\snap/docs/research/native-routing/20261114/long-batch-stopped}{停止长批归档}：原计划、停止记录和费用账本。
-\item[S5] \href{\repo/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114}{Mac 修复归档}：OpenAI 探索、远端 Qwen 尝试、人工协助结果与任务参数；\href{\repo/pull/20#issuecomment-6875817264}{候选导出一致性复核记录}。
-\item[S6] \href{\repo/blob/\snap/docs/project-description.md}{历史系统能力说明}及\href{\repo/blob/\snap/docs/results.md}{自建任务实验}：程序复验与跨任务经验积累的独立证据。
+\item[S5] \href{\repo/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114}{Mac 探索归档}：OpenAI 探索、远端 Qwen 尝试、人工协助结果与任务参数；\href{\repo/pull/20#issuecomment-6875817264}{候选导出一致性复核记录}。
+\item[S6] \href{\repo/blob/\snap/docs/project-description.md}{历史系统能力说明}及\href{\repo/blob/\snap/docs/results.md}{自建任务实验}：早期跨任务经验积累参考文档。
 \end{description}

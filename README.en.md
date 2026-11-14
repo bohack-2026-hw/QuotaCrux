@@ -20,7 +20,7 @@ QuotaCrux frames algorithm and code optimization as a **budget-governed, empiric
 
 1. **Orthogonal Action & Model Routing (`ActionRouter` × `ModelRouter`)** — Decouples *what step to take next* (analyze, propose a candidate, gather task-specific profile evidence, re-validate, or finish) from *which model tier generates the artifact* (`small` local/hosted Qwen vs. `large` `gpt-6.1-sol`). Action routing can use either the generation LLM or a dedicated decision model; model routing swaps between an escalation rule and a decision model via clean adapters. On `ALE-Bench ahc026`, `gpt-6-luna` Decisions routing accounted for just **2.26%** of recorded USD spend.
 2. **Executable Program Experience, Not Prose Tips** — Early ablations established that storing prose-only advice cut API spend but *degraded* held-out speedup (`1.41× → 1.29×`). QuotaCrux persists **sandbox-verified programs paired with workload applicability conditions** in immutable snapshots (`v0, v1, …`). Incoming tasks re-validate closest past wins in Docker *before* touching any LLM, triage unseen task families directly to the large tier, and atomically publish verified improvements with instant rollback.
-3. **Zero-Trust Sandbox Evaluation & Auditable Ledger** — Models never grade themselves. Candidates execute in network-disabled, read-only, non-root Docker containers (or a dedicated GPU worker for KernelBench), timed alternately against the baseline (`U = 0`), with one final pass over hidden test cases. Every model role, reasoning token, wall-clock latency, and missing billing field (`null`, never silently zeroed) lands in a reproducible ledger.
+3. **Zero-Trust Sandbox Evaluation & Auditable Ledger** — Evaluation is strictly external. Candidates execute in network-disabled, read-only, non-root Docker containers (or a dedicated GPU worker for KernelBench), timed alternately against the baseline (`U = 0`), with one final pass over hidden test cases. Every model role, reasoning token, wall-clock latency, and missing billing field (`null` when unavailable, not zero-filled) lands in a reproducible ledger.
 
 ---
 
@@ -34,11 +34,11 @@ The DeepSeek Harness team's [SuperAgent research prototype](https://github.com/d
 
 We share that principle of **separating orchestration from execution**. While SuperAgent targets continuous team development workflows, QuotaCrux applies the boundary to single-episode budget allocation and empirical verification across three adapter seams:
 
-- **Action adapter:** Chooses `analyze`, `propose`, `profile`, `validate`, or `finish` from visible evidence, remaining budget, and task capabilities; `profile`, `validate`, and `finish` dispatch directly to program execution without an extra generation call.
+- **Action adapter:** Chooses `analyze`, `propose_candidate`, `get_evidence` (profiling), `run_validation`, or `finish` from visible evidence, remaining budget, and task capabilities; `get_evidence`, `run_validation`, and `finish` dispatch directly to program execution without an extra generation call.
 - **Model adapter:** Selects the model tier when generation is required. Both rule-based and decision-model routers enforce the same irreversible `small → large` escalation constraint, isolating *when* escalation happens as the controlled variable.
 - **Task & evaluation adapter:** Translates each benchmark's objective, profiling hooks, and verifier protocol into the research loop; an independent judge determines candidate validity and true metric gain.
 
-Because these seams isolate routing cleanly, we hold the task suite, generator weights, and budget cap fixed and vary one router at a time—directly measuring whether extra routing calls pay for themselves. Implementation details live in [Action & Model Routing](docs/design/action-model-routing.md).
+Because these seams isolate routing cleanly, we hold the task suite, generator weights, and budget cap fixed and vary one router at a time—directly quantifying the cost-quality trade-off of dedicated routing calls. Implementation details live in [Action & Model Routing](docs/design/action-model-routing.md).
 
 ### Inspiration from Jev and the Decision API Ecosystem
 
@@ -50,19 +50,19 @@ The decision layer also draws from **TypeSafe's Jev**: mapping `"state + typed q
 | **[TypeSafe Jev](https://docs.typesafe.ai/introduction)** | Typed choices, scoring rubrics, and truth judgments composable into control flow | **Choice action and model routing integrated**; use `--action-router jev` / `--model-router jev`, see [configuration](docs/design/action-model-routing.md#typesafe-jev) |
 | **[Gemini Decisions (`gemini-decision-1`)](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)** | Evaluates closed choices, boolean predicates, and scoring criteria over shared context | **Parallel Decision API reference & candidate adapter**; not integrated |
 
-Adding a new decision provider only requires an adapter mapping its request/response schema, validating allowed choices, and logging tokens/cost into the shared budget ledger. Current routing ablations charge both decisions and generations to one unified cap, exposing genuine quality/cost/time trade-offs (1 run per combination in the short study).
+Adding a new decision provider only requires an adapter mapping its request/response schema, validating allowed choices, and logging tokens/cost into the shared budget ledger. Current routing ablations charge both decisions and generations to one unified cap, exposing empirical quality, cost, and runtime trade-offs (1 run per combination in the short study).
 
 ---
 
 ## Built for Better: Inspectable, Rollback-Safe Self-Evolution
 
-Aligned with the **"Built for Better — Building Self-Evolving Intelligence"** principle, QuotaCrux turns every sandbox outcome into inspectable, diffable, rollback-safe evolutionary state—so the next run is measurably faster, cheaper, and more reliable than the last:
+Aligned with the **"Built for Better — Building Self-Evolving Intelligence"** principle, QuotaCrux turns every sandbox outcome into inspectable, diffable, rollback-safe evolutionary state—so subsequent runs reduce LLM cost and improve verified performance:
 
 - **Cross-round progression to 100% attainment (`A-Batch` `v0 → v19`):** Across `A-01..A-06`, Round 1 met `5/6` speedup targets; by Round 2 (`v19`), every task improved further to **`6/6` attainment** (per-task final speedups rising from `1.09×–1.77×` to `1.24×–2.03×`; `$0.455` cumulative learning cost).
 
 <img src="docs/assets/readme/evolution-abatch-en.png" alt="A-Batch two-round self-evolution speedups per task" width="780" />
 
-- **Verified generalization on sealed suites & live streams:** On the never-seen `D-Batch` held-out suite, switching to `v19` raised target attainment from `15/18` to **`18/18`**, median speedup from `1.20×` to **`1.73×`**, and delivered **`18/18` runs with zero LLM calls (`$0.000`)**. On `S-Stream` (seeded with `groupagg`-only `v19` plus unseen `logstats`/`intervals` tasks), QuotaCrux escalated on first encounters and solved **all `30/30` follow-up tasks with zero LLM calls** (vs. `9/30` without memory), cutting GPT requests by **78%** (`27 → 6`).
+- **Verified generalization on sealed suites & live streams:** On the sealed `D-Batch` held-out suite, switching to `v19` raised target attainment from `15/18` to **`18/18`**, median speedup from `1.20×` to **`1.73×`**, and delivered **`18/18` runs with zero LLM calls (`$0.000`)**. On `S-Stream` (seeded with `groupagg`-only `v19` plus unseen `logstats`/`intervals` tasks), QuotaCrux escalated on first encounters and solved **`30/30` follow-up tasks with zero LLM calls** (vs. `9/30` without memory), cutting GPT requests by **78%** (`27 → 6`).
 
 <img src="docs/assets/readme/evolution-zero-llm-en.png" alt="Zero-LLM re-validation delivery rates across D-Batch and S-Stream" width="780" />
 
@@ -96,7 +96,7 @@ All figures below are audited directly against run ledgers and frozen evaluation
 
 Evaluated on 15 hidden final cases under a unified per-run budget (`360s` wall-clock cap, `20` total HTTP requests including routing calls, up to `10` candidates; `small` = hosted `Qwen3.8-27B`, `large` = `gpt-6.1-sol`, `Decisions` = `gpt-6-luna`; 1 run per combination from `v0`):
 
-- **Highest final quality (`Decisions / rule`):** Reached **`139,972`** (**`+6.15%`** over `c0 = 131,864`, beating the default `LLM / rule` baseline by `+236` pts) while cutting task box-movement energy across the 15 final cases from `18,136` to `10,028` (**-44.7%**).
+- **Highest final quality (`Decisions / rule`):** Reached **`139,972`** (**`+6.15%`** over `c0 = 131,864`, beating the default `LLM / rule` baseline by `+236` pts) while cutting total box-movement energy across the 15 final cases from `18,136` to `10,028` (**-44.7%**).
 - **Early stopping vs. depth (`Decisions / Decisions`):** Finished **71.2% faster** (`112.9s` vs. `392.0s`) by staying on `small` and calling `finish` early (`+0.51%` score gain), making the cost/speed vs. quality trade-off explicit.
 
 <img src="docs/assets/readme/routing-ahc026-tradeoff-en.png" alt="ALE-Bench ahc026 routing ablation speed vs final quality trade-off" width="780" />
@@ -107,7 +107,7 @@ Evaluated on 15 hidden final cases under a unified per-run budget (`360s` wall-c
 
 <img src="docs/assets/readme/routing-ahc026-requests-en.png" alt="ALE-Bench ahc026 HTTP request mix, pass rate, and decision cost" width="780" />
 
-> **Boundary clarified by the two-host supplement:** Across 14 Decisions action calls, median latency was `1.34s` with an estimated total routing cost of about `$0.015`, supporting low-overhead integration. Because every call in this batch continued proposing candidates and complete searches still consumed most of the loop budget—without repeating the earlier dual-Decisions early finish—these runs do not establish end-to-end speedup or settled speed/quality modes yet.
+> **Scope boundary from the two-host supplement:** Across 14 Decisions action calls, median latency was `1.34s` with ~$0.015 estimated routing cost, confirming low per-call overhead. However, every call continued proposing candidates and consumed most of the loop budget without reproducing the earlier dual-Decisions early stop, so these runs do not establish consistent end-to-end speedup or settled speed/quality tiers.
 
 <details>
 <summary>Show raw ahc026 routing ablation table</summary>
@@ -127,8 +127,8 @@ Conducted with fixed `gpt-6.1-sol` (`180s` / `5` requests / `3` candidates per e
 
 <img src="docs/assets/readme/algotune-speedups-en.png" alt="AlgoTune PageRank and 1D Convolution speedup comparison" width="780" />
 
-- **Graph representation breakthrough (PageRank):** Both modes eliminated NetworkX graph construction in favor of SciPy sparse power iteration, slashing solve latency from `11.15 ms` / `10.91 ms` down to **`0.45 ms` (`25.04×`)** and **`0.47 ms` (`23.05×`)**.
-- **Precision-aware FFT scheduling (1D Convolution):** Switched to `float32` real FFT within the L2 tolerance and batched buffer reuse, accelerating solve latency to **`0.42 ms` (`2.67×`)** and **`0.74 ms` (`1.30×`)**.
+- **Graph representation breakthrough (PageRank):** Both modes eliminated NetworkX graph construction in favor of SciPy sparse power iteration, reducing median solve time from `11.15 ms` / `10.91 ms` down to **`0.45 ms` (`25.04×`)** and **`0.47 ms` (`23.05×`)**.
+- **Precision-aware FFT scheduling (1D Convolution):** Switched to `float32` real FFT within the L2 tolerance and batched buffer reuse, reducing solve latency to **`0.42 ms` (`2.67×`)** and **`0.74 ms` (`1.30×`)**.
 
 <details>
 <summary>Show raw AlgoTune Mac exploratory table</summary>
@@ -146,13 +146,13 @@ Conducted with fixed `gpt-6.1-sol` (`180s` / `5` requests / `3` candidates per e
 
 Evaluated on sealed Python optimization benchmarks (3 built-in families: `groupagg`, `logstats`, `intervals`; identical model weights, prompts, and evaluators — varying *only* the experience snapshot):
 
-- **`C-Batch` prose regression vs. `D-Batch` program reuse:** `v6` prose advice trimmed GPT escalations slightly yet pushed median held-out speedup down **-8.5%** (`1.41× → 1.29×`); executable snapshot `v19` (from two A-batch learning rounds) raised `D-Batch` attainment from `15/18` to **`18/18`** and median speedup **+44.2%** (`1.20× → 1.73×`).
+- **`C-Batch` regression under prose-only advice vs. `D-Batch` gains from program reuse:** `v6` prose advice trimmed GPT escalations slightly yet pushed median held-out speedup down **-8.5%** (`1.41× → 1.29×`); executable snapshot `v19` (from two A-batch learning rounds) raised `D-Batch` attainment from `15/18` to **`18/18`** and median speedup **+44.2%** (`1.20× → 1.73×`).
 
 <img src="docs/assets/readme/experience-quality-ablation-en.png" alt="Controlled comparison of text-only regression vs executable program reuse" width="780" />
 
 - **`D-Batch` zero-LLM held-out delivery & `S-Stream` online scaling:** All 18 `D-Batch` held-out runs completed with **zero LLM requests (`$0.000` held-out cost; prior learning rounds cost `$0.455` separately)** and **62.5%** lower total runtime (`1782s → 669s`). Starting from `groupagg`-only `v19`, `S-Stream` preserved `36/36` attainment and `1.86×` median speedup while cutting GPT calls by **78%** (`27 → 6`), USD spend from `$0.402` to **`$0.086`**, and solving **every follow-up run (`30/30`) without an LLM call**.
 
-<img src="docs/assets/readme/experience-cost-runtime-en.png" alt="Frontier cost collapse and batch runtime reduction from experience reuse" width="780" />
+<img src="docs/assets/readme/experience-cost-runtime-en.png" alt="Frontier cost reduction and batch runtime reduction from experience reuse" width="780" />
 
 <details>
 <summary>Show raw experience-memory controlled comparison table</summary>
@@ -219,7 +219,7 @@ cd backend
 # Run a single task with decoupled Decisions action routing
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
 
-# Use Jev action routing; model routing can also use --model-router jev
+# Use Jev action routing (--no-router bypasses initial experience routing so the chosen router picks step 1; --model-router jev is also supported)
 uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # Deliver online while evolving snapshots, or learn serially across tasks

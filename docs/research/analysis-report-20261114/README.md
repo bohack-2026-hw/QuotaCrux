@@ -46,17 +46,17 @@
 
     bash build.sh
 
-构建流程核验 desktop 三批 524 个清单条目，从原始 JSON 重算 desktop 数据和六张图，再审计已合入的 Mac 归档并重算其分析 JSON 和计时图，最后编译 LaTeX。该命令不运行模型或 benchmark；首次执行可能下载绘图依赖。
+构建流程核验 desktop 三批 524 个清单条目，从原始 JSON 重算 desktop 数据和六张图，随后校验 Mac 归档并重算其分析 JSON 与计时图，最后编译 LaTeX。该脚本仅读取本地归档，不触发模型或基准评测；首次执行可能需拉取绘图依赖。
 
 只更新正文时，执行两遍：
 
     xelatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf -jobname=quotacrux-research-report report.tex
 
-Mac 结果已通过 PR #20 合入；修复版归档为 `5962203`，可单独重新分析：
+Mac 归档（提交 `5962203`）可单独重新分析：
 
     uv run --with matplotlib==3.10.8 python scripts/analyze_mac.py --source ../mac-exploratory-20261114 --source-commit 5962203315dc1c229cd6ef3255d06e2dc5745436
 
-脚本只读取本地目录，输出分析 JSON、代码一致性检查和图表。--plot-only 使用已保存的分析 JSON，仅重建图形。
+脚本只读取本地目录，输出分析 JSON、代码一致性检查和图表。`--plot-only` 仅使用已保存的分析 JSON 重建图形。
 
 ## 数据版本与复核
 
@@ -64,8 +64,8 @@ Mac 结果已通过 PR #20 合入；修复版归档为 `5962203`，可单独重�
 - 固定 Qwen 执行源码：990f598b87f7c93bd27b6ceef5751bbc2d39dd79。
 - 路由及 Mac 最终执行源码：912b20a4cfeb51af9c36d0679b23f0990abe862f。
 - [固定 Qwen 结果](../native-formal-20261114/ale/results/README.md)、[路由短批](../native-routing/20261114/short-results/README.md)、[停止长批](../native-routing/20261114/long-batch-stopped/README.md)。
-- [Mac 归档修复版本](https://github.com/bohack-2026-hw/QuotaCrux/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114)及[导出复核记录](https://github.com/bohack-2026-hw/QuotaCrux/pull/20#issuecomment-6875817264)。
+- [Mac 探索归档](https://github.com/bohack-2026-hw/QuotaCrux/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114)及[导出一致性核验记录](https://github.com/bohack-2026-hw/QuotaCrux/pull/20#issuecomment-6875817264)。
 
-Mac 导出方括号问题已修复，受损程序按原有运行/任务身份哈希恢复；189 项清单、24 份候选、12 份 best、16 份公开任务源码及 53 份归档程序语法检查通过。分析 JSON 为 verified_archive。恢复记录见 [recovery.json](../mac-exploratory-20261114/recovery.json)。本轮按现有材料收尾，不再等待 Mac 补交或追加评测，原正式 15+12 计划保持取消。远端 Qwen 的三个失败批次共 19 次 HTTP 503。
+Mac 归档已完成导出恢复与校验（189 项清单、24 份候选、12 份最优程序与 16 份任务源码哈希一致，53 份归档程序通过语法检查；分析状态为 `verified_archive`，恢复记录见 [recovery.json](../mac-exploratory-20261114/recovery.json)）。
 
-验证包括归档哈希、原始数据重算、独立内容复核、LaTeX 编译、字体嵌入与 PDF 逐页检查。源码仓库为 QuotaCrux，历史实验标识保留 RouteEvo。
+构建检验覆盖归档 SHA256、原始数据重算、LaTeX 无警告编译与字体嵌入。源码仓库为 QuotaCrux（归档 JSON 中保留历史标识 RouteEvo）。

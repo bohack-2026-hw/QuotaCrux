@@ -1,14 +1,16 @@
 # 正式研究协议 v2
 
-日期：2026-11-14。提示版本为 `agent-prompt-v7`。ALE 使用代码版本 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`；Mac 新计时方法和 Decisions 路由使用 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。下文的“冻结”指评测前固定代码、数据和参数，运行期间不再修改。
+> 归档说明：本协议中的 ALE 15 项已执行完毕并归档于 [ALE 结果](ale/results/README.md)；Mac 原定 15 项正式消融与 12 项路由批次未启动，相关探索与校准记录分别见 [Mac 交接](mac-handoff.md) 与 [Mac 探索结果包](../mac-exploratory-20261114/README.md)。
+
+日期：2026-11-14。提示版本为 `agent-prompt-v7`。ALE 使用代码版本 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`；Mac 计时方法和 Decisions 路由使用 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。下文的“冻结”指评测前固定代码、数据和参数，运行期间不再修改。
 
 ## 运行安排
 
-[central-plan.json](central-plan.json) 列出 30 次运行：ahc024 的 F/I 各3次，ahc026 的 F/N/I 各3次，convolve_1d 的 F/N/I 各3次，pagerank 的 F/I 各3次。F/N/I 分别为 feedback/no_feedback/independent。三组按 F-N-I / N-I-F / I-F-N 轮换，两组交替。每题使用5个开发用例（dev）和15个最终测试用例（final）。
+[central-plan.json](central-plan.json) 列出 30 次计划运行：ahc024 的 F/I 各 3 次，ahc026 的 F/N/I 各 3 次，convolve_1d 的 F/N/I 各 3 次，pagerank 的 F/I 各 3 次（F/N/I 分别为 feedback / no_feedback / independent）。三组按 F-N-I / N-I-F / I-F-N 轮换，每题使用 5 个开发用例（dev）和 15 个最终测试用例（final）。
 
-ALE 的任务、镜像、提示词、CPU 和15项顺序见 [ale-freeze.json](ale-freeze.json)。15项已执行：14项正常完成，1项因 API 错误失败；15个选定候选均通过最终测试。见 [ALE 结果](ale/results/README.md)。
+ALE 的任务、镜像、提示词、CPU 和 15 项顺序见 [ale-freeze.json](ale-freeze.json)。15 项已执行：14 项正常完成，1 项因 API 错误失败；15 个选定候选均通过最终测试（见 [ALE 结果](ale/results/README.md)）。
 
-Mac 已采用 GC v2 计时方法，待 #4 回传任务、镜像和校准记录后启动原15项，见 [Mac交接](mac-handoff.md)。各模式使用同题、同机、同代码和镜像，旧v1计时结果单独保留。Mac卷积另有12轮 Decisions 路由实验，使用独立计划和结果。各批校准及配置检查通过后即可启动。
+Mac 端已核验 GC v2 计时方法，原定 15 项正式计划及新增 12 项 Decisions 路由实验未启动，具体交接清单与准备工作见 [Mac 交接](mac-handoff.md)。
 
 以下设置用于原30项固定模型批次：
 
@@ -33,7 +35,7 @@ F 保留当前任务全部候选、模型分析/假设/意图和真实评测反�
 
 final状态分 disabled/pending/completed/failed/not_run；completed须验收通过。final错误输出、超时、裁判异常保留为failed。c0性能final正确时报告1.0且normalized=true/measured=false；ALE使用实际score。失败、缺失、c0、零改善保留在分母和配对表，c0分数为零不计算百分比。
 
-环境、内部、模型API致命错误或人工停止会中断后续wave，已执行和未执行项全部留档；不自动重跑替换。单个候选final不通过照实计为失败，继续已登记的其他项。配置公平性独立于结果成败：相同配置且记录完整为true，变化为false，材料不足为null。
+环境、内部或模型 API 致命错误及人工停止会中断后续 wave，已执行和未执行项全部留档。单个候选 final 未通过时计为失败，其余已登记项继续执行。配置公平性独立于结果成败：相同配置且记录完整为 true，变化为 false，材料不足为 null。
 
 ## 费用、接口和验证
 
@@ -45,14 +47,14 @@ final状态分 disabled/pending/completed/failed/not_run；completed须验收通
 
 ## 执行
 
-以下保留已完成 ALE 批次的启动命令：在desktop的固定源码checkout内，使用已登记的两worker任务包，先运行不带`--execute`的冻结一致性检查，再执行同一命令加`--execute`。脚本核对源码SHA、干净checkout、模型、任务manifest、镜像、schema和各模式提示哈希，拒绝覆盖已有批次目录。当前待执行的 Mac 原15轮及新增路由12轮按 [Mac交接](mac-handoff.md)完成v2任务、镜像和机器登记后启动。
+以下保留已完成 ALE 批次的启动命令示例：在 desktop 的固定源码 checkout 内使用已登记的两 worker 任务包，先执行不带 `--execute` 的冻结一致性检查，再加入 `--execute` 运行（脚本核对源码 SHA、干净 checkout、模型、任务 manifest、镜像、schema 与提示哈希，并阻止覆盖已有目录）。原计划的 Mac 15+12 正式批次后续未启动，相关交接与预检说明见 [Mac 交接](mac-handoff.md)。
 
 ```bash
-cd /home/hycx233/routeevo-ale-formal-20261114/repo/backend
+cd "$ALE_ROOT/repo/backend"
 .venv/bin/python ../../run_ale.py \
-  --root /home/hycx233/routeevo-ale-formal-20261114 \
-  --manifest /home/hycx233/routeevo-ale-formal-20261114/freeze.json \
-  --out /home/hycx233/routeevo-ale-formal-20261114/formal-v2 --execute
+  --root "$ALE_ROOT" \
+  --manifest "$ALE_ROOT/freeze.json" \
+  --out "$ALE_ROOT/formal-v2" --execute
 ```
 
 脚本复用 `research_compare.execute(plan=...)`，逐批记录耗时。结果按计划中的seq/task_id/repeat/mode匹配，请求、候选、评测和SQLite保存在各worker目录。

@@ -8,8 +8,9 @@
 | 现场演示脚本 | [Markdown](demo-script.md) | — |
 | 项目演示文稿 | [PowerPoint](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
 | 技术演示文稿 | [PowerPoint](QuotaCrux-technical.pptx) | [PDF](QuotaCrux-technical.pdf) |
-| 幻灯片 PDF | — | [PDF](QuotaCrux.pdf) |
-| 海报 | [生成脚本](../../backend/scripts/build_poster.py) | [PDF](../poster/QuotaCrux-poster.pdf) · [预览](../poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) · [场景预览](../poster/QuotaCrux-xbanner-mockup.jpg) |
+| 海报 | [生成脚本](../../backend/scripts/build_poster.py) | [PDF](../poster/QuotaCrux-poster.pdf) · [预览](../poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) |
+| 研究实验报告（19 页） | [LaTeX 源码](../research/analysis-report-20261114/report.tex) | [PDF](../research/analysis-report-20261114/output/pdf/quotacrux-research-report.pdf) |
+| 展示视频手稿 | [Markdown](../video/QuotaCrux-video-manuscript.md) | — |
 
 图表与截图在 [deck/](deck/)。`backend/scripts/build_deck.py` 默认输出技术文稿 `QuotaCrux-technical.pptx`，截图取 `deck/shots/`；海报由 `backend/scripts/build_poster.py` 生成到 `docs/poster/`。
 

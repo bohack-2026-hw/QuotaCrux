@@ -1,9 +1,6 @@
 # 动作与模型选择设计
 
-路由适配器最初基于 `f8fbb3e`，将两个决策点分开：**下一步做什么**和**由哪个生成模型处理**。
-当前集成保留默认 `action=llm, model=rule`，并与初始经验分流、在线任务流及 native 研究协议共存。
-legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`）或 TypeSafe Jev（`jev-1.14.0`），
-其输出为离散选择和概率；代码与分析仍由 Qwen/GPT 生成。下方接口联测数据保留原执行版本与结果。
+路由适配器基于决策与生成解耦架构，将两个选择点拆分：**下一步做什么**（`ActionRouter`）与**由哪个生成模型处理**（`ModelRouter`）。当前实现保留默认组合 `action=llm, model=rule`，并与初始经验分流、在线任务流及原生研究协议共存。传统（`legacy`）运行及显式启用 `adaptive` 策略的原生 `feedback` 研究，可将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`）或 TypeSafe Jev（`jev-1.14.0`）；其输出为离散选择和概率，代码与分析仍由 Qwen/GPT 生成。
 
 ## 执行流程
 
@@ -11,7 +8,7 @@ legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以�
 flowchart TD
     S[固定任务、快照与预算] --> R[既有经验检索及程序复验]
     R -->|未达标| I[按配置固定模型或执行初始分流]
-    I --> A{动作 adaptor}
+    I --> A{动作适配器}
     A -->|llm| M[生成模型: fixed / rule / decisions / jev]
     M --> L[Qwen / GPT 选择动作并返回内容]
     A -->|decisions / jev| D[决策模型选择离散动作]
@@ -31,17 +28,17 @@ flowchart TD
 - `ModelRouter`：`RuleModelRouter` 仍以连续 2 个未达标候选或 3 次小模型请求触发升级；
   `DecisionsModelRouter` 在每个待生成请求前选择 small/large，升级后保持 large。
   两者只替换选择依据，沿用基线的单向升级约束。
-- 决策输入为当时的 agent 可见状态、预算和模型配置。隐藏 final 数据及事后评测结果不进入路由请求。
-  两层适配器共用动作菜单和解析逻辑；`llm/openai_decisions.py` 与 `llm/typesafe_jev.py` 分别校验供应商响应，凭证仅从环境读取。
+- 决策输入为当时的 agent 可见状态、预算和模型配置。隐藏 final 数据与 final 评测结果不进入路由请求。
+  两层适配器共用动作菜单和解析逻辑；`llm/openai_decisions.py` 与 `llm/typesafe_jev.py` 分别校验供应商响应，凭证仅从环境变量读取。
 - Runner 保有候选静态检查、沙箱、实测判定、停止与资源记账。生成模型返回与已选动作不同的 action
   会记为 `invalid_action/route_mismatch`；外部调用错误沿用既有错误记录与停止规则。
 
 实现入口：`backend/src/quotacrux/agent/routing.py`；接入点：`agent/runner.py` 的 `_iterate`、
-`_select_model` 和 `_invoke`。没有更改任务、经验或 evaluator 接口。
+`_select_model` 和 `_invoke`，未改动既有任务、经验与评测器接口。
 
 ## 四组配置
 
-此四组消融继续使用 OpenAI Decisions。Jev 可通过下节的单次运行配置独立选择。
+四组消融命令（`ablate-routing`）默认使用 OpenAI Decisions；TypeSafe Jev 可通过下节的单次运行参数独立指定。
 
 | 组 | `--action-router` | `--model-router` | 变化 |
 | --- | --- | --- | --- |
@@ -63,14 +60,10 @@ uv run quotacrux ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
   --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
 ```
 
-任务需先通过 `quotacrux tasks build` 注册。四组统一关闭初始经验分流，从 small 开始；比较固定任务、经验快照、生成模型、总预算、沙箱及评测器，
-仅改变 routing；按任务和重复轮次轮换组别顺序，串行执行。运行均为 eval，不发布经验；拒绝使用包含
-这些任务经验的快照。`v0` 为空快照，适合观察路由本身；非空快照可能在复用阶段直接完成，报告保留这类零调用运行。
+任务需先通过 `quotacrux tasks build` 注册。四组统一关闭初始经验分流，从 small 开始；在固定任务、经验快照、生成模型、总预算、沙箱及评测器的前提下，仅改变路由策略（routing），按任务和重复轮次轮换组别顺序并串行执行。运行均为 eval，不发布经验；拒绝使用包含目标任务经验的快照。`v0` 为空快照，适合观察路由本身；非空快照可能在复用阶段直接完成，报告保留这类零调用运行。
 
 新汇总写入 `var/comparisons/research-routing-<id>.json`，每次运行仍有完整 `var/runs/<id>/report.json`。
-汇总的 `fair` 按同一任务检查实际配置仅有两个 routing 开关不同、完整环境与 manifest 不漂移、快照一致，
-并核对冻结计划和四组矩阵。未全部记录时为 null；final 完整性由独立字段报告。
-这是配置可比性检查；样本量及计时波动仍需根据实际结果判断。环境、内部或模型 API 错误会停止批次并记录失败。
+汇总的 `fair` 仅校验配置、环境与矩阵完整性，样本量与计时波动需结合实测数据判断；未全部记录时为 null，final 完整性由独立字段报告。环境、内部或模型 API 错误会停止批次并记录失败。
 
 `run`、`learn` 命令均接受两个开关；HTTP 单次运行也可选择：
 
@@ -84,13 +77,13 @@ uv run quotacrux ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
 }
 ```
 
-请求发往既有 `POST /api/runs`，省略两个字段即为 baseline。界面的现有启动方式仍使用默认值。
+请求发往既有 `POST /api/runs`，省略两个字段即为 baseline。前端界面默认启动配置仍沿用上述默认值。
 
 ## TypeSafe Jev
 
 在 `backend/.env` 配置 `TYPESAFE_API_KEY` 和 `TYPESAFE_MODEL=jev-1.14.0`，然后选择
 `--action-router jev`、`--model-router jev`，或同时选择两者。也可与 `llm`、`rule`、`decisions` 混合。
-HTTP 单次运行对应字段同样接受 `jev`。native feedback 任务还需 `--research-model-policy adaptive`。
+HTTP 单次运行对应字段同样接受 `jev`。原生 `feedback` 研究还需加上 `--research-model-policy adaptive`。
 
 ```sh
 uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
@@ -102,9 +95,7 @@ Jev 使用官方 `POST https://api.typesafe.ai/v1/systemone`，把现有可见�
 缺失选项、非法概率、未知动作或不合法用量均作为 `bad_response` 记录。原始响应单独保留。
 实现复用 `httpx`，单次调用只发一次请求，错误恢复仍由 Runner 在总预算内决定。
 
-动作和模型判断保留为两个决策点：模型问题可以读取本轮动作选择后的状态，且直接取证、复验或结束
-无需模型分档请求。每次调用记录 `typesafe_jev`、请求模型与返回模型、用量、延迟和估算费用。
-配置指纹增加 Jev 模型、端点及证据处理指令 hash；`jev-latest` 可用于探索，正式比较应固定版本。
+动作和模型判断保留为两个决策点：模型分档问题读取本轮动作选择后的状态，若动作直接为取证、复验或结束则跳过模型分档请求。每次调用记录 `typesafe_jev`、请求模型与返回模型、用量、延迟和估算费用。配置指纹增加 Jev 模型、端点及证据处理指令哈希；`jev-latest` 可用于探索，正式比较应固定版本。
 
 按 [TypeSafe 官方模型页](https://docs.typesafe.ai/models)（2026-11-15 核对），Jev 1.13/1.14
 输入为 `$0.042 / 1M tokens`，输出免费；只有已知版本与已报告用量可估价，未来未知版本的费用保留 unknown。
@@ -114,24 +105,22 @@ Jev 使用官方 `POST https://api.typesafe.ai/v1/systemone`，把现有可见�
 2026-11-15 接口联测复用公开开发包 `docs/research/run-20261113T212515-d6bd/model_calls/m1.json`
 中的请求前状态，分别调用动作与模型路由各一次：返回模型均为 `jev-1.14.0`，动作选择
 `propose_candidate`（0.828s，输入 10,935 token），模型选择 `small`（0.635s，输入 10,666 token）。
-两次估算费用合计 `$0.000907242`。该联测验证真实接口、概率解析与路由映射，未运行生成或评测器，
-不能据此判断完整优化实验的收益；两层路由都使用相同历史状态，未模拟顺序执行中的状态更新。
+两次估算费用合计 `$0.000907242`。该联测验证接口连通性、概率解析与路由映射，未运行代码生成或评测器；两层路由均基于同一历史快照状态，不反映顺序执行中的状态演进。
 
 ## 预算与报告含义
 
 每次 OpenAI Decisions、Jev 或生成请求都计入同一个 `max_model_requests`、已报告 token 和 wall-clock 预算。
 一次“决策模型选动作 → 决策模型选模型档位 → Qwen/GPT 生成”最多消耗 3 次请求。
 模型选择前至少预留路由和生成的 2 次配额；生成前重新检查停止标记、token 和时间预算。
-因此固定总请求预算下，Decisions 组可能有更少生成机会，这是本消融测量的实际开销。
+因此在固定总请求预算下，路由请求（Decisions / Jev）会占用部分可用生成配额，该开销计入路由策略对比。
 
 报告新增 `iterations.routing_requests`、`generation_requests` 和 `usage.by_purpose.routing/generation`。
 路由步骤保留选择、完整概率分布和 call id；原始请求/响应仍保存在 `calls/`。
-配置指纹含两个开关、路由实现版本、问题文本 hash；复现命令同时保留初始分流、两层路由、研究模式、
+配置指纹含两个开关、路由实现版本、问题文本哈希；复现命令同时保留初始分流、两层路由、研究模式、
 固定模型、dev-only、CPU affinity、预热次数和预算配置。
 
 OpenAI Decisions 使用既有实验中的官方端点与计价表，估算费用与生成费用分开。
-AIPing Qwen 暂无本仓库计价表，费用标记为 unknown；与已知 OpenAI 费用汇总时标记 partial。
-`cost_usd_total` 标为 partial 时，只包含已知费用。
+运行账本中 AIPing Qwen 未内置美元计价表，费用记为 unknown；与已知美元费用汇总时记为 partial（研究批次报告中的人民币费用按冻结价目表另行核算）。`cost_usd_total` 标为 partial 时，只包含已知费用。
 
 ## 当前集成约定
 
@@ -142,20 +131,13 @@ AIPing Qwen 暂无本仓库计价表，费用标记为 unknown；与已知 OpenA
 
 `--fixed-model small|large` 优先固定生成角色，同时关闭初始经验分流，跳过模型路由请求与升级。
 研究默认 `research_model_policy=fixed`，只接受默认 `llm + rule`。
-`research_mode=feedback` 显式配合 `research_model_policy=adaptive` 时允许 native 四组路由，固定 eval/v0、
-`fixed_model=None` 和初始分流关闭；native 菜单按真实能力去掉 cProfile，并传入 score/speedup 目标。
-independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
-没有前次分析、候选或评测反馈，只允许提出独立候选或结束。
+`research_mode=feedback` 显式配合 `research_model_policy=adaptive` 时允许 native 四组路由：固定 `eval` / `v0`、`fixed_model=None` 并关闭初始经验分流；原生任务的动作菜单按可用工具移除 cProfile（`get_evidence`），并传入 `score` 或 `speedup` 目标。independent/no_feedback 不接受 adaptive。independent 模式只见 c0，没有前次分析、候选或评测反馈，只允许提出独立候选或结束。
 
-初始分流的 `route_model` 步骤由 `program` 记录，Decisions 的模型选择由 `model` 记录。
+初始分流的 `route_model` 步骤由 `program` 记录，路由模型（Decisions / Jev）的模型选择由 `model` 记录。
 报告的 `route` 只取初始程序分流，逐步 `model_role` 与用途账本保留实际调用角色。
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
-协调入口：[QuotaCrux issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1)。
 
-历史回放结果见 [decision-model/README.md](../archive/decisions-experiments/README.md)。
-本适配器提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
-实际批次范围与结果见[路由研究入口](../research/native-routing/README.md)；
-最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/routing-study-plan-v1.md)。下方保留旧版接口联测结果，原生任务的 baseline 在对应批次重新运行。
+历史回放结果见 [Decisions 接口探索与历史回放](../archive/decisions-experiments/README.md)。四组路由对照与原生任务实测结果见[路由研究入口](../research/native-routing/README.md)；最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/routing-study-plan-v1.md)。下节为早期接口联测记录。
 
 ## 2026-11-14 接口联测结果
 
@@ -172,15 +154,12 @@ benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标�
 | model_decisions | 1 | 2 | 20.881 s | 1.1443× | 是 |
 | both_decisions | 1 | 2 | 23.618 s | 1.2969× | 是 |
 
-四组最终产物均正确，`fair=true`，除 routing 外共享配置 hash 为 `ac9717d00b1da0f8`。
+四组最终产物均正确，`fair=true`，除 routing 外共享配置哈希为 `ac9717d00b1da0f8`。
 action_decisions 首个候选开发检查为 wrong_output，第二个候选开发验证达标；final 中候选最慢
-178.315 ms 略慢于基线最快 178.102 ms，未满足原有的全样本分离门槛，保留未达标结果。
+178.315 ms 略慢于基线最快 178.102 ms，未满足全样本分离门槛，记为未达标。
 
 7 次 Decisions 请求中，5 次成功、2 次 ConnectError；失败已计入预算，后续请求在预算内恢复。
-成功调用已知费用估算合计 **$0.0013514**。两次网络错误和五次 Qwen 调用的费用未知，
-AIPing 的费用未查询，保留为未知。
-单任务、单次运行及两次网络错误不足以区分策略优劣；本轮确认两处替换逻辑及四组实验入口都能运行，
-保留 baseline 为默认策略。
+成功调用已知费用估算合计 **$0.0013514**。两次网络错误和五次 Qwen 调用的费用未知，保留为 `unknown`。本次联测验证了双层路由切换与四组消融入口的端到端连通性，默认策略维持 baseline；完整原生路由对照结果见[路由研究入口](../research/native-routing/README.md)。
 
 逐调用 usage、路由概率、候选哈希、开发结果和 final 原始计时见
 [routing-smoke-results.json](../archive/decisions-experiments/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
@@ -196,10 +175,4 @@ uv run quotacrux ablate-routing routing-smoke-01 --snapshot v0 --repeats 1 \
   --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
 ```
 
-验证记录：
-
-- `python -m pytest -q`：60 passed，包含原有 Docker 回归；有一条 FastAPI TestClient 的依赖弃用提示。
-- Python 编译、Git diff 检查、前端 TypeScript/Vite 构建及 oxlint 通过。
-- 前端构建使用原工作区已安装依赖，其 `pnpm-lock.yaml` 与本分支字节一致；新安装受到本机
-  minimumReleaseAge 策略阻止，未改动依赖锁或该策略。
-- 已通过 issue #1 与本地 EffiBench agent 交接独占 Docker/Qwen 调用窗口，本轮完成后已释放。
+验证记录：联测时后端 60 项 pytest 回归、Python 编译及前端 TypeScript/Vite 构建与 oxlint 均通过。

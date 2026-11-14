@@ -1,11 +1,10 @@
 # ALE、AlgoTune 与 KernelBench 接入
 
-分支：`feat/research-benchmarks`，基于 `feat/effibench-x-adapter@19ce8db`。
 正式评测按[研究协议 v2](../research/native-formal-20261114/protocol.md)执行；早期双组设计见[归档方案](../archive/feedback-comparison-plan-v1.md)。
 
-首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](../research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
+首轮 ALE-Bench / AlgoTune 开发预实验见[第一轮结果与轨迹](../research/native-20261114/README.md)（v4 提示；v5 提示与后续结果单独归档）。
 
-第二轮补齐实际任务概况、保留任务内分析，并完成 CPU 计时校准后，已执行固定 Qwen 的真实对照。AlgoTune feedback / independent 的保留开发加速分别为 1.8343× / 1.2101×；ALE independent 得分从 17,753 提高到 18,230，feedback 保持基线。完整指标、成本、过程曲线和冻结配置见[第二轮报告](../research/native-r2-20261114/README.md)。两轮均未评测最终集。
+第二轮补齐实际任务概况、保留任务内分析，并完成 CPU 计时校准后，执行了固定 Qwen 的 dev 对照：AlgoTune `feedback` / `independent` 的保留开发加速分别为 1.8343× / 1.2101×；ALE `independent` 得分从 17,753 提高到 18,230，`feedback` 保持基线（详见[第二轮报告](../research/native-r2-20261114/README.md)，上述预实验均未评测最终集）。后续基于该适配完成的 15 轮 ALE 正式实验（含 final 测试）见[ALE 正式结果](../research/native-formal-20261114/ale/results/README.md)。
 
 ## 已接入范围
 
@@ -13,9 +12,9 @@
 | --- | --- | --- | --- |
 | ALE-Bench | `ahc026`、`ahc024`，均为 batch 题 | 上游 Rust `vis` 校验可行性并计算原始分数；按用例求和，越高越好 | 本机 CPU；候选 Python，裁判独立容器 |
 | AlgoTune | `convolve_1d`、`pagerank` | 上游 `is_solution` 数值校验；初始 `solve` / 候选 `solve` 的函数加速比 | 本机 CPU，NumPy / SciPy / NetworkX |
-| KernelBench | Level 1 `1_Square_matrix_multiplication_` | 参考张量对照、CUDA events 计时 | 独立 GPU worker；面向 desktop 的 RTX 2080 Ti |
+| KernelBench | Level 1 `1_Square_matrix_multiplication_` | 参考张量对照、CUDA events 计时 | 独立 GPU worker（RTX 2080 Ti 节点） |
 
-目前接入上表中的题目。ALE 报告原始得分；AlgoTune 和 KernelBench 按下述方法计时。下载数据和运行产物保存在 `backend/var/`（或 `QUOTACRUX_VAR_DIR`）。
+ALE 报告原始得分；AlgoTune 和 KernelBench 按下述方法计时。下载数据和运行产物保存在 `backend/var/`（或 `QUOTACRUX_VAR_DIR`）。
 
 固定来源：
 
@@ -65,7 +64,7 @@ uv run quotacrux report RUN_ID --json
 uv run quotacrux export-run RUN_ID --bundle ../artifacts/RUN_ID
 ```
 
-成对结果写入 `var/comparisons/research-*.json`，各轮研究 的完整报告、候选和请求仍按既有目录存储。控制台的比较结果给出文件路径。美元费用未知时维持 `null`；使用其他币种的服务需按该批冻结价目表单独报告估算，不记为零。
+成对结果写入 `var/comparisons/research-*.json`，各轮研究的完整报告、候选与请求仍按既有目录存储；控制台输出比较结果的文件路径。美元费用未知时维持 `null`；使用其他币种的服务需按该批冻结价目表单独报告估算，不记为零。
 
 ## 各裁判的边界
 
@@ -73,13 +72,13 @@ ALE 使用数据集内的原始 `gen` / `vis`，Cargo.lock 锁定 Rust 依赖。
 
 AlgoTune 固定 NumPy 2.5.4、SciPy 1.18.1、NetworkX 3.7，单线程。仅移除上游 Task 注册器/基类和装饰器，保留这两题的生成、参考解和校验方法；初始程序提取 `solve` 及初始化代码。输入以 JSON + 数值数组 base64 传递，不使用 pickle。校验器额外拒绝 NaN/Inf 和错误数组形状。
 
-每个用例分别运行初始/候选容器，交替先后顺序；一次预热、五次函数计时，每次重建候选 globals 和输入。计时只覆盖 `solve`，导入、输入编码、容器启动和独立校验计入 整轮研究耗时。预热和每个计时结果均由独立容器验证；五轮各自累加所有用例的函数耗时，再取中位数计算加速比。
+每个用例分别运行初始/候选容器，交替先后顺序；一次预热、五次函数计时，每次重建候选 globals 和输入。计时只覆盖 `solve`，导入、输入编码、容器启动和独立校验计入整轮研究耗时。预热和每个计时结果均由独立容器验证；五轮各自累加所有用例的函数耗时，再取中位数计算加速比。
 
 ## KernelBench GPU worker
 
 本次提供接入代码与固定任务导入入口；GPU 实机评价安排在 CPU 两项之后。2080 Ti 的 compute capability 为 7.5，本入口支持 PyTorch / CUDA C++ `load_inline`。固定使用上游 4096×4096 float32 方阵，每个张量约 64 MiB。
 
-2026-11-14 远端检查：2080 Ti，11264 MiB，驱动 615.78.08；Docker 仅登记 runc，GPU runtime 待配置。此机 SSH 需显式使用 `-F /home/hycx233/.ssh/config`，避开系统配置 include 的权限错误。以下示例的 ssh/scp 和 worker-command 在该环境中也需加上 `-F`。
+2026-11-14 远端硬件核查：RTX 2080 Ti，11264 MiB，驱动 615.78.08；Docker 当时仅登记 runc，GPU runtime 待配置。若运行宿主机需要指定 SSH 配置文件，可在下方 ssh/scp 与 `--worker-command` 中显式传入 `-F <ssh_config>`。
 
 部署到 `desktop` 的独立目录（下面以 `/home/USER/quotacrux-kernel-worker` 为例）：
 

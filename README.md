@@ -2,7 +2,7 @@
 
 # QuotaCrux（枢决）
 
-**从反馈中自我进化的预算感知 Research Agent：将决策与生成解耦，以独立沙箱裁判、动作/模型正交路由与可回退的程序经验快照，让每次运行比上一次更快、更省、更稳。**
+**面向预算约束的自我进化 Research Agent：将调度决策与代码生成解耦，以独立沙箱裁判、动作/模型正交路由与可回退的程序经验快照，在受限配额内持续沉淀可验证的优化增益。**
 
 [简体中文](README.md) · [English](README.en.md) · [文档总导航](docs/README.md) · [研究报告 (PDF)](docs/research/analysis-report-20261114/output/pdf/quotacrux-research-report.pdf) · [项目介绍 (PDF)](docs/presentation/project-overview.pdf) · [展示海报 (PDF)](docs/poster/QuotaCrux-poster.pdf) · [演示文稿 (PDF)](docs/presentation/QuotaCrux.pdf) · [后端指南](backend/README.md)
 
@@ -20,7 +20,7 @@ QuotaCrux 将算法与代码优化重塑为**受预算约束、由外部裁判�
 
 1. **动作与模型正交解耦路由（`ActionRouter` × `ModelRouter`）** — 把“**下一步做什么**”（分析、提出候选、按任务能力取证、复验、结束）与“**这一步交给谁生成**”（轻量模型 Qwen vs. 云端强模型 `gpt-6.1-sol`）拆分为两个正交决策边界。动作层可选生成模型或专用决策模型，模型层可选升级规则或专用决策模型，并通过适配器独立组合，将强模型配额精准留给关键攻坚节点——在 `ahc026` 动作决策实验中，`gpt-6-luna` Decisions 路由费用仅占该轮已知美元支出的 **2.26%**。
 2. **可执行程序经验，而非只存文字心得** — 早期消融实证：只保存纯文字建议虽降低了单次调用费用，却让留出集最终加速比从 `1.41×` 滑落至 `1.29×`。QuotaCrux 在不可变经验快照（`v0, v1, …`）中沉淀**经沙箱实测通过的可执行程序及其成立的工作负载条件**。面对新任务时，程序先在调用任何模型前自动复验最相近的历史方案；全新任务族或未覆盖条件由分流器直交强模型攻坚，新成果原子发布并支持随时回退。
-3. **零信任隔离裁判与全链路资源账本** — 禁止模型自评。所有候选统一在断网、只读文件系统、非 root 的 Docker 沙箱（或 KernelBench 独立 GPU worker）中运行；性能任务执行预热 + 5 轮交替计时与严格单侧检验（`U = 0`），并在研究结束时于隐藏最终集上独立验收。每一次调用的模型角色、推理 Token、耗时及未知用量（显式记为 `null`，绝不静默填 0）均完整落账，并支持一键导出可复现交付包。
+3. **零信任隔离裁判与全链路资源账本** — 所有候选均由外部独立裁判评测（不使用模型自评）。所有候选统一在断网、只读文件系统、非 root 的 Docker 沙箱（或 KernelBench 独立 GPU worker）中运行；性能任务执行预热 + 5 轮交替计时与严格单侧检验（`U = 0`），并在研究结束时于隐藏最终集上独立验收。每一次调用的模型角色、推理 Token、耗时及缺失用量（显式记为 `null`，不作零值填充）均完整落账，并支持一键导出可复现交付包。
 
 ---
 
@@ -56,17 +56,17 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 ## Built for Better：看得见、可回退的自我进化
 
-围绕 **「Built for Better —— 打造会自我进化的智能」**，QuotaCrux 不把智能体停留在“单次完成任务”，而是让每次沙箱评测的真实反馈持续沉淀为可检验、可对比、可回退的进化资产，使系统在下一次运行中实打实地更快、更省、更稳：
+围绕 **「Built for Better —— 打造会自我进化的智能」**，QuotaCrux 将每次沙箱评测反馈沉淀为可检验、可对比、可回退的进化资产，在后续运行中降低推理开销并提升交付性能：
 
-- **两轮进化即可全数突破目标（`A 批` `v0 → v19`）：** `A-01..A-06` 在第一轮学习中 `5/6` 达标；到第二轮进化沉淀为 `v19` 后，6 个任务全数提速并实现 **`6/6` 达标**（各任务最终加速比由 `1.09×–1.77×` 跃升至 `1.24×–2.03×`，累计学习费用 `$0.455`）。
+- **两轮学习后全数突破目标（`A 批` `v0 → v19`）：** `A-01..A-06` 在第一轮学习中 `5/6` 达标；到第二轮进化沉淀为 `v19` 后，6 个任务全数提速并实现 **`6/6` 达标**（各任务最终加速比由 `1.09×–1.77×` 跃升至 `1.24×–2.03×`，累计学习费用 `$0.455`）。
 
 <img src="docs/assets/readme/evolution-abatch-zh.png" alt="A 批两轮自我学习各任务加速比进展" width="780" />
 
-- **进化结果经得起封存留出集与在线流检验：** 在从未参与学习的封存 `D 批` 上，切换 `v19` 快照后达标率由 `15/18` 升至 **`18/18`**、中位加速比由 `1.20×` 升至 **`1.73×`**，并实现 **`18/18` 零模型调用直接交付**；在混合未知新族（`logstats`、`intervals`）的在线流 `S 任务流` 中，系统仅在首次遭遇新族时触发强模型沉淀方案，此后 **`30/30` 后续同类任务零模型调用交付**（无记忆对照仅 `9/30`），GPT 请求减少 **78%**（`27 → 6`）。
+- **封存留出集与在线流泛化验证：** 在从未参与学习的封存 `D 批` 上，切换 `v19` 快照后达标率由 `15/18` 升至 **`18/18`**、中位加速比由 `1.20×` 升至 **`1.73×`**，并实现 **`18/18` 零模型调用交付（`$0.000`）**；在混合未知新族（`logstats`、`intervals`）的在线流 `S 任务流` 中，系统在首次遭遇新族时触发强模型沉淀方案，此后 **`30/30` 后续同类任务零模型调用交付**（无记忆对照仅 `9/30`），GPT 请求减少 **78%**（`27 → 6`）。
 
 <img src="docs/assets/readme/evolution-zero-llm-zh.png" alt="D 批留出集与 S 任务流零模型直接复验交付率对比" width="780" />
 
-- **任务内实证纠错 + 透明三态经验库：** 在单次任务内，沙箱反驳直接驱动修正与确定性升级（如 `A-01`：`c1` 实测 `0.90×` 被否 → `c2` 格式错误 → 升级强模型定位瓶颈后达成 **`1.45×`**）。经验库则由外部程序确定性抽取**可执行程序、5 项工作负载特征与成功 / 无收益 / 失败三态裁决**（如 `v19` 含 `59` 条记录：`42` 成功、`13` 无收益、`4` 失败；模型口头分析单独标注为“未验证假设”）。当某程序存在比其成功记录更匹配当前特征的失败或无收益前科时，复验引擎自动跳过，避免在同一陷阱上反复烧钱。
+- **任务内实证纠错 + 透明三态经验库：** 在单次任务内，沙箱反馈直接驱动修正与确定性升级（如 `A-01`：`c1` 实测 `0.90×` 被否 → `c2` 格式错误 → 升级强模型定位瓶颈后达成 **`1.45×`**）。经验库则由外部程序确定性抽取**可执行程序、5 项工作负载特征与成功 / 无收益 / 失败三态裁决**（如 `v19` 含 `59` 条记录：`42` 成功、`13` 无收益、`4` 失败；模型口头分析单独标注为“未验证假设”）。当某程序存在比其成功记录更匹配当前特征的失败或无收益前科时，复验引擎自动跳过，避免在已知无效方案上重复试错。
 - **不可变快照、差异审计与一键安全回退：** 每次进化以不可变快照（`v0, v1, …`）原子发布并记录父版本与来源运行；通过 Web 控制台「版本管理」或 CLI 随时对比差异、零破坏回退并保留完整切换审计日志：
   ```bash
   uv run quotacrux snapshots list                              # 查看快照谱系、经验条目数与当前生效版本 (*)
@@ -92,7 +92,7 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 以下结果均核对自仓库运行账本与冻结评测分片，每组实验严格保持各自口径与基线对照，不做跨基准平均。
 
-### 1. 任务内决策路由消融（`ALE-Bench ahc026`）
+### 1. 任务内决策路由消融（`ALE-Bench ahc026`，单次消融）
 
 在 15 例隐藏最终测试集上以统一预算运行四组路由组合（每轮上限 `360s`、总 HTTP 请求 `20` 次含路由决策、最多 `10` 个候选；生成 `small` 为托管 `Qwen3.8-27B`，`large` 为 `gpt-6.1-sol`，`Decisions` 为 `gpt-6-luna`；基于 `v0` 各运行 1 次）：
 
@@ -107,7 +107,7 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 <img src="docs/assets/readme/routing-ahc026-requests-zh.png" alt="ALE-Bench ahc026 请求预算分配、通过率与决策费用占比图" width="780" />
 
-> **补充证据对路由权衡的边界界定：** 在该补充批次中，14 次 Decisions 动作选择的中位延迟为 `1.34s`、估算路由费用合计约 `$0.015`，进一步验证了低开销局部接入的可行性；同时该批 Decisions 调用均倾向继续生成候选，完整搜索仍大体用满轮次预算，且未复现早先双 Decisions 的早停加速，因此尚不能认定已有稳定的“端到端加速 / 速度-质量固定档位”。
+> **补充实验的适用边界：** 在该双机批次的 14 次 Decisions 动作选择中，中位延迟为 `1.34s`、估算路由费用合计约 `$0.015`，证实局部决策接入开销较低；但该批 Decisions 调用均选择继续生成候选并接近用满轮次预算，未复现早先双 Decisions 配置的早停现象，现有数据尚不足以确立稳定的端到端加速或固定速度-质量档位。
 
 <details>
 <summary>展开查看 ahc026 四组路由消融原始数据明细</summary>
@@ -146,11 +146,11 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 在覆盖 3 个任务族（`groupagg`、`logstats`、`intervals`）的封存任务集上，锁定模型权重、提示词与沙箱裁判，**仅切换经验快照**进行三组受控消融：
 
-- **`C 批` 反证“只存文字不可靠” vs. `D 批` 程序复用提速：** `v6` 纯文字经验虽略微减少了强模型升级，却让中位加速比从 `1.41×` 逆向跌至 `1.29×`（`-8.5%`）；基于两轮 A 批学习沉淀的可执行快照 `v19` 则将 `D 批` 留出集达标率由 `15/18` 升至 **`18/18`**、中位加速比由 `1.20×` 跃至 **`1.73×`**（`+44.2%`）。
+- **`C 批`（纯文字经验回退）与 `D 批`（可执行程序复用提速）对照：** `v6` 纯文字经验虽略微减少了强模型升级，却让中位加速比从 `1.41×` 降至 `1.29×`（`-8.5%`）；基于两轮 A 批学习沉淀的可执行快照 `v19` 则将 `D 批` 留出集达标率由 `15/18` 升至 **`18/18`**、中位加速比由 `1.20×` 跃至 **`1.73×`**（`+44.2%`）。
 
 <img src="docs/assets/readme/experience-quality-ablation-zh.png" alt="经验形态受控对照：纯文字建议退步 vs 可执行程序复用提速" width="780" />
 
-- **`D 批` 留出费用归零与 `S 任务流` 在线进化：** `D 批` 全部 18 次留出运行实现**零 LLM 请求、`$0.000` 云端支出**，总耗时缩减 **`62.5%`**（`1782s → 669s`；前置学习费用另计 `$0.455`）。`S 任务流` 以仅含 `groupagg` 经验的 `v19` 起步，在保持 `1.86×` 加速比与 `36/36` 达标的前提下将 GPT 请求锐减 **78%**（`27 → 6`），云端支出从 `$0.402` 降至 **`$0.086`**，所有新族首现之后的 **`30/30` 后续任务**均零模型调用直接交付。
+- **`D 批` 零费用交付与 `S 任务流` 在线复用收敛：** `D 批` 全部 18 次留出运行实现**零 LLM 请求、`$0.000` 云端支出**，总耗时缩减 **`62.5%`**（`1782s → 669s`；前置学习费用另计 `$0.455`）。在以 `v19` 起步的 `S 任务流` 中，系统在保持 `1.86×` 加速比与 `36/36` 达标的前提下将 GPT 请求减少 **78%**（`27 → 6`），云端支出从 `$0.402` 降至 **`$0.086`**，所有新族首现之后的 **`30/30` 后续任务**均零模型调用直接交付。
 
 <img src="docs/assets/readme/experience-cost-runtime-zh.png" alt="跨任务经验复用云端费用归零与端到端耗时收敛图" width="780" />
 
@@ -219,7 +219,7 @@ cd backend
 # 使用 Decisions 动作路由运行单个任务
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
 
-# 使用 Jev 动作路由；模型路由也可改为 --model-router jev
+# 使用 Jev 动作路由（--no-router 禁用初始经验分流，由指定路由器决定首步模型；也可设为 --model-router jev）
 uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # 在线边交付边进化（自动发布新快照），或串行多任务自主学习
@@ -281,7 +281,7 @@ uv run --extra benchmark pytest
 | --- | --- | --- |
 | **文档总览** | [docs/README.md](docs/README.md) | 赛题 → 需求 → 设计 → 评测 → 实验 → 验收的完整导航 |
 | **项目介绍与路演** | [项目介绍 (PDF)](docs/presentation/project-overview.pdf) · [演示文稿 (PDF)](docs/presentation/QuotaCrux.pdf) · [技术汇报 (PDF)](docs/presentation/QuotaCrux-technical.pdf) · [演示脚本](docs/presentation/demo-script.md) | 路演材料、技术幻灯片与现场演示流程（含 [Markdown 原文](docs/presentation/project-overview.md)） |
-| **展示海报** | [展架海报 (PDF)](docs/poster/QuotaCrux-poster.pdf) · [高清预览图](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) | `80 × 180 cm` 印刷级矢量海报及导出预览 |
+| **展示海报** | [展示海报 (PDF)](docs/poster/QuotaCrux-poster.pdf) · [高清预览图](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) | `80 × 180 cm` 印刷级矢量海报及导出预览 |
 | **架构与接入设计** | [后端指南](backend/README.md) · [动作与模型路由](docs/design/action-model-routing.md) · [EffiBench-X 接入](docs/design/effibench-integration.md) · [原生 Benchmark 接入](docs/design/native-benchmarks.md) | CLI / HTTP API、四组路由消融、EffiBench-X / ALE / AlgoTune / KernelBench 协议 |
 | **需求与验收** | [产品需求](docs/requirements/product-requirements.md) · [核心需求](docs/requirements/core-requirements.md) · [验收记录](docs/requirements/acceptance-record.md) | 研究闭环规则、经验与快照版本机制、RA-AC-01–08 逐条证据对照 |
 | **实验数据与报告** | [研究实验报告 (19 页 PDF)](docs/research/analysis-report-20261114/output/pdf/quotacrux-research-report.pdf)（[说明](docs/research/analysis-report-20261114/README.md)） · [Mac 探索归档](docs/research/mac-exploratory-20261114/README.md) · [2026-11-14 数据汇总](docs/research/20261114-summary.md) · [实验批次索引](docs/research/README.md) · [路由短批结果](docs/research/native-routing/20261114/RESULTS.md) · [ALE 正式结果](docs/research/native-formal-20261114/ale/results/README.md) · [经验学习结果](docs/archive/memory-learning-results.md) | 全部实证实验报告、图表复现脚本、运行边界（[运行时规则](docs/archive/legacy-runtime-rules.md)）与集成记录 |

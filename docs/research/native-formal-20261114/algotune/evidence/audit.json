@@ -132,7 +132,7 @@
   },
   "schema": "algotune-mac-preflight-v1",
   "selection_rule": "correct and max(candidate_samples) < min(baseline_samples)",
-  "source_git_head": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "source_git_head": "bdd78b85e448f591dab13babdc279ec7cd6cefe5",
   "status": "environment-ready-calibration-provisional",
   "task_manifest_hashes": {
     "convolve_1d": "bc00cd13960442ea34b0bb08a152eb9a0b95ab1f23faa97b4f24252944febfd9",

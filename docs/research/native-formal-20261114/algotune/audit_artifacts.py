@@ -54,6 +54,7 @@ def main() -> None:
     ledger = load("evidence/ledger-audit.json")
     audit = load("evidence/audit.json")
     timing = load("evidence/timing-observation.json")
+    gc_probe = load("evidence/pagerank-gc-probe.json")
     plan = load("proposed-run-plan.json")
 
     check(host["docker"]["native_architecture"] is True, "Docker server is not native arm64")
@@ -156,6 +157,17 @@ def main() -> None:
           "timing observation must block freeze")
     check(timing["tasks"]["pagerank"]["repeat_3_vs_other_median"] > 1.5,
           "systematic PageRank timing observation disappeared")
+    check(gc_probe["model_requests"] == 0 and gc_probe["final_evaluations"] == 0,
+          "GC probe must remain dev-only and model-free")
+    check(gc_probe["summary"]["original"]["evaluations"] == 3 and
+          gc_probe["summary"]["gc_disabled"]["evaluations"] == 3,
+          "GC probe matrix is incomplete")
+    check(gc_probe["summary"]["original"]["repeat_3_vs_other_median"] > 1.5 and
+          gc_probe["summary"]["gc_disabled"]["repeat_3_vs_other_median"] < 1.1,
+          "GC probe did not isolate the repeat-position effect")
+    check(gc_probe["summary"]["gc_disabled"]["median_range_over_median"] < 0.1 and
+          gc_probe["summary"]["gc_disabled"]["strict_false_improvements"] == 0,
+          "GC-disabled probe remains too noisy or selected a false improvement")
     print(json.dumps({"status": "ok", "checksummed_files": checksum_count,
                       "tasks": list(EXPECTED_TASKS), "formal_progress": audit["formal_progress"]}, indent=2))
 

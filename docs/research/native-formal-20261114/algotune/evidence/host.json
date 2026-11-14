@@ -7,7 +7,7 @@
     "physical_core_exclusive": false,
     "requested": "Docker VM vCPU 2"
   },
-  "captured_at": "2026-11-14T15:54:24.621806+08:00",
+  "captured_at": "2026-11-14T15:59:08.984436+08:00",
   "docker": {
     "client_version": "29.8.2",
     "driver": "overlay2",
@@ -30,7 +30,7 @@
   "host": {
     "chip": "Apple M4 Max",
     "efficiency_cores": 4,
-    "filesystem_available_bytes": 218164752384,
+    "filesystem_available_bytes": 217939132416,
     "logical_cpus": 16,
     "machine": "arm64",
     "macos_build": "25G83",
@@ -76,7 +76,7 @@
     "version": "Version: 2.2.5 (2020500)\nCommit: bf842321f95fc3ca7cda3227bf0cd41cb188c471 (v2.2.5)"
   },
   "source_branch": "bench/algotune-formal-v1",
-  "source_git_head": "a67850f3db224a9243f59703d25397ede3d54aa7",
+  "source_git_head": "bdd78b85e448f591dab13babdc279ec7cd6cefe5",
   "toolchain": {
     "python": "3.12.11",
     "uv": "uv 0.8.19 (Homebrew 2025-09-19)",

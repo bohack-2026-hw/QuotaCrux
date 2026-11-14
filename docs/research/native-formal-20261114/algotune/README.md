@@ -53,7 +53,9 @@
 
 卷积 3 ms 正控制严格入选（11.8920×），负控制未入选（0.0838×）。PageRank 首次 3 ms 正控制虽有 1.7440× 中位加速，但区间重叠，按规则未入选；这次结果保留为控制强度不足。改用 20 ms 延迟后，正控制严格入选（5.6388×），负控制未入选（0.1683×）。两题 12 次自比均零误入选，但这只说明严格规则没有误选，不能消除下述计时问题。
 
-校准时宿主 1 分钟 load average 约为 30 到 49，高于 16 个逻辑 CPU。PageRank 的第 3 个计时样本在 baseline/candidate、default/pinned 和所有用例中都系统性变慢，跨样本中位数约为其他位置的 1.86 倍；该周期性运行时效应的原因尚未证明。固定 VM vCPU 没有消除它，样本极差/中位数约 86%，会让正式批次对真实小收益几乎失去检出力。[timing-observation.json](evidence/timing-observation.json) 将当前校准标为未接受。
+校准时宿主 1 分钟 load average 约为 30 到 49，高于 16 个逻辑 CPU。PageRank 的第 3 个计时样本在 baseline/candidate、default/pinned 和所有用例中都系统性变慢，跨样本中位数约为其他位置的 1.86 倍。固定 VM vCPU 没有消除它，样本极差/中位数约 86%，会让正式批次对真实小收益几乎失去检出力。[timing-observation.json](evidence/timing-observation.json) 将当前校准标为未接受。
+
+独立临时账本上的 3×3 交替诊断再次得到原始 harness 的第 3 样本比值 1.8442、样本极差/中位数 84.52%；仅在 `solve(problem)` 计时期间关闭 Python 自动 GC 后，比值变为 0.9975、波动降至 3.17%，三次自比仍零误入选。完整结果和每次评测见 [pagerank-gc-probe.json](evidence/pagerank-gc-probe.json)，复现脚本为 [probe_pagerank_gc.py](probe_pagerank_gc.py)。该诊断不修改正式任务或账本，但把公共修订方向缩小到计时窗口的 GC 处理。
 
 因此必须由 #2 冻结 timing harness 对该周期效应的处理；若 harness 变化，candidate image 与任务 manifest 都要重建。随后在安静窗口重跑 3 预热 / 5 计时和正反控制。正式 15 个 episode 保持串行，measurement window 不重叠。用户允许的并行仅用于只读分析和环境准备。
 

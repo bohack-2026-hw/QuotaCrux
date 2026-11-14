@@ -1,7 +1,58 @@
 {
   "accepted_for_freeze": false,
   "finding": "PageRank repeat index 3 is systematically slower and the host load was high.",
-  "interpretation": "The pattern is consistent with a periodic runtime effect, but the cause is not yet proven.",
+  "gc_probe": {
+    "file": "evidence/pagerank-gc-probe.json",
+    "final_evaluations": 0,
+    "model_requests": 0,
+    "order": [
+      "original",
+      "gc_disabled",
+      "gc_disabled",
+      "original",
+      "original",
+      "gc_disabled"
+    ],
+    "summary": {
+      "gc_disabled": {
+        "evaluations": 3,
+        "median_range_over_median": 0.03173764030147427,
+        "repeat_3_vs_other_median": 0.9975211692541709,
+        "repeat_index_median_ms": [
+          24.570339000774766,
+          24.626215500120452,
+          24.573131000124704,
+          24.682591499640694,
+          24.6421745000589
+        ],
+        "speedups": [
+          0.9919055715339469,
+          0.9991121046485921,
+          0.9981334557670192
+        ],
+        "strict_false_improvements": 0
+      },
+      "original": {
+        "evaluations": 3,
+        "median_range_over_median": 0.8451659000906102,
+        "repeat_3_vs_other_median": 1.8441818917677777,
+        "repeat_index_median_ms": [
+          27.190877000293767,
+          26.90410449963565,
+          49.64349499982745,
+          26.93385500037948,
+          26.830165999854216
+        ],
+        "speedups": [
+          0.9800035781063867,
+          0.9997270705337421,
+          1.027652069131435
+        ],
+        "strict_false_improvements": 0
+      }
+    }
+  },
+  "interpretation": "An alternating 3x3 diagnostic removes the position effect when automatic GC is disabled only during solve; issue #2 still owns the public protocol change.",
   "recalibration_required": true,
   "required_decision": "Issue #2 must freeze the timing-harness treatment before tasks are rebuilt and recalibrated in a quiet window.",
   "tasks": {

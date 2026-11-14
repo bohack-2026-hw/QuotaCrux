@@ -303,9 +303,20 @@ def main() -> None:
                 "pinned": value["summary"]["pinned"]["median_range_over_median"],
             },
         }
+    gc_probe_path = EVIDENCE / "pagerank-gc-probe.json"
+    gc_probe = json.loads(gc_probe_path.read_text()) if gc_probe_path.exists() else None
+    if gc_probe is not None:
+        timing_observation["gc_probe"] = {
+            "file": "evidence/pagerank-gc-probe.json",
+            "order": gc_probe["order"],
+            "summary": gc_probe["summary"],
+            "model_requests": gc_probe["model_requests"],
+            "final_evaluations": gc_probe["final_evaluations"],
+        }
     timing_observation.update({
         "finding": "PageRank repeat index 3 is systematically slower and the host load was high.",
-        "interpretation": "The pattern is consistent with a periodic runtime effect, but the cause is not yet proven.",
+        "interpretation": ("An alternating 3x3 diagnostic removes the position effect when automatic GC is disabled "
+                           "only during solve; issue #2 still owns the public protocol change."),
         "required_decision": "Issue #2 must freeze the timing-harness treatment before tasks are rebuilt and recalibrated in a quiet window.",
     })
     write_json(EVIDENCE / "timing-observation.json", timing_observation)

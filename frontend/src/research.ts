@@ -2,10 +2,15 @@
 // Primary shape: research-comparison-v1 (GET /api/research-comparisons[/{id}], backend research_views.py): the
 // comparison JSON plus api_contract, dev_only, price_snapshot and per-run task / final_status / dev_status / cost.
 // Older comparison.json files (no v1 fields) still render: every v1 field has a fallback from what they record.
+// Two studies share the contract: study "feedback" groups runs by mode; study "routing" (#6) keeps mode=feedback on
+// every row and groups by variant (baseline / action_decisions / model_decisions / both_decisions), with costs
+// split by currency and model. Groups of different studies are never merged.
 // No runtime imports: scripts/check-research.ts runs this file directly under Node.
 
 export type ResearchMode = 'feedback' | 'independent' | 'no_feedback'
 export const MODES: ResearchMode[] = ['feedback', 'independent', 'no_feedback']
+export const VARIANTS = ['baseline', 'action_decisions', 'model_decisions', 'both_decisions']
+export type Study = 'feedback' | 'routing'
 
 /* ---------- raw contract (research-comparison-v1, with fallbacks for older JSON) ---------- */
 
@@ -26,10 +31,16 @@ export interface RawPricing {
 export interface RawPriceSnapshot {
   model?: string; currency: string; unit?: string; input_per_1m: number; output_per_1m: number; source?: string; retrieved_at?: string
 }
-export interface RawCost { amount: number | null; currency: string | null; status?: string; source?: string | null; note?: string }
+export interface RawCurrencyCost { amount: number | null; known_amount?: number | null; status?: string }
+export interface RawModelCost extends RawCurrencyCost { currency: string | null; purpose?: string; role?: string; model?: string }
+export interface RawCost {
+  amount?: number | null; currency?: string | null; status?: string; source?: string | null; note?: string
+  by_currency?: Record<string, RawCurrencyCost>; by_model?: Record<string, RawModelCost>
+}
 export interface RawRun {
   seq: number; task_id: string; repeat: number; mode: string; run_id?: string | null
   task?: RawTask | null
+  variant?: string | null; routing?: { action?: string; model?: string } | null; action_counts?: Record<string, number> | null
   final_status?: string | null; dev_status?: string | null
   final_evaluation?: { status?: string; correct?: boolean | null; speedup?: number | null; objective?: RawObjective | null; normalized?: boolean; measured?: boolean } | null
   cost?: RawCost | null
@@ -56,7 +67,11 @@ export interface RawTask {
   task_id: string; family?: string | null; title?: string; workload?: string; objective?: RawObjective; dev_cases?: number | null; final_cases?: number | null
 }
 export interface RawBatch {
-  contract?: string; api_contract?: string; dev_only?: boolean; price_snapshot?: RawPriceSnapshot | null; comparison_id: string; status: string; label?: string | null; protocol?: string | null; scope?: string | null
+  contract?: string; api_contract?: string; dev_only?: boolean; price_snapshot?: RawPriceSnapshot | null; comparison_id: string;
+  study?: string; variants?: string[]; fixture?: boolean; price_snapshots?: Record<string, RawPriceSnapshot> | null
+  fairness?: Record<string, unknown> | null
+  summary?: { interactions?: { task_id: string; repeat: number; status: string; both_minus_action_minus_model_plus_baseline: number | null }[] } | null
+  status: string; label?: string | null; protocol?: string | null; scope?: string | null
   fair?: boolean | null; created_at?: string | null; ended_at?: string | null; code_commit?: string | null; prompt_version?: string | null
   fixed_model?: string | null; model?: { role?: string; name?: string; provider?: string; host?: string; hosted?: boolean | null } | null
   final_evaluation?: boolean | null; modes?: string[]; repeats?: number
@@ -71,6 +86,7 @@ export interface RawBatch {
 export interface RawBatchRow {
   comparison_id: string; status: string; label?: string | null; protocol?: string | null; created_at?: string | null
   fair?: boolean | null; final_evaluation?: boolean | null; dev_only?: boolean; task_ids?: string[]; modes?: string[]
+  study?: string; variants?: string[]
   runs_total?: number; runs_finished?: number; final_status_counts?: Record<string, number>; cost?: RawCost | null
 }
 
@@ -80,7 +96,12 @@ export type RunState = 'planned' | 'running' | 'completed' | 'stopped' | 'failed
 /** disabled = dev-only batch; pending/running = not reached yet; missing = enabled but no result after the run ended. */
 export type FinalState = 'disabled' | 'pending' | 'running' | 'passed' | 'failed' | 'error' | 'missing'
 export type Metric = 'score' | 'speedup'
-export interface Cost { kind: 'estimate' | 'billed' | 'unknown' | 'none'; amount: number | null; currency: string | null; note: string | null }
+/** One currency's share of a cost: amount when complete, known when only part of the usage could be priced. */
+export interface CostPart { currency: string; amount: number | null; known: number | null }
+export interface Cost {
+  kind: 'estimate' | 'billed' | 'unknown' | 'none' | 'partial' | 'not_run'; amount: number | null; currency: string | null; note: string | null
+  parts?: CostPart[]; purpose?: Record<string, CostPart[]>
+}
 export interface Point { t: number; tokens: number | null; cost: number | null; value: number | null; candidate: string | null }
 
 export interface RRun {
@@ -94,6 +115,9 @@ export interface RRun {
   cost: Cost
   progress: Point[]
   record: string | null; error: string | null
+  routing: { action: string | null; model: string | null } | null
+  calls: { small: number | null; large: number | null; routing: number | null; generation: number | null; upgrades: number | null }
+  actions: Record<string, number> | null
 }
 export interface RTask {
   id: string; family: string; title: string; metric: Metric; direction: string; baseline: number | null; minSpeedup: number | null
@@ -101,6 +125,8 @@ export interface RTask {
 }
 export interface RBatch {
   id: string; label: string | null; status: string; running: boolean; protocol: string | null; scope: string | null
+  study: Study; fixture: boolean; fairness: Record<string, unknown> | null; priceSnapshots: Record<string, RawPriceSnapshot> | null
+  interactions: NonNullable<NonNullable<RawBatch['summary']>['interactions']>
   fair: boolean | null; finalEnabled: boolean | null; contract: string | null
   model: { role: string | null; name: string | null; hosted: boolean | null; provider: string | null } | null
   modes: string[]; limits: RawBatch['limits']; measure: RawBatch['measure']; pricing: RawPricing | null
@@ -182,10 +208,11 @@ export function priceOf(p: RawPricing | null | undefined, input: number | null |
 
 export function costOf(r: RawRun, pricing: RawPricing | null | undefined): Cost {
   const c = r.cost
+  if (c?.by_currency) return splitCost(c)
   if (c) {
-    if (c.status === 'no_model_calls') return { kind: 'none', amount: c.amount ?? 0, currency: c.currency, note: null }
+    if (c.status === 'no_model_calls') return { kind: 'none', amount: c.amount ?? 0, currency: c.currency ?? null, note: null }
     if (c.amount != null && c.currency) return { kind: c.status === 'billed' ? 'billed' : 'estimate', amount: c.amount, currency: c.currency, note: c.note ?? null }
-    return { kind: 'unknown', amount: null, currency: c.currency, note: c.note ?? null }
+    return { kind: 'unknown', amount: null, currency: c.currency ?? null, note: c.note ?? null }
   }
   const e = r.estimated_cost
   if (e && e.amount != null) return { kind: 'estimate', amount: e.amount, currency: e.currency, note: e.note ?? null }
@@ -198,6 +225,25 @@ export function costOf(r: RawRun, pricing: RawPricing | null | undefined): Cost 
   const est = priceOf(pricing, u?.input_tokens, u?.cached_input_tokens, u?.output_tokens)
   if (est != null && pricing) return { kind: 'estimate', amount: est, currency: pricing.currency, note: '按批次价格快照由 Token 推算' }
   return { kind: 'unknown', amount: null, currency: null, note: null }
+}
+
+/** Routing-study cost: per currency (never converted) and per purpose; partial keeps only the known part. */
+export function splitCost(c: RawCost): Cost {
+  const parts: CostPart[] = Object.entries(c.by_currency ?? {}).map(([currency, v]) => ({ currency, amount: v.amount ?? null, known: v.known_amount ?? v.amount ?? null }))
+  const purpose: Record<string, CostPart[]> = {}
+  for (const m of Object.values(c.by_model ?? {})) {
+    if (!m.currency) continue
+    const list = (purpose[m.purpose ?? 'generation'] ??= [])
+    let part = list.find((p) => p.currency === m.currency)
+    if (!part) list.push(part = { currency: m.currency, amount: 0, known: null })
+    part.amount = part.amount == null || m.amount == null ? null : part.amount + m.amount
+    const k = m.known_amount ?? m.amount ?? null
+    if (k != null) part.known = (part.known ?? 0) + k
+  }
+  const complete = parts.length > 0 && parts.every((p) => p.amount != null)
+  const kind: Cost['kind'] = !parts.length ? 'unknown' : complete ? 'estimate' : parts.some((p) => p.known != null) ? 'partial' : 'unknown'
+  const single = parts.length === 1 && parts[0].amount != null ? parts[0] : null
+  return { kind, amount: single?.amount ?? null, currency: single?.currency ?? null, note: null, parts, purpose }
 }
 
 function progressOf(r: RawRun, pricing: RawPricing | null | undefined): Point[] {
@@ -232,6 +278,9 @@ export function titleOf(taskId: string, family: string): string {
 }
 
 export function normalize(raw: RawBatch): RBatch {
+  const study: Study = raw.study === 'routing' ? 'routing' : 'feedback'
+  const order: string[] = study === 'routing' ? VARIANTS : MODES
+  const groupOf = (r: RawRun) => (study === 'routing' ? r.variant ?? r.mode : r.mode)
   const pricing = pricingOf(raw)
   const taskMeta = new Map<string, RawTask>((raw.tasks ?? []).map((t) => [t.task_id, t]))
   for (const r of raw.runs) if (r.task && !taskMeta.has(r.task_id)) taskMeta.set(r.task_id, r.task)
@@ -244,7 +293,7 @@ export function normalize(raw: RawBatch): RBatch {
     const t = r.timing ?? {}
     const it = r.iterations ?? {}
     return {
-      seq: r.seq, taskId: r.task_id, repeat: r.repeat, mode: r.mode, runId: r.run_id ?? null, state, stopReason: r.stop_reason ?? null,
+      seq: r.seq, taskId: r.task_id, repeat: r.repeat, mode: groupOf(r), runId: r.run_id ?? null, state, stopReason: r.stop_reason ?? null,
       metric, dev: devOf(r, metric),
       final: {
         state: finalState(r, finalEnabled, state),
@@ -259,14 +308,19 @@ export function normalize(raw: RawBatch): RBatch {
       tokens: u.input_tokens == null && u.output_tokens == null ? null : (u.input_tokens ?? 0) + (u.output_tokens ?? 0),
       wallS: num(t.wall_clock_total_s) ?? num(t.agent_loop_s), modelWaitS: num(t.model_wait_s), devEvalS: num(t.dev_evaluation_s),
       proposed: r.candidates?.proposed ?? num(it.candidates_proposed), passed: r.candidates?.passed ?? num(it.candidates_passed),
-      cost: costOf(r, pricing),
+      // A slot that never ran has no cost to know; it is not an unknown cost.
+      cost: state === 'planned' && !r.cost?.amount && !r.cost?.by_currency ? { kind: 'not_run', amount: null, currency: null, note: null } : costOf(r, pricing),
       progress: progressOf(r, pricing),
       record: r.record ?? null, error: r.error ?? null,
+      routing: r.routing ? { action: r.routing.action ?? null, model: r.routing.model ?? null } : null,
+      calls: { small: num(it.small_model_requests), large: num(it.large_model_requests), routing: num(it.routing_requests),
+        generation: num(it.generation_requests), upgrades: num(it.upgrades) },
+      actions: r.action_counts ?? null,
     }
   })
-  const order: string[] = []
-  for (const r of raw.runs) if (!order.includes(r.task_id)) order.push(r.task_id)
-  const tasks: RTask[] = order.map((id) => {
+  const taskOrder: string[] = []
+  for (const r of raw.runs) if (!taskOrder.includes(r.task_id)) taskOrder.push(r.task_id)
+  const tasks: RTask[] = taskOrder.map((id) => {
     const meta = taskMeta.get(id)
     const own = runs.filter((r) => r.taskId === id)
     const metric = own[0]?.metric ?? 'speedup'
@@ -278,16 +332,20 @@ export function normalize(raw: RawBatch): RBatch {
       baseline: meta?.objective?.baseline ?? (metric === 'speedup' ? 1 : scoreBaseline),
       minSpeedup: meta?.objective?.min_speedup ?? null,
       devCases: meta?.dev_cases ?? null, finalCases: meta?.final_cases ?? null,
-      modes: (MODES as string[]).filter((m) => own.some((r) => r.mode === m)).concat([...new Set(own.map((r) => r.mode))].filter((m) => !(MODES as string[]).includes(m))),
+      modes: order.filter((m) => own.some((r) => r.mode === m)).concat([...new Set(own.map((r) => r.mode))].filter((m) => !order.includes(m))),
       repeats: [...new Set(own.map((r) => r.repeat))].sort((a, b) => a - b),
       runs: own,
     }
   })
-  const modes = raw.modes?.length ? raw.modes : MODES.filter((m) => runs.some((r) => r.mode === m))
+  const modes = study === 'routing' ? (raw.variants?.length ? raw.variants : order.filter((m) => runs.some((r) => r.mode === m)))
+    : raw.modes?.length ? raw.modes : order.filter((m) => runs.some((r) => r.mode === m))
+  const ps = raw.price_snapshots ?? null
+  const routingModel = ps ? [ps.small?.model, ps.large?.model].filter(Boolean).join(' → ') || null : null
   return {
     id: raw.comparison_id, label: raw.label ?? null, status: raw.status, running: raw.status === 'running', protocol: raw.protocol ?? null,
+    study, fixture: !!raw.fixture, fairness: raw.fairness ?? null, priceSnapshots: ps, interactions: raw.summary?.interactions ?? [],
     scope: raw.scope ?? null, fair: raw.fair ?? null, finalEnabled, contract: raw.api_contract ?? raw.contract ?? null,
-    model: raw.model ? { role: raw.model.role ?? raw.fixed_model ?? null, name: raw.model.name ?? null, hosted: raw.model.hosted ?? null, provider: raw.model.provider ?? null }
+    model: routingModel ? { role: 'adaptive', name: routingModel, hosted: null, provider: null } : raw.model ? { role: raw.model.role ?? raw.fixed_model ?? null, name: raw.model.name ?? null, hosted: raw.model.hosted ?? null, provider: raw.model.provider ?? null }
       : raw.fixed_model || raw.price_snapshot?.model ? { role: raw.fixed_model ?? null, name: raw.price_snapshot?.model ?? null, hosted: null, provider: null } : null,
     modes, limits: raw.limits ?? null, measure: raw.measure ?? null, pricing,
     codeCommit: raw.code_commit ?? null, promptVersion: raw.prompt_version ?? null, createdAt: raw.created_at ?? null, endedAt: raw.ended_at ?? null,
@@ -313,17 +371,27 @@ export function total(vs: (number | null)[]): { value: number | null; partial: b
   return { value: known.length ? known.reduce((a, b) => a + b, 0) : null, partial: known.length < vs.length }
 }
 
-/** Cost totals per currency; amounts in different currencies are never added or converted. */
-export function costTotals(costs: Cost[]): { byCurrency: Record<string, number>; unknown: number; kinds: Set<Cost['kind']> } {
+/** Cost totals per currency; amounts in different currencies are never added or converted. A currency is
+    "partial" when some of its usage could not be priced: its figure is then a lower bound, not a total. */
+export function costTotals(costs: Cost[]): { byCurrency: Record<string, number>; partial: Set<string>; unknown: number; kinds: Set<Cost['kind']> } {
   const byCurrency: Record<string, number> = {}
+  const partial = new Set<string>()
   let unknown = 0
   const kinds = new Set<Cost['kind']>()
   for (const c of costs) {
+    if (c.kind === 'not_run') continue
     kinds.add(c.kind)
-    if (c.amount != null && c.currency) byCurrency[c.currency] = (byCurrency[c.currency] ?? 0) + c.amount
+    if (c.parts) {
+      if (!c.parts.length || c.parts.every((p) => p.amount == null && p.known == null)) { unknown += 1; continue }
+      for (const p of c.parts) {
+        const v = p.amount ?? p.known
+        if (v != null) byCurrency[p.currency] = (byCurrency[p.currency] ?? 0) + v
+        if (p.amount == null) partial.add(p.currency)
+      }
+    } else if (c.amount != null && c.currency) byCurrency[c.currency] = (byCurrency[c.currency] ?? 0) + c.amount
     else if (c.kind === 'unknown') unknown += 1
   }
-  return { byCurrency, unknown, kinds }
+  return { byCurrency, partial, unknown, kinds }
 }
 
 export function median(vs: number[]): number | null {

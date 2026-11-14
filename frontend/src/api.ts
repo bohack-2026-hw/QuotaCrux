@@ -58,6 +58,8 @@ export interface RunRow {
   // From #2 (research-comparison-v1 run list); absent on older APIs, where a missing final row means "final not run".
   research_mode?: string | null
   dev_only?: boolean | null
+  final_status?: string | null
+  final_error?: string | null
 }
 
 export interface Step {

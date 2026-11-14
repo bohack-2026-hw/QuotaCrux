@@ -8,7 +8,7 @@ import type { RawBatch, RBatch } from './research'
 import archivedR2 from './samples/research-native-r2.json'
 
 export interface BatchEntry {
-  id: string; label: string | null; status: string; createdAt: string | null
+  id: string; label: string | null; status: string; createdAt: string | null; study: string
   source: 'api' | 'archive'; archivePath: string | null
 }
 
@@ -28,10 +28,10 @@ export function useResearchList() {
   }, [], 10000)
   const entries = useMemo<BatchEntry[]>(() => {
     const live: BatchEntry[] = (res.data?.rows ?? [])
-      .map((r) => ({ id: r.comparison_id, label: r.label ?? null, status: r.status, createdAt: r.created_at ?? null, source: 'api' as const, archivePath: null }))
+      .map((r) => ({ id: r.comparison_id, label: r.label ?? null, status: r.status, createdAt: r.created_at ?? null, study: r.study ?? 'feedback', source: 'api' as const, archivePath: null }))
       .sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''))
     const archived: BatchEntry[] = ARCHIVE.filter((a) => !live.some((l) => l.id === a.comparison_id)).map((a) => ({
-      id: a.comparison_id, label: a.label ?? null, status: a.status, createdAt: a.created_at ?? null,
+      id: a.comparison_id, label: a.label ?? null, status: a.status, createdAt: a.created_at ?? null, study: a.study ?? 'feedback',
       source: 'archive' as const, archivePath: a.source?.path ?? null,
     }))
     return [...live, ...archived]

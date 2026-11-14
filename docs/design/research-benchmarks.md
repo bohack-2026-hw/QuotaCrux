@@ -1,11 +1,11 @@
 # 研究任务 benchmark 接入
 
 分支：`feat/research-benchmarks`，基于 `feat/effibench-x-adapter@19ce8db`。
-主线协议见[单任务持续优化方案](research-evaluation-plan.md)。
+主线协议见[单任务持续优化方案](../evaluation/research-evaluation-plan.md)。
 
-首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
+首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](../research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
 
-第二轮补齐实际任务画像、保留任务内分析，并完成 CPU 计时校准后，已执行固定 Qwen 的真实对照。AlgoTune feedback / independent 的保留开发加速分别为 1.8343× / 1.2101×；ALE independent 得分从 17,753 提高到 18,230，feedback 保持基线。完整指标、成本、过程曲线和冻结配置见[第二轮报告](research/native-r2-20261114/README.md)。两轮均未评测最终集。
+第二轮补齐实际任务画像、保留任务内分析，并完成 CPU 计时校准后，已执行固定 Qwen 的真实对照。AlgoTune feedback / independent 的保留开发加速分别为 1.8343× / 1.2101×；ALE independent 得分从 17,753 提高到 18,230，feedback 保持基线。完整指标、成本、过程曲线和冻结配置见[第二轮报告](../research/native-r2-20261114/README.md)。两轮均未评测最终集。
 
 ## 已接入范围
 
@@ -101,4 +101,4 @@ worker 需要 Docker GPU runtime；镜像固定 PyTorch 2.8.0 / CUDA 12.6 / NumP
 
 每个种子的参考与候选在不同 GPU 容器运行，候选仅获得公共参考源码中的输入工厂与当前种子。所有结果保存为非 pickle 的 `.npy` 数组，再由无 GPU 的独立容器检查形状、有限数值和 `atol=rtol=1e-4`。输出文件须为普通文件，禁止借助符号链接访问参考结果。CUDA events 在同步后计时，禁用 TF32；编译、初始化、拷贝与校验计入研究墙钟。当前只支持单个 float32 输出张量，未实现完整多级题库。
 
-第三方许可与来源见[第三方说明](../THIRD_PARTY_NOTICES.md)。
+第三方许可与来源见[第三方说明](../../THIRD_PARTY_NOTICES.md)。

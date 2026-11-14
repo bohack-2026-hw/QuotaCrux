@@ -2,7 +2,7 @@
 
 版本：v0.3；更新日期：2026-11-14；状态：选题比较历史参考。
 
-团队已于 2026-11-14 确认选择 Research Agent，当前开发按 [Research Agent PRD](research-agent-track-prd.md)及[补充说明](research-agent-clarifications.md)推进。下文保留选题阶段的能力比较和判断依据，不再作为待执行的选赛道流程。
+团队已于 2026-11-14 确认选择 Research Agent，当前开发按 [Research Agent PRD](../requirements/research-agent-track-prd.md)及[补充说明](../requirements/research-agent-clarifications.md)推进。下文保留选题阶段的能力比较和判断依据，不再作为待执行的选赛道流程。
 
 首版的具体任务、Qwen/GPT 两条路径、Docker 环境与 A/B/C 评测划分统一按[开工决策](implementation-decisions.md)执行。
 
@@ -32,7 +32,7 @@
 | Comparison | 学习前后质量、Token、费用、耗时及适用反例 | 任务基线、研究后结果、相同 Agent 有无经验的对照 |
 | 报告与产物 | 生成三行进化说明、演示证据和版本复现信息 | 导出最佳方案、实验账本、最终结果和复现入口 |
 
-这些是现有对象上的关系与字段增量，不要求为每项能力新增服务。具体需求见[日新 PRD](rixin-track-prd.md)与 [Research Agent PRD](research-agent-track-prd.md)。
+这些是现有对象上的关系与字段增量，不要求为每项能力新增服务。具体需求见[日新 PRD](rixin-track-prd.md)与 [Research Agent PRD](../requirements/research-agent-track-prd.md)。
 
 ## 3. 用同一个载体理解差异
 

@@ -1,8 +1,8 @@
 # EffiBench-X 试接入验证
 
-日期：2026-11-14。实现提交：`c79dad6`；原始基线：`f8fbb3e`。数据与评测边界见 [适配方案](benchmark-adapters.md)。
+日期：2026-11-14。实现提交：`c79dad6`；原始基线：`f8fbb3e`。数据与评测边界见 [适配方案](../design/benchmark-adapters.md)。
 
-后续真实模型评测见 [四题子集结果](research/effibench-x-20261114/README.md)：60/60 final 用例通过，2/4 题达标，含 token、费用和耗时。下文保留首次适配验证记录。
+后续真实模型评测见 [四题子集结果](../research/effibench-x-20261114/README.md)：60/60 final 用例通过，2/4 题达标，含 token、费用和耗时。下文保留首次适配验证记录。
 
 ## 真实数据检查
 
@@ -60,4 +60,4 @@
 - `backend/var/tasks/<task_id>/`：冻结输入、期望输出、checker、初始程序与 manifest。
 - `backend/var/benchmarks/effibench-x/<revision>/`：经哈希验证的原始分片。
 
-重新导入、运行和离线导入命令见 [使用方式](benchmark-adapters.md#4-使用方式)。首次真实模型评测应固定题目级 A/B/C/D 划分、模型/路由配置和机器资源，再记录完成率、加速比、token、云端成本与墙钟时间；本次没有选择或承诺一个全量得分。
+重新导入、运行和离线导入命令见 [使用方式](../design/benchmark-adapters.md#4-使用方式)。首次真实模型评测应固定题目级 A/B/C/D 划分、模型/路由配置和机器资源，再记录完成率、加速比、token、云端成本与墙钟时间；本次没有选择或承诺一个全量得分。

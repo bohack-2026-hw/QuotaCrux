@@ -213,10 +213,10 @@ def stream_note(c: dict) -> dict:
     g = c["growth"]
     routes = "、".join(f"{ROUTE_ZH.get(k, k)} {v}" for k, v in sorted(M["routes"].items(), key=lambda kv: -kv[1]))
     line2 = (f"学到什么：每次重放从 {start} 出发，经验从 {g[0]['experiences_start']} 条增长到 "
-             f"{'/'.join(str(x['experiences_end']) for x in g)} 条；任务族首次出现时由分流器直接交给大模型，之后的同族任务带记忆时 "
+             f"{'/'.join(str(x['experiences_end']) for x in g)} 条；新任务族首次出现时由分流器直接交给大模型，其余任务带记忆时 "
              f"{later['runs_without_model_request']}/{later['runs']} 次没有调用模型（不带记忆 {lf['runs_without_model_request']}/{lf['runs']}），"
              f"大模型请求 {lf['large_model_requests_total']} → {later['large_model_requests_total']} 次；带记忆一侧的分流：{routes}。"
-             f"首次出现的任务两侧条件相同（都没有该族经验），带记忆 {first['goal_met']}/{first['runs']} 达标。")
+             f"新任务族首次出现时两侧条件相同（都没有该族经验），两侧都直接用大模型，带记忆 {first['goal_met']}/{first['runs']} 达标。")
     line3 = (f"如何回退：任务流结束后生效版本已恢复为实验前的版本；任何一次重放产生的版本都可在「04 版本管理」查看或设为生效，"
              f"`uv run routeevo snapshots activate {start} --reason 回退` 回到起点，全部运行记录保留可查。")
     return {"comparison_id": c["comparison_id"], "fair": c["fair"], "scripted_model": c["scripted_model"],

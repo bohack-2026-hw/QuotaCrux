@@ -255,8 +255,9 @@ def section_stream(lines: list[str], s: dict) -> None:
               + ("" if not s["errors"] else f" 计划运行出错 {len(s['errors'])} 次。"), "",
               "| 指标 | 不带记忆 | 带记忆 |", "|---|---|---|", *_side_rows(F, M), ""]
     f1, fl = s["first_of_family"], s["repeats_of_family"]
-    lines += ["按任务在流中的位置拆开：任务族首次出现时，两侧都没有该族经验，条件相同；之后的任务才体现记忆的作用。", "",
-              "| | 首次出现的任务（不带 → 带记忆） | 之后的任务（不带 → 带记忆） |", "|---|---|---|",
+    lines += [f"按任务在流中的位置拆开：新任务族（起点 {s['start_snapshot']} 没有它的经验）在流中第一次出现时，两侧都没有该族经验，条件相同；"
+              "其余任务才体现记忆的作用。", "",
+              "| | 新任务族首次出现（不带 → 带记忆） | 其余任务（不带 → 带记忆） |", "|---|---|---|",
               f"| 运行 | {f1['fresh']['runs']} → {f1['memory']['runs']} | {fl['fresh']['runs']} → {fl['memory']['runs']} |",
               f"| 达标 | {f1['fresh']['goal_met']} → {f1['memory']['goal_met']} | {fl['fresh']['goal_met']} → {fl['memory']['goal_met']} |",
               f"| 大模型请求 | {f1['fresh']['large_model_requests_total']} → {f1['memory']['large_model_requests_total']} | "
@@ -282,7 +283,7 @@ def section_stream(lines: list[str], s: dict) -> None:
         return " ".join(ROUTE_MARK.get(r["route"], "?") for r in runs) + " · " + " ".join(
             f"{x(r['final_speedup'])}{'' if r['goal_met'] else '!'}" for r in runs)
     for p in s["positions"]:
-        lines.append(f"| {p['position']} | {p['task_id']}{'（首次）' if p['first_of_family'] else ''} | {p['workload']} | "
+        lines.append(f"| {p['position']} | {p['task_id']}{'（新任务族首次）' if p['first_of_family'] else ''} | {p['workload']} | "
                      f"{cell(p['arms']['memory'])} | {cell(p['arms']['fresh'])} |")
     lines += ["", "| 重放 | 带记忆一侧的版本链 | 新发布版本 | 经验条数 |", "|---|---|---|---|"]
     for gr in s["growth"]:
@@ -308,7 +309,8 @@ def section_stream(lines: list[str], s: dict) -> None:
     lines += ["", "观察（由数据生成）：", ""]
     note = narrative.stream_note(s)["lines"]
     lines += [f"- {note[0]}", f"- {note[1]}"]
-    worse = [(fam, d) for fam, d in s["by_family"].items() if (d["memory"]["final_speedup_median"] or 0) < (d["fresh"]["final_speedup_median"] or 0)]
+    worse = [(fam, d) for fam, d in s["by_family"].items()
+             if round(d["memory"]["final_speedup_median"] or 0, 2) < round(d["fresh"]["final_speedup_median"] or 0, 2)]
     for fam, d in worse:
         lines.append(f"- {FAMILY_ZH.get(fam, fam)}：带记忆一侧最终加速比中位数 {x(d['memory']['final_speedup_median'])} 低于不带记忆的 "
                      f"{x(d['fresh']['final_speedup_median'])}。复用的程序在新任务上复验达标就交付，不再为这个任务专门研究；"

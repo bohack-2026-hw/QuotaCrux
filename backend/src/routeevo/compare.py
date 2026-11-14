@@ -409,7 +409,9 @@ def summarize_stream(comparison_id: str) -> dict:
     reports = {r["run_id"]: report.build(r["run_id"]) for r in finished}
     fairness = _fairness(finished)
 
-    seen: set[str] = set()
+    # A task family is "new" at its first position in the stream only if the start snapshot holds no record of it.
+    known = {memory.experience(e)["conditions"]["family"] for e in memory.snapshot_experience_ids(p["start_snapshot"])}
+    seen: set[str] = set(known)
     positions = []
     for i, t in enumerate(p["tasks"], start=1):
         m = json.loads(db.one("SELECT manifest_json FROM tasks WHERE task_id = ?", (t,))["manifest_json"])
@@ -462,6 +464,7 @@ def summarize_stream(comparison_id: str) -> dict:
         "fair": fairness["fair"], "config_fingerprints": fairness["config_hashes"],
         "tasks_with_mixed_fingerprints": fairness["tasks_with_mixed_fingerprints"],
         "sides": {a: _side([reports[r["run_id"]] for r in finished if r["arm"] == a]) for a in ARMS},
+        "families_at_start": sorted(known),
         "first_of_family": {a: group(a, True) for a in ARMS},
         "repeats_of_family": {a: group(a, False) for a in ARMS},
         "by_family": by_family,

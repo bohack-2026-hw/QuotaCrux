@@ -1,0 +1,8 @@
+output/pdf/*.aux
+output/pdf/*.log
+output/pdf/*.out
+output/pdf/*.toc
+output/pdf/*.fls
+output/pdf/*.fdb_latexmk
+__pycache__/
+scripts/__pycache__/

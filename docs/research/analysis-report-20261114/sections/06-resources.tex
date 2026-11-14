@@ -1,0 +1,50 @@
+\section{资源分析：生成、决策与评测的成本}\label{sec:resources}
+\subsection{研究时间的主要去向}
+固定模型批次累计运行 3665.581 秒，其中模型等待 3441.755 秒、开发评测 148.662 秒、最终评测 71.862 秒。模型等待占累计运行时长 93.89\%。两个 worker 并行，使整批墙钟为 2621.263 秒，其中包含 241.594 秒中断。累计运行时间衡量资源占用，整批墙钟衡量从开始到交付的实际等待。
+
+\reportfigure[0.98\linewidth]{routing_resources.pdf}{路由短批的请求分工、单轮时间构成与分币种费用。美元图中基线路由的斜线柱为已知小计；一次 Sol timeout 的用量缺失。}{fig:resources}
+
+路由短批累计总耗时为 1284.242 秒，模型等待占 1060.045 秒；整批墙钟为 1284.393 秒。三个接近时间上限的组，最后都需要约 32 秒执行最终评测，双 Decisions 组的最终评测约为 6.6 秒。候选程序本身的运行差异也会传递到裁判耗时，因而单轮总耗时由研究和验收两部分共同构成。
+
+\subsection{决策调用的开销与生成机会}
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}Lrrrr@{}}\toprule
+组合 & Qwen / Sol / 决策请求 & 决策等待（秒） & 生成等待（秒） & 首次增益（秒）\\\midrule
+基线路由 & 3 / 6 / 0 & 0.000 & 325.218 & 91.744\\
+动作决策 & 2 / 5 / 7 & 7.677 & 304.634 & 94.286\\
+模型决策 & 7 / 4 / 8 & 14.125 & 311.454 & 175.432\\
+双决策 & 6 / 0 / 13 & 20.497 & 76.440 & 67.265\\\bottomrule
+\end{tabularx}
+\end{smalltable}
+
+动作 Decisions 的 7 次选择全部用于提出候选，平均每次决策等待约 1.10 秒。模型 Decisions 的 8 次选择中，7 次保留 small、1 次升级 large；升级发生后，后续生成继续使用 large。双 Decisions 的动作选择为 6 次提案和 1 次结束，模型选择全部保留 small。
+
+决策层在时间上的开销相对生成较小，但在请求配额中占有明确份额。双 Decisions 使用了 13 次决策请求，占该轮 19 次总请求的 68.4\%；它生成的候选数量与模型 Decisions 组相同。对请求受限的任务，控制状态查询的频率与决定是否继续生成同样重要。
+
+\subsection{按角色拆分费用}
+下表按冻结价表重算每个角色的已知费用。Qwen 以人民币计价，Sol 与 Decisions 以美元计价。费用随实际输入、输出和使用角色变化；Decisions 的两个路由角色在表内合并。
+
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}Lrrl@{}}\toprule
+模型角色 & 每百万输入 tokens & 每百万输出 tokens & 币种\\\midrule
+Qwen3.8-27B & 3 & 12 & CNY\\
+gpt-6.1-sol & 2 & 10 & USD\\
+gpt-6-luna / Decisions & 0.1 & 0 & USD\\\bottomrule
+\end{tabularx}
+\end{smalltable}
+
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}Lrrr@{}}\toprule
+组合 & Qwen / CNY & Sol / USD & Decisions / USD\\\midrule
+基线路由 & 0.066657 & 0.2772980* & 0.0000000\\
+动作决策 & 0.039933 & 0.2679340 & 0.0067843\\
+模型决策 & 0.150432 & 0.2360940 & 0.0054316\\
+双决策 & 0.184455 & 0.0000000 & 0.0107416\\\bottomrule
+\end{tabularx}
+{\footnotesize * 一次 Sol timeout 未返回用量，表中为其余已知调用的费用。}
+\end{smalltable}
+
+动作决策组中，Decisions 费用约占该组美元小计的 2.47\%，大部分美元费用来自 Sol 生成。双决策组的美元费用全部来自 Decisions，人民币费用则高于其它三组，反映了该轮持续使用 Qwen。质量、生成模型分配与币种费用在同一张表中形成可解释的对应关系。
+
+本批共 61 次 HTTP 请求，已知输入 495075 tokens、输出 56351 tokens。账本按角色保存请求数、延迟、用量和冻结价表；输出用量已包含 reasoning tokens。下一阶段若比较调度策略的经济性，可在同一质量门槛下观察达到目标所需的时间与费用，进一步衡量“何时值得升级”。
+\source{[S2--S3] timing、usage、冻结价格；分角色重算见 \texttt{deep-analysis.json}。}

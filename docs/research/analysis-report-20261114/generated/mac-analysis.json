@@ -1,0 +1,1385 @@
+{
+  "schema_version": 1,
+  "source_commit": "5962203315dc1c229cd6ef3255d06e2dc5745436",
+  "source_directory": "docs/research/mac-exploratory-20261114",
+  "execution_code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
+  "scope": "Mac exploratory two-case dev records; final disabled; no experiments rerun",
+  "audit": {
+    "export_checksum_count": 189,
+    "export_checksum_mismatches": [],
+    "candidate_count": 16,
+    "candidate_record_hash_mismatches": [],
+    "candidate_syntax_failures": [],
+    "status": "verified_archive",
+    "root_cause": null
+  },
+  "batch_wall_s": 567.411237,
+  "sum_slot_wall_s": 567.385,
+  "sum_model_wait_s": 533.486,
+  "sum_dev_evaluation_s": 33.796,
+  "total_model_calls": 12,
+  "model_candidate_count": 12,
+  "model_candidate_dev_passed": 11,
+  "usage": {
+    "input_tokens": 34240,
+    "output_tokens": 26717,
+    "reasoning_tokens": 18884
+  },
+  "estimated_usd_frozen_rate": 0.33565,
+  "timing_definition": "For each repeat sum solve times across the two cases, then take median across five repeats; one warmup per case; imports, serialization and automatic cyclic GC excluded. Baseline remeasured for each candidate.",
+  "price_snapshot": {
+    "model": "gpt-6.1-sol",
+    "currency": "USD",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 2,
+    "output_per_1m": 10,
+    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "retrieved_at": "2026-11-14T07:55:40.056468+00:00",
+    "cache_policy": "Standard uncached token estimate; discounts and credits are not modeled.",
+    "context": "Exploratory dev-only subset; reasoning tokens are included in output."
+  },
+  "runs": [
+    {
+      "run_id": "run-20261114T085753-a6bb",
+      "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+      "mode": "feedback",
+      "best_candidate": "c2",
+      "best_dev_speedup": 1.2985780320905493,
+      "timing": {
+        "wall_clock_total_s": 155.555,
+        "agent_loop_s": 155.555,
+        "agent_loop_elapsed_s": 155.555,
+        "agent_loop_limit_s": 180.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 145.262,
+        "dev_evaluation_s": 10.27,
+        "evidence_tool_s": 0,
+        "container_startup_s": 2.19
+      },
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "candidates: used 3/3",
+      "candidate_evidence": [
+        {
+          "candidate_id": "c0",
+          "parent": null,
+          "path": "openai/runs/run-20261114T085753-a6bb/candidates/c0.py",
+          "recorded_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "exported_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c1",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T085753-a6bb/candidates/c1.py",
+          "recorded_sha256": "c4bc6eb962a26943f0ddad56b0813ea7ede7698b7974aeb11fdf88989360dd48",
+          "exported_sha256": "c4bc6eb962a26943f0ddad56b0813ea7ede7698b7974aeb11fdf88989360dd48",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c2",
+          "parent": "c1",
+          "path": "openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
+          "recorded_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
+          "exported_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c3",
+          "parent": "c2",
+          "path": "openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
+          "recorded_sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7",
+          "exported_sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        }
+      ],
+      "candidate_hypotheses": [
+        {
+          "candidate_id": "c1",
+          "hypothesis": "已知输入是一维实数组，省略通用 signal.convolve 的处理并允许逆变换覆盖频谱，可以减少固定开销和内存分配。",
+          "purpose": "直接调用实数快速傅里叶变换，减少通用卷积的分派、形状处理及逆变换临时内存开销。"
+        },
+        {
+          "candidate_id": "c2",
+          "hypothesis": "当前耗时主要来自三个傅里叶变换；并行执行两个正向变换有望抵消批处理缓冲区和线程调度的额外成本。",
+          "purpose": "将两个独立的正向实数傅里叶变换合并成双行批处理，并使用两个工作线程降低主要计算路径的延迟。"
+        },
+        {
+          "candidate_id": "c3",
+          "hypothesis": "开发输入的长度比例适合分成四块；较短的二次幂变换加上并行逆变换，可能比当前两个大规模正向变换和单个串行逆变换更快。",
+          "purpose": "将长输入分为若干重叠相加块，并行执行较短的双精度傅里叶变换，进一步降低正向和逆向变换的关键路径延迟。"
+        }
+      ],
+      "validations": [
+        {
+          "candidate_id": "c0",
+          "elapsed_s": 1.854,
+          "correct": true,
+          "status": "passed",
+          "speedup": null,
+          "candidate_median_s": null,
+          "baseline_median_s": null,
+          "best_candidate_id": null,
+          "best_replaced": null,
+          "failure": null,
+          "timing_spread": null
+        },
+        {
+          "candidate_id": "c1",
+          "elapsed_s": 33.623,
+          "correct": true,
+          "status": "passed",
+          "speedup": 1.2082335051281494,
+          "candidate_median_s": 0.0007583890001114924,
+          "baseline_median_s": 0.0009163109998553409,
+          "best_candidate_id": "c1",
+          "best_replaced": true,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.0008791740001470316,
+              0.0010204650006926386
+            ],
+            "candidate_min_max_s": [
+              0.000734715999897162,
+              0.0007718930000919499
+            ]
+          }
+        },
+        {
+          "candidate_id": "c2",
+          "elapsed_s": 76.084,
+          "correct": true,
+          "status": "passed",
+          "speedup": 1.2985780320905493,
+          "candidate_median_s": 0.0007415080008286168,
+          "baseline_median_s": 0.0009629060004954226,
+          "best_candidate_id": "c2",
+          "best_replaced": true,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.0009075150001081056,
+              0.0011224959989704075
+            ],
+            "candidate_min_max_s": [
+              0.0007280460004039924,
+              0.0007813539996277541
+            ]
+          }
+        },
+        {
+          "candidate_id": "c3",
+          "elapsed_s": 155.554,
+          "correct": true,
+          "status": "passed",
+          "speedup": 0.6996159278131724,
+          "candidate_median_s": 0.001487742000790604,
+          "baseline_median_s": 0.0010408480002297438,
+          "best_candidate_id": "c2",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.0009132479999607312,
+              0.0014106500002526445
+            ],
+            "candidate_min_max_s": [
+              0.0014120659989202977,
+              0.001572920999933558
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T085753-a6bb/m1",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 28.946,
+          "input_tokens": 2237,
+          "output_tokens": 1272,
+          "reasoning_tokens": 940
+        },
+        {
+          "call_id": "run-20261114T085753-a6bb/m2",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 39.687,
+          "input_tokens": 3158,
+          "output_tokens": 1894,
+          "reasoning_tokens": 1422
+        },
+        {
+          "call_id": "run-20261114T085753-a6bb/m3",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 76.629,
+          "input_tokens": 3951,
+          "output_tokens": 3921,
+          "reasoning_tokens": 3106
+        }
+      ],
+      "usage": {
+        "requests": 3,
+        "input_tokens": 9346,
+        "output_tokens": 7087,
+        "reasoning_tokens": 5468
+      },
+      "estimated_usd_frozen_rate": 0.089562
+    },
+    {
+      "run_id": "run-20261114T090029-3c04",
+      "task_id": "algotune-pagerank-exploratory-short-20261114",
+      "mode": "independent",
+      "best_candidate": "c1",
+      "best_dev_speedup": 23.051414599425694,
+      "timing": {
+        "wall_clock_total_s": 109.645,
+        "agent_loop_s": 109.645,
+        "agent_loop_elapsed_s": 109.645,
+        "agent_loop_limit_s": 180.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 102.117,
+        "dev_evaluation_s": 7.508,
+        "evidence_tool_s": 0,
+        "container_startup_s": 2.13
+      },
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "candidates: used 3/3",
+      "candidate_evidence": [
+        {
+          "candidate_id": "c0",
+          "parent": null,
+          "path": "openai/runs/run-20261114T090029-3c04/candidates/c0.py",
+          "recorded_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "exported_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c1",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090029-3c04/candidates/c1.py",
+          "recorded_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
+          "exported_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c2",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090029-3c04/candidates/c2.py",
+          "recorded_sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b",
+          "exported_sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c3",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090029-3c04/candidates/c3.py",
+          "recorded_sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00",
+          "exported_sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        }
+      ],
+      "candidate_hypotheses": [
+        {
+          "candidate_id": "c1",
+          "hypothesis": "对于约一千个节点、八千条边的图，直接构建 SciPy 稀疏矩阵并迭代可以消除大部分 Python 图构建开销。",
+          "purpose": "以直接构建稀疏转移矩阵替代 NetworkX 图对象及转换开销，并严格复现参考的幂迭代终止条件。"
+        },
+        {
+          "candidate_id": "c2",
+          "hypothesis": "直接使用 SciPy 稀疏矩阵可消除大部分 Python 图构建成本；保持参考停止阈值可以避免更精确的稳态解反而偏离参考输出。",
+          "purpose": "绕过 NetworkX 图对象构建，直接构造稀疏转移矩阵并执行与参考一致的 PageRank 幂迭代。"
+        },
+        {
+          "candidate_id": "c3",
+          "hypothesis": "主要耗时来自构建 NetworkX 图及稀疏矩阵转换；直接构造 CSR 并使用其转置进行矩阵向量乘法，可以保留参考迭代行为且降低开销。",
+          "purpose": "直接构造稀疏转移矩阵，消除 NetworkX 图对象及转换开销，同时复现参考实现的幂迭代停止条件。"
+        }
+      ],
+      "validations": [
+        {
+          "candidate_id": "c0",
+          "elapsed_s": 0.993,
+          "correct": true,
+          "status": "passed",
+          "speedup": null,
+          "candidate_median_s": null,
+          "baseline_median_s": null,
+          "best_candidate_id": null,
+          "best_replaced": null,
+          "failure": null,
+          "timing_spread": null
+        },
+        {
+          "candidate_id": "c1",
+          "elapsed_s": 32.915,
+          "correct": true,
+          "status": "passed",
+          "speedup": 23.051414599425694,
+          "candidate_median_s": 0.0004732310007966589,
+          "baseline_median_s": 0.010908644000664935,
+          "best_candidate_id": "c1",
+          "best_replaced": true,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.010714575000747573,
+              0.011066956999457034
+            ],
+            "candidate_min_max_s": [
+              0.0004429780001373729,
+              0.0006650479999734671
+            ]
+          }
+        },
+        {
+          "candidate_id": "c2",
+          "elapsed_s": 59.922,
+          "correct": true,
+          "status": "passed",
+          "speedup": 20.143776079795394,
+          "candidate_median_s": 0.0004892329998256173,
+          "baseline_median_s": 0.009854999999333813,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.00957117100006144,
+              0.010373361999882036
+            ],
+            "candidate_min_max_s": [
+              0.0004663130002882099,
+              0.0005837039998368709
+            ]
+          }
+        },
+        {
+          "candidate_id": "c3",
+          "elapsed_s": 109.645,
+          "correct": true,
+          "status": "passed",
+          "speedup": 21.508531585417778,
+          "candidate_median_s": 0.00048214900016319007,
+          "baseline_median_s": 0.010370316998887574,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.01023672799965425,
+              0.010643247999723826
+            ],
+            "candidate_min_max_s": [
+              0.0004270210001777741,
+              0.0005094839998491807
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T090029-3c04/m1",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 29.726,
+          "input_tokens": 2484,
+          "output_tokens": 1590,
+          "reasoning_tokens": 887
+        },
+        {
+          "call_id": "run-20261114T090029-3c04/m2",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 24.875,
+          "input_tokens": 2484,
+          "output_tokens": 1499,
+          "reasoning_tokens": 778
+        },
+        {
+          "call_id": "run-20261114T090029-3c04/m3",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 47.516,
+          "input_tokens": 2484,
+          "output_tokens": 2516,
+          "reasoning_tokens": 1698
+        }
+      ],
+      "usage": {
+        "requests": 3,
+        "input_tokens": 7452,
+        "output_tokens": 5605,
+        "reasoning_tokens": 3363
+      },
+      "estimated_usd_frozen_rate": 0.070954
+    },
+    {
+      "run_id": "run-20261114T090218-2120",
+      "task_id": "algotune-convolve_1d-exploratory-short-20261114",
+      "mode": "independent",
+      "best_candidate": "c1",
+      "best_dev_speedup": 2.669287533650096,
+      "timing": {
+        "wall_clock_total_s": 152.859,
+        "agent_loop_s": 152.859,
+        "agent_loop_elapsed_s": 152.859,
+        "agent_loop_limit_s": 180.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 144.323,
+        "dev_evaluation_s": 8.512,
+        "evidence_tool_s": 0,
+        "container_startup_s": 1.893
+      },
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "candidates: used 3/3",
+      "candidate_evidence": [
+        {
+          "candidate_id": "c0",
+          "parent": null,
+          "path": "openai/runs/run-20261114T090218-2120/candidates/c0.py",
+          "recorded_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "exported_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c1",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090218-2120/candidates/c1.py",
+          "recorded_sha256": "bf31e6b70e7228b8fef9e1da732148bc50d627614223077ec5b8629cdc327741",
+          "exported_sha256": "bf31e6b70e7228b8fef9e1da732148bc50d627614223077ec5b8629cdc327741",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c2",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090218-2120/candidates/c2.py",
+          "recorded_sha256": "a5ecc4a17ef776e741327fd9ffb606990a7755a51d8ca5cebe9d247688f20acb",
+          "exported_sha256": "a5ecc4a17ef776e741327fd9ffb606990a7755a51d8ca5cebe9d247688f20acb",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c3",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090218-2120/candidates/c3.py",
+          "recorded_sha256": "da06135f728793e664700179f50258d0f96b4c125f3e1df807339c2b523df2de",
+          "exported_sha256": "da06135f728793e664700179f50258d0f96b4c125f3e1df807339c2b523df2de",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        }
+      ],
+      "candidate_hypotheses": [
+        {
+          "candidate_id": "c1",
+          "hypothesis": "给定长度下，单精度实数变换的误差通常远小于容差，其速度收益足以覆盖额外的安全检查。",
+          "purpose": "用直接实数快速傅里叶变换替代通用卷积分派，并在数值条件良好时使用单精度变换以降低计算和内存开销。"
+        },
+        {
+          "candidate_id": "c2",
+          "hypothesis": "开发输入的卷积条件通常足以支持单精度快速傅里叶变换达到百万分之一的相对误差；能量检查可识别需要双精度的明显病态输入。",
+          "purpose": "用直接实数快速傅里叶变换和受保护的单精度计算降低长序列全卷积的运行时间。"
+        },
+        {
+          "candidate_id": "c3",
+          "hypothesis": "基线的自动算法选择、FFT 包装层和结果复制占有可消除的开销；直接调用同源底层 FFT 并复用缓冲区能够降低总耗时，而无需使用低精度计算。",
+          "purpose": "使用底层双精度实数 FFT，并复用填充与逆变换缓冲区，减少通用卷积接口的调度、分配和复制开销。"
+        }
+      ],
+      "validations": [
+        {
+          "candidate_id": "c0",
+          "elapsed_s": 1.769,
+          "correct": true,
+          "status": "passed",
+          "speedup": null,
+          "candidate_median_s": null,
+          "baseline_median_s": null,
+          "best_candidate_id": null,
+          "best_replaced": null,
+          "failure": null,
+          "timing_spread": null
+        },
+        {
+          "candidate_id": "c1",
+          "elapsed_s": 55.295,
+          "correct": true,
+          "status": "passed",
+          "speedup": 2.669287533650096,
+          "candidate_median_s": 0.00041856300049403217,
+          "baseline_median_s": 0.001117264999265899,
+          "best_candidate_id": "c1",
+          "best_replaced": true,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.0010641779999787104,
+              0.001284982000470336
+            ],
+            "candidate_min_max_s": [
+              0.00037872699977015145,
+              0.0004248549994372297
+            ]
+          }
+        },
+        {
+          "candidate_id": "c2",
+          "elapsed_s": 105.425,
+          "correct": true,
+          "status": "passed",
+          "speedup": 2.4317323975614205,
+          "candidate_median_s": 0.0004238759993313579,
+          "baseline_median_s": 0.001030753000122786,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.0009405849996255711,
+              0.0011236279997319798
+            ],
+            "candidate_min_max_s": [
+              0.0003945420003219624,
+              0.00046583400035160594
+            ]
+          }
+        },
+        {
+          "candidate_id": "c3",
+          "elapsed_s": 152.858,
+          "correct": false,
+          "status": "runtime_error",
+          "speedup": null,
+          "candidate_median_s": null,
+          "baseline_median_s": null,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": {
+            "case": "0",
+            "category": "runtime_error",
+            "stderr_tail": "Traceback (most recent call last):\n  File \"/opt/routeevo/scientific_harness.py\", line 23, in <module>\n    exec(source, namespace)\n  File \"candidate.py\", line 3, in <module>\n    from scipy.fft._pocketfft import pypocketfft as _pfft\nModuleNotFoundError: No module named 'scipy.fft._pocketfft'\n"
+          },
+          "timing_spread": null
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T090218-2120/m1",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 50.554,
+          "input_tokens": 2049,
+          "output_tokens": 2541,
+          "reasoning_tokens": 1937
+        },
+        {
+          "call_id": "run-20261114T090218-2120/m2",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 47.251,
+          "input_tokens": 2049,
+          "output_tokens": 2327,
+          "reasoning_tokens": 1660
+        },
+        {
+          "call_id": "run-20261114T090218-2120/m3",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 46.518,
+          "input_tokens": 2049,
+          "output_tokens": 2121,
+          "reasoning_tokens": 1552
+        }
+      ],
+      "usage": {
+        "requests": 3,
+        "input_tokens": 6147,
+        "output_tokens": 6989,
+        "reasoning_tokens": 5149
+      },
+      "estimated_usd_frozen_rate": 0.082184
+    },
+    {
+      "run_id": "run-20261114T090451-aeec",
+      "task_id": "algotune-pagerank-exploratory-short-20261114",
+      "mode": "feedback",
+      "best_candidate": "c1",
+      "best_dev_speedup": 25.041934744449737,
+      "timing": {
+        "wall_clock_total_s": 149.326,
+        "agent_loop_s": 149.326,
+        "agent_loop_elapsed_s": 149.326,
+        "agent_loop_limit_s": 180.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": null,
+        "model_wait_s": 141.784,
+        "dev_evaluation_s": 7.506,
+        "evidence_tool_s": 0,
+        "container_startup_s": 2.075
+      },
+      "stop_reason": "budget_exhausted",
+      "stop_detail": "candidates: used 3/3",
+      "candidate_evidence": [
+        {
+          "candidate_id": "c0",
+          "parent": null,
+          "path": "openai/runs/run-20261114T090451-aeec/candidates/c0.py",
+          "recorded_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "exported_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c1",
+          "parent": "c0",
+          "path": "openai/runs/run-20261114T090451-aeec/candidates/c1.py",
+          "recorded_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+          "exported_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c2",
+          "parent": "c1",
+          "path": "openai/runs/run-20261114T090451-aeec/candidates/c2.py",
+          "recorded_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
+          "exported_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        },
+        {
+          "candidate_id": "c3",
+          "parent": "c2",
+          "path": "openai/runs/run-20261114T090451-aeec/candidates/c3.py",
+          "recorded_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
+          "exported_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
+          "hash_matches_run": true,
+          "syntax_valid": true
+        }
+      ],
+      "candidate_hypotheses": [
+        {
+          "candidate_id": "c1",
+          "hypothesis": "开发图较稀疏，直接构造 CSR 并执行稀疏矩阵向量乘法，能够消除 NetworkX 对象分配的主要开销。",
+          "purpose": "绕过 NetworkX 图构建，直接用稀疏矩阵实现与参考相同停止条件的 PageRank。"
+        },
+        {
+          "candidate_id": "c2",
+          "hypothesis": "直接使用 SciPy 的稀疏底层内核，并将阻尼系数预先并入边权，可减少对象分配、整数类型转换及迭代中的数组运算。",
+          "purpose": "进一步消除稀疏矩阵对象构造和每轮矩阵乘法包装开销，保留参考算法的去重与停止语义。"
+        },
+        {
+          "candidate_id": "c3",
+          "hypothesis": "前两次反馈显示主要开销已降至数百微秒；直接转置能在获得按源节点排序的入边时避免逐行排序，而较窄的安全索引类型和直接 CSR 乘法可能进一步减少开销。",
+          "purpose": "尝试用线性时间的稀疏转置替代逐行排序，并采用入边 CSR 内核进一步降低构图和迭代成本。"
+        }
+      ],
+      "validations": [
+        {
+          "candidate_id": "c0",
+          "elapsed_s": 0.964,
+          "correct": true,
+          "status": "passed",
+          "speedup": null,
+          "candidate_median_s": null,
+          "baseline_median_s": null,
+          "best_candidate_id": null,
+          "best_replaced": null,
+          "failure": null,
+          "timing_spread": null
+        },
+        {
+          "candidate_id": "c1",
+          "elapsed_s": 34.959,
+          "correct": true,
+          "status": "passed",
+          "speedup": 25.041934744449737,
+          "candidate_median_s": 0.00044516799971461296,
+          "baseline_median_s": 0.011147867999170558,
+          "best_candidate_id": "c1",
+          "best_replaced": true,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.00994669800002157,
+              0.011152701999890269
+            ],
+            "candidate_min_max_s": [
+              0.0004134170003453619,
+              0.00048241799959214404
+            ]
+          }
+        },
+        {
+          "candidate_id": "c2",
+          "elapsed_s": 80.615,
+          "correct": true,
+          "status": "passed",
+          "speedup": 24.91958561833868,
+          "candidate_median_s": 0.0003912109996235813,
+          "baseline_median_s": 0.009748815999955696,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.009697939999568916,
+              0.010323526999854948
+            ],
+            "candidate_min_max_s": [
+              0.0003700440001921379,
+              0.0004339200004324084
+            ]
+          }
+        },
+        {
+          "candidate_id": "c3",
+          "elapsed_s": 149.326,
+          "correct": true,
+          "status": "passed",
+          "speedup": 23.649573790758815,
+          "candidate_median_s": 0.00042300199947931105,
+          "baseline_median_s": 0.010003817000324489,
+          "best_candidate_id": "c1",
+          "best_replaced": false,
+          "failure": null,
+          "timing_spread": {
+            "baseline_min_max_s": [
+              0.009870482999758678,
+              0.010638738000125159
+            ],
+            "candidate_min_max_s": [
+              0.0004080029993929202,
+              0.0005300869997881819
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T090451-aeec/m1",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 31.815,
+          "input_tokens": 2671,
+          "output_tokens": 1551,
+          "reasoning_tokens": 956
+        },
+        {
+          "call_id": "run-20261114T090451-aeec/m2",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 43.462,
+          "input_tokens": 3822,
+          "output_tokens": 2150,
+          "reasoning_tokens": 1466
+        },
+        {
+          "call_id": "run-20261114T090451-aeec/m3",
+          "status": "ok",
+          "model_requested": "gpt-6.1-sol",
+          "model_returned": "gpt-6.1-sol",
+          "latency_s": 66.507,
+          "input_tokens": 4802,
+          "output_tokens": 3335,
+          "reasoning_tokens": 2482
+        }
+      ],
+      "usage": {
+        "requests": 3,
+        "input_tokens": 11295,
+        "output_tokens": 7036,
+        "reasoning_tokens": 4904
+      },
+      "estimated_usd_frozen_rate": 0.09295
+    }
+  ],
+  "input_profiles": {
+    "algotune-convolve_1d-exploratory-short-20261114": {
+      "problem": "convolve_1d",
+      "cases": 2,
+      "memory_key": "fb78be9195",
+      "settings": {
+        "candidate_image": {
+          "image_tag": "routeevo-scientific:9df8e32a4952",
+          "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
+        },
+        "judge_image": {
+          "image_tag": "routeevo-algotune-convolve_1d:230b3ab275ba",
+          "image_id": "sha256:9fc1233b6e2dfde34e2bde3585cf4a754f4ffc389229012db9401c9d0a5ab14a"
+        },
+        "size": 1000,
+        "seed": 1729,
+        "allowed_imports": [
+          "numpy",
+          "scipy",
+          "networkx"
+        ],
+        "candidate_interface": "solve"
+      },
+      "input_profile": {
+        "source": "frozen_dev_inputs",
+        "generator_scale": 1000,
+        "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+        "cases": [
+          {
+            "id": "0",
+            "a": {
+              "shape": [
+                30000
+              ],
+              "dtype": "float64",
+              "wire_dtype": "<f8",
+              "nbytes": 240000
+            },
+            "b": {
+              "shape": [
+                8000
+              ],
+              "dtype": "float64",
+              "wire_dtype": "<f8",
+              "nbytes": 64000
+            },
+            "output_shape": [
+              37999
+            ]
+          },
+          {
+            "id": "1",
+            "a": {
+              "shape": [
+                30000
+              ],
+              "dtype": "float64",
+              "wire_dtype": "<f8",
+              "nbytes": 240000
+            },
+            "b": {
+              "shape": [
+                8000
+              ],
+              "dtype": "float64",
+              "wire_dtype": "<f8",
+              "nbytes": 64000
+            },
+            "output_shape": [
+              37999
+            ]
+          }
+        ]
+      }
+    },
+    "algotune-pagerank-exploratory-short-20261114": {
+      "problem": "pagerank",
+      "cases": 2,
+      "memory_key": "f743c0884f",
+      "settings": {
+        "candidate_image": {
+          "image_tag": "routeevo-scientific:9df8e32a4952",
+          "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
+        },
+        "judge_image": {
+          "image_tag": "routeevo-algotune-pagerank:ee2973687637",
+          "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f"
+        },
+        "size": 1000,
+        "seed": 1729,
+        "allowed_imports": [
+          "numpy",
+          "scipy",
+          "networkx"
+        ],
+        "candidate_interface": "solve"
+      },
+      "input_profile": {
+        "source": "frozen_dev_inputs",
+        "generator_scale": 1000,
+        "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+        "cases": [
+          {
+            "id": "0",
+            "nodes": 1000,
+            "directed_edges": 7950,
+            "node_id_type": "int",
+            "dangling_nodes": 1,
+            "out_degree": {
+              "min": 0,
+              "max": 18,
+              "mean": 7.95
+            },
+            "output_scores": 1000
+          },
+          {
+            "id": "1",
+            "nodes": 1000,
+            "directed_edges": 7878,
+            "node_id_type": "int",
+            "dangling_nodes": 0,
+            "out_degree": {
+              "min": 1,
+              "max": 18,
+              "mean": 7.878
+            },
+            "output_scores": 1000
+          }
+        ]
+      }
+    }
+  },
+  "remote": [
+    {
+      "path": "remote/01-preload-proxy",
+      "runs": 4,
+      "model_candidates": 0,
+      "calls": [
+        {
+          "call_id": "run-20261114T090917-c2a9/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.503,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090917-c2a9/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.634,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090917-c2a9/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.57,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090921-d4b4/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.713,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090921-d4b4/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.445,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090921-d4b4/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.356,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090923-482f/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.464,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090923-482f/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.367,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090923-482f/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.376,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090926-632f/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.373,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090926-632f/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.236,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T090926-632f/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.212,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        }
+      ]
+    },
+    {
+      "path": "remote/02-loaded-proxy",
+      "runs": 2,
+      "model_candidates": 0,
+      "calls": [
+        {
+          "call_id": "run-20261114T091202-9870/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.856,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T091202-9870/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.234,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T091202-9870/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.236,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T091205-4bfc/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.363,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T091205-4bfc/m2",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.448,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        },
+        {
+          "call_id": "run-20261114T091205-4bfc/m3",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.468,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        }
+      ]
+    },
+    {
+      "path": "remote/03-bounded-proxy",
+      "runs": 1,
+      "model_candidates": 0,
+      "calls": [
+        {
+          "call_id": "run-20261114T091639-dd63/m1",
+          "status": "error",
+          "error_kind": "bad_response",
+          "http_503": true,
+          "latency_s": 0.389,
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null
+        }
+      ]
+    },
+    {
+      "path": "remote/04-direct",
+      "runs": 1,
+      "model_candidates": 0,
+      "calls": [
+        {
+          "call_id": "run-20261114T091800-a13b/m1",
+          "status": "error",
+          "error_kind": "incomplete",
+          "http_503": false,
+          "latency_s": 120.193,
+          "input_tokens": 2327,
+          "output_tokens": 2047,
+          "reasoning_tokens": 1707
+        }
+      ]
+    }
+  ],
+  "remote_503_calls": 19,
+  "manual_evaluation": {
+    "evaluation_id": "5a0af294e328",
+    "status": "passed",
+    "executed": true,
+    "format_ok": true,
+    "correct": true,
+    "speedup": 1.225486477902775,
+    "improved": true,
+    "goal_met": true,
+    "candidate_median_s": 0.0007729509998171125,
+    "baseline_median_s": 0.0009472409983573016,
+    "case_count": 2,
+    "passed_cases": 2,
+    "timing_spread": {
+      "candidate_min_max_s": [
+        0.0007503680008085212,
+        0.0008568250013922807
+      ],
+      "baseline_min_max_s": [
+        0.0008811160005279817,
+        0.0010962390006170608
+      ]
+    },
+    "detail": {
+      "case_count": 2,
+      "passed_cases": 2,
+      "timing": {
+        "candidate_s": [
+          0.0008568250013922807,
+          0.0007503680008085212,
+          0.0007729509998171125,
+          0.00077174300167826,
+          0.000822367999717244
+        ],
+        "baseline_s": [
+          0.0010962390006170608,
+          0.0009245739984180545,
+          0.0009766990006028209,
+          0.0008811160005279817,
+          0.0009472409983573016
+        ],
+        "candidate_min_max_s": [
+          0.0007503680008085212,
+          0.0008568250013922807
+        ],
+        "baseline_min_max_s": [
+          0.0008811160005279817,
+          0.0010962390006170608
+        ],
+        "warmup_count": 1,
+        "gc_policy": "automatic_gc_disabled_during_solve",
+        "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports, serialization and automatic cyclic GC excluded"
+      },
+      "container_ready_latency_s": 0.5478813329991681,
+      "duration_s": 2.626,
+      "dataset_sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125",
+      "candidate_sha256": "0a4d055e781259c494f33fd91ae9bd663b125a3cab8f489dd0847e28f784d099"
+    }
+  },
+  "manual_metadata": {
+    "status": "semantically-reconstructed-from-truncated-model-proposal",
+    "eligible_as_model_generated_candidate": false,
+    "source_run_id": "run-20261114T091800-a13b",
+    "source_call_id": "run-20261114T091800-a13b/m1",
+    "source_finish_reason": "length",
+    "source_visible_output_present": true,
+    "manual_change": "Semantically reconstructed the truncated tail from the model's complete reasoning, with unused-import cleanup and variable renaming.",
+    "evaluation_scope": "exploratory dev-only",
+    "formal_results_eligible": false
+  },
+  "sources": [
+    {
+      "path": "docs/research/mac-exploratory-20261114/export-manifest.json",
+      "sha256": "4ca70721b7c817ed33ced55a28f6e4dd3542a242b9e75756bc59eece1f88ee7e"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/comparison.json",
+      "sha256": "2c107f8532822eb639324a970cbb0eccf716af6ca38ce78d80b1677130ce1b61"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/evidence/pricing-gpt-6.1-sol.json",
+      "sha256": "bd573236eef8d60f4d2f110f791ee03721d2d299d49893b44730cf5dc3e11e7c"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/ledger.json",
+      "sha256": "cfb10c5128fb803a2763e2923c31f8f39237ea7ce8744e100400427643000e5c"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c0.py",
+      "sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c1.py",
+      "sha256": "c4bc6eb962a26943f0ddad56b0813ea7ede7698b7974aeb11fdf88989360dd48"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
+      "sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
+      "sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/report.json",
+      "sha256": "e01dd735f6b2df9f71ce57260e8ffce060d90cad14e42ce00458fa585de98cb1"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c0.py",
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c1.py",
+      "sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c2.py",
+      "sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c3.py",
+      "sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/report.json",
+      "sha256": "f40202192880a811ff85703a0e4444a49a52c7157c122be83fcd9bfe734db1f1"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090218-2120/candidates/c0.py",
+      "sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090218-2120/candidates/c1.py",
+      "sha256": "bf31e6b70e7228b8fef9e1da732148bc50d627614223077ec5b8629cdc327741"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090218-2120/candidates/c2.py",
+      "sha256": "a5ecc4a17ef776e741327fd9ffb606990a7755a51d8ca5cebe9d247688f20acb"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090218-2120/candidates/c3.py",
+      "sha256": "da06135f728793e664700179f50258d0f96b4c125f3e1df807339c2b523df2de"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090218-2120/report.json",
+      "sha256": "c474aeafc2b51dd7425e7f037698c77b3f28cb102a5603c9938249c165fcd4f7"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c0.py",
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c1.py",
+      "sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c2.py",
+      "sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c3.py",
+      "sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/report.json",
+      "sha256": "da89d3e0eb897e526b72a220b0e2cd11ed73e580958a71667b6f75e25afb231c"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/tasks/algotune-convolve_1d-exploratory-short-20261114/dev_profile.json",
+      "sha256": "35dc1e67cce294ae6bac915c1aeabb78ef88c9e7ce5502103da8567b7c0eb3d7"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/openai/tasks/algotune-pagerank-exploratory-short-20261114/dev_profile.json",
+      "sha256": "8c7073cf4fbebdeb76c01a1186f1ef6636ebcad41b5597e7669ef96463b57145"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/01-preload-proxy/ledger.json",
+      "sha256": "8a1bd25f083321d884c1f9315ba09f1b1aaf93d3f9aa719829e9fd041666c0ee"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/02-loaded-proxy/ledger.json",
+      "sha256": "f269e8f9ce39834a5e86a1cc2eacda8df097ce802669f414a052843eed736ebd"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/03-bounded-proxy/ledger.json",
+      "sha256": "091a537d97ad7ef7fd8e63b760d57c668f43ea61731a480b53b62ce6d6522a46"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/04-direct/evidence/manual-completion-evaluation.json",
+      "sha256": "00dd66b80e4ebc782c1df77d2fe9695d83aff76ff39f9d9ad88581e0a64724ad"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/04-direct/evidence/manual-completion-metadata.json",
+      "sha256": "24276243027c85cf1386ed3a0754ec1b6e784ba7332c8fed18e3ebef57e343bf"
+    },
+    {
+      "path": "docs/research/mac-exploratory-20261114/remote/04-direct/ledger.json",
+      "sha256": "263498f976e3630b3a31970d059022bd72411a5893dec75537f73b37fe9f6080"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper,UTF8,fontset=none]{ctexart}
+\usepackage[left=22mm,right=22mm,top=22mm,bottom=21mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.83]
+\setCJKmainfont{Source Han Serif CN}[BoldFont={Source Han Serif CN SemiBold}]
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Medium}]
+\setCJKmonofont{Source Han Sans CN}
+\usepackage{graphicx,booktabs,tabularx,longtable,array,amsmath}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr,lastpage,enumitem,caption,float,hyperref,xurl,needspace}
+\definecolor{ink}{HTML}{193247}
+\definecolor{teal}{HTML}{167D8D}
+\definecolor{orange}{HTML}{B86B35}
+\definecolor{muted}{HTML}{566977}
+\definecolor{pale}{HTML}{F2F6F8}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=teal,pdftitle={QuotaCrux 枢决：预算约束下的研究优化实验报告},pdfauthor={QuotaCrux 项目组},bookmarksnumbered=true}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{muted}QuotaCrux / 枢决\quad 研究报告}
+\fancyhead[R]{\sffamily\small\color{muted}2026.11.14\quad v1.2}
+\fancyfoot[L]{\sffamily\scriptsize\color{muted}预算约束下的研究优化}
+\fancyfoot[R]{\sffamily\small\color{muted}\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\ctexset{section={format=\Large\sffamily\bfseries\color{ink},beforeskip=12pt,afterskip=10pt},subsection={format=\large\sffamily\bfseries\color{ink},beforeskip=12pt,afterskip=6pt},subsubsection={format=\normalsize\sffamily\bfseries\color{ink},beforeskip=8pt,afterskip=4pt}}
+\setlength{\parindent}{2em}\setlength{\parskip}{4pt}
+\linespread{1.23}
+\setlist[itemize]{leftmargin=1.5em,itemsep=3pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=4pt,topsep=4pt}
+\renewcommand{\arraystretch}{1.24}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false,skip=7pt}
+\newtcolorbox{finding}[1]{enhanced,breakable,colback=pale,colframe=teal,boxrule=0pt,borderline west={1.5pt}{0pt}{teal},arc=0mm,left=10pt,right=10pt,top=8pt,bottom=8pt,title={#1},coltitle=ink,fonttitle=\sffamily\bfseries,colbacktitle=pale,attach title to upper={\par}}
+\newcommand{\source}[1]{\par\vspace{2pt}{\noindent\footnotesize\color{muted}资料来源：#1\par}}
+\newcommand{\reportfigure}[4][\linewidth]{\begin{figure}[H]\centering\includegraphics[width=#1]{figures/#2}\caption{#3}\label{#4}\end{figure}}
+\newenvironment{smalltable}{\par\begingroup\small\setlength{\tabcolsep}{5pt}\noindent\ignorespaces}{\par\endgroup}
+\newcommand{\repo}{https://github.com/bohack-2026-hw/QuotaCrux}
+\newcommand{\snap}{cd9cc4fcc7af46451acd2398042c9e9b8b255d67}
+\input{generated/metrics.tex}
+\setcounter{tocdepth}{1}
+\setlength{\emergencystretch}{1.5em}
+\begin{document}
+\thispagestyle{empty}
+{\noindent\sffamily\small\color{teal}实验研究报告\hfill 2026 年 11 月}
+\vspace{15mm}
+
+{\noindent\sffamily\fontsize{36}{44}\selectfont\color{ink}QuotaCrux\quad 枢决}\par
+\vspace{5mm}
+{\noindent\sffamily\fontsize{24}{33}\selectfont\color{ink}预算约束下的研究优化}\par
+\vspace{3mm}
+{\noindent\sffamily\large\color{muted}系统机制、实验结果与过程分析}
+\vspace{10mm}
+
+\begin{finding}{摘要}
+QuotaCrux 将研究任务组织为候选生成、外部验证、状态更新和决策调度组成的循环。在给定时间、调用次数和候选数量下，系统选择下一步行动与生成模型，并将开发阶段保留的最佳方案提交独立测试。本报告分析固定 Qwen 的 15 轮研究策略实验、四种动作与模型路由组合，以及 Mac 上的卷积与 PageRank 探索。
+
+固定 Qwen 实验中，96 个生成候选有 60 个通过开发验证，15 个最终交付全部通过测试，其中 8 个保留初始程序。地图压缩任务的主要困难集中在约束满足和重复提案；搬箱任务出现改进，但反馈组的最终中位数低于独立探索组。
+
+路由实验中，动作 Decisions 与规则模型路由组合获得最高最终得分，相对初始程序提高 6.149\%，对应搬箱能耗减少 44.707\%。双 Decisions 组合提前结束研究，用时 112.910 秒，最终得分提高 0.513\%。这些观测揭示了继续搜索、模型升级和停止决策之间的资源取舍。
+
+Mac 探索进一步展示了两类算法实现优化：卷积通过实数 FFT、缓冲区与精度选择降低运行开销；PageRank 通过直接构造稀疏表示替代图对象构建。报告结合每次候选的结果、调用账本和计时样本，分析各项收益的形成过程。
+\end{finding}
+\vfill
+{\noindent\small\color{muted}
+版本：v1.2\quad 数据截止：2026 年 11 月 14 日\par
+研究范围：单任务优化、研究策略对照、动作与模型路由\par
+正式项目名称：QuotaCrux / 枢决\quad 源码仓库：QuotaCrux\par
+执行版本、样本与来源见方法章节及附录。
+}
+
+\clearpage
+\tableofcontents
+\vspace{8mm}
+\subsection*{主要结果索引}
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}lLL@{}}\toprule
+问题 & 主要观察 & 结果位置\\\midrule
+反馈如何影响搜索 & ahc024 反馈组 25 个候选中 20 个失败；ahc026 反馈组 20 个候选含 9 种代码 & 第 \ref{sec:feedback} 节\\
+路由如何分配资源 & 动作决策组 7 次生成；双决策组 6 次生成、13 次决策并提前结束 & 第 \ref{sec:routing} 节\\
+改进如何形成 & 模型升级后，分段规划、局部搜索和后缀复用逐步降低搬运成本 & 第 \ref{sec:case} 节\\
+时间花在哪里 & 固定模型批次的模型等待占累计运行时长 93.89\% & 第 \ref{sec:resources} 节\\
+函数优化有什么变化 & 卷积更换变换执行路径；PageRank 直接使用稀疏迭代 & 第 \ref{sec:mac} 节\\\bottomrule
+\end{tabularx}
+\end{smalltable}
+
+\clearpage\input{sections/01-system.tex}
+\clearpage\input{sections/02-protocol.tex}
+\clearpage\input{sections/03-feedback.tex}
+\clearpage\input{sections/04-routing.tex}
+\clearpage\input{sections/05-case.tex}
+\clearpage\input{sections/06-resources.tex}
+\clearpage\input{sections/07-mac.tex}
+\clearpage\input{sections/08-conclusions.tex}
+\clearpage\input{sections/09-appendix.tex}
+\end{document}

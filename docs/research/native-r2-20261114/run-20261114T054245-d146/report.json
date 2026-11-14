@@ -1,0 +1,1576 @@
+{
+  "run_id": "run-20261114T054245-d146",
+  "task": {
+    "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+    "split": "smoke",
+    "target_min_speedup": 1.1,
+    "objective": {
+      "metric": "speedup",
+      "direction": "maximize",
+      "min_speedup": 1.1
+    },
+    "family": "algotune",
+    "presentation": {
+      "title": "AlgoTune · convolve_1d",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": "上游 solve 方法；独立函数计时",
+      "validation": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "agent_notes": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden."
+    },
+    "dev_params": {
+      "cases": 2
+    },
+    "final_params": {
+      "cases": 3
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+    },
+    "selection": {
+      "dev_cases": 2,
+      "final_cases": 3
+    }
+  },
+  "mode": "eval",
+  "snapshot_id": "v0",
+  "label": "research-20261114T053410-bfde #3 r1",
+  "scripted_model": [],
+  "status": "completed",
+  "stop_reason": "agent_finished",
+  "stop_detail": "当前最优候选 c0 直接使用 scipy.signal.convolve，这是高度优化的库函数。在没有明显更快的替代方案的情况下，进一步尝试可能无法达到目标加速比。",
+  "config_fingerprint": "7e9c6212771208a6",
+  "outcome": {
+    "run_completed": true,
+    "candidate_ran": true,
+    "dev_validation_passed": true,
+    "dev_improved": true,
+    "best_from_reuse": false,
+    "best_is_initial": false,
+    "final_evaluated": false,
+    "final_correct": null,
+    "final_speedup": null,
+    "final_objective": null,
+    "goal_met": false,
+    "valid_artifact": null,
+    "summary": "未执行最终测试（agent_finished）；最佳候选 c5 仅有开发验证结果"
+  },
+  "experience": {
+    "snapshot_read": "v0",
+    "retrieval": {
+      "current_buckets": {
+        "problem": "eeb3cd9d83"
+      },
+      "feature_count": 1,
+      "matched_by_outcome": {},
+      "min_matches": 1,
+      "retrieval": "retrieval-v2",
+      "scores": {},
+      "selected": [],
+      "snapshot_size": 0
+    },
+    "read": [],
+    "published_snapshot_id": null,
+    "published_experiences": []
+  },
+  "best_candidate": {
+    "candidate_id": "c5",
+    "origin": "model",
+    "parent_candidate_id": "c0",
+    "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c5.py",
+    "code_sha256": "52c4c814beadd2005cd142fe19700bf528dd21921adb3d76770d284f1ffb56a0",
+    "model_call_id": "m5",
+    "dev_evaluations": [
+      {
+        "evaluation_id": "10758ba75c8d",
+        "status": "passed",
+        "correct": 1,
+        "speedup": 1.2100715604780834,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": null,
+        "eligible_for_selection": true
+      }
+    ]
+  },
+  "best_rule": "highest latest dev median speedup among passed eligible candidates whose samples all beat the baseline's; else initial c0",
+  "run_target_speedup": 1.1,
+  "final_evaluation": null,
+  "candidates": [
+    {
+      "candidate_id": "c0",
+      "origin": "initial",
+      "parent_candidate_id": null,
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c0.py",
+      "code_sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5",
+      "model_call_id": null,
+      "dev_evaluations": [
+        {
+          "evaluation_id": "a32ff4817928",
+          "status": "passed",
+          "correct": 1,
+          "speedup": null,
+          "improved": null,
+          "goal_met": null,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c1",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c1.py",
+      "code_sha256": "52c4c814beadd2005cd142fe19700bf528dd21921adb3d76770d284f1ffb56a0",
+      "model_call_id": "m1",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "f51456ddcc01",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.1665250110604213,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c2.py",
+      "code_sha256": "caa349e27606d3815a18d1aa02824a732ddeb0ffdadf765d1e8f321a1352653e",
+      "model_call_id": "m2",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "411c215bbd24",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.073530124925302,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c3",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c3.py",
+      "code_sha256": "7f9a8fec97004d9e2faa0f7b526864a08b5bc2f39c98b3a0552337b764a02d7f",
+      "model_call_id": "m3",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "2f8b72441710",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 0.7299369892900457,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c4",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c4.py",
+      "code_sha256": "52c4c814beadd2005cd142fe19700bf528dd21921adb3d76770d284f1ffb56a0",
+      "model_call_id": "m4",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "c3449a63348a",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.1613538070977598,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c5",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c5.py",
+      "code_sha256": "52c4c814beadd2005cd142fe19700bf528dd21921adb3d76770d284f1ffb56a0",
+      "model_call_id": "m5",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "10758ba75c8d",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.2100715604780834,
+          "improved": 1,
+          "goal_met": 1,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c6",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c6.py",
+      "code_sha256": "77b824300ff25919a2da5ee07737ed486d005f03086479a072cee6f2f1a28bb4",
+      "model_call_id": "m6",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "7e919f758713",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 0.8233003883012423,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c7",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c7.py",
+      "code_sha256": "cc1f0c2b91262b05ccbb6494ebba395a83cbf56b5aea3d79e26002803703f880",
+      "model_call_id": "m7",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "6a4d656526ea",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 0.7792644575905584,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    },
+    {
+      "candidate_id": "c8",
+      "origin": "model",
+      "parent_candidate_id": "c0",
+      "code_path": "/home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c8.py",
+      "code_sha256": "7cae0094cacb06166941a8c09226b8aed332d7c538233568b858c574456e0481",
+      "model_call_id": "m8",
+      "dev_evaluations": [
+        {
+          "evaluation_id": "cdbb6a0af572",
+          "status": "passed",
+          "correct": 1,
+          "speedup": 1.1465100406806659,
+          "improved": 0,
+          "goal_met": 0,
+          "objective": null,
+          "eligible_for_selection": true
+        }
+      ]
+    }
+  ],
+  "iterations": {
+    "model_requests": 9,
+    "candidates_proposed": 8,
+    "candidates_passed": 8,
+    "candidates_improved": 1,
+    "candidates_no_gain": 7,
+    "candidates_failed": 0,
+    "programs_reused": 0,
+    "programs_reused_improved": 0,
+    "invalid_actions": 0,
+    "unusable_replies": 0,
+    "api_errors": 0,
+    "evidence_calls": 0,
+    "upgrades": 0,
+    "upgrade_at_step": null
+  },
+  "usage": {
+    "total": {
+      "requests": 9,
+      "ok": 9,
+      "errors": {},
+      "latency_s": 48.305,
+      "input_tokens": 19763,
+      "input_tokens_unknown_calls": 0,
+      "cached_input_tokens": 5376,
+      "cached_input_tokens_unknown_calls": 0,
+      "output_tokens": 2263,
+      "output_tokens_unknown_calls": 0,
+      "reasoning_tokens": null,
+      "reasoning_tokens_unknown_calls": 9,
+      "cost_usd": null,
+      "cost_status": "unknown",
+      "cost_unknown_calls": 9,
+      "price_versions": []
+    },
+    "by_model": {
+      "small:chat_compat:Qwen3.8-27B": {
+        "requests": 9,
+        "ok": 9,
+        "errors": {},
+        "latency_s": 48.305,
+        "input_tokens": 19763,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 5376,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 2263,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 9,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 9,
+        "price_versions": []
+      }
+    },
+    "self_hosted_machine_cost": "unknown (not accounted)"
+  },
+  "timing": {
+    "wall_clock_total_s": 81.4,
+    "agent_loop_s": 81.398,
+    "agent_loop_elapsed_s": 81.398,
+    "agent_loop_limit_s": 900,
+    "agent_loop_overrun_s": 0.0,
+    "final_evaluation_s": null,
+    "model_wait_s": 48.305,
+    "dev_evaluation_s": 32.984,
+    "evidence_tool_s": 0,
+    "container_startup_s": 5.733
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": "验证初始程序在开发数据上正确，作为基线候选",
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": null,
+        "candidate_median_s": null,
+        "case_count": 2,
+        "correct": true,
+        "evaluation_id": "a32ff4817928",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": null,
+        "improved": null,
+        "passed_cases": 2,
+        "speedup": null,
+        "status": "passed"
+      },
+      "next_decision": "continue",
+      "candidate_id": "c0",
+      "evaluation_id": "a32ff4817928",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:42:45.883+00:00",
+      "ended_at": "2026-11-14T05:42:48.159+00:00"
+    },
+    {
+      "seq": 2,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "用 scipy.signal.fftconvolve 替代 signal.convolve，避免直接调用 FFT 的额外开销并可能获得更快的卷积计算。",
+      "expected_result": "候选程序在两个开发用例上通过数值检查，且中位耗时低于基线，速度提升至少达到目标。",
+      "verification": "运行验证，确认所有用例正确，比较 candidate_median_s 与 baseline_median_s，确保每个候选样本都快于每个基线样本。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c1",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m1",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:42:48.160+00:00",
+      "ended_at": "2026-11-14T05:42:52.736+00:00"
+    },
+    {
+      "seq": 3,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.0018954759871121496,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": 0.0016248909960268065,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "f51456ddcc01",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 10.877,
+          "metric": "speedup",
+          "model_requests": 1,
+          "tokens": 2381,
+          "value": 1.0
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 1.1665250110604213,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0017965950100915506,
+            0.0019367580098332837
+          ],
+          "candidate_min_max_s": [
+            0.0014407650014618412,
+            0.0019330750074004754
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c1",
+      "evaluation_id": "f51456ddcc01",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:42:56.758+00:00",
+      "ended_at": "2026-11-14T05:42:56.758+00:00"
+    },
+    {
+      "seq": 4,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "优化一维卷积计算，使用更高效的FFT方法替代scipy.signal.convolve。对于大数组(30000和8000)，FFT-based方法通常比直接卷积更快。",
+      "expected_result": "通过验证，速度提升超过1.1倍",
+      "verification": "检查输出形状为(37999,)，数值精度满足要求，且测量时间显著低于基线",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c2",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m2",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:42:56.760+00:00",
+      "ended_at": "2026-11-14T05:43:03.107+00:00"
+    },
+    {
+      "seq": 5,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001885135003249161,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": 0.0017560150008648634,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "411c215bbd24",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 21.315,
+          "metric": "speedup",
+          "model_requests": 2,
+          "tokens": 4941,
+          "value": 1.0
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 1.073530124925302,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0017944830178748816,
+            0.001981412002351135
+          ],
+          "candidate_min_max_s": [
+            0.0016026490047806874,
+            0.0024776080099400133
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c2",
+      "evaluation_id": "411c215bbd24",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:07.196+00:00",
+      "ended_at": "2026-11-14T05:43:07.196+00:00"
+    },
+    {
+      "seq": 6,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "尝试使用FFT方法替代scipy.signal.convolve，可能更快。",
+      "expected_result": "速度提升至少1.1倍。",
+      "verification": "运行验证并检查数值正确性和时间。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c3",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m3",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:07.197+00:00",
+      "ended_at": "2026-11-14T05:43:11.287+00:00"
+    },
+    {
+      "seq": 7,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001838284995756112,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": 0.0025184160040225834,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "2f8b72441710",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 28.624,
+          "metric": "speedup",
+          "model_requests": 3,
+          "tokens": 7344,
+          "value": 1.0
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 0.7299369892900457,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0017511510086478665,
+            0.0019720179989235476
+          ],
+          "candidate_min_max_s": [
+            0.0023190799984149635,
+            0.002544543007388711
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c3",
+      "evaluation_id": "2f8b72441710",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:14.505+00:00",
+      "ended_at": "2026-11-14T05:43:14.505+00:00"
+    },
+    {
+      "seq": 8,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "使用scipy.signal.fftconvolve替代signal.convolve，利用FFT进行快速卷积计算以提升性能。",
+      "expected_result": "由于FFT卷积的时间复杂度为O(n log n)，对于大数组（如30000和8000长度）应比直接卷积更快。预期速度提升至少1.1倍。",
+      "verification": "通过验证反馈确认输出正确性（与scipy.signal.convolve结果误差在1e-6以内）以及实际测量时间是否低于基线。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c4",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m4",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:14.507+00:00",
+      "ended_at": "2026-11-14T05:43:19.559+00:00"
+    },
+    {
+      "seq": 9,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.0018867179896915331,
+        "best_candidate_id": "c0",
+        "best_replaced": false,
+        "candidate_median_s": 0.0016245850129052997,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "c3449a63348a",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c0",
+          "elapsed_s": 37.694,
+          "metric": "speedup",
+          "model_requests": 4,
+          "tokens": 9765,
+          "value": 1.0
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 1.1613538070977598,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0018287339917151257,
+            0.0019172479951521382
+          ],
+          "candidate_min_max_s": [
+            0.001417437000782229,
+            0.001892268002848141
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c4",
+      "evaluation_id": "c3449a63348a",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:23.574+00:00",
+      "ended_at": "2026-11-14T05:43:23.574+00:00"
+    },
+    {
+      "seq": 10,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "尝试使用scipy.signal.fftconvolve替代直接卷积，利用FFT加速大数组的线性卷积计算。",
+      "expected_result": "对于长度30000和8000的数组，FFT方法应该比直接卷积更快，预期速度提升超过1.1倍。",
+      "verification": "检查输出形状是否为(37999,)，数值误差是否满足norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6，并测量实际运行时间。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c5",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m5",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:23.576+00:00",
+      "ended_at": "2026-11-14T05:43:27.773+00:00"
+    },
+    {
+      "seq": 11,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.0019690490007633343,
+        "best_candidate_id": "c5",
+        "best_replaced": true,
+        "candidate_median_s": 0.001627216988708824,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "10758ba75c8d",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": true,
+        "improved": true,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 45.947,
+          "metric": "speedup",
+          "model_requests": 5,
+          "tokens": 12197,
+          "value": 1.2100715604780834
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 1.2100715604780834,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0019087770051555708,
+            0.002091555987135507
+          ],
+          "candidate_min_max_s": [
+            0.001445533984224312,
+            0.001847285995609127
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c5",
+      "evaluation_id": "10758ba75c8d",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:31.828+00:00",
+      "ended_at": "2026-11-14T05:43:31.828+00:00"
+    },
+    {
+      "seq": 12,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "尝试使用FFT方法进行1D卷积，以加速计算。对于长度为30000和8000的数组，FFT方法通常比直接卷积更快。",
+      "expected_result": "候选方案通过正确性检查，并且速度提升超过1.1倍。",
+      "verification": "验证输出与scipy.signal.convolve的结果在数值上等价（相对误差<=1e-6），并测量执行时间。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c6",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m6",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:31.830+00:00",
+      "ended_at": "2026-11-14T05:43:39.101+00:00"
+    },
+    {
+      "seq": 13,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001975916005903855,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": 0.0023999940167414024,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "7e919f758713",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 56.604,
+          "metric": "speedup",
+          "model_requests": 6,
+          "tokens": 14752,
+          "value": 1.2100715604780834
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 0.8233003883012423,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0019011170079465955,
+            0.0020100519905099645
+          ],
+          "candidate_min_max_s": [
+            0.0022181290114531294,
+            0.003969568992033601
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c6",
+      "evaluation_id": "7e919f758713",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:42.485+00:00",
+      "ended_at": "2026-11-14T05:43:42.485+00:00"
+    },
+    {
+      "seq": 14,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "使用numpy的FFT方法替代scipy.signal.convolve，可能更快。",
+      "expected_result": "速度提升超过1.1倍，结果正确。",
+      "verification": "验证输出与scipy.signal.convolve一致，且耗时更短。",
+      "hypothesis": null,
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c7",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m7",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:42.487+00:00",
+      "ended_at": "2026-11-14T05:43:46.299+00:00"
+    },
+    {
+      "seq": 15,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.001840819008066319,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": 0.002362251980230212,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "6a4d656526ea",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 63.781,
+          "metric": "speedup",
+          "model_requests": 7,
+          "tokens": 17143,
+          "value": 1.2100715604780834
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 0.7792644575905584,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.001824445993406698,
+            0.001967228003195487
+          ],
+          "candidate_min_max_s": [
+            0.002181013987865299,
+            0.0028355240065138787
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c7",
+      "evaluation_id": "6a4d656526ea",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:49.661+00:00",
+      "ended_at": "2026-11-14T05:43:49.661+00:00"
+    },
+    {
+      "seq": 16,
+      "actor": "model",
+      "action": "propose_candidate",
+      "status": "submitted",
+      "purpose": "使用 scipy.signal.fftconvolve 替代 signal.convolve，利用 FFT 加速大尺寸线性卷积。",
+      "expected_result": "正确性通过，速度显著提升（FFT 复杂度 O(n log n) vs O(n*m)）。",
+      "verification": "数值检查 norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6；测量 speedup > 1.1。",
+      "hypothesis": "对于 len(a)=30000, len(b)=8000 的大输入，fftconvolve 比直接 convolve 快得多。",
+      "params": {
+        "parent_candidate_id": "c0"
+      },
+      "result": {
+        "parent_candidate_id": "c0"
+      },
+      "next_decision": "validate candidate",
+      "candidate_id": "c8",
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m8",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:43:49.663+00:00",
+      "ended_at": "2026-11-14T05:43:56.829+00:00"
+    },
+    {
+      "seq": 17,
+      "actor": "program",
+      "action": "run_validation",
+      "status": "passed",
+      "purpose": null,
+      "expected_result": null,
+      "verification": null,
+      "hypothesis": null,
+      "params": {},
+      "result": {
+        "baseline_median_s": 0.0019091329886578023,
+        "best_candidate_id": "c5",
+        "best_replaced": false,
+        "candidate_median_s": 0.0016651690093567595,
+        "case_count": 2,
+        "correct": true,
+        "eligible_for_selection": true,
+        "evaluation_id": "cdbb6a0af572",
+        "executed": true,
+        "format_ok": true,
+        "goal_met": false,
+        "improved": false,
+        "passed_cases": 2,
+        "progress": {
+          "best_candidate_id": "c5",
+          "elapsed_s": 75.551,
+          "metric": "speedup",
+          "model_requests": 8,
+          "tokens": 19587,
+          "value": 1.2100715604780834
+        },
+        "run_target_speedup": 1.1,
+        "speedup": 1.1465100406806659,
+        "status": "passed",
+        "timing_spread": {
+          "baseline_min_max_s": [
+            0.0017992420180235058,
+            0.0019434190035099164
+          ],
+          "candidate_min_max_s": [
+            0.0014771930000279099,
+            0.0019404460035730153
+          ]
+        }
+      },
+      "next_decision": "continue",
+      "candidate_id": "c8",
+      "evaluation_id": "cdbb6a0af572",
+      "model_call_id": null,
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:44:01.431+00:00",
+      "ended_at": "2026-11-14T05:44:01.431+00:00"
+    },
+    {
+      "seq": 18,
+      "actor": "model",
+      "action": "finish",
+      "status": "done",
+      "purpose": "终止运行，因为当前最优候选 c0 已是 scipy.signal.convolve 的直接调用，难以通过进一步优化获得显著加速。",
+      "expected_result": "记录完成原因并停止研究循环。",
+      "verification": "确认 finish_reason 字段已填写且动作类型正确。",
+      "hypothesis": null,
+      "params": {
+        "analysis": "任务要求对一维卷积进行优化，基准是 scipy.signal.convolve(a, b, mode='full')。c0 已经直接调用了该函数，任何替代实现（如 FFT 或 numpy 的 correlate）都很难在数值精度和速度上同时超越 scipy 的实现。由于预算有限且没有明显的优化空间，选择结束。",
+        "finish_reason": "当前最优候选 c0 直接使用 scipy.signal.convolve，这是高度优化的库函数。在没有明显更快的替代方案的情况下，进一步尝试可能无法达到目标加速比。"
+      },
+      "result": {
+        "finish_reason": "当前最优候选 c0 直接使用 scipy.signal.convolve，这是高度优化的库函数。在没有明显更快的替代方案的情况下，进一步尝试可能无法达到目标加速比。"
+      },
+      "next_decision": "stop",
+      "candidate_id": null,
+      "evaluation_id": null,
+      "model_call_id": "run-20261114T054245-d146/m9",
+      "tool_call_id": null,
+      "started_at": "2026-11-14T05:44:01.433+00:00",
+      "ended_at": "2026-11-14T05:44:07.277+00:00"
+    }
+  ],
+  "config": {
+    "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+    "evaluator_version": "runtime-suite-eval-3",
+    "experience_extractor": "extractor-v3",
+    "fingerprint": "7e9c6212771208a6",
+    "fingerprint_excludes": [
+      "mode",
+      "snapshot_id",
+      "label",
+      "environment details beyond image id"
+    ],
+    "label": "research-20261114T053410-bfde #3 r1",
+    "limits": {
+      "max_candidates": 10,
+      "max_code_bytes": 20000,
+      "max_model_requests": 20,
+      "measurement_timeout_s": 10.0,
+      "min_request_window_s": 15.0,
+      "model_request_timeout_s": 120.0,
+      "token_budget": null,
+      "wall_clock_s": 900
+    },
+    "measure": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "models": {
+      "large": {
+        "base_url": "https://api.openai.com/v1",
+        "enable_thinking": null,
+        "extra": {},
+        "max_output_tokens": 32000,
+        "model": "gpt-6.1-sol",
+        "provider": "openai_responses",
+        "reasoning_effort": "xhigh",
+        "response_format": "json_schema",
+        "role": "large",
+        "temperature": null
+      },
+      "small": {
+        "base_url": "https://aiping.cn/api/v1",
+        "enable_thinking": false,
+        "extra": {},
+        "max_output_tokens": 8192,
+        "model": "Qwen3.8-27B",
+        "provider": "chat_compat",
+        "reasoning_effort": null,
+        "response_format": "json_object",
+        "role": "small",
+        "temperature": null
+      }
+    },
+    "prompt": {
+      "system_sha256": "c2f6957074dc3d3733a5d737a6b5750d85a6c3f0bbfbabfc0b8d3c82badabf13",
+      "version": "agent-prompt-v5"
+    },
+    "research_protocol": {
+      "final_evaluation": false,
+      "fixed_model": "small",
+      "mode": "independent"
+    },
+    "retrieval": {
+      "features": "benchmark adapter workload features; compatible task semantics required",
+      "max_per_outcome": {
+        "failure": 2,
+        "no_gain": 1,
+        "success": 3
+      },
+      "rank": "matching features desc, then newest first",
+      "version": "retrieval-v2"
+    },
+    "reuse": {
+      "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
+      "learn_target_margin": 0.05,
+      "max_programs": 3,
+      "rank": "best matching features among the program's success records desc, then its best measured speedup desc",
+      "requires": "a success record (passed, every sample faster than the baseline) that stores the full program",
+      "skip": "a program with a no-gain or failure record that matches the current workload on more features than any of its successes",
+      "version": "reuse-v2"
+    },
+    "sandbox_image_id": "sha256:5d36bf4b0fb86cbae9f72dca43154ae3e175c116dab95bc28a46f375b6c40793",
+    "scripted": [],
+    "task_manifest_sha256": "8d7d12ef1f5938b1d0e3ffadbf8842d506858ef4d9beee8d23bffcf51ddf961b",
+    "upgrade_rule": {
+      "consecutive_misses": 2,
+      "description": "start with the small model; switch to the large model for the rest of the run, if model requests remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model requests without an on-target candidate",
+      "id": "upgrade-rule-v2",
+      "max_small_requests_without_goal": 3
+    }
+  },
+  "environment": {
+    "image_id": "sha256:5d36bf4b0fb86cbae9f72dca43154ae3e175c116dab95bc28a46f375b6c40793",
+    "image_tag": "routeevo-scientific:6251644e51bd",
+    "judge": {
+      "image_id": "sha256:756e7a4eda1c38fb0e855b72ebf7884b9a4e4e8a20f3f91bd568ac68147ae971",
+      "image_tag": "routeevo-algotune-convolve_1d:97afbd85999c"
+    },
+    "limits": {
+      "cpus": 1.0,
+      "cpuset_cpus": "2",
+      "function_warmups": 3,
+      "max_output_bytes": 67108864,
+      "memory": "1g",
+      "pids_limit": 64,
+      "ready_timeout_s": 30.0,
+      "repeats": 5
+    },
+    "protocol": "isolated-function-timing-v1",
+    "threads": 1
+  },
+  "reproduce": {
+    "run_again": "uv run routeevo run algotune-convolve_1d-smoke-eeb3cd9d83 --mode eval --snapshot v0 --research-mode independent --fixed-model small --dev-only --cpuset-cpus 2 --function-warmups 3 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0",
+    "recheck_best": "uv run routeevo check algotune-convolve_1d-smoke-eeb3cd9d83 /home/hycx233/Projects/bohack/RouteEvo-research-benchmarks/backend/var/runs/run-20261114T054245-d146/candidates/c5.py --dataset final --cpuset-cpus 2 --function-warmups 3",
+    "report": "uv run routeevo report run-20261114T054245-d146"
+  },
+  "started_at": "2026-11-14T05:42:45.881+00:00",
+  "loop_ended_at": "2026-11-14T05:44:07.279+00:00",
+  "ended_at": "2026-11-14T05:44:07.281+00:00",
+  "research": {
+    "definition": {
+      "question": "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 1.1×？",
+      "goal": "输出全对；全部样本快于基线；加速比 ≥ 1.1×",
+      "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+      "baseline": {
+        "program": "上游 solve 方法；独立函数计时",
+        "dev_median_s": 0.0018954759871121496,
+        "final_median_s": null
+      },
+      "scope": "Submit a Python module with solve(problem), not a stdin/stdout program. NumPy/SciPy/NetworkX are installed. Use the observed dev profile for actual sizes and the contract for output types and numerical tolerances. Function timing excludes import/serialization. No cProfile tool is available; use measured validation feedback. Cross-run caches are forbidden.",
+      "tools": [
+        {
+          "action": "propose_candidate",
+          "label": "提出候选：提交完整程序，程序立即验证"
+        },
+        {
+          "action": "finish",
+          "label": "结束：交付当前最佳已验证候选"
+        }
+      ],
+      "verification": "上游数值校验器 + 形状及有限数值检查；每次计时结果均校验",
+      "budget": {
+        "model_requests": 20,
+        "candidates": 10,
+        "loop_s": 900,
+        "request_timeout_s": 120.0,
+        "measurement_timeout_s": 10.0
+      },
+      "final_test": "本轮为开发集预实验，未打开最终数据"
+    },
+    "experiments": [
+      {
+        "candidate_id": "c1",
+        "step": 2,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "用 scipy.signal.fftconvolve 替代 signal.convolve，避免直接调用 FFT 的额外开销并可能获得更快的卷积计算。",
+        "expected": "候选程序在两个开发用例上通过数值检查，且中位耗时低于基线，速度提升至少达到目标。",
+        "verification": "运行验证，确认所有用例正确，比较 candidate_median_s 与 baseline_median_s，确保每个候选样本都快于每个基线样本。",
+        "result": {
+          "status": "passed",
+          "speedup": 1.1665250110604213,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "f51456ddcc01"
+      },
+      {
+        "candidate_id": "c2",
+        "step": 4,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "优化一维卷积计算，使用更高效的FFT方法替代scipy.signal.convolve。对于大数组(30000和8000)，FFT-based方法通常比直接卷积更快。",
+        "expected": "通过验证，速度提升超过1.1倍",
+        "verification": "检查输出形状为(37999,)，数值精度满足要求，且测量时间显著低于基线",
+        "result": {
+          "status": "passed",
+          "speedup": 1.073530124925302,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "411c215bbd24"
+      },
+      {
+        "candidate_id": "c3",
+        "step": 6,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "尝试使用FFT方法替代scipy.signal.convolve，可能更快。",
+        "expected": "速度提升至少1.1倍。",
+        "verification": "运行验证并检查数值正确性和时间。",
+        "result": {
+          "status": "passed",
+          "speedup": 0.7299369892900457,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "2f8b72441710"
+      },
+      {
+        "candidate_id": "c4",
+        "step": 8,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "使用scipy.signal.fftconvolve替代signal.convolve，利用FFT进行快速卷积计算以提升性能。",
+        "expected": "由于FFT卷积的时间复杂度为O(n log n)，对于大数组（如30000和8000长度）应比直接卷积更快。预期速度提升至少1.1倍。",
+        "verification": "通过验证反馈确认输出正确性（与scipy.signal.convolve结果误差在1e-6以内）以及实际测量时间是否低于基线。",
+        "result": {
+          "status": "passed",
+          "speedup": 1.1613538070977598,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "c3449a63348a"
+      },
+      {
+        "candidate_id": "c5",
+        "step": 10,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "尝试使用scipy.signal.fftconvolve替代直接卷积，利用FFT加速大数组的线性卷积计算。",
+        "expected": "对于长度30000和8000的数组，FFT方法应该比直接卷积更快，预期速度提升超过1.1倍。",
+        "verification": "检查输出形状是否为(37999,)，数值误差是否满足norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6，并测量实际运行时间。",
+        "result": {
+          "status": "passed",
+          "speedup": 1.2100715604780834,
+          "objective": null,
+          "improved": true,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "supported",
+        "then": "continue",
+        "evaluation_id": "10758ba75c8d"
+      },
+      {
+        "candidate_id": "c6",
+        "step": 12,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "尝试使用FFT方法进行1D卷积，以加速计算。对于长度为30000和8000的数组，FFT方法通常比直接卷积更快。",
+        "expected": "候选方案通过正确性检查，并且速度提升超过1.1倍。",
+        "verification": "验证输出与scipy.signal.convolve的结果在数值上等价（相对误差<=1e-6），并测量执行时间。",
+        "result": {
+          "status": "passed",
+          "speedup": 0.8233003883012423,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "7e919f758713"
+      },
+      {
+        "candidate_id": "c7",
+        "step": 14,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": null,
+        "purpose": "使用numpy的FFT方法替代scipy.signal.convolve，可能更快。",
+        "expected": "速度提升超过1.1倍，结果正确。",
+        "verification": "验证输出与scipy.signal.convolve一致，且耗时更短。",
+        "result": {
+          "status": "passed",
+          "speedup": 0.7792644575905584,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "6a4d656526ea"
+      },
+      {
+        "candidate_id": "c8",
+        "step": 16,
+        "kind": "model",
+        "target": 1.1,
+        "hypothesis": "对于 len(a)=30000, len(b)=8000 的大输入，fftconvolve 比直接 convolve 快得多。",
+        "purpose": "使用 scipy.signal.fftconvolve 替代 signal.convolve，利用 FFT 加速大尺寸线性卷积。",
+        "expected": "正确性通过，速度显著提升（FFT 复杂度 O(n log n) vs O(n*m)）。",
+        "verification": "数值检查 norm(solution - reference, 2) / (norm(reference, 2) + 1e-12) <= 1e-6；测量 speedup > 1.1。",
+        "result": {
+          "status": "passed",
+          "speedup": 1.1465100406806659,
+          "objective": null,
+          "improved": false,
+          "failure": null,
+          "contract_case": null
+        },
+        "verdict": "refuted",
+        "then": "continue",
+        "evaluation_id": "cdbb6a0af572"
+      }
+    ],
+    "verdicts": {
+      "supported": 1,
+      "partial": 0,
+      "refuted": 7,
+      "untestable": 0,
+      "untested": 0
+    },
+    "verdict_labels": {
+      "supported": "得到支持",
+      "partial": "部分支持（改善，但未达目标）",
+      "refuted": "被反驳（正确但没有改善）",
+      "untestable": "未能检验（候选出错）",
+      "untested": "未评测（预算或运行结束）"
+    }
+  },
+  "progress": [
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 10.877,
+      "metric": "speedup",
+      "model_requests": 1,
+      "tokens": 2381,
+      "value": 1.0,
+      "usage": {
+        "requests": 1,
+        "ok": 1,
+        "errors": {},
+        "latency_s": 4.571,
+        "input_tokens": 2195,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 186,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 1,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 1,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 21.315,
+      "metric": "speedup",
+      "model_requests": 2,
+      "tokens": 4941,
+      "value": 1.0,
+      "usage": {
+        "requests": 2,
+        "ok": 2,
+        "errors": {},
+        "latency_s": 10.912,
+        "input_tokens": 4391,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 768,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 550,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 2,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 28.624,
+      "metric": "speedup",
+      "model_requests": 3,
+      "tokens": 7344,
+      "value": 1.0,
+      "usage": {
+        "requests": 3,
+        "ok": 3,
+        "errors": {},
+        "latency_s": 14.996,
+        "input_tokens": 6587,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 1536,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 757,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 3,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c0",
+      "elapsed_s": 37.694,
+      "metric": "speedup",
+      "model_requests": 4,
+      "tokens": 9765,
+      "value": 1.0,
+      "usage": {
+        "requests": 4,
+        "ok": 4,
+        "errors": {},
+        "latency_s": 20.042,
+        "input_tokens": 8783,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 2304,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 982,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 4,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 4,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 45.947,
+      "metric": "speedup",
+      "model_requests": 5,
+      "tokens": 12197,
+      "value": 1.2100715604780834,
+      "usage": {
+        "requests": 5,
+        "ok": 5,
+        "errors": {},
+        "latency_s": 24.231,
+        "input_tokens": 10979,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 3072,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 1218,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 5,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 5,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 56.604,
+      "metric": "speedup",
+      "model_requests": 6,
+      "tokens": 14752,
+      "value": 1.2100715604780834,
+      "usage": {
+        "requests": 6,
+        "ok": 6,
+        "errors": {},
+        "latency_s": 31.497,
+        "input_tokens": 13175,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 3840,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 1577,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 6,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 6,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 63.781,
+      "metric": "speedup",
+      "model_requests": 7,
+      "tokens": 17143,
+      "value": 1.2100715604780834,
+      "usage": {
+        "requests": 7,
+        "ok": 7,
+        "errors": {},
+        "latency_s": 35.304,
+        "input_tokens": 15371,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 3840,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 1772,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 7,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 7,
+        "price_versions": []
+      }
+    },
+    {
+      "best_candidate_id": "c5",
+      "elapsed_s": 75.551,
+      "metric": "speedup",
+      "model_requests": 8,
+      "tokens": 19587,
+      "value": 1.2100715604780834,
+      "usage": {
+        "requests": 8,
+        "ok": 8,
+        "errors": {},
+        "latency_s": 42.464,
+        "input_tokens": 17567,
+        "input_tokens_unknown_calls": 0,
+        "cached_input_tokens": 4608,
+        "cached_input_tokens_unknown_calls": 0,
+        "output_tokens": 2020,
+        "output_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 8,
+        "cost_usd": null,
+        "cost_status": "unknown",
+        "cost_unknown_calls": 8,
+        "price_versions": []
+      }
+    }
+  ]
+}

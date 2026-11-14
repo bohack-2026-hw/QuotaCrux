@@ -1,0 +1,299 @@
+{
+  "started_at": "2026-11-14T05:34:10.401+00:00",
+  "git_commit": "7408358977a5c83e890f4bb8f7af5f54041db6fa",
+  "models": {
+    "small": {
+      "provider": "chat_compat",
+      "model": "Qwen3.8-27B",
+      "role": "small",
+      "base_url": "https://aiping.cn/api/v1",
+      "reasoning_effort": null,
+      "enable_thinking": false,
+      "max_output_tokens": 8192,
+      "temperature": null,
+      "response_format": "json_object",
+      "extra": {}
+    },
+    "large": {
+      "provider": "openai_responses",
+      "model": "gpt-6.1-sol",
+      "role": "large",
+      "base_url": "https://api.openai.com/v1",
+      "reasoning_effort": "xhigh",
+      "enable_thinking": null,
+      "max_output_tokens": 32000,
+      "temperature": null,
+      "response_format": "json_schema",
+      "extra": {}
+    }
+  },
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 3,
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30.0
+  },
+  "calibration_sha256": "ad9739b688ec9b92525bca972b309fe75ce48f62b8ac32941443b9a03c666e5f",
+  "calibration_summary": {
+    "controls": [
+      {
+        "expected_outcome_observed": true,
+        "kind": "positive_control",
+        "speedup": 4.363898470066484
+      },
+      {
+        "expected_outcome_observed": true,
+        "kind": "negative_control",
+        "speedup": 0.22700065991146498
+      }
+    ],
+    "default": {
+      "median_first_vs_rest": null,
+      "median_range_over_median": null,
+      "passed": 0,
+      "self_comparisons": 0,
+      "speedups": [],
+      "strict_false_improvements": 0
+    },
+    "pinned": {
+      "median_first_vs_rest": 0.023090417152282106,
+      "median_range_over_median": 0.08850855938515766,
+      "passed": 3,
+      "self_comparisons": 3,
+      "speedups": [
+        0.9945160912949167,
+        1.0087906959674562,
+        0.9945435652692208
+      ],
+      "strict_false_improvements": 0
+    }
+  },
+  "host_platform": "Linux-7.2.15-arch1-1-x86_64-with-glibc2.44",
+  "tasks": [
+    {
+      "adapter_version": "research-benchmarks-v1",
+      "dev_params": {
+        "cases": 2
+      },
+      "family": "ale-bench",
+      "files": {
+        "contract": {
+          "bytes": 5837,
+          "file": "contract.txt",
+          "sha256": "f2bc67a6d1eee1ab4e293a8cae9cf9e86553630f1eae433ebc9b6220f7a8bd5e"
+        },
+        "dev_expected": {
+          "bytes": 2,
+          "file": "dev-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "dev_input": {
+          "bytes": 1502,
+          "file": "dev.json",
+          "sha256": "48102f0362c8746f9f235ce44a3afd4dfeff30507c3ac194781e55d6382b1b60"
+        },
+        "dev_profile": {
+          "bytes": 328,
+          "file": "dev_profile.json",
+          "sha256": "c8a42974a35bf47b67468f12034a6ba9db4056d48b46a55aff0bb3ab295430ef"
+        },
+        "examples": {
+          "bytes": 2,
+          "file": "examples.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_expected": {
+          "bytes": 2,
+          "file": "final-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_input": {
+          "bytes": 2314,
+          "file": "final.json",
+          "sha256": "125d059c75209bc7f639b064fa3e3d47ba3067d999499357519d2f92b0ec3999"
+        },
+        "initial": {
+          "bytes": 610,
+          "file": "initial.py",
+          "sha256": "d0f96678218cad87053ccf3bdcd3fecc0acfbf49ed0571279dc35f10f1ab06d6"
+        }
+      },
+      "final_params": {
+        "cases": 3
+      },
+      "native": {
+        "allowed_imports": [],
+        "candidate_interface": "stdin_stdout",
+        "image_id": "sha256:3af815c47183578c0b0f5dc5f1156ab160becb5d8925a10c88df303af42bb4ce",
+        "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62",
+        "memory_limit_bytes": 1073741824,
+        "time_limit_s": 2.0
+      },
+      "notes": "RouteEvo research subset",
+      "problem": {
+        "key": "ahc026",
+        "title": "ahc026"
+      },
+      "selection": {
+        "dev_cases": 2,
+        "final_cases": 3
+      },
+      "source": {
+        "archive_sha256": "c9acb296ceff4948df2cb000459d8153af4ba8ddb60c987b565e19b628dd845a",
+        "dataset": "SakanaAI/ALE-Bench",
+        "license": "CC-BY-ND-4.0",
+        "revision": "0f426173b4e4e73b09b2b3631ae0490f66b75f99"
+      },
+      "split": "smoke",
+      "target": {
+        "direction": "maximize",
+        "metric": "score",
+        "min_speedup": null
+      },
+      "task_id": "ale-bench-ahc026-smoke-2960ce864b"
+    },
+    {
+      "adapter_version": "research-benchmarks-v1",
+      "dev_params": {
+        "cases": 2
+      },
+      "family": "algotune",
+      "files": {
+        "UPSTREAM_LICENSE.txt": {
+          "bytes": 1096,
+          "file": "UPSTREAM_LICENSE.txt",
+          "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d"
+        },
+        "contract": {
+          "bytes": 880,
+          "file": "contract.txt",
+          "sha256": "e287a0f664f7e14ec0545cbb4c14843275a9cb741810ea1dfbbb9272231532ce"
+        },
+        "dev_expected": {
+          "bytes": 2,
+          "file": "dev-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "dev_input": {
+          "bytes": 811020,
+          "file": "dev.json",
+          "sha256": "04678523f5a20e36698ab850ec90f19dd0eac39c7f89402de3328e34c31ff125"
+        },
+        "dev_profile": {
+          "bytes": 1104,
+          "file": "dev_profile.json",
+          "sha256": "6b0f8c980466db3df0b8f218fae9b1d47b3f776bb93b5e1c3fe1ff1869007565"
+        },
+        "examples": {
+          "bytes": 2,
+          "file": "examples.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_expected": {
+          "bytes": 2,
+          "file": "final-expected.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "final_input": {
+          "bytes": 1216530,
+          "file": "final.json",
+          "sha256": "d32df79604ee9387e05079a94c2cd8a831c27e361e0b29f0e67ea7e228c67711"
+        },
+        "initial": {
+          "bytes": 533,
+          "file": "initial.py",
+          "sha256": "aa6c0690686b4ed5cc1582dc8af998b1a81cd55fe0f56ec5fa4a000e5f6b14f5"
+        },
+        "upstream_task.py": {
+          "bytes": 1550,
+          "file": "upstream_task.py",
+          "sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+        }
+      },
+      "final_params": {
+        "cases": 3
+      },
+      "native": {
+        "allowed_imports": [
+          "numpy",
+          "scipy",
+          "networkx"
+        ],
+        "candidate_image": {
+          "image_id": "sha256:5d36bf4b0fb86cbae9f72dca43154ae3e175c116dab95bc28a46f375b6c40793",
+          "image_tag": "routeevo-scientific:6251644e51bd"
+        },
+        "candidate_interface": "solve",
+        "judge_image": {
+          "image_id": "sha256:756e7a4eda1c38fb0e855b72ebf7884b9a4e4e8a20f3f91bd568ac68147ae971",
+          "image_tag": "routeevo-algotune-convolve_1d:97afbd85999c"
+        },
+        "seed": 1729,
+        "size": 1000
+      },
+      "notes": "RouteEvo research subset",
+      "problem": {
+        "key": "convolve_1d",
+        "title": "convolve_1d"
+      },
+      "selection": {
+        "dev_cases": 2,
+        "final_cases": 3
+      },
+      "source": {
+        "license": "MIT",
+        "repository": "oripress/AlgoTune",
+        "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+        "task_sha256": "bc7ff6ede664a675276503fda9a3ddd5de429b472bb9cb77aeb00785bbe6960e"
+      },
+      "split": "smoke",
+      "target": {
+        "direction": "maximize",
+        "metric": "speedup",
+        "min_speedup": 1.1
+      },
+      "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83"
+    }
+  ],
+  "pricing": {
+    "id": "Qwen3.8-27B",
+    "object": "model",
+    "created": 1787193049,
+    "owned_by": "system",
+    "status": true,
+    "price": {
+      "input_price_range": [
+        3,
+        3
+      ],
+      "output_price_range": [
+        12,
+        12
+      ]
+    },
+    "context_length_range": [
+      1024000,
+      1024000
+    ],
+    "is_foreign": false,
+    "model_type": "llm"
+  },
+  "price_source": "https://aiping.cn/api/v1/models",
+  "price_currency": "CNY",
+  "price_unit": "per 1M tokens",
+  "protocol": "2 tasks x feedback/independent x 1 repeat; dev-only; fixed small model; empty snapshot v0"
+}

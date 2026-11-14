@@ -1,5 +1,7 @@
 # AlgoTune 正式批次：Mac 环境、任务包与无模型校准
 
+> 历史准备档案：本轮原固定Qwen15轮与routing12轮已取消启动。下文保留当时的环境、校准与待冻结状态；当前完成范围、独立探索结果及交付状态见[本轮数据汇总](../../20261114-summary.md)。GC修复已进入main，旧准备命令仅供追溯。
+
 2026-11-14，负责人 SnowballXueQiu，执行机为本机 Mac。关联 [AlgoTune #4](https://github.com/bohack-2026-hw/RouteEvo/issues/4) 与 [公共协议 #2](https://github.com/bohack-2026-hw/RouteEvo/issues/2)。
 
 **状态：环境与两题 5 dev / 15 final 任务包已完成；当前校准为有保留的预检，尚未冻结；正式批次为 0/15。** 本目录没有正式模型回复或 final 评测。SQLite 记录 `runs=0`、`model_calls=0`、`final evaluations=0`，API 支出为 0。正式调用仍等待 #2 冻结计时处理、唯一实验 SHA、完整三模式提示与哈希、价格快照和中央 run plan，并须在安静窗口重新校准。

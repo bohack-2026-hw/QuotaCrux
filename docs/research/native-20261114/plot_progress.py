@@ -46,7 +46,7 @@ def main():
             if col == 1:
                 ax.xaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value / 1000:g}k"))
             ax.legend()
-    fig.suptitle("RouteEvo native pilot: best accepted result within one episode\n2 dev cases; 1 repeat per arm; private final suite unopened", fontsize=13)
+    fig.suptitle("QuotaCrux native pilot: best accepted result within one episode\n2 dev cases; 1 repeat per arm; private final suite unopened", fontsize=13)
     fig.savefig(args.directory / "progress.svg")
     svg = args.directory / "progress.svg"
     svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")

@@ -1,4 +1,4 @@
-"""Write docs/results.md from stored records: learning runs, comparisons, per-task outcomes, costs.
+"""Write docs/archive/memory-learning-results.md from stored records: learning runs, comparisons, per-task outcomes, costs.
 
 Three configurations are reported. Version 3 (current) adds the router, online memory and two new task families; it is
 measured on the sealed S stream (memory vs fresh). Version 2 re-validates verified programs from experience before
@@ -13,9 +13,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from routeevo import compare, config, db, memory, narrative, report, research
+from quotacrux import compare, config, db, memory, narrative, report, research
 
-OUT = Path(__file__).resolve().parents[2] / "docs" / "results.md"
+OUT = Path(__file__).resolve().parents[2] / "docs" / "archive" / "memory-learning-results.md"
 
 
 def x(v) -> str:
@@ -217,7 +217,7 @@ def section_tuning(lines: list[str]) -> None:
         return
     lines += ["### 2.1 调优：T 批（新任务族，在线模式，从 v19 依次写入）", "",
               "T 批的条件与 S 批的“首次出现”和“新条件”任务对应，只用于检查新任务族和分流器能否工作；S 批在任何第三版运行之前封存。", "",
-              "| 任务 | 任务族 · 工作负载 | 读取 → 发布 | 路线 | 模型请求 | 费用 | 最终加速比 | 循环时长 |", "|---|---|---|---|---|---|---|---|"]
+              "| 任务 | 任务族 · 输入规模和特点 | 读取 → 发布 | 路线 | 模型请求 | 费用 | 最终加速比 | 循环时长 |", "|---|---|---|---|---|---|---|---|"]
     for i in ids:
         r = report.build(i)
         route = (r["route"] or {}).get("reason") or ("reuse" if r["outcome"].get("best_from_reuse") else "—")
@@ -277,7 +277,7 @@ def section_stream(lines: list[str], s: dict) -> None:
                      f"{x(a['final_speedup_median'])} → {x(b['final_speedup_median'])} | {a['agent_loop_s_median']:.1f}s → {b['agent_loop_s_median']:.1f}s |")
     lines += ["", "逐任务（每格三个符号是三次重放的路线：↺ 复用直接交付，★ 全新任务族 → 大模型，◆ 新条件 → 大模型，○ 相近经验 → 小模型；"
               "随后是最终加速比，未达标标“!”）：", "",
-              "| # | 任务 | 工作负载 | 带记忆 | 不带记忆 |", "|---|---|---|---|---|"]
+              "| # | 任务 | 输入规模和特点 | 带记忆 | 不带记忆 |", "|---|---|---|---|---|"]
 
     def cell(runs):
         return " ".join(ROUTE_MARK.get(r["route"], "?") for r in runs) + " · " + " ".join(
@@ -314,7 +314,7 @@ def section_stream(lines: list[str], s: dict) -> None:
     for fam, d in worse:
         lines.append(f"- {FAMILY_ZH.get(fam, fam)}：带记忆一侧最终加速比中位数 {x(d['memory']['final_speedup_median'])} 低于不带记忆的 "
                      f"{x(d['fresh']['final_speedup_median'])}。复用的程序在新任务上复验达标就交付，不再为这个任务专门研究；"
-                     "想继续提高要用学习模式（见[边界条件](boundaries.md)第 6 节）。")
+                     "想继续提高要用学习模式（见[边界条件](legacy-runtime-rules.md)第 6 节）。")
     lines.append("")
 
 
@@ -430,15 +430,15 @@ def section_summary(lines: list[str], cs: dict) -> None:
 
 
 def main() -> None:
-    lines = ["# RouteEvo 实验结果", "",
-             "本文由 `backend/scripts/write_results.py` 从运行记录生成，不含手工填写的数字。口径见[项目说明](project-description.md)。", ""]
+    lines = ["# 经验学习实验结果（第一至三版）", "",
+             "数据由 `backend/scripts/write_results.py` 从运行记录生成。方法见[项目说明](../presentation/project-overview.md)。", ""]
     cs = comparisons()
     section_summary(lines, cs)
     if "S" in cs:
         lines += ["## 2. 第三版：分流器 + 在线记忆 + 3 个任务族（当前配置）", "",
                   "第二版只在一个任务族上验证。第三版新增两个任务族（访问日志统计、区间合并），并加入分流器：复用不达标时，"
                   "有同族相近成功经验的任务先用本地小模型，全新的任务族或没有相近成功经验的条件直接交给大模型。新增在线模式："
-                  "像评测一样交付，交付后把验证过的结果写入经验，下一个相似任务先复用。规则与边界见[边界条件](boundaries.md)。"
+                  "像评测一样交付，交付后把验证过的结果写入经验，下一个相似任务先复用。规则与边界见[边界条件](legacy-runtime-rules.md)。"
                   "S 批和 T 批在第三版任何运行之前提交并锁定（提交 `7f9cace`）。", ""]
         section_tuning(lines)
         section_stream(lines, cs["S"])
@@ -462,7 +462,7 @@ def main() -> None:
     section_research(lines, cs)
     lines += ["## 6. 说明", "",
               "- 三版的配置指纹不同（提示词版本、复用策略、分流器），各自内部对照的两侧使用同一配置；跨版本的数字只用于说明改动前后，不当作同一对照。",
-              "- S 任务流是前序评估（prequential）：每个任务都在从它学到任何东西之前运行，没有任务读到自己的经验。",
+              "- S 任务流先评测、再学习：每个任务完成测试后才写入经验。",
               "- 第一版 C 批的结果是第二版修改的依据，因此第二版的最终验收改用新封存的 D 批；B 批两版都作开发对照。",
               "- B、C、D 的 3 次重复衡量固定快照下的运行波动；S 任务流的 3 次重放每次都从起点重新学习，重复的是学习过程本身。",
               "- 所有运行都计入，包括失败、无收益和预算耗尽的运行；没有挑选任务或样本。",

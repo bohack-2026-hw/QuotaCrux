@@ -58,10 +58,10 @@ def check(args):
     require(os.environ.get("ROUTEEVO_VAR_DIR", str(var)) == str(var), "ROUTEEVO_VAR_DIR differs from root/var")
     os.environ["ROUTEEVO_VAR_DIR"] = str(var)
     sys.path.insert(0, str(repo / "backend/src"))
-    from routeevo import config, db, routing_ablation, taskpkg
-    from routeevo.agent import actions, prompt, routing
-    from routeevo.research_views import validate_pricing
-    from routeevo.sandbox import executor
+    from quotacrux import config, db, routing_ablation, taskpkg
+    from quotacrux.agent import actions, prompt, routing
+    from quotacrux.research_views import validate_pricing
+    from quotacrux.sandbox import executor
 
     require(config.BACKEND_DIR.resolve() == repo / "backend", "imported backend differs from execution checkout")
     fields(frozen["limits"], config.RunLimits.__dataclass_fields__, "limits")

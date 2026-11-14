@@ -5,9 +5,9 @@ import json
 
 import pytest
 
-from routeevo import config, taskpkg
-from routeevo.benchmarks import algotune, native
-from routeevo.sandbox import executor
+from quotacrux import config, taskpkg
+from quotacrux.benchmarks import algotune, native
+from quotacrux.sandbox import executor
 
 from conftest import requires_docker
 
@@ -134,7 +134,7 @@ def solve(problem):
     sample = executor.run_sample(
         code, json.dumps({"problem": None, "repeats": 2, "warmups": 2}).encode(),
         config.RunLimits().measurement_timeout_s, measure,
-        image=image["image_id"], harness="/opt/routeevo/scientific_harness.py")
+        image=image["image_id"], harness="/opt/quotacrux/scientific_harness.py")
     assert sample.status == "ok", sample.stderr_tail
     payload = json.loads(sample.stdout)
     assert payload["solutions"] == [[True, False]] * 4

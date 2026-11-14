@@ -12,30 +12,30 @@
 # and router, so their fingerprints differ from the recorded ones.
 # Usage: scripts/experiment.sh [learn|compare-b|compare-d|stream|ablation|all]
 # Version 1 used: learn --label "formal A learning", then the B and C comparisons labelled "B dev comparison" and
-# "C final held-out" (see docs/results.md section 4).
+# "C final held-out" (see docs/archive/memory-learning-results.md section 4).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 step=${1:-all}
-learned() { uv run python -c "from routeevo import db; print(db.one(\"SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1\")['snapshot_id'])"; }
+learned() { uv run python -c "from quotacrux import db; print(db.one(\"SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1\")['snapshot_id'])"; }
 # The snapshot the S stream started from (online runs publish more versions, so "latest" no longer means "learned on A").
-stream_start() { uv run python -c "from routeevo import db; r = db.one(\"SELECT json_extract(plan_json, '$.start_snapshot') AS s FROM comparisons WHERE label LIKE 'S online stream%' ORDER BY created_at DESC LIMIT 1\"); print(r['s'] if r else '')"; }
+stream_start() { uv run python -c "from quotacrux import db; r = db.one(\"SELECT json_extract(plan_json, '$.start_snapshot') AS s FROM comparisons WHERE label LIKE 'S online stream%' ORDER BY created_at DESC LIMIT 1\"); print(r['s'] if r else '')"; }
 
 if [[ $step == all || $step == learn ]]; then
-  uv run routeevo tasks build
-  uv run routeevo snapshots activate v0 --reason "learn from empty experience"
-  uv run routeevo learn A-01 A-02 A-03 A-04 A-05 A-06 --label "reuse A learning r1"
-  uv run routeevo learn A-01 A-02 A-03 A-04 A-05 A-06 --label "reuse A learning r2"
+  uv run quotacrux tasks build
+  uv run quotacrux snapshots activate v0 --reason "learn from empty experience"
+  uv run quotacrux learn A-01 A-02 A-03 A-04 A-05 A-06 --label "reuse A learning r1"
+  uv run quotacrux learn A-01 A-02 A-03 A-04 A-05 A-06 --label "reuse A learning r2"
 fi
 if [[ $step == all || $step == compare-b ]]; then
-  uv run routeevo compare B-01 B-02 B-03 B-04 B-05 B-06 --a v0 --b "$(learned)" --repeats 3 --label "B dev comparison · reuse"
+  uv run quotacrux compare B-01 B-02 B-03 B-04 B-05 B-06 --a v0 --b "$(learned)" --repeats 3 --label "B dev comparison · reuse"
 fi
 if [[ $step == all || $step == compare-d ]]; then
-  uv run routeevo compare D-01 D-02 D-03 D-04 D-05 D-06 --a v0 --b "$(learned)" --repeats 3 --label "D final held-out · reuse"
+  uv run quotacrux compare D-01 D-02 D-03 D-04 D-05 D-06 --a v0 --b "$(learned)" --repeats 3 --label "D final held-out · reuse"
 fi
 if [[ $step == all || $step == stream ]]; then
   start=$(learned)
-  uv run routeevo stream S-01 S-02 S-03 S-04 S-05 S-06 S-07 S-08 S-09 S-10 S-11 S-12 --start "$start" --repeats 3 \
+  uv run quotacrux stream S-01 S-02 S-03 S-04 S-05 S-06 S-07 S-08 S-09 S-10 S-11 S-12 --start "$start" --repeats 3 \
     --label "S online stream · router"
 fi
 if [[ $step == all || $step == ablation ]]; then

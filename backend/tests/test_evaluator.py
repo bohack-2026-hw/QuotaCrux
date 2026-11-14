@@ -11,7 +11,7 @@ CANDS = Path(__file__).parent / "fixtures" / "cands"
 
 @pytest.fixture(scope="module")
 def sorted_task():
-    from routeevo import taskpkg
+    from quotacrux import taskpkg
 
     return taskpkg.build_task("groupagg", {"task_id": "t-sorted", "split": "smoke",
                                            "params": {"rows": 200000, "keys": 2000, "order": "sorted"},
@@ -19,7 +19,7 @@ def sorted_task():
 
 
 def evaluate(task, name: str, timing: bool = False):
-    from routeevo import config, evaluator
+    from quotacrux import config, evaluator
 
     return evaluator.evaluate(task, (CANDS / name).read_bytes(), "dev", config.MeasureConfig(), config.RunLimits(),
                               measure_timing=timing)

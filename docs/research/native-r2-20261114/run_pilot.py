@@ -6,7 +6,7 @@ from pathlib import Path
 import platform
 import subprocess
 
-from routeevo import config, db, research_compare, taskpkg
+from quotacrux import config, db, research_compare, taskpkg
 
 
 def main():

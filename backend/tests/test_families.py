@@ -3,8 +3,8 @@ import sys
 
 import pytest
 
-from routeevo import families
-from routeevo.families import intervals, logstats
+from quotacrux import families
+from quotacrux.families import intervals, logstats
 
 NEW = {
     "logstats": [dict(rows=3000, endpoints=40, hours=5, order=o, disorder=0.05, error_rate=0.1) for o in ("time", "nearly_time", "shuffled")],

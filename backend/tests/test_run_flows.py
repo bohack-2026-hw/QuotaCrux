@@ -11,7 +11,7 @@ SCRIPTS = Path(__file__).parent / "fixtures" / "scripts"
 
 @pytest.fixture(scope="module")
 def task():
-    from routeevo import taskpkg
+    from quotacrux import taskpkg
 
     entry = {"task_id": "t-flow", "split": "smoke", "params": {"rows": 300000, "keys": 5000, "skew": 0.8}, "dev_seed": 1, "final_seed": 2}
     return taskpkg.build_task("groupagg", entry)
@@ -20,8 +20,8 @@ def task():
 def run(task, script: str, **limits):
     import dataclasses
 
-    from routeevo import config
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux import config
+    from quotacrux.agent.runner import RunOptions, Runner
 
     # v0 holds no programs to re-use, so these flows exercise the model loop whatever earlier tests published; with the
     # router on, v0 would send every run straight to the large model, so these upgrade-rule flows switch it off
@@ -41,7 +41,7 @@ def test_success_flow(task):
 
 @requires_docker
 def test_research_view_and_bundle(task, tmp_path):
-    from routeevo import cli, narrative
+    from quotacrux import cli, narrative
 
     rep = run(task, "failure_upgrade")
     r = rep["research"]
@@ -88,7 +88,7 @@ def test_consecutive_api_errors_stop_run(task):
 
 @requires_docker
 def test_runs_are_serial(task):
-    from routeevo.agent.runner import RunBusy, RunOptions, Runner
+    from quotacrux.agent.runner import RunBusy, RunOptions, Runner
 
     first = Runner(RunOptions(task_id=task.task_id, script=SCRIPTS / "api_errors.json"))
     first.create()
@@ -101,8 +101,8 @@ def test_runs_are_serial(task):
 
 @requires_docker
 def test_learning_publishes_snapshot_and_rollback(task):
-    from routeevo import memory, taskpkg
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux import memory, taskpkg
+    from quotacrux.agent.runner import RunOptions, Runner
 
     other = taskpkg.build_task("groupagg", {"task_id": "t-flow-b", "split": "B", "params": {"rows": 300000, "keys": 5000, "skew": 0.8},
                                             "dev_seed": 3, "final_seed": 4})
@@ -145,11 +145,11 @@ def test_learning_publishes_snapshot_and_rollback(task):
 
 @requires_docker
 def test_comparison_is_fair_alternating_and_rejects_leaks(task):
-    from routeevo import compare, memory, taskpkg
+    from quotacrux import compare, memory, taskpkg
 
     held = taskpkg.build_task("groupagg", {"task_id": "t-cmp-c", "split": "C", "params": {"rows": 200000, "keys": 3000},
                                            "dev_seed": 5, "final_seed": 6})
-    from routeevo import db
+    from quotacrux import db
 
     new = db.one("SELECT snapshot_id FROM snapshots ORDER BY version DESC LIMIT 1")["snapshot_id"]
     assert memory.snapshot_experience_ids(new), "depends on the learning test having published a snapshot"
@@ -170,7 +170,7 @@ def test_comparison_is_fair_alternating_and_rejects_leaks(task):
 
 @requires_docker
 def test_two_round_session(task):
-    from routeevo import compare, memory, session, taskpkg
+    from quotacrux import compare, memory, session, taskpkg
 
     learn_task = taskpkg.build_task("groupagg", {"task_id": "t-ses-a", "split": "A", "params": {"rows": 200000, "keys": 3000},
                                                  "dev_seed": 41, "final_seed": 42})
@@ -197,8 +197,8 @@ def test_small_model_stalling_triggers_upgrade(task):
 
 @requires_docker
 def test_reuse_skips_the_model_and_learning_raises_the_target():
-    from routeevo import memory, taskpkg
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux import memory, taskpkg
+    from quotacrux.agent.runner import RunOptions, Runner
 
     params = {"rows": 300000, "keys": 5000, "skew": 0.8}
     learn_task = taskpkg.build_task("groupagg", {"task_id": "t-reuse-a", "split": "smoke", "params": params, "dev_seed": 51, "final_seed": 52})

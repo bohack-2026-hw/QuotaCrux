@@ -13,14 +13,14 @@ IV = {"rows": 150000, "value_max": 5_000_000, "length_mean": 30}
 
 
 def build(task_id, family, split, params, seed):
-    from routeevo import taskpkg
+    from quotacrux import taskpkg
 
     return taskpkg.build_task(family, {"task_id": task_id, "split": split, "family": family, "params": params,
                                        "dev_seed": seed, "final_seed": seed + 1})
 
 
 def go(task_id, mode, snapshot, script, router=True):
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux.agent.runner import RunOptions, Runner
 
     r = Runner(RunOptions(task_id=task_id, mode=mode, snapshot_id=snapshot, script=SCRIPTS / f"{script}.json", router=router))
     r.create()
@@ -41,7 +41,7 @@ def tasks():
 
 @requires_docker
 def test_new_family_goes_to_the_large_model_and_online_memory_serves_the_next_task(tasks):
-    from routeevo import memory
+    from quotacrux import memory
 
     # 1. Nothing in v0 covers access logs: the router starts on the large model; online mode publishes what it verified.
     first = go("t-log-a", "online", "v0", "large_logstats")
@@ -75,7 +75,7 @@ def test_new_family_goes_to_the_large_model_and_online_memory_serves_the_next_ta
 
 @requires_docker
 def test_family_records_without_a_similar_success_route_as_new_conditions(tasks):
-    from routeevo import memory
+    from quotacrux import memory
 
     first = go("t-iv-a", "online", "v0", "large_intervals_same")
     assert first["route"]["reason"] == "new_family"
@@ -101,8 +101,8 @@ def test_router_off_always_starts_small(tasks):
 
 @requires_docker
 def test_held_out_tasks_cannot_write_and_streams_need_learnable_tasks(tasks):
-    from routeevo import compare
-    from routeevo.agent.runner import RunOptions, Runner
+    from quotacrux import compare
+    from quotacrux.agent.runner import RunOptions, Runner
 
     with pytest.raises(ValueError):
         Runner(RunOptions(task_id="t-log-held", mode="online"))
@@ -114,8 +114,8 @@ def test_held_out_tasks_cannot_write_and_streams_need_learnable_tasks(tasks):
 
 @requires_docker
 def test_stream_memory_arm_pays_once_and_restores_the_pointer(tasks):
-    from routeevo import compare, memory
-    from routeevo.narrative import evolution_note
+    from quotacrux import compare, memory
+    from quotacrux.narrative import evolution_note
 
     a = build("t-str-1", "logstats", "T", LOG, 321).task_id
     b = build("t-str-2", "logstats", "T", LOG, 323).task_id

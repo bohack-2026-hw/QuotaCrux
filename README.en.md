@@ -18,9 +18,39 @@ Autonomous coding and research agents typically fail in two opposite ways: they 
 
 QuotaCrux treats code and algorithm optimization as a **closed-loop, budget-governed empirical research process** built around three design choices:
 
-1. **Decoupled Routing (`ActionRouter` × `ModelRouter`)** — Separates *what step to take next* (`analyze`, `propose_candidate`, `profile_candidate`, `run_validation`, `finish`) from *which model tier generates the artifact* (`small` local/hosted Qwen vs. `large` `gpt-6.1-sol`). Both decisions can be driven by deterministic rules or the lightweight `gpt-6-luna` Decisions API, keeping strong-model tokens focused on breakthroughs—in the `ahc026` action-decisions study, Decisions routing accounted for **2.26%** of recorded USD spend.
+1. **Decoupled Routing (`ActionRouter` × `ModelRouter`)** — Separates *what step to take next* (analysis, candidate generation, task-supported evidence gathering, validation, or finish) from *which model tier generates the artifact* (`small` local/hosted Qwen vs. `large` `gpt-6.1-sol`). Action routing uses either the generation model or a dedicated decision model; model routing uses either an escalation rule or a dedicated decision model. Independent adaptors compose these choices to focus strong-model quota on difficult steps—in the `ahc026` action-decisions study, `gpt-6-luna` Decisions routing accounted for **2.26%** of recorded USD spend.
 2. **Executable Experience, Not Just Text Tips** — In earlier ablations, storing text-only advice reduced API cost but *hurt* optimization quality (`1.41× → 1.29×`). QuotaCrux stores **verified programs paired with their applicability conditions** inside immutable snapshots (`v0, v1, …`). New tasks re-validate matching past programs in Docker *before* calling any LLM, escalate straight to the large model on unseen task families or conditions, and atomically publish new wins with instant rollback.
 3. **Zero-Trust Sandbox Evaluation & Full Resource Ledger** — Models cannot self-grade. Every candidate is checked in an isolated, network-disabled, read-only Docker container (or a dedicated GPU worker for KernelBench), timed alternately against the baseline with strict statistical gating (`U = 0`), and verified once more on a hidden final suite. Every token, reasoning token, latency, and unknown-cost response (`null`, never silently zeroed) is preserved in a reproducible ledger.
+
+---
+
+## Design & Inspiration: A Separate Research Decision Layer
+
+**QuotaCrux asks when to analyze, experiment, escalate, or stop to achieve better verified results within a fixed budget.** These choices form a separate decision layer, composed with generation, task adaptation, and external evaluation. The cost of deciding is part of the comparison.
+
+### A Shared Separation of Concerns with DeepSeek SuperAgent
+
+The DeepSeek Harness team's [SuperAgent research prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) assigns interaction and dispatch to a Router, while Workers execute tasks in their own sessions and working directories. This division gives orchestration and execution distinct contexts and tool capabilities. See its [official execution design](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/003-execution.md).
+
+We see a shared principle in **separating orchestration from execution**. SuperAgent focuses on ongoing collaboration around team development tasks. QuotaCrux focuses on budget allocation and evidence within a research episode, with three distinct boundaries:
+
+- **Action adaptor:** Select analysis, candidate generation, evidence gathering, validation, or finish from options allowed by the visible evidence, remaining budget, and task capabilities. Evidence gathering, validation, and finish can go directly to program execution.
+- **Model adaptor:** Select the model tier for steps requiring generation. Both rule-based and decision-model routing currently share the same irreversible `small → large` escalation constraint, allowing a comparison of escalation timing.
+- **Task and evaluation adapter:** Supply each benchmark's objective, tool capabilities, and judging protocol to the loop. An independent evaluator measures candidate validity and improvement.
+
+These boundaries let us replace action or model routing independently while holding tasks, generation models, and total budgets constant. The four-way ablation asks whether an extra decision is worth its cost. See [Action & Model Routing](docs/design/action-model-routing.md) for the implementation and protocol.
+
+### Inspiration from Jev and the Decision API Ecosystem
+
+The decision layer draws part of its inspiration from **TypeSafe's Jev**: map a state and typed questions to choices and probabilities that software can consume, then compose small judgments in code. QuotaCrux applies this idea to research scheduling: a dedicated decision model selects the next step, a generation model produces analysis or candidate code, and the Runner executes and verifies the result. See [Jev's official introduction](https://docs.typesafe.ai/introduction).
+
+| Decision API example | Relevant capability | Status in this repository |
+| --- | --- | --- |
+| **OpenAI Decisions (`gpt-6-luna`)** | Select from supplied actions or model tiers and return choices with probabilities | **Integrated and exercised in the four-way routing study**; see the [client](backend/src/quotacrux/llm/openai_decisions.py) and [experiment record](docs/research/native-routing/20261114/short-results/README.md) |
+| **[TypeSafe Jev](https://docs.typesafe.ai/introduction)** | Typed choices, scores, and truth judgments that compose into program control flow | **Design inspiration and a candidate for adaptation**; not integrated |
+| **[Gemini Decisions (`gemini-decision-1`)](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)** | Evaluate closed choices, yes/no questions, and scoring rubrics against shared input, returning probabilistic decisions | **Another Decision API example and a candidate for adaptation**; not integrated |
+
+A new provider requires an adaptor that maps its requests and responses, validates allowed choices, and records usage in the same ledger. Existing experiments count both routing and generation requests against one budget and expose quality, cost, and latency trade-offs; the current short routing batch contains one run per combination.
 
 ---
 

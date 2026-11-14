@@ -51,7 +51,7 @@ AlgoTune 独立组最高原始中位加速比 **1.1673×**，反馈组最高 **1
 - [AlgoTune independent](run-20261114T044301-e2a7/research.md)、[AlgoTune feedback](run-20261114T044433-9802/research.md)。各目录包含完整 report、所有候选程序与适用许可证；原始 API 请求/响应保留在本机忽略的 `backend/var/runs/`。
 - [实验脚本](run_pilot.py)在首次调用前写入冻结 manifest；[作图脚本](plot_progress.py)只读取结果，不调用模型或裁判。
 
-复现本批需使用 `f94a76c` 和记录的镜像/模型配置。按[接入文档](../../research-benchmarks.md)重建两个任务包后，在 `backend/` 执行：
+复现本批需使用 `f94a76c` 和记录的镜像/模型配置。按[接入文档](../../design/research-benchmarks.md)重建两个任务包后，在 `backend/` 执行：
 
 ```bash
 uv run python ../docs/research/native-20261114/run_pilot.py ALE_TASK_ID ALGOTUNE_TASK_ID \

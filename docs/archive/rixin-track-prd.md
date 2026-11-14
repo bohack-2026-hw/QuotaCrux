@@ -2,7 +2,7 @@
 
 版本：v0.3；更新日期：2026-11-14；状态：未采用方案，保留为历史参考。
 
-团队已确认选择 [Research Agent](research-agent-track-prd.md)。下文保留此前日新方案，涉及的两轮任务编排、三行进化说明等日新专属要求不属于当前开发范围。
+团队已确认选择 [Research Agent](../requirements/research-agent-track-prd.md)。下文保留此前日新方案，涉及的两轮任务编排、三行进化说明等日新专属要求不属于当前开发范围。
 
 ## 1. 产品目标与赛事边界
 

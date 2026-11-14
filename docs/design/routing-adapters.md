@@ -119,14 +119,14 @@ independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
 协调入口：[RouteEvo issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
 
-历史回放的负面结果见 [decision-model/README.md](decision-model/README.md)。
+历史回放的负面结果见 [decision-model/README.md](../decision-model/README.md)。
 本 adaptor 提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
 新增 24 轮研究的冻结模板、实际规则计数语义和交接约定见
-[native routing study](research/native-routing/README.md)。下方是旧 legacy 联调，不能用作 native routing 的 baseline。
+[native routing study](../research/native-routing/README.md)。下方是旧 legacy 联调，不能用作 native routing 的 baseline。
 
 ## 2026-11-14 联调结果
 
-执行代码为 `813db15`，任务为 [routing-smoke-spec.json](decision-model/routing-smoke-spec.json) 中固定的
+执行代码为 `813db15`，任务为 [routing-smoke-spec.json](../decision-model/routing-smoke-spec.json) 中固定的
 30 万行、5000 keys、skew=0.8 的 groupagg；dev/final 种子分别为 1114/1115。
 四组各运行一次，统一使用 v0、6 次请求、4 个候选、300 秒循环、120 秒请求超时、5 轮交替计时。
 生成模型配置为 AIPing `Qwen3.8-27B`（thinking=false）与 `gpt-6.1-sol`（xhigh）；
@@ -150,7 +150,7 @@ action_decisions 首个候选开发检查为 wrong_output，第二个候选开�
 保留 baseline 为默认策略。
 
 逐调用 usage、路由概率、候选哈希、开发结果和 final 原始计时见
-[routing-smoke-results.json](decision-model/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
+[routing-smoke-results.json](../decision-model/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
 `backend/var/runs/<run_id>/`；批次汇总为
 `backend/var/routing-ablations/routing-20261114T032721-aad0.json`。
 

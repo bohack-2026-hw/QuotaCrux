@@ -1,6 +1,6 @@
 """Build the presentation deck from stored records (no hand-typed results).
 
-    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/RouteEvo.pptx]
+    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/presentation/RouteEvo.pptx]
 
 Charts follow the dashboard palette (validated with the dataviz validator on #fbf9f4): old snapshot #2a78d6,
 new snapshot #eb6834. Every number on a slide is read from the SQLite store or a comparison summary.
@@ -584,7 +584,7 @@ def build(out: Path, shots: Path) -> None:
                   "没有验证出改进时，交付初始程序并写明“无改进”，不包装成提升"], 0.6, 1.75, 7.0, 3.2, size=15)
     d.card(s, 8.0, 1.8, 4.7, 4.5, ACCENT)
     d.text(s, "docs/research/ 中的样例", 8.25, 1.95, 4.3, 0.4, size=15, bold=True, color=ACCENT)
-    readme = Path(__file__).resolve().parents[2] / "docs" / "research" / "README.md"
+    readme = Path(__file__).resolve().parents[2] / "docs" / "research" / "examples.md"
     cases = [ln.split("](")[0].lstrip("| [") for ln in readme.read_text().splitlines() if ln.startswith("| [")] if readme.exists() else []
     d.text(s, "按规则从正式运行中选出：\n\n" + "\n".join(f"{i}. {c}" for i, c in enumerate(cases, 1))
            + "\n\nreproduce.sh 复核：A-01 1.44×（记录 1.4367×）；D-01 1.4473×（记录 1.4481×）", 8.25, 2.4, 4.3, 3.8, size=12.5, color=INK2)
@@ -806,7 +806,7 @@ def build(out: Path, shots: Path) -> None:
             ["沙箱或基线自身失败", "停止（environment_error），不发布经验"],
             ["学习 / 在线运行进行中", "拒绝切换生效版本；快照不可变，回退只切指针"]]
     d.table(s, rows, 0.6, 1.75, 12.1, [4.6, 7.5], size=12.5)
-    d.text(s, "完整列表与对应测试见 docs/boundaries.md", 0.6, 6.55, 12, 0.4, size=11, color=INK3)
+    d.text(s, "完整列表与对应测试见 docs/archive/boundaries.md", 0.6, 6.55, 12, 0.4, size=11, color=INK3)
 
     # 19 self-iteration: one real two-round session, end to end
     ses = db.one("SELECT * FROM sessions WHERE status = 'completed' AND comparison_id IS NOT NULL ORDER BY created_at DESC LIMIT 1")
@@ -886,7 +886,7 @@ def build(out: Path, shots: Path) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "RouteEvo.pptx"))
-    ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "deck" / "shots"))
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "RouteEvo.pptx"))
+    ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "deck" / "shots"))
     args = ap.parse_args()
     build(Path(args.out), Path(args.shots))

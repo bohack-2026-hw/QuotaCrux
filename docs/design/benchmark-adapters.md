@@ -46,7 +46,7 @@ flowchart LR
 
 题目目录、分片大小和 SHA256 在 `backend/src/routeevo/benchmarks/effibench_catalog.json`。规模与 Python 覆盖通过读取全部 20 个分片的元数据和选定列核实；没有把 2.34 GB 数据放进 Git。压缩文件大小不等于内存开销；部分题目的测试字符串很大，导入时需要解压所在分片。
 
-上游运行逻辑参考 [EffiBench-X `21b6668a`](https://github.com/EffiBench/EffiBench-X/tree/21b6668a49a342c843e679cc5ed16081064a5768)，相关许可证及修改说明见 [第三方说明](../THIRD_PARTY_NOTICES.md)。
+上游运行逻辑参考 [EffiBench-X `21b6668a`](https://github.com/EffiBench/EffiBench-X/tree/21b6668a49a342c843e679cc5ed16081064a5768)，相关许可证及修改说明见 [第三方说明](../../THIRD_PARTY_NOTICES.md)。
 
 ## 3. 接入协议
 
@@ -88,6 +88,6 @@ uv run routeevo run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
 
 ## 5. 验证记录
 
-见 [EffiBench-X 试接入结果](effibench-pilot.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
+见 [EffiBench-X 试接入结果](../archive/effibench-pilot.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
 
-后续研究评测按[单任务持续优化方案](research-evaluation-plan.md)推进，主线验证同一 episode 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生 adapter 接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](research-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。
+后续研究评测按[单任务持续优化方案](../evaluation/research-evaluation-plan.md)推进，主线验证同一 episode 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生 adapter 接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](research-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。

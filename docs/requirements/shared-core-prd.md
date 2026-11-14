@@ -4,9 +4,9 @@
 
 目标：为已选定的 Research Agent 赛道提供执行、验证、资源账本、经验积累和版本对照能力。
 
-研究流程、验收与交付按 [Research Agent PRD](research-agent-track-prd.md)执行；企业方补充原文与团队确认见[补充说明](research-agent-clarifications.md)。[方向差异](track-differences.md)和[日新 PRD](rixin-track-prd.md)保留为历史参考。
+研究流程、验收与交付按 [Research Agent PRD](research-agent-track-prd.md)执行；企业方补充原文与团队确认见[补充说明](research-agent-clarifications.md)。[方向差异](../archive/track-differences.md)和[日新 PRD](../archive/rixin-track-prd.md)保留为历史参考。
 
-首版任务、模型、测量次数、A/B/C 划分、技术栈与开发分工按[开工决策](implementation-decisions.md)执行。
+首版任务、模型、测量次数、A/B/C 划分、技术栈与开发分工按[开工决策](../archive/implementation-decisions.md)执行。
 
 ## 1. 产品定位
 
@@ -46,7 +46,7 @@
 | 可追溯性 | 计划、动作、反馈、产物、经验来源 | 交付可复现的实验记录、独立评价和可运行成果 |
 | 回退 | 切换生效经验快照，保留历史记录 | 复现旧策略，比较经验版本的实际效果 |
 
-运行额度按[开工决策](implementation-decisions.md)设置，展示节奏根据实际研究耗时安排。日新的单轮时长建议与两轮专属编排不作为当前主线的验收条件。
+运行额度按[开工决策](../archive/implementation-decisions.md)设置，展示节奏根据实际研究耗时安排。日新的单轮时长建议与两轮专属编排不作为当前主线的验收条件。
 
 ## 4. 使用流程
 
@@ -223,7 +223,7 @@ API 未返回用量或价格未知时标记“未知”或“估算”，不能�
 - 初始版本使用正常实现，不通过人为削弱提示词或关闭常规能力制造改进。
 - 存在可控的工具失败或验证失败场景，用于验证修正和保留最佳产物的机制。
 
-任务目标、程序计时与完整 Agent 运行的重复次数，以及模型可见边界按[开工决策](implementation-decisions.md)执行；固定错误候选只用于功能检查，不作为模型真实效果记录。
+任务目标、程序计时与完整 Agent 运行的重复次数，以及模型可见边界按[开工决策](../archive/implementation-decisions.md)执行；固定错误候选只用于功能检查，不作为模型真实效果记录。
 
 ## 9. 验收条件
 
@@ -271,7 +271,7 @@ API 未返回用量或价格未知时标记“未知”或“估算”，不能�
 
 ## 12. 待验证事项与依据
 
-赛道、模型、首个任务族、技术栈与固定 Docker 环境均已确定。金额暂不设硬上限，运行仍受次数与超时约束并完整记账。开发 agent 需按[开工决策](implementation-decisions.md)接通 Qwen 的实际部署与两端凭据，验证真实延迟、样例优化空间与研究闭环；是否引入决策 API 由后续独立对照决定。
+赛道、模型、首个任务族、技术栈与固定 Docker 环境均已确定。金额暂不设硬上限，运行仍受次数与超时约束并完整记账。开发 agent 需按[开工决策](../archive/implementation-decisions.md)接通 Qwen 的实际部署与两端凭据，验证真实延迟、样例优化空间与研究闭环；是否引入决策 API 由后续独立对照决定。
 
 依据：
 

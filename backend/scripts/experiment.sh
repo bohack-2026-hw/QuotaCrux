@@ -12,7 +12,7 @@
 # and router, so their fingerprints differ from the recorded ones.
 # Usage: scripts/experiment.sh [learn|compare-b|compare-d|stream|ablation|all]
 # Version 1 used: learn --label "formal A learning", then the B and C comparisons labelled "B dev comparison" and
-# "C final held-out" (see docs/results.md section 4).
+# "C final held-out" (see docs/evaluation/results.md section 4).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

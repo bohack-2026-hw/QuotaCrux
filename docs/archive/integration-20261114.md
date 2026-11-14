@@ -15,7 +15,7 @@
 - 三个自建 family 接到统一 generated benchmark adapter；外部 benchmark 继续使用各自裁判和接口。groupagg 的旧任务构包内容保持一致。检索使用每个 adapter 的匹配阈值，保留语义兼容性及新任务族/新条件的区别。
 - 保留 legacy eval/learn/online 与任务流；native 默认使用任务内 feedback，固定模型、空快照 v0。feedback/independent 研究模式只允许 eval/v0，独立组历史隔离、分析状态传递、截止时间和候选选择资格均保留。
 - 固定模型绕过初始经验路由、模型选择请求及升级。显式使用 Decisions ModelRouter 时关闭初始经验规则，避免在第一次 Decisions 请求前直接进入 large。四组合消融统一关闭初始规则，维持同一起点。
-- native 与 feedback/independent 当前只接受默认 LLM ActionRouter + rule ModelRouter；不支持的组合在入口明确拒绝。legacy 保留两类路由的完整组合。详见[路由适配器](routing-adapters.md)。
+- native 与 feedback/independent 当前只接受默认 LLM ActionRouter + rule ModelRouter；不支持的组合在入口明确拒绝。legacy 保留两类路由的完整组合。详见[路由适配器](../design/routing-adapters.md)。
 - 报告区分免费初始路由和付费 Decisions 选择，保留实际调用角色、用途和费用未知状态。CLI、报告与导出脚本保留研究、路由和计时复现参数。前端同时显示任务族、任务流、在线模式、速度或原始得分。
 - 集成后的提示版本为 v6。已有实验按各自代码与提示版本保存；第二轮 native 数据固定在 7408358/v5，没有混入主分支集成后的调用。
 
@@ -29,6 +29,6 @@
 
 ## 新的实测证据
 
-[第二轮 native 报告](research/native-r2-20261114/README.md)：固定 Qwen3.8-27B，4 个开发 episode，47 次请求，约 738.6 秒，标价估算 ¥1.1951。AlgoTune feedback / independent 保留加速为 1.8343× / 1.2101×；ALE independent 得分 18,230（基线 17,753），feedback 保持基线。最终集未评测，KernelBench GPU 实机实验仍未执行。
+[第二轮 native 报告](../research/native-r2-20261114/README.md)：固定 Qwen3.8-27B，4 个开发 episode，47 次请求，约 738.6 秒，标价估算 ¥1.1951。AlgoTune feedback / independent 保留加速为 1.8343× / 1.2101×；ALE independent 得分 18,230（基线 17,753），feedback 保持基线。最终集未评测，KernelBench GPU 实机实验仍未执行。
 
 远端协作通过 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1) 显式 @ 提交作者 SnowballXueQiu；后续开发以 main 为共同基线，原开发分支继续保留。

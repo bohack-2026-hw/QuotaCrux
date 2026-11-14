@@ -1,4 +1,4 @@
-"""Export representative research runs as deliverable bundles into docs/research/, with an index.
+"""Export representative research runs as deliverable bundles into docs/research/, with a generated examples index.
 
     uv run python scripts/export_research.py
 
@@ -91,9 +91,7 @@ def pick_cases() -> list[tuple[str, str, str]]:
 
 
 def main() -> None:
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir(parents=True)
+    OUT.mkdir(parents=True, exist_ok=True)
     rows = ["# 研究成果样例", "",
             "由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付："
             "研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、"
@@ -102,11 +100,14 @@ def main() -> None:
             "| 案例 | 任务 · 读取快照 | 结论 | 请求 · 费用 | 说明 |", "|---|---|---|---|---|"]
     for run_id, title, why in pick_cases():
         rep = report.build(run_id)
-        cli.export_bundle(run_id, OUT / run_id, narrative.run_markdown(run_id))
+        bundle = OUT / run_id
+        if bundle.exists():
+            shutil.rmtree(bundle)
+        cli.export_bundle(run_id, bundle, narrative.run_markdown(run_id))
         u = rep["usage"]["total"]
         rows.append(f"| [{title}]({run_id}/README.md) | {rep['task']['task_id']} · {rep['snapshot_id']} | {rep['outcome']['summary']} | "
                     f"{rep['iterations']['model_requests']} 次 · {'$%.3f' % u['cost_usd'] if u['cost_usd'] is not None else '未知'} | {why} |")
-    (OUT / "README.md").write_text("\n".join(rows) + "\n")
+    (OUT / "examples.md").write_text("\n".join(rows) + "\n")
     print(f"wrote {OUT}")
 
 

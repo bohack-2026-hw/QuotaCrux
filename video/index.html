@@ -3,34 +3,50 @@
 <head>
 <meta charset="utf-8">
 <title>QuotaCrux 枢决 · video</title>
+<link rel="icon" href="data:,">
 <script type="importmap">{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }</script>
 <style>
-  :root { --bg: #F3F2EE; --ink: #111113; --grey: #8E8D88; --line: #D8D6CF; --accent: #FF4D1F; }
+  :root { --bg: #F1EFE9; --ink: #111113; --grey: #8E8D88; --accent: #FF4D1F; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink);
     font-family: "PingFang SC", sans-serif; }
   #gl { position: absolute; inset: 0; }
   .layer { position: absolute; inset: 0; pointer-events: none; }
-  .latin { font-family: "Avenir Next", sans-serif; }
-  #title { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); }
-  #title svg { position: absolute; inset: 0; }
-  #title .name { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 210px; letter-spacing: -6px; line-height: 1; }
-  #title .cn { font-size: 96px; font-weight: 600; letter-spacing: 18px; margin-top: 18px; }
-  #sub { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); max-width: 1500px; text-align: center;
-    font-size: 44px; font-weight: 600; line-height: 1.45; padding: 14px 36px; border-radius: 16px;
-    background: rgba(243, 242, 238, 0.86); box-shadow: 0 2px 0 rgba(17, 17, 19, 0.06); }
-  #hud { position: absolute; right: 72px; top: 60px; text-align: right; }
-  #hud .k { font-size: 30px; font-weight: 600; color: var(--grey); }
-  #hud .v { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 120px; line-height: 1; letter-spacing: -3px; }
-  #tag { position: absolute; left: 72px; top: 56px; padding: 10px 18px 14px; border-radius: 14px; background: rgba(243, 242, 238, 0.82); }
-  #tag .k { font-size: 30px; font-weight: 600; color: var(--accent); }
-  #tag .v { font-size: 64px; font-weight: 600; line-height: 1.2; }
+  /* soft vignette and fine grain over the 3D view */
+  #vignette { background: radial-gradient(ellipse 75% 70% at 50% 45%, rgba(0,0,0,0) 55%, rgba(70,55,35,0.16) 100%); }
+  #grain { opacity: 0.07; mix-blend-mode: multiply; }
+
+  #brand { position: absolute; left: 0; top: 0; transform-origin: 0 0; white-space: nowrap; display: flex; align-items: baseline; gap: 28px; }
+  #brand .name { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 220px; letter-spacing: -7px; line-height: 1; }
+  #brand .name span { display: inline-block; }
+  #brand .cn { font-size: 104px; font-weight: 600; letter-spacing: 12px; }
+  #brand .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); align-self: center; }
+
+  #tag { position: absolute; left: 76px; top: 150px; padding: 14px 28px 18px; border-radius: 14px; background: rgba(255, 255, 255, 0.9); box-shadow: 0 18px 40px -22px rgba(40, 30, 10, 0.45); }
+  #tag .k { font-family: "Avenir Next", "PingFang SC", sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+  #tag .k b { margin-right: 14px; }
+  #tag .v { font-size: 60px; font-weight: 600; line-height: 1.25; margin-top: 4px; }
+
+  #sub { position: absolute; left: 76px; bottom: 70px; max-width: 1640px; display: flex; gap: 22px; align-items: stretch;
+    padding: 20px 34px 20px 22px; border-radius: 14px; background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 18px 40px -22px rgba(40, 30, 10, 0.45); }
+  #sub i { width: 8px; border-radius: 4px; background: var(--accent); flex: none; }
+  #sub span { font-size: 42px; font-weight: 600; line-height: 1.42; }
+
+  #hud { position: absolute; right: 76px; top: 64px; text-align: right; padding: 18px 30px 22px; border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9); box-shadow: 0 18px 40px -22px rgba(40, 30, 10, 0.45); min-width: 320px; }
+  #hud .k { font-size: 26px; font-weight: 600; color: var(--grey); }
+  #hud .v { font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 118px; line-height: 1; letter-spacing: -3px; }
+  #hud .who { font-size: 24px; font-weight: 600; margin-top: 6px; }
+  .float { position: absolute; font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 54px; color: var(--accent);
+    transform: translate(-50%, -100%); text-shadow: 0 2px 0 #fff, 0 0 12px rgba(255,255,255,0.9); }
 </style>
 </head>
 <body>
 <canvas id="gl" width="1920" height="1080"></canvas>
-<div class="layer" id="title"></div>
-<div class="layer"><div id="tag"></div><div id="hud"></div><div id="sub"></div></div>
+<div class="layer" id="vignette"></div>
+<svg class="layer" id="grain" width="1920" height="1080"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+<div class="layer" id="ui"><div id="brand"></div><div id="tag"></div><div id="hud"></div><div id="sub"><i></i><span></span></div><div class="float" id="delta"></div></div>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

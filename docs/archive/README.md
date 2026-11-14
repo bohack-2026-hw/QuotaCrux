@@ -11,5 +11,9 @@
 | [长时 Benchmark 调研](long-horizon-benchmarks.md) | 接入之前的选型依据 |
 | [EffiBench-X 接入预检](effibench-pilot.md) | 首次适配与校验记录；后续真实模型结果见[四题批次](../research/effibench-x-20261114/README.md) |
 | [2026-11-14 集成记录](integration-20261114.md) | 并行开发线合并时的提交与验证记录 |
+| [早期双组评测方案](research-evaluation-plan.md) | 已被正式 v2 三模式协议替代的评测设计 |
+| [经验学习第一至三版结果](results.md) · [PDF](results.pdf) | groupagg、D 留出和 S 任务流历史汇总；由 `backend/scripts/write_results.py` 生成到本目录 |
+| [Decisions 接口探索](decision-model/README.md) | 早期回放、输入消融及 legacy 冒烟数据；原始 JSON 保留原字节 |
+| [原 Native 路由研究计划](native-routing-plan.md) | 缩减为探索性短批之前的 24 轮计划与交接；[当前入口](../research/native-routing/README.md) |
 
 [返回文档导航](../README.md)。

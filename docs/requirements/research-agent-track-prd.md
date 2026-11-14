@@ -12,7 +12,7 @@
 
 首版采用一个研究执行循环。规划、分析、生成候选和审视结果是工作阶段，不要求实现成多个独立 Agent。
 
-主线评价单个研究任务内的持续改进与资源效率，跨题目或跨 session 的经验积累作为扩展。具体对照、长时预算与实施差距见[单任务评测方案](../evaluation/research-evaluation-plan.md)，候选任务见[benchmark 调研](../archive/long-horizon-benchmarks.md)。
+主线评价单个研究任务内的持续改进与资源效率，跨题目或跨 session 的经验积累作为扩展。具体对照、长时预算与实施差距见[单任务评测方案](../archive/research-evaluation-plan.md)，候选任务见[benchmark 调研](../archive/long-horizon-benchmarks.md)。
 
 当前具体实现按[开工决策](../archive/implementation-decisions.md)：Qwen 常规执行，GPT-6.1 Sol（xhigh）升级诊断与候选生成。单 LLM 是赛题允许的下限，当前已选择两条模型路径。
 
@@ -134,7 +134,7 @@
 
 反馈对照首轮固定同一生成模型、工具、数据划分、初始方案与预算，唯一登记的差异是候选之间能否传递本次研究反馈与产物。独立尝试组由外部评测器选最佳候选，不把得分回传给下一次尝试。多模型调度另行实验，避免同时改变模型能力与信息条件。
 
-过程曲线展示当时已完成验证的最佳开发指标，最终结论同时报告独立验收结果。新方案先做 15 分钟 pilot，再冻结 30 分钟正式预算；具体数量、额度、计时边界和停止规则见[评测方案](../evaluation/research-evaluation-plan.md)。
+过程曲线展示当时已完成验证的最佳开发指标，最终结论同时报告独立验收结果。新方案先做 15 分钟 pilot，再冻结 30 分钟正式预算；具体数量、额度、计时边界和停止规则见[评测方案](../archive/research-evaluation-plan.md)。
 
 性能任务用相同测量环境、输入和预先约定的重复方法比较。资源限制与验收口径在对照前冻结。
 

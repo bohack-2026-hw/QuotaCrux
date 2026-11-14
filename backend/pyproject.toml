@@ -1,7 +1,7 @@
 [project]
-name = "routeevo"
+name = "quotacrux"
 version = "0.1.0"
-description = "RouteEvo shared core: execute, verify, learn from runs"
+description = "QuotaCrux shared core: execute, verify, learn from runs"
 authors = [
     { name = "Snowball_233", email = "wangrb.qq@outlook.com" }
 ]
@@ -16,7 +16,7 @@ dependencies = [
 benchmark = ["pyarrow>=26.0.0"]
 
 [project.scripts]
-routeevo = "routeevo.cli:main"
+quotacrux = "quotacrux.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.8.19,<0.9.0"]

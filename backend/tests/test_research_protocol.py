@@ -6,10 +6,10 @@ from dataclasses import replace
 
 import pytest
 
-from routeevo import config, db, evaluator, narrative
-from routeevo.agent.runner import RunOptions, Runner
-from routeevo.benchmarks import ale, native
-from routeevo.llm.scripted import ScriptedClient
+from quotacrux import config, db, evaluator, narrative
+from quotacrux.agent.runner import RunOptions, Runner
+from quotacrux.benchmarks import ale, native
+from quotacrux.llm.scripted import ScriptedClient
 
 
 @pytest.fixture
@@ -118,7 +118,7 @@ def test_research_rejects_cross_session_memory(score_task):
 
 
 def test_kernel_reference_verified_before_remote_execution(tmp_path, monkeypatch):
-    from routeevo.benchmarks import kernelbench
+    from quotacrux.benchmarks import kernelbench
     source = tmp_path / "reference.py"
     source.write_text("untrusted source")
     monkeypatch.setattr(kernelbench, "call_worker", lambda *a: pytest.fail("must reject before SSH"))
@@ -128,7 +128,7 @@ def test_kernel_reference_verified_before_remote_execution(tmp_path, monkeypatch
 
 
 def test_pair_fairness_keeps_budget_and_environment():
-    from routeevo.research_compare import comparable
+    from quotacrux.research_compare import comparable
     import copy
     first = {"config": {"prompt": {"version": "v4", "system_sha256": "a"},
         "research_protocol": {"mode": "feedback", "fixed_model": "small"}, "limits": {"wall_clock_s": 900},

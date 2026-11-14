@@ -1,4 +1,4 @@
-"""Export representative research runs as deliverable bundles into docs/research/, with an index.
+"""Export representative research runs as deliverable bundles into docs/research/, with a generated examples index.
 
     uv run python scripts/export_research.py
 
@@ -11,7 +11,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from routeevo import cli, compare, db, narrative, report
+from quotacrux import cli, compare, db, narrative, report
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "research"
 
@@ -48,7 +48,7 @@ def pick_cases() -> list[tuple[str, str, str]]:
                       f"{raised['result']['best_dev_speedup']:.2f}×；学习运行把目标提高到 {raised['result']['run_target_speedup']:g}×，"
                       f"模型以它为起点提出 {won[-1]['candidate_id']}，开发数据 {won[-1]['result']['speedup']:.2f}×，假设得到支持。"))
     cases.append((learn_run("A-05"), "没有验证出改进（第一版）",
-                   "高基数工作负载上 Qwen 两个、GPT 一个候选都正确但更慢（0.80—0.83×），三个假设均被反驳；预算耗尽后交付初始程序，结论是“没有验证出改进”。"))
+                   "分组数多的任务上 Qwen 两个、GPT 一个候选都正确但更慢（0.80—0.83×），三个假设均被反驳；预算耗尽后交付初始程序，结论是“没有验证出改进”。"))
     held = comparison_runs("D final held-out · reuse") or comparison_runs("B dev comparison · reuse")
     if held:
         new = held["snapshot_b"]
@@ -91,22 +91,23 @@ def pick_cases() -> list[tuple[str, str, str]]:
 
 
 def main() -> None:
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir(parents=True)
-    rows = ["# 研究成果样例", "",
+    OUT.mkdir(parents=True, exist_ok=True)
+    rows = ["# 研究过程案例", "",
             "由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付："
             "研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、"
             "原始模型请求与回复 `model_calls/`、结构化报告 `report.json` 和复核脚本 `reproduce.sh`。"
-            "任意一次运行都可以用 `uv run routeevo export-run <run_id> --bundle <目录>` 导出。", "",
+            "任意一次运行都可以用 `uv run quotacrux export-run <run_id> --bundle <目录>` 导出。", "",
             "| 案例 | 任务 · 读取快照 | 结论 | 请求 · 费用 | 说明 |", "|---|---|---|---|---|"]
     for run_id, title, why in pick_cases():
         rep = report.build(run_id)
-        cli.export_bundle(run_id, OUT / run_id, narrative.run_markdown(run_id))
+        bundle = OUT / run_id
+        if bundle.exists():
+            shutil.rmtree(bundle)
+        cli.export_bundle(run_id, bundle, narrative.run_markdown(run_id))
         u = rep["usage"]["total"]
         rows.append(f"| [{title}]({run_id}/README.md) | {rep['task']['task_id']} · {rep['snapshot_id']} | {rep['outcome']['summary']} | "
                     f"{rep['iterations']['model_requests']} 次 · {'$%.3f' % u['cost_usd'] if u['cost_usd'] is not None else '未知'} | {why} |")
-    (OUT / "README.md").write_text("\n".join(rows) + "\n")
+    (OUT / "case-studies.md").write_text("\n".join(rows) + "\n")
     print(f"wrote {OUT}")
 
 

@@ -1,6 +1,6 @@
-"""Build the 80 x 180 cm portrait poster (PDF) from stored records; the illustration comes from docs/poster/assets.
+"""Build the 80 x 180 cm QuotaCrux (枢决) poster (PDF) from stored records; the illustration comes from docs/poster/assets.
 
-    uv run --with segno python scripts/build_poster.py [--out ../docs/poster/RouteEvo-poster.pdf]
+    uv run --with segno python scripts/build_poster.py [--out ../docs/poster/QuotaCrux-poster.pdf]
 
 Every number is read from the SQLite store or a comparison summary when the poster is built. The illustration was
 generated with gpt-image-2 and contains no text; the route map, figures and chart are typeset here as vectors.
@@ -29,8 +29,7 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 BG, INK, MUTED, RULE = "#F5F0EB", "#1D2133", "#5F6476", "#DCD5CC"
 AMBER, TEAL, VIOLET = "#E8962A", "#0FA38A", "#6D5BF6"
 AMBER_T, TEAL_T, VIOLET_T = "#B26A0E", "#0A7E6B", "#5442E0"  # darker text shades for the light background
-NAVY, CREAM = "#171B2E", "#EDE8E0"
-AMBER_B, TEAL_B, VIOLET_B, SLATE = "#FFC46B", "#3DD9BE", "#A497FF", "#8A90A8"  # brighter shades on navy
+SLATE = "#8A8FA3"  # the "without experience" line in the cost chart
 
 
 def find(prefix: str) -> dict:
@@ -159,16 +158,16 @@ def cost_chart(n: dict, w: float = 330, h: float = 128) -> str:
     x = lambda i: left + i * (w - left - right) / (k - 1)  # noqa: E731
     y = lambda v: top + (1 - v / hi) * (h - top - bottom)  # noqa: E731
     path = lambda vs: " ".join(f"{'M' if i == 0 else 'L'}{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vs))  # noqa: E731
-    grid = "".join(f'<line x1="{left}" x2="{w - right}" y1="{y(t):.1f}" y2="{y(t):.1f}" stroke="#2C3148" stroke-width="0.6"/>'
+    grid = "".join(f'<line x1="{left}" x2="{w - right}" y1="{y(t):.1f}" y2="{y(t):.1f}" stroke="{RULE}" stroke-width="0.6"/>'
                    f'<text x="{left - 4}" y="{y(t) + 3:.1f}" class="ax" text-anchor="end">${t:.2f}</text>' for t in (0, 0.05, 0.10))
     xs = "".join(f'<text x="{x(i):.1f}" y="{h - 12}" class="ax" text-anchor="middle">{i + 1}</text>' for i in range(k))
-    firsts = "".join(f'<circle cx="{x(i):.1f}" cy="{h - 4}" r="2.6" fill="{VIOLET_B}"/>' for i in range(k) if n["s_first"][i])
-    dots = "".join(f'<circle cx="{x(i):.1f}" cy="{y(v):.1f}" r="2.6" fill="{c}"/>' for vs, c in ((fresh, SLATE), (mem, AMBER_B)) for i, v in enumerate(vs))
+    firsts = "".join(f'<circle cx="{x(i):.1f}" cy="{h - 4}" r="2.6" fill="{VIOLET}"/>' for i in range(k) if n["s_first"][i])
+    dots = "".join(f'<circle cx="{x(i):.1f}" cy="{y(v):.1f}" r="2.6" fill="{c}"/>' for vs, c in ((fresh, SLATE), (mem, AMBER)) for i, v in enumerate(vs))
     return (f'<svg viewBox="0 0 {w} {h}" width="{w}mm" height="{h}mm">{grid}{xs}{firsts}'
             f'<path d="{path(fresh)}" fill="none" stroke="{SLATE}" stroke-width="2.6"/>'
-            f'<path d="{path(mem)}" fill="none" stroke="{AMBER_B}" stroke-width="2.6"/>{dots}'
+            f'<path d="{path(mem)}" fill="none" stroke="{AMBER}" stroke-width="2.6"/>{dots}'
             f'<text x="{x(k - 1)}" y="{y(fresh[-1]) - 7:.1f}" class="cl" fill="{SLATE}" text-anchor="end">没有经验 ${fresh[-1]:.3f}</text>'
-            f'<text x="{x(k - 1)}" y="{y(mem[-1]) - 7:.1f}" class="cl" fill="{AMBER_B}" text-anchor="end">有经验 ${mem[-1]:.3f}</text></svg>')
+            f'<text x="{x(k - 1)}" y="{y(mem[-1]) - 7:.1f}" class="cl" fill="{AMBER_T}" text-anchor="end">有经验 ${mem[-1]:.3f}</text></svg>')
 
 
 ICONS = {
@@ -189,16 +188,18 @@ def page(n: dict) -> str:
     d_goal, d_speed, d_cost = n["d_goal"], n["d_speed"], n["d_cost"]
     ab_loop, ab_speed = n["ab_loop"], n["ab_speed"]
     ab_cut = round(100 * (1 - ab_loop[1] / ab_loop[0]))
-    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>RouteEvo poster</title><style>
+    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title><style>
 @page {{ size: 800mm 1800mm; margin: 0; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html, body {{ width: 800mm; height: 1800mm; }}
 body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; overflow: hidden;
   -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
 .page {{ width: 800mm; height: 1800mm; display: flex; flex-direction: column; padding: 34mm 50mm 28mm; gap: var(--gap); }}
-:root {{ --gap: 10mm; }}
-.title {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.86; letter-spacing: -4mm; margin-left: -6mm; }}
-.lines {{ display: flex; gap: 5mm; margin-top: 10mm; }}
+:root {{ --gap: 10mm; --title: 132mm; }}
+.title {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: var(--title); line-height: 0.86; letter-spacing: -4mm; margin-left: -6mm; white-space: nowrap; }}
+.namerow {{ display: flex; align-items: center; gap: 12mm; margin-top: 10mm; }}
+.cn {{ font-size: 46mm; font-weight: 600; letter-spacing: 4mm; margin-left: auto; line-height: 1; }}
+.lines {{ display: flex; gap: 5mm; }}
 .lines i {{ height: 6mm; border-radius: 3mm; display: block; }}
 .top {{ display: grid; grid-template-columns: 1fr 330mm; gap: 14mm; align-items: center; }}
 .tag {{ font-size: 40mm; font-weight: 600; line-height: 1.22; letter-spacing: -0.6mm; }}
@@ -220,36 +221,34 @@ body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; 
 .rule {{ background: #fff; border-radius: 5mm; padding: 7mm 8mm; display: flex; gap: 5mm; align-items: flex-start; font-size: 13.2mm; line-height: 1.4; }}
 .rule i {{ font-style: normal; flex: none; width: 17mm; height: 17mm; border-radius: 50%; color: #fff; font-weight: 700;
   font-family: "Avenir Next", sans-serif; font-size: 11mm; display: grid; place-items: center; margin-top: 1mm; }}
-.dark {{ margin: 0 -50mm; background: {NAVY}; color: {CREAM}; padding: 14mm 50mm 14mm; }}
-.dark .sh b, .dark .sh span {{ color: #8A90A8; }}
+
 .res {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10mm 16mm; margin-top: 10mm; }}
 .stat .big {{ font-family: "Avenir Next", sans-serif; font-weight: 700; font-size: 64mm; line-height: 0.95; letter-spacing: -2mm; }}
 .stat .cap {{ font-size: 17mm; font-weight: 600; margin-top: 4mm; }}
-.stat .sub {{ font-size: 12.5mm; line-height: 1.5; color: #A9ACBB; margin-top: 2mm; }}
+.stat .sub {{ font-size: 12.5mm; line-height: 1.5; color: {MUTED}; margin-top: 2mm; }}
 .chartbox {{ grid-column: span 2; display: grid; grid-template-columns: 1fr 330mm; gap: 16mm; align-items: center;
-  border-top: 0.6mm solid #2C3148; padding-top: 8mm; }}
+  border-top: 0.6mm solid {RULE}; padding-top: 8mm; }}
 .chartbox h3 {{ font-size: 17mm; font-weight: 600; }}
-.chartbox p {{ font-size: 12.5mm; line-height: 1.55; color: #A9ACBB; margin-top: 3mm; }}
-.chartbox svg text.ax {{ font-size: 8.5px; fill: #7D8299; font-family: "Avenir Next", sans-serif; }}
+.chartbox p {{ font-size: 12.5mm; line-height: 1.55; color: {MUTED}; margin-top: 3mm; }}
+.chartbox svg text.ax {{ font-size: 8.5px; fill: {MUTED}; font-family: "Avenir Next", sans-serif; }}
 .chartbox svg text.cl {{ font-size: 10.5px; font-weight: 600; font-family: "PingFang SC", sans-serif; }}
 .trust {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 10mm; margin-top: 6mm; }}
 .trust div {{ font-size: 13mm; line-height: 1.45; color: {MUTED}; }}
 .trust b {{ display: block; font-size: 16mm; color: {INK}; margin: 3mm 0 1mm; }}
 .foot {{ margin-top: auto; display: grid; grid-template-columns: 1fr 52mm; gap: 14mm; align-items: end;
   border-top: 0.8mm solid {RULE}; padding-top: 8mm; }}
-.foot .repo {{ font-family: "Avenir Next", sans-serif; font-weight: 600; font-size: 17mm; }}
+.foot .repo {{ font-size: 17mm; font-weight: 600; }}
 .foot p {{ font-size: 12mm; line-height: 1.5; color: {MUTED}; margin-top: 2mm; }}
 .foot svg {{ width: 52mm; height: 52mm; display: block; }}
 </style></head><body><div class="page">
 
 <div>
-  <div class="title">RouteEvo</div>
-  <div class="lines"><i style="width: 120mm; background: {AMBER}"></i><i style="width: 260mm; background: {TEAL}"></i><i style="width: 70mm; background: {VIOLET}"></i></div>
+  <div class="title">QuotaCrux</div>
+  <div class="namerow"><div class="lines"><i style="width: 100mm; background: {AMBER}"></i><i style="width: 220mm; background: {TEAL}"></i><i style="width: 60mm; background: {VIOLET}"></i></div><div class="cn">枢决</div></div>
 </div>
 <div class="top"><div>
   <div class="tag">每一步研究，<br>都走最划算的<br>那条线。</div>
-  <div class="lede">RouteEvo 会自己规划、取证、提假设、做实验、验证和修正。<b style="color: {AMBER_T}">熟悉的问题</b>直接复用验证过的程序；
-  <b style="color: {TEAL_T}">日常研究</b>交给本地小模型；<b style="color: {VIOLET_T}">卡住或全新的问题</b>才换乘云端大模型。</div>
+  <div class="lede">QuotaCrux 会自己规划、取证、提假设、做实验、验证和修正。<b style="color: {AMBER_T}">熟悉的问题</b>直接复用验证过的程序；<b style="color: {TEAL_T}">日常研究</b>交给本地小模型；<b style="color: {VIOLET_T}">卡住或全新的问题</b>才换乘云端大模型。</div>
 </div><img class="hero" src="{img('hero.png')}" alt=""></div>
 
 <section>
@@ -262,16 +261,16 @@ body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; 
   </div>
 </section>
 
-<section class="dark">
+<section>
   <div class="sh"><b>02</b><h2>用得少、跑得快，质量不降</h2><span>全部来自真实运行记录</span></div>
   <div class="res">
-    <div class="stat"><div class="big" style="color: {TEAL_B}">{n['no_cloud_pct']}%</div><div class="cap">的运行全程没用云端大模型</div>
+    <div class="stat"><div class="big" style="color: {TEAL_T}">{n['no_cloud_pct']}%</div><div class="cap">的运行全程没用云端大模型</div>
       <div class="sub">{n['runs']} 次真实运行中 {n['no_cloud']} 次；本地小模型完成 {n['small_pct']}% 的模型请求</div></div>
-    <div class="stat"><div class="big" style="color: {VIOLET_B}">−{n['s_large_cut']}%</div><div class="cap">云端调用（有经验 vs 没有经验）</div>
+    <div class="stat"><div class="big" style="color: {VIOLET_T}">−{n['s_large_cut']}%</div><div class="cap">云端调用（有经验 vs 没有经验）</div>
       <div class="sub">同一串 {n['s_tasks']} 道题 × {n['s_rep']} 次重放：{s_large[0]} → {s_large[1]} 次；单次研究 {s_loop[0]:.0f} s → {s_loop[1]:.0f} s；达标 {s_goal[2]}/{s_goal[3]} 不变</div></div>
-    <div class="stat"><div class="big" style="color: {AMBER_B}">{d_goal[2]}/{d_goal[3]}</div><div class="cap">没见过的新题全部达标</div>
+    <div class="stat"><div class="big" style="color: {AMBER_T}">{d_goal[2]}/{d_goal[3]}</div><div class="cap">没见过的新题全部达标</div>
       <div class="sub">{n['d_tasks']} 道封存题 × {n['d_rep']} 次：没有经验时 {d_goal[0]}/{d_goal[1]}；加速比中位数 {d_speed[0]:.2f}× → {d_speed[1]:.2f}×；云端费用 ${d_cost[0]:.2f} → $0</div></div>
-    <div class="stat"><div class="big" style="color: {VIOLET_B}">−{ab_cut}%</div><div class="cap">新问题直接换乘，研究更快</div>
+    <div class="stat"><div class="big" style="color: {VIOLET_T}">−{ab_cut}%</div><div class="cap">新问题直接换乘，研究更快</div>
       <div class="sub">对比先让本地小模型试：单次研究 {ab_loop[0]:.0f} s → {ab_loop[1]:.0f} s，加速比 {ab_speed[0]:.2f}× → {ab_speed[1]:.2f}×；每题多花约 {n['ab_extra'] * 100:.1f} 美分</div></div>
     <div class="chartbox"><div><h3>只在新问题第一次出现时花钱</h3>
       <p>沿同一串任务累计的云端费用（图为 3 次重放的平均）。紫点是新类型问题第一次出现的位置；之后的同类问题走黄线，费用不再增加。3 次重放合计 ${s_cost[0]:.3f} → ${s_cost[1]:.3f}。</p></div>{cost_chart(n)}</div>
@@ -288,14 +287,14 @@ body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; 
   </div>
 </section>
 
-<div class="foot"><div><div class="repo">github.com/bohack-2026-hw/RouteEvo</div>
+<div class="foot"><div><div class="repo">QuotaCrux 枢决 · 扫码查看代码、实验记录与复现脚本</div>
   <p>BoHack 2026 · 倍漾量化 Research Agent　|　分组聚合 · 访问日志统计 · 区间合并 · ALE-Bench · AlgoTune</p></div>{qr_svg()}</div>
 </div></body></html>"""
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(ROOT / "docs" / "poster" / "RouteEvo-poster.pdf"))
+    ap.add_argument("--out", default=str(ROOT / "docs" / "poster" / "QuotaCrux-poster.pdf"))
     args = ap.parse_args()
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

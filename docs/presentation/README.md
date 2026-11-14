@@ -6,12 +6,11 @@
 | --- | --- | --- |
 | 项目介绍 | [Markdown](project-overview.md) | [PDF](project-overview.pdf) |
 | 现场演示脚本 | [Markdown](demo-script.md) | — |
-| 项目演示文稿 | [PowerPoint](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
-| 技术演示文稿 | [PowerPoint](QuotaCrux-technical.pptx) | [PDF](QuotaCrux-technical.pdf) |
-| 幻灯片 PDF | — | [PDF](QuotaCrux.pdf) |
+| 技术演示文稿（29 页） | [源文件](slides/) · [PowerPoint（文字可编辑）](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
+| 展示视频（2:43） | [手稿](../video/QuotaCrux-video-manuscript.md) | [MP4](../video/QuotaCrux-showcase.mp4) |
 | 海报 | [生成脚本](../../backend/scripts/build_poster.py) | [PDF](../poster/QuotaCrux-poster.pdf) · [预览](../poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) · [场景预览](../poster/QuotaCrux-xbanner-mockup.jpg) |
 
-图表与截图在 [deck/](deck/)。`backend/scripts/build_deck.py` 默认输出技术文稿 `QuotaCrux-technical.pptx`，截图取 `deck/shots/`；海报由 `backend/scripts/build_poster.py` 生成到 `docs/poster/`。
+演示文稿由 [slides/](slides/) 中的网页源文件生成：`slides/build.sh` 输出矢量 PDF 和文字可编辑的 PPTX。旧版两份文稿及其 python-pptx 生成脚本的输出已移到 [archive/presentation-v1](../archive/presentation-v1/)。海报由 `backend/scripts/build_poster.py` 生成到 `docs/poster/`。
 
 Markdown 导出 PDF 时，从 `backend/` 执行：
 

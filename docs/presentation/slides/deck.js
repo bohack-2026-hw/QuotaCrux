@@ -34,7 +34,6 @@ slides.forEach((s, i) => {
   const m = k.match(/^(\S+)\s·\s(.*)$/)
   hd.innerHTML = `<div class="k">${m ? `<b>${m[1]}</b>${m[2]}` : k}</div><div class="r"><span>QuotaCrux 枢决</span><i></i><span>${String(i + 1).padStart(2, '0')} / ${slides.length}</span></div>`
   s.prepend(hd)
-  if (s.dataset.src) { const ft = document.createElement('div'); ft.className = 'ft'; ft.innerHTML = `<div class="src">来源　${s.dataset.src}</div>`; s.appendChild(ft) }
 })
 
 // ---------- cover art: a glowing step line over faint box stacks ----------
@@ -88,8 +87,9 @@ slides.forEach((s, i) => {
   g += node(1560, 330, 168, 120, '报告 · 账本', '复现包', { fs: 24, ss: 17 })
   g += node(1560, 520, 168, 120, '快照 vN+1', '原子发布', { hot: true, fs: 24, ss: 17 })
   g += arrow(LX + LW, 200, 1560, 200); g += arrow(1644, 260, 1644, 330); g += arrow(1644, 450, 1644, 520)
-  g += path(`M680 175 C 720 175, 720 -10, 1100 -10 S 1560 60, 1600 140`, { stroke: INK3, strokeDasharray: '6 6', markerEnd: 'url(#ar)' })
-  g += text(1150, 12, '复验达标 → 直接交付，不调用模型', { fontSize: 18, fill: INK2, textAnchor: 'middle' })
+  g += path(`M680 175 C 720 175, 720 -36, 1100 -36 S 1560 60, 1600 140`, { stroke: INK3, strokeDasharray: '6 6', markerEnd: 'url(#ar)' })
+  g += rect(970, -14, 360, 30, { rx: 6, fill: '#0C0D0F', stroke: 'none' })
+  g += text(1150, 8, '复验达标 → 直接交付，不调用模型', { fontSize: 19, fill: INK2, textAnchor: 'middle' })
   g += path(`M1560 580 C 900 760, 300 760, 150 310`, { stroke: ACC, strokeDasharray: '6 6', markerEnd: 'url(#arA)', opacity: 0.8 })
   g += text(860, 735, 'learn / online 模式：程序提取已验证事实，写回经验', { fontSize: 19, fill: ACC2, textAnchor: 'middle' })
   svg('arch', g)

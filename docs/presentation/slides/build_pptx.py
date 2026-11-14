@@ -55,16 +55,16 @@ def style_run(run, r: dict) -> None:
 
 
 def add_block(slide, b: dict) -> None:
-    single = b["h"] < b["lh"] * 1.6 and not b["pre"]
-    slack = 1.0 if single else 1.04
-    w = b["w"] * slack + (6 if single else 0)
+    single = b.get("single", False)
+    # single lines sit centred in the rect of the rendered text, so font-metric differences stay symmetric
+    w = b["w"] * (1.08 if single else 1.04)
     x = b["x"] - (w - b["w"]) / 2 if b["align"] == "center" else b["x"] - (w - b["w"]) if b["align"] == "right" else b["x"]
-    tb = slide.shapes.add_textbox(Emu(round(x * PX)), Emu(round(b["y"] * PX)), Emu(round(w * PX)), Emu(round(max(b["h"], b["lh"]) * PX)))
+    tb = slide.shapes.add_textbox(Emu(round(x * PX)), Emu(round(b["y"] * PX)), Emu(round(w * PX)), Emu(round((b["h"] if single else max(b["h"], b["lh"])) * PX)))
     tf = tb.text_frame
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     tf.word_wrap = not single
     tf.auto_size = MSO_AUTO_SIZE.NONE
-    tf.vertical_anchor = MSO_ANCHOR.MIDDLE if b["valign"] == "middle" else MSO_ANCHOR.TOP
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE if single or b["valign"] == "middle" else MSO_ANCHOR.TOP
     # split runs into paragraphs on newlines
     paras, cur = [], []
     for r in b["runs"]:
@@ -79,7 +79,7 @@ def add_block(slide, b: dict) -> None:
     for k, runs in enumerate(paras):
         para = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
         para.alignment = ALIGN.get(b["align"], PP_ALIGN.LEFT)
-        para.line_spacing = Pt(b["lh"] * 0.5)
+        para.line_spacing = 1.0 if single else Pt(b["lh"] * 0.5)
         para.space_before = para.space_after = Pt(0)
         for r in runs:
             run = para.add_run()

@@ -79,12 +79,19 @@ export function decision(d: string): string {
 
 /** Within-task research modes. Colors follow the fixed categorical order (validated on the card surface); the
     marker shape is the secondary encoding, so a mode is never told apart by color alone. */
-export const RMODE: Record<string, { label: string; short: string; desc: string; color: string; shape: 'circle' | 'square' | 'triangle' }> = {
-  feedback: { label: '反馈', short: 'F', desc: '看到每个候选的评测反馈', color: 'var(--series-1)', shape: 'circle' },
-  independent: { label: '独立', short: 'I', desc: '每次只看初始程序，互不相见', color: 'var(--series-2)', shape: 'square' },
-  no_feedback: { label: '无反馈', short: 'N', desc: '保留自己的历史，但看不到任何评测结果', color: 'var(--series-3)', shape: 'triangle' },
+type Shape = 'circle' | 'square' | 'triangle' | 'diamond'
+export const RMODE: Record<string, { label: string; short: string; desc: string; seen: string; color: string; shape: Shape }> = {
+  feedback: { label: '反馈', short: 'F', desc: '看到每个候选的评测反馈', seen: '每轮评测结果', color: 'var(--series-1)', shape: 'circle' },
+  independent: { label: '独立', short: 'I', desc: '每次只看初始程序，互不相见', seen: '只有初始程序', color: 'var(--series-2)', shape: 'square' },
+  no_feedback: { label: '无反馈', short: 'N', desc: '保留自己的历史，但看不到任何评测结果', seen: '自己的历史，无评测', color: 'var(--series-3)', shape: 'triangle' },
+  // Routing study (#6): every variant runs with full feedback; only who picks the action and the model changes.
+  baseline: { label: '基线路由', short: 'B', desc: '动作 LLM · 模型 规则', seen: '动作 LLM · 模型 规则', color: 'var(--series-1)', shape: 'circle' },
+  action_decisions: { label: '动作决策', short: 'A', desc: '动作 Decisions · 模型 规则', seen: '动作 Decisions · 模型 规则', color: 'var(--series-2)', shape: 'square' },
+  model_decisions: { label: '模型决策', short: 'M', desc: '动作 LLM · 模型 Decisions', seen: '动作 LLM · 模型 Decisions', color: 'var(--series-3)', shape: 'triangle' },
+  both_decisions: { label: '双层决策', short: 'D', desc: '动作 Decisions · 模型 Decisions', seen: '动作 Decisions · 模型 Decisions', color: 'var(--series-4)', shape: 'diamond' },
 }
-export const rmode = (m: string) => RMODE[m] ?? { label: m, short: m.slice(0, 1).toUpperCase(), desc: '', color: 'var(--ink-3)', shape: 'circle' as const }
+export const rmode = (m: string) => RMODE[m] ?? { label: m, short: m.slice(0, 1).toUpperCase(), desc: '', seen: '', color: 'var(--ink-3)', shape: 'circle' as const }
+export const STUDY: Record<string, string> = { feedback: '反馈消融', routing: '路由消融' }
 
 export const FINAL: Record<string, [string, Tone, string]> = {
   disabled: ['final 未启用 · 仅开发', 'neutral', '–'],

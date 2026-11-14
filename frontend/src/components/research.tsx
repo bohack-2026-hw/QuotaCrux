@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useWidth } from '../hooks'
-import { FINAL, RUN_STATE, fmt, money, rmode } from '../labels'
-import type { Cost, RBatch, RRun, RTask } from '../research'
+import { ACTION, FINAL, RUN_STATE, fmt, money, rmode } from '../labels'
+import type { Cost, CostPart, RBatch, RRun, RTask } from '../research'
 import { costTotals, fairLabel } from '../research'
 import { bigNumber, gainOf, metricName, metricText, modeSummary } from '../researchFormat'
 import { REPO_BLOB } from '../researchData'
@@ -27,6 +27,7 @@ export function ModeTag({ mode, repeat }: { mode: string; repeat?: number }) {
 function Shape({ shape, x, y, r, fill, stroke }: { shape: string; x: number; y: number; r: number; fill: string; stroke?: string }) {
   const common = { fill, stroke: stroke ?? 'var(--card)', strokeWidth: stroke ? 2 : 1.5 }
   if (shape === 'square') return <rect x={x - r * 0.9} y={y - r * 0.9} width={r * 1.8} height={r * 1.8} rx={1.5} {...common} />
+  if (shape === 'diamond') return <path d={`M${x},${y - r * 1.15} L${x + r * 1.15},${y} L${x},${y + r * 1.15} L${x - r * 1.15},${y} Z`} {...common} />
   if (shape === 'triangle') return <path d={`M${x},${y - r * 1.1} L${x + r},${y + r * 0.8} L${x - r},${y + r * 0.8} Z`} {...common} />
   return <circle cx={x} cy={y} r={r} {...common} />
 }
@@ -48,13 +49,21 @@ export function FairChip({ b }: { b: RBatch }) {
 
 export function CostText({ c }: { c: Cost }) {
   if (c.kind === 'none') return <span className="muted">无 API 费用</span>
+  if (c.kind === 'not_run') return <span className="muted">—</span>
+  if (c.parts) {
+    if (!c.parts.some((p) => p.amount != null || p.known != null)) return <span className="muted">未知</span>
+    return <span title={c.kind === 'partial' ? '部分用量无法计价：≥ 为已知部分' : undefined}>
+      {c.parts.map((p) => `${p.amount == null ? '≥' : ''}${money(p.amount ?? p.known, p.currency)}`).join(' + ')}<span className="muted small"> 估</span>
+    </span>
+  }
   if (c.amount == null) return <span className="muted">未知</span>
   return <span title={c.note ?? undefined}>{money(c.amount, c.currency)}{c.kind === 'estimate' && <span className="muted small"> 估</span>}</span>
 }
 
 export function CostTotal({ costs }: { costs: Cost[] }) {
+  if (costs.length && costs.every((c) => c.kind === 'not_run')) return <>—</>
   const t = costTotals(costs)
-  const parts = Object.entries(t.byCurrency).map(([cur, v]) => money(v, cur))
+  const parts = Object.entries(t.byCurrency).map(([cur, v]) => `${t.partial.has(cur) ? '≥' : ''}${money(v, cur)}`)
   if (!parts.length) return <>未知</>
   return <>{parts.join(' + ')}{t.kinds.has('estimate') ? ' 估' : ''}{t.unknown ? `（另 ${t.unknown} 轮未知）` : ''}</>
 }
@@ -69,7 +78,7 @@ export function BatchFacts({ b }: { b: RBatch }) {
   const L = b.limits, M = b.measure, P = b.pricing
   const dash = '—'
   const items: [string, ReactNode][] = [
-    ['模型', b.model?.name ? `${b.model.name}${b.model.hosted == null ? '' : b.model.hosted ? ' · 托管' : ' · 本地'} · 固定` : b.model?.role ?? dash],
+    ['模型', b.model?.name ? `${b.model.name}${b.model.hosted == null ? '' : b.model.hosted ? ' · 托管' : ' · 本地'} · ${b.study === 'routing' ? '自适应升级' : '固定'}` : b.model?.role ?? dash],
     ['对照组', b.modes.map((m) => `${rmode(m).label} ${m}`).join(' / ')],
     ['每轮上限', L ? `${L.wall_clock_s ?? '?'}s · ${L.max_model_requests ?? '?'} 请求 · ${L.max_candidates ?? '?'} 候选` : dash],
     ['计时', M ? `预热 ${M.function_warmups ?? '?'} · 计时 ${M.repeats ?? '?'}${M.cpuset_cpus ? ` · CPU ${M.cpuset_cpus}` : ''}` : dash],
@@ -81,6 +90,51 @@ export function BatchFacts({ b }: { b: RBatch }) {
     ['契约', b.contract ?? dash],
   ]
   return <dl className="facts">{items.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+}
+
+/** Routing study only: per variant, who picked actions and models, which generators ran, and what each purpose cost. */
+export function RoutingTable({ task }: { task: RTask }) {
+  const sum = (rs: RRun[], f: (r: RRun) => number | null) => rs.reduce<number | null>((a, r) => (f(r) == null ? a : (a ?? 0) + f(r)!), null)
+  return (
+    <div className="tbl-wrap">
+      <table className="tbl pair-table">
+        <thead><tr><th>变体</th><th>动作 / 模型</th><th>small / large 生成</th><th>路由请求</th><th>升级</th><th>主要动作</th><th>路由费用</th><th>生成费用</th></tr></thead>
+        <tbody>{task.modes.map((v) => {
+          const rs = task.runs.filter((r) => r.mode === v && r.state !== 'planned')
+          const route = task.runs.find((r) => r.mode === v)?.routing
+          const actions = Object.entries(rs.reduce<Record<string, number>>((a, r) => {
+            for (const [k, n] of Object.entries(r.actions ?? {})) a[k] = (a[k] ?? 0) + n
+            return a
+          }, {})).sort((a, b) => b[1] - a[1]).slice(0, 3)
+          const byPurpose = (p: string) => ({ kind: 'estimate' as const, amount: null, currency: null, note: null,
+            parts: mergeParts(rs.map((r) => r.cost.purpose?.[p] ?? [])) })
+          return (
+            <tr key={v}>
+              <td className="nowrap"><ModeTag mode={v} /></td>
+              <td className="nowrap mono small">{route ? `${route.action ?? '?'} / ${route.model ?? '?'}` : '—'}</td>
+              <td className="nowrap mono">{sum(rs, (r) => r.calls.small) ?? '—'} / {sum(rs, (r) => r.calls.large) ?? '—'}</td>
+              <td className="nowrap mono">{sum(rs, (r) => r.calls.routing) ?? '—'}</td>
+              <td className="nowrap mono">{rs.filter((r) => (r.calls.upgrades ?? 0) > 0).length}/{rs.length}</td>
+              <td className="nowrap small">{actions.length ? actions.map(([k, n]) => `${ACTION[k] ?? k} ${n}`).join(' · ') : '—'}</td>
+              <td className="nowrap mono">{byPurpose('routing').parts.length ? <CostText c={byPurpose('routing')} /> : '—'}</td>
+              <td className="nowrap mono">{byPurpose('generation').parts.length ? <CostText c={byPurpose('generation')} /> : '—'}</td>
+            </tr>
+          )
+        })}</tbody>
+      </table>
+    </div>
+  )
+}
+
+function mergeParts(lists: CostPart[][]): CostPart[] {
+  const out: CostPart[] = []
+  for (const list of lists) for (const p of list) {
+    const o = out.find((x) => x.currency === p.currency)
+    if (!o) { out.push({ ...p }); continue }
+    o.amount = o.amount == null || p.amount == null ? null : o.amount + p.amount
+    if (p.known != null) o.known = (o.known ?? 0) + p.known
+  }
+  return out
 }
 
 /* ---------- best-so-far curve ---------- */
@@ -213,7 +267,7 @@ function ModeUsage({ runs }: { runs: RRun[] }) {
   return (
     <dl className="usage">
       <div><dt>请求</dt><dd>{req ?? '—'}</dd></div>
-      <div><dt>候选</dt><dd>{pass ?? '?'}/{prop ?? '?'}</dd></div>
+      <div><dt>候选</dt><dd>{pass == null && prop == null ? '—' : `${pass ?? '?'}/${prop ?? '?'}`}</dd></div>
       <div><dt>耗时</dt><dd>{wall == null ? '—' : fmt.s(wall)}</dd></div>
       <div><dt>费用</dt><dd><CostTotal costs={runs.map((r) => r.cost)} /></dd></div>
     </dl>
@@ -223,7 +277,7 @@ function ModeUsage({ runs }: { runs: RRun[] }) {
 /** One tile per mode: the median development result, its change against the baseline, and nothing else. */
 export function Scoreboard({ task, lead, planned, usage = false }: { task: RTask; lead: string | null; planned: string[]; usage?: boolean }) {
   return (
-    <div className="scores">
+    <div className="scores" style={{ ['--cols' as string]: task.modes.length > 3 ? 2 : Math.max(1, task.modes.length) }}>
       {task.modes.map((m) => {
         const s = modeSummary(task, m)
         const [n, unit] = bigNumber(task.metric, s.value)
@@ -233,7 +287,7 @@ export function Scoreboard({ task, lead, planned, usage = false }: { task: RTask
           <div key={m} className={`score ${isLead ? 'lead' : ''}`} style={{ ['--mode' as string]: rmode(m).color }}>
             <div className="who"><ModeMark mode={m} size={10} />{rmode(m).label}{s.runs > 1 && <span className="mono muted">· {s.runs} 次中位</span>}{isLead && <span className="lead-tag">最佳</span>}</div>
             <div className={`num ${isLead ? 'gain-text' : ''}`}>{n}{unit && <small>{unit}</small>}</div>
-            {s.pending ? <div className="sub">研究中</div>
+            {s.pending ? <div className="sub">{task.runs.some((r) => r.mode === m && r.state === 'running') ? '研究中' : '未运行'}</div>
               : g ? <span className="gain-pill">▲ {task.metric === 'score' ? `${g.detail} · ${g.big}${g.unit}` : g.detail}</span>
               : <div className="sub">{s.value == null ? '无有效结果' : '与基线持平'}</div>}
             {usage && <ModeUsage runs={task.runs.filter((r) => r.mode === m)} />}
@@ -259,8 +313,8 @@ export function BatchBadges({ b }: { b: RBatch }) {
     : counts.passed === b.runs.length ? <Chip tone="good" icon="✓">最终集全部通过</Chip>
     : <Chip tone={counts.failed || counts.error || counts.missing ? 'bad' : 'neutral'}>最终集 {counts.passed ?? 0}/{b.runs.length} 通过</Chip>
   const budget = b.limits ? `${b.limits.wall_clock_s}s · ${b.limits.max_model_requests} 次请求` : ''
-  const same = b.fair === true ? <Chip tone="good" icon="✓">同模型 · 同预算{budget ? ` ${budget}` : ''}</Chip>
+  const same = b.fair === true ? <Chip tone="good" icon="✓">{b.study === 'routing' ? '同协议' : '同模型'} · 同预算{budget ? ` ${budget}` : ''}</Chip>
     : b.fair === false ? <Chip tone="bad" icon="✕">组间配置不一致</Chip>
     : <Chip tone="warn" icon="?">同预算{budget ? ` ${budget}` : ''} · 一致性待确认</Chip>
-  return <div className="row">{scope}{same}</div>
+  return <div className="row">{b.fixture && <span className="fixture-tag">FIXTURE</span>}{scope}{same}</div>
 }

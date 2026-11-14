@@ -1,32 +1,48 @@
+import type { ReactNode } from 'react'
 import { BatchBadges, CostTotal, ModeMark, ProgressChart, Scoreboard } from '../components/research'
 import { Empty } from '../components/ui'
-import { fmt, rmode } from '../labels'
+import { STUDY, fmt, rmode } from '../labels'
 import type { RBatch, RTask } from '../research'
-import { MODES, total } from '../research'
+import { total } from '../research'
 import { bestOf, gainOf, taskVerdict } from '../researchFormat'
 import { useResearchBatch, useResearchList } from '../researchData'
+import type { BatchEntry } from '../researchData'
 
-/* Overview: numbers only. The best gain per task up top, then a scoreboard and a curve per task. */
+/* Overview: numbers only, one section per study (feedback ablation first, then routing ablation when it exists).
+   Studies are never merged: each keeps its own groups, baseline and budget. */
 export function HomeView({ onOpenResearch }: { onOpenResearch: (id: string) => void }) {
   const { entries } = useResearchList()
-  const { batch: b } = useResearchBatch(entries[0] ?? null)
-  if (!b) return <div className="card"><Empty title="还没有研究批次" /></div>
-
+  const feedback = entries.find((e) => e.study !== 'routing') ?? null
+  const routing = entries.find((e) => e.study === 'routing') ?? null
+  if (!feedback && !routing) return <div className="card"><Empty title="还没有研究批次" /></div>
+  const both = !!feedback && !!routing
   return (
     <div>
+      {feedback && <Study entry={feedback} titled={both} onOpen={onOpenResearch} />}
+      {routing && <Study entry={routing} titled={both} onOpen={onOpenResearch} />}
+    </div>
+  )
+}
+
+function Study({ entry, titled, onOpen }: { entry: BatchEntry; titled: boolean; onOpen: (id: string) => void }) {
+  const { batch: b } = useResearchBatch(entry)
+  if (!b) return null
+  return (
+    <>
+      {titled && <div className="study-head"><h2>{STUDY[b.study]}</h2><span className="mono small muted">{b.modes.length} 组 · {b.tasks.length} 题</span></div>}
       <section className="hero">
         <Highlights b={b} />
         <div className="spread wrap" style={{ marginTop: 26 }}>
           <BatchBadges b={b} />
-          <button className="btn primary" onClick={() => onOpenResearch(b.id)}>研究对照 →</button>
+          <button className="btn primary" onClick={() => onOpen(b.id)}>研究对照 →</button>
         </div>
       </section>
       <Kpis b={b} />
-      <Modes b={b} />
+      <Groups b={b} />
       <div className="board">
         {b.tasks.map((t) => <TaskCard key={t.id} t={t} b={b} />)}
       </div>
-    </div>
+    </>
   )
 }
 
@@ -36,7 +52,7 @@ function Kpis({ b }: { b: RBatch }) {
     const t = total(vs)
     return t.value == null ? '—' : f(t.value)
   }
-  const tiles: [string, React.ReactNode][] = [
+  const tiles: [string, ReactNode][] = [
     ['任务', b.tasks.length],
     ['研究轮次', `${b.finished}/${b.planned}`],
     ['候选', `${n(b.runs.map((r) => r.passed))}/${n(b.runs.map((r) => r.proposed))}`],
@@ -52,17 +68,17 @@ function Kpis({ b }: { b: RBatch }) {
   )
 }
 
-/** The three research modes: what each one lets the agent see, and how many runs it has in this batch. */
-function Modes({ b }: { b: RBatch }) {
-  const seen: Record<string, string> = { feedback: '每轮评测结果', independent: '只有初始程序', no_feedback: '自己的历史，无评测' }
+/** The groups of this study: what each one changes, and how many runs it has in this batch. */
+function Groups({ b }: { b: RBatch }) {
+  const all = b.study === 'routing' ? b.modes : ['feedback', 'independent', 'no_feedback']
   return (
     <div className="modes">
-      {MODES.map((m) => {
+      {all.map((m) => {
         const runs = b.runs.filter((r) => r.mode === m).length
         return (
           <div key={m} className={`mode-card ${runs ? '' : 'off'}`} style={{ ['--mode' as string]: rmode(m).color }}>
             <div className="row" style={{ gap: 8 }}><ModeMark mode={m} size={11} /><b>{rmode(m).label}</b><span className="mono muted small">{m}</span></div>
-            <div className="seen"><span className="muted">可见</span> {seen[m]}</div>
+            <div className="seen"><span className="muted">{b.study === 'routing' ? '路由' : '可见'}</span> {rmode(m).seen}</div>
             <div className="mono small muted">{runs ? `${runs} 轮` : '本批未安排'}</div>
           </div>
         )
@@ -73,10 +89,10 @@ function Modes({ b }: { b: RBatch }) {
 
 /** The best gain of each task, large. */
 function Highlights({ b }: { b: RBatch }) {
-  const items = b.tasks.map((t) => ({ t, best: bestOf(t) }))
   return (
     <div className="highlights">
-      {items.map(({ t, best }) => {
+      {b.tasks.map((t) => {
+        const best = bestOf(t)
         const g = best ? gainOf(t, best.value) : null
         return (
           <div key={t.id} className="highlight">

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { AxisSwitch, BatchBadges, ModeLegend, ProgressChart, Scoreboard } from '../components/research'
+import { AxisSwitch, BatchBadges, ModeLegend, ProgressChart, RoutingTable, Scoreboard } from '../components/research'
 import type { Axis } from '../components/research'
 import { Empty } from '../components/ui'
-import { fmt, rmode } from '../labels'
+import { STUDY, fmt, rmode } from '../labels'
 import type { RBatch, RTask } from '../research'
 import { metricName, taskVerdict } from '../researchFormat'
 import { useResearchBatch, useResearchList } from '../researchData'
@@ -20,10 +20,11 @@ export function ResearchView({ selected, onSelect, onOpenConsole }: { selected: 
     <div className="stack">
       <div className="spread wrap">
         <div className="row">
+          <span className="metric-pill">{STUDY[batch.study]}</span>
           <BatchBadges b={batch} />
           {entries.length > 1 && (
             <select value={entry.id} onChange={(e) => onSelect(e.target.value)} style={{ width: 'auto' }}>
-              {entries.map((e) => <option key={e.id} value={e.id}>{e.label ?? e.id}</option>)}
+              {entries.map((e) => <option key={e.id} value={e.id}>{STUDY[e.study] ?? e.study} · {e.label ?? e.id}</option>)}
             </select>
           )}
         </div>
@@ -49,6 +50,7 @@ function TaskCard({ t, b, axis }: { t: RTask; b: RBatch; axis: Axis }) {
       <Scoreboard task={t} lead={v.lead} planned={b.modes} />
       {t.repeats.length > 1 && <ModeLegend modes={t.modes} repeats={t.repeats} />}
       <ProgressChart task={t} axis={axis} currency={b.pricing?.currency ?? null} />
+      {b.study === 'routing' && <div style={{ marginTop: 14 }}><RoutingTable task={t} /></div>}
     </div>
   )
 }

@@ -57,7 +57,7 @@ export default function App() {
   const activeRow = snaps.data?.snapshots.find((s) => s.snapshot_id === active)
   // The model shown is what the latest research batch actually ran, not a fixed label.
   const research = useResearchList()
-  const latest = useResearchBatch(research.entries[0] ?? null).batch
+  const latest = useResearchBatch(research.entries.find((e) => e.study !== 'routing') ?? research.entries[0] ?? null).batch
 
   useEffect(() => {
     const on = () => { setRoute(readHash()); window.scrollTo(0, 0) }

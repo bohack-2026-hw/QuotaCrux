@@ -2,7 +2,7 @@
 
 > 这是最初的24轮计划。后续范围和结果见[路由研究入口](../research/native-routing/README.md)。
 
-对应 [issue #6](https://github.com/bohack-2026-hw/RouteEvo/issues/6)。本目录交付实现说明与
+对应 [issue #6](https://github.com/bohack-2026-hw/QuotaCrux/issues/6)。本目录交付实现说明与
 [freeze-template.json](../research/native-routing/freeze-template.json)，当前没有真实路由实验结果。
 ALE ahc026 / AlgoTune convolve_1d 各四组 × 三次，新增 24 轮；#2 的 30 轮反馈对照继续独立。
 旧实验固定 Qwen，本实验允许升级，不能复用旧结果当 baseline。

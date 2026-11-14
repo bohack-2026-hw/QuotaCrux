@@ -17,7 +17,7 @@ from pathlib import Path
 import segno
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO = "https://github.com/bohack-2026-hw/RouteEvo"
+REPO = "https://github.com/bohack-2026-hw/QuotaCrux"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 BG, INK, GREY, LINE, ACCENT = "#F3F2EE", "#111113", "#8E8D88", "#D8D6CF", "#FF4D1F"

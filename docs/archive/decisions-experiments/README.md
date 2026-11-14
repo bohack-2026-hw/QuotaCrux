@@ -3,7 +3,7 @@
 > 这是早期回放实验。后续见[路由设计](../../design/action-model-routing.md)和[实际实验](../../research/native-routing/README.md)。
 
 2026-11-14；基线 `f8fbb3e`；分支 `explore/openai-decisions`。
-协作入口：[issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
+协作入口：[issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1)。
 
 ## 结论
 

@@ -27,7 +27,7 @@
 ## 固定配置与选样
 
 - 数据：`EffiBench/effibench-x`，revision `49babbec95f0897d5f06276aaf274f9f1dcd036b`；上游 runner/checker 版本及接入边界见[适配方案](../../design/effibench-integration.md)。
-- 选样在模型调用前写入 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1#issuecomment-6870725713)：从已缓存的同一分片选两道 io、两道 functional 题，覆盖不同程序结构；没有根据运行成绩更换题目。这是小规模方便样本，没有做难度分层。
+- 选样在模型调用前写入 [issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1#issuecomment-6870725713)：从已缓存的同一分片选两道 io、两道 functional 题，覆盖不同程序结构；没有根据运行成绩更换题目。这是小规模方便样本，没有做难度分层。
 - 原始分片 `data/test-00009-of-00020.parquet`，7,321,349 bytes，SHA256 `958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc`。
 - 每题输入先去重，再按输入 SHA256 排序，前 5 个作 dev、后 15 个作 final；完整用例 ID、文件哈希和来源在 [plan.json](plan.json)。`leetcode/3188` 的 100 个原始用例有 92 个唯一输入，其余三题均为 100 个。
 - QuotaCrux split 为 `B`，`eval` 模式，空经验快照 `v0`。B 是本地实验标记，上游只有 test split；本轮不发布学习经验。

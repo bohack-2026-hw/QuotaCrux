@@ -15,7 +15,7 @@ export interface BatchEntry {
 
 // Newest first: the audited ALE formal batch (#3), then the second dev pilot.
 const ARCHIVE: RawBatch[] = [archivedAle as unknown as RawBatch, archivedR2 as RawBatch]
-export const REPO_BLOB = 'https://github.com/bohack-2026-hw/RouteEvo/blob/main/'
+export const REPO_BLOB = 'https://github.com/bohack-2026-hw/QuotaCrux/blob/main/'
 
 export type ApiState = 'ok' | 'missing' | 'error' | 'loading'
 

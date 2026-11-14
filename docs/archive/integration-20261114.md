@@ -31,4 +31,4 @@
 
 [第二轮 native 报告](../research/native-r2-20261114/README.md)：固定 Qwen3.8-27B，4 个开发研究，47 次请求，约 738.6 秒，标价估算 ¥1.1951。AlgoTune feedback / independent 保留加速为 1.8343× / 1.2101×；ALE independent 得分 18,230（基线 17,753），feedback 保持基线。最终集未评测，KernelBench GPU 实机实验仍未执行。
 
-远端协作通过 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1) 显式 @ 提交作者 SnowballXueQiu；后续开发以 main 为共同基线，原开发分支继续保留。
+远端协作通过 [issue #1](https://github.com/bohack-2026-hw/QuotaCrux/issues/1) 显式 @ 提交作者 SnowballXueQiu；后续开发以 main 为共同基线，原开发分支继续保留。

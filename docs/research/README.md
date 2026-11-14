@@ -1,15 +1,15 @@
-# 实验批次与研究成果
+# 实验批次与结果
 
-每批的模型、源码、任务、预算、硬件及 final 状态，以该批协议和原始记录为准。下表区分正式评测、开发预实验和独立路由实验。
+先从[评测规则](../evaluation/README.md)选择实验类型，再按下表查看批次的设置和结果。每份批次报告链接到计划、候选、请求及原始数据。
 
 | 批次 | 范围与状态 | 入口 |
 | --- | --- | --- |
 | 原生正式评测 v2（2026-11-14） | 中央计划 30 项。ALE 15 项已执行：14 completed、1 API 错误 failed，15 项冻结候选均通过 final；Mac 原 15 项按交接记录仍待任务、镜像和机器登记与启动 | [协议](native-formal-20261114/protocol.md) · [中央计划](native-formal-20261114/central-plan.json) · [ALE 结果](native-formal-20261114/ale/results/README.md) · [Mac 交接](native-formal-20261114/mac-handoff.md) |
-| Native Decisions 路由（2026-11-14） | ahc026 四组各 1 次，360 秒探索实验：4/4 completed、4/4 final 通过；单独保留中止的 900 秒长批 | [结果摘要](native-routing/20261114/RESULTS.md) · [完整短批证据](native-routing/20261114/short-results/README.md) · [中止长批](native-routing/20261114/long-batch-stopped/README.md) · [系列入口](../archive/native-routing-plan.md) |
+| Native Decisions 路由（2026-11-14） | ahc026 四组各 1 次，360 秒探索实验：4/4 completed、4/4 final 通过；单独保留中止的 900 秒长批 | [结果摘要](native-routing/20261114/RESULTS.md) · [完整短批证据](native-routing/20261114/short-results/README.md) · [中止长批](native-routing/20261114/long-batch-stopped/README.md) · [系列入口](native-routing/README.md) |
 | 原生 CPU 第二轮（2026-11-14） | 校准后的 ALE / AlgoTune F/I 开发对照，dev-only，未评测 final | [报告](native-r2-20261114/README.md) · [协议](native-r2-20261114/protocol.md) · [审计](native-r2-20261114/protocol-audit.json) |
 | 原生 CPU 第一轮（2026-11-14） | ALE / AlgoTune 首轮开发预实验，dev-only，未评测 final | [报告](native-20261114/README.md) · [清单](native-20261114/manifest.json) |
 | EffiBench-X 四题（2026-11-14） | 60/60 final 用例通过，2/4 题达到加速目标，按币种记录费用 | [报告](effibench-x-20261114/README.md) · [计划](effibench-x-20261114/plan.json) · [结果](effibench-x-20261114/results.json) |
-| 经验学习第一至三版 | groupagg、D 留出及 S 任务流，属于早期跨任务经验实验 | [历史汇总](../archive/results.md) · [代表性研究交付样例](examples.md) |
+| 经验学习第一至三版 | groupagg、D 留出及 S 任务流，属于早期跨任务经验实验 | [历史汇总](../archive/memory-learning-results.md) · [代表性研究交付样例](case-studies.md) |
 
 ## 如何阅读一份实验
 
@@ -17,6 +17,6 @@
 
 `run-*` 目录保存研究样例，日期目录保存各批次材料。`SHA256SUMS` 用于检查文件是否被改动。
 
-`backend/scripts/export_research.py` 生成 [examples.md](examples.md) 并更新选中的样例目录；本索引手工维护。单次导出可使用 `uv run routeevo export-run <run_id> --bundle <目录>`。
+`backend/scripts/export_research.py` 生成 [examples.md](case-studies.md) 并更新选中的样例目录；本索引手工维护。单次导出可使用 `uv run routeevo export-run <run_id> --bundle <目录>`。
 
 [返回文档导航](../README.md)。

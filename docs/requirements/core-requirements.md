@@ -1,12 +1,12 @@
-# RouteEvo 共用核心 PRD
+# 核心运行与经验管理需求
 
 版本：v0.4；日期：2026-11-14；状态：Research Agent 主线的核心需求。
 
 目标：为已选定的 Research Agent 赛道提供执行、验证、资源用量记录、经验积累和版本对照能力。
 
-研究流程、验收与交付按 [Research Agent PRD](research-agent-track-prd.md)执行；企业方补充原文与团队确认见[补充说明](research-agent-clarifications.md)。[方向差异](../archive/track-differences.md)和[日新 PRD](../archive/rixin-track-prd.md)保留为历史参考。
+本文定义任务、运行、验证、用量、经验和版本的共用规则。研究动作与 RA 验收目标见[产品需求](product-requirements.md)，代码实现见[实现设计](../design/README.md)。
 
-首版任务、模型、测量次数、A/B/C 划分、技术栈与开发分工按[开工决策](../archive/implementation-decisions.md)执行。
+首版任务、模型、测量次数、A/B/C 划分、技术栈与开发分工按[开工决策](../archive/initial-implementation-decisions.md)执行。
 
 ## 1. 产品定位
 
@@ -46,7 +46,7 @@
 | 可追溯性 | 计划、动作、反馈、产物、经验来源 | 交付可复现的实验记录、独立评价和可运行成果 |
 | 回退 | 切换生效经验快照，保留历史记录 | 复现旧策略，比较经验版本的实际效果 |
 
-运行额度按[开工决策](../archive/implementation-decisions.md)设置，展示节奏根据实际研究耗时安排。
+运行额度按[开工决策](../archive/initial-implementation-decisions.md)设置，展示节奏根据实际研究耗时安排。
 
 ## 4. 使用流程
 
@@ -223,7 +223,7 @@ API 未返回用量或价格未知时标记“未知”或“估算”，不能�
 - 初始版本使用正常实现，不通过人为削弱提示词或关闭常规能力制造改进。
 - 存在可控的工具失败或验证失败场景，用于验证修正和保留最佳产物的机制。
 
-任务目标、程序计时与完整 Agent 运行的重复次数，以及模型可见边界按[开工决策](../archive/implementation-decisions.md)执行；固定错误候选只用于功能检查，不作为模型真实效果记录。
+任务目标、程序计时与完整 Agent 运行的重复次数，以及模型可见边界按[开工决策](../archive/initial-implementation-decisions.md)执行；固定错误候选只用于功能检查，不作为模型真实效果记录。
 
 ## 9. 验收条件
 
@@ -257,7 +257,7 @@ API 未返回用量或价格未知时标记“未知”或“估算”，不能�
 | M2 经验与版本 | 结构化执行经验、自动快照、相关经验注入、回退 | 经验来源可查，前后两次运行实际使用不同快照 |
 | M3 对照与展示 | 冻结评测、旧新版本对比、最小界面、复现入口 | 功能验收完成，并获得真实效果数据 |
 
-核心按 M1—M3 推进，并按 [Research Agent PRD](research-agent-track-prd.md)的顺序接入研究功能：M1 同步记录证据与假设，优先完成反馈驱动实验、独立评价和成果复现，再完善 M2 经验与 M3 对照展示。按现有赛事说明，项目材料于 11 月 15 日 08:00 前提交，时区为 Asia/Shanghai。
+核心按 M1—M3 推进，并按 [Research Agent PRD](product-requirements.md)的顺序接入研究功能：M1 同步记录证据与假设，优先完成反馈驱动实验、独立评价和成果复现，再完善 M2 经验与 M3 对照展示。按现有赛事说明，项目材料于 11 月 15 日 08:00 前提交，时区为 Asia/Shanghai。
 
 ## 11. 当前主线的效果验证重点
 
@@ -271,10 +271,10 @@ API 未返回用量或价格未知时标记“未知”或“估算”，不能�
 
 ## 12. 待验证事项与依据
 
-赛道、模型、首个任务族、技术栈与固定 Docker 环境均已确定。金额暂不设硬上限，运行仍受次数与超时约束并完整记账。开发 agent 需按[开工决策](../archive/implementation-decisions.md)接通 Qwen 的实际部署与两端凭据，验证真实延迟、样例优化空间与研究过程；是否引入决策 API 由后续独立对照决定。
+赛道、模型、首个任务族、技术栈与固定 Docker 环境均已确定。金额暂不设硬上限，运行仍受次数与超时约束并完整记账。开发 agent 需按[开工决策](../archive/initial-implementation-decisions.md)接通 Qwen 的实际部署与两端凭据，验证真实延迟、样例优化空间与研究过程；是否引入决策 API 由后续独立对照决定。
 
 依据：
 
 - [BoHack 2026 赛道与赛题设置](https://tcnf5s7xd39g.feishu.cn/wiki/EpxXwbYkkieZrfk0QbRc7wWQnRc)：Research Agent 的研究过程和资源效率。
-- [企业补充说明 comment1—comment4 原文](research-agent-clarifications.md)：本地轻量模型可忽略，可以仅使用一个 LLM，任务自由选择，需评估 Agent 系统自身的成本、效率与迭代能力。企业赛道的实现范围按这份补充理解。
+- [企业补充说明 comment1—comment4 原文](competition-brief.md)：本地轻量模型可忽略，可以仅使用一个 LLM，任务自由选择，需评估 Agent 系统自身的成本、效率与迭代能力。企业赛道的实现范围按这份补充理解。
 - [TypeSafe 记忆示例](https://docs.typesafe.ai/cookbooks/basic_memory)：由外部程序保存经验并注入后续模型请求，作为实现参考。

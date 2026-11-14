@@ -1,10 +1,10 @@
-# 单个研究任务内持续优化：评测方案
+# 反馈迭代与独立尝试：初版评测方案
 
 > 早期双组方案，后由[正式研究协议 v2](../research/native-formal-20261114/protocol.md)替代。
 
-日期：2026-11-14；状态：协议与首批适配器已实现，正式多次对照尚未执行。接入分支 `feat/research-benchmarks` 基于 `19ce8db`，使用说明见[研究任务 benchmark 接入](../design/research-benchmarks.md)。
+日期：2026-11-14；状态：协议与首批适配器已实现，正式多次对照尚未执行。接入分支 `feat/research-benchmarks` 基于 `19ce8db`，使用说明见[研究任务 benchmark 接入](../design/native-benchmarks.md)。
 
-本方案落实 [Research Agent 补充说明](../requirements/research-agent-clarifications.md)中的研究过程与系统效率要求，并替代主线 PRD 中把跨任务经验对照作为主要系统评测的安排。当前代码、既有任务锁及[历史实验结果](results.md)保留。
+本方案落实 [Research Agent 补充说明](../requirements/competition-brief.md)中的研究过程与系统效率要求，并替代主线 PRD 中把跨任务经验对照作为主要系统评测的安排。当前代码、既有任务锁及[历史实验结果](memory-learning-results.md)保留。
 
 ## 1. 要验证的主张
 
@@ -73,7 +73,7 @@ RouteEvo 的试验预算如下。当前 `300s / 6 请求 / 4 候选` 仍是已�
 
 ## 5. Benchmark 安排
 
-详细来源、规模和限制见[长时研究与优化 benchmark 调研](long-horizon-benchmarks.md)。
+详细来源、规模和限制见[长时研究与优化 benchmark 调研](benchmark-survey.md)。
 
 1. **主线优先 ALE-Bench。** 原生目标是同一问题内持续提高解的质量；CPU 即可执行。候选为 Lite 中的 `ahc026`（搬箱子）和 `ahc024`（拓扑地图），按任务性质预选，尚未观察 RouteEvo 效果。pilot 和正式留出安排须在读取私有结果前冻结。
 2. **AlgoTune 作为性能优化备选。** 已适配 `convolve_1d` 与 `pagerank`，使用独立科学计算镜像、上游数值校验和函数计时。

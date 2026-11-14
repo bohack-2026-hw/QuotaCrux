@@ -1,36 +1,45 @@
 # RouteEvo 文档导航
 
-按用途查找文档；实验设置和结果见各批次记录。
+第一次了解项目，从[项目介绍](presentation/project-overview.md)开始。开发时按“赛题 → 产品需求 → 核心需求 → 设计 → 评测 → 结果 → 验收”查阅。
 
-## 从这里开始
+## 文档之间的关系
 
-| 想了解什么 | 阅读入口 |
-| --- | --- |
-| 项目做什么、如何演示 | [项目说明](presentation/project-description.md) · [演示脚本](presentation/demo.md) |
-| 需求、赛题与验收 | [Research Agent PRD](requirements/research-agent-track-prd.md) · [赛题补充说明](requirements/research-agent-clarifications.md) · [验收对照](requirements/research-agent-acceptance.md) |
-| 如何运行与开发 | [仓库首页](../README.md) · [后端说明](../backend/README.md) · [工程设计与接入](design/README.md) |
-| 正式评测协议与交接 | [正式协议 v2](research/native-formal-20261114/protocol.md) · [中央 30 项计划](research/native-formal-20261114/central-plan.json) · [Mac 交接](research/native-formal-20261114/mac-handoff.md) |
-| 实验结果与证据 | [实验批次索引](research/README.md) · [评测方法与历史结果](evaluation/README.md) |
-| 提交材料与幻灯片 | [展示材料索引](presentation/README.md) |
-| 早期方案与决策依据 | [历史归档](archive/README.md) |
+```mermaid
+flowchart TD
+    Brief[赛题原文与团队选择] --> Product[产品需求：研究流程与目标]
+    Product --> Core[核心需求：运行、经验与版本规则]
+    Core --> Design[实现设计：任务接入与模型选择]
+    Product --> Evaluation[评测规则：数据、预算与比较方法]
+    Design --> Runs[实验记录：计划、用量与结果]
+    Evaluation --> Runs
+    Runs --> Acceptance[验收记录：逐项核对需求]
+    Product --> Acceptance
+    Acceptance --> Presentation[项目介绍与现场演示]
+```
 
-## 目录职责
+## 每份文档负责什么
 
-| 目录 | 内容与维护方式 |
-| --- | --- |
-| [requirements/](requirements/README.md) | 赛题原文、产品需求、核心 PRD 和验收对照 |
-| [design/](design/README.md) | Benchmark 接入和动作/模型路由设计 |
-| [evaluation/](evaluation/README.md) | 当前评测协议与结果入口；历史方案和汇总统一放入 archive/ |
-| [research/](research/README.md) | 预实验、正式批次、冻结清单、候选、请求、报告和复现脚本 |
-| [presentation/](presentation/README.md) | 项目说明、演示脚本、PPT/PDF 和幻灯片图表素材 |
-| [archive/](archive/README.md) | 旧方案、历史结果、首版决策、早期 Decisions 探索与集成记录 |
-| [poster/](poster/) | 海报 PDF、预览和图像素材 |
-| [licenses/](licenses/) | 第三方许可文本；总说明见 [THIRD_PARTY_NOTICES](../THIRD_PARTY_NOTICES.md) |
+| 顺序 | 入口 | 回答的问题 |
+| --- | --- | --- |
+| 1 | [赛题原文与团队选择](requirements/competition-brief.md) | 比赛要求什么，团队选了什么？ |
+| 2 | [产品需求](requirements/product-requirements.md) | 系统要完成什么研究流程，怎样验收？ |
+| 3 | [核心需求](requirements/core-requirements.md) | 任务、运行、经验记录和版本怎样工作？ |
+| 4 | [实现设计](design/README.md) | 评测任务怎样接入，动作和模型怎样选择？ |
+| 5 | [评测入口](evaluation/README.md) | 数据、预算、候选选择和计时规则是什么？ |
+| 6 | [实验批次与结果](research/README.md) | 实际运行了什么，结果与原始记录在哪里？ |
+| 7 | [验收记录](requirements/acceptance-record.md) | 每项需求对应哪些实现和实验依据？ |
+| 展示 | [项目介绍与演示材料](presentation/README.md) | 怎样向观众介绍和演示？ |
+| 历史 | [旧方案与早期结果](archive/README.md) | 过去为什么这样设计，后来改了什么？ |
 
-## 更新约定
+## 按工作查找
 
-- 新说明放入相应分类；新实验按批次单独建目录，并在实验索引登记协议、结果入口与状态。
-- 每批实验记录代码版本、模型、机器、计时和费用计算方式，不同批次分别汇总。
-- 已冻结批次的原始数据、候选、请求、校验清单和目录位置保留；导航调整不重写实验结果。
-- 修改 Markdown 后，按需重新导出 PDF/PPTX。
-- 修改文件路径时，同时更新相对链接和生成脚本；提交前检查本地引用是否仍可解析。
+- 运行项目：[仓库首页](../README.md)、[后端命令与 API](../backend/README.md)。
+- 正式对照：[协议 v2](research/native-formal-20261114/protocol.md)、[30项计划](research/native-formal-20261114/central-plan.json)、[Mac执行交接](research/native-formal-20261114/mac-handoff.md)。
+- 查看研究过程：[案例索引](research/case-studies.md)；查看总体结果：[实验批次索引](research/README.md)。
+- 提交材料：[展示材料](presentation/README.md)、[海报](poster/)、[第三方说明](../THIRD_PARTY_NOTICES.md)与[许可文本](licenses/)。
+
+## 维护方式
+
+需求写目标和规则，设计写实现方法，批次记录写实际设置和结果，验收表引用这些记录。展示材料从它们提炼内容，旧方案统一进入 `archive/`。
+
+新文档按上述职责放置，文件名说明主题。实验批次按日期保存，保留原始文件和 `SHA256SUMS`。重命名时同步更新引用和生成脚本；修改 Markdown 后按需重新导出 PDF/PPTX。

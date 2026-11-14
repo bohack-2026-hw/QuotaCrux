@@ -14,9 +14,9 @@
 
 ## 协议与实现入口
 
-- [动作/模型路由设计与读取约定](../../design/routing-adapters.md)。
-- [原 24 轮计划与完整交接说明（归档）](../../archive/native-routing-plan.md)。
+- [动作/模型路由设计与读取约定](../../design/action-model-routing.md)。
+- [原 24 轮计划与完整交接说明（归档）](../../archive/routing-study-plan-v1.md)。
 - [冻结模板](freeze-template.json)只作为原计划模板，实际执行使用批次内的冻结清单。
-- [早期 Decisions 接口探索（归档）](../../archive/decision-model/README.md)。
+- [早期 Decisions 接口探索（归档）](../../archive/decisions-experiments/README.md)。
 
 [返回实验批次索引](../README.md)。

@@ -1,9 +1,13 @@
-# 工程设计与接入
+# 实现设计
 
-| 文档 | 用途 |
-| --- | --- |
-| [Benchmark 解耦与 EffiBench-X 接入](benchmark-adapters.md) | 适配器边界、任务包与 EffiBench-X 导入 |
-| [原生研究 Benchmark 接入](research-benchmarks.md) | ALE、AlgoTune、KernelBench 的环境、接口与测量 |
-| [动作与模型路由适配器](routing-adapters.md) | ActionRouter / ModelRouter、四组对照及调用账本 |
+这里说明需求怎样实现。通用运行和经验规则见[核心需求](../requirements/core-requirements.md)，命令与 API 见[后端说明](../../backend/README.md)。
 
-操作命令见[后端说明](../../backend/README.md)，独立接口探索见[decision-model](../archive/decision-model/README.md)，实际运行版本见[实验批次](../research/README.md)。[返回文档导航](../README.md)。
+| 文档 | 负责范围 | 对应实验 |
+| --- | --- | --- |
+| [EffiBench-X 接入](effibench-integration.md) | 数据导入、任务适配、正确性校验与计时 | [四题结果](../research/effibench-x-20261114/README.md) |
+| [ALE、AlgoTune 与 KernelBench 接入](native-benchmarks.md) | 各任务的输入输出、裁判、依赖及 CPU/GPU 环境 | [原生任务批次](../research/README.md) |
+| [动作与模型选择](action-model-routing.md) | ActionRouter / ModelRouter、调用预算与四组对照 | [路由实验](../research/native-routing/README.md) |
+
+设计文档解释代码职责；实验的固定配置、运行顺序和结果保存到对应批次。早期接口探索见[归档](../archive/decisions-experiments/README.md)。
+
+[返回文档导航](../README.md)。

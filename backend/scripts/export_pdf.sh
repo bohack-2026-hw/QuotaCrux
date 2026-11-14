@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Export docs/<name>.md to docs/<name>.pdf (pandoc → HTML → headless Chrome). Mermaid diagrams are rendered in the page.
-#   scripts/export_pdf.sh project-description results
+# Export a path relative to docs/ to a PDF alongside its Markdown source.
+#   scripts/export_pdf.sh presentation/project-overview archive/memory-learning-results
 set -euo pipefail
 DOCS="$(cd "$(dirname "$0")/../../docs" && pwd)"
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
@@ -31,12 +31,19 @@ cat > "$TMP/style.html" <<'EOF'
 EOF
 
 for name in "$@"; do
-  pandoc "$DOCS/$name.md" -f gfm -t html5 -s --metadata title="$name" -H "$TMP/style.html" -o "$TMP/$name.html"
+  document="${name%.md}"
+  source_file="$DOCS/$document.md"
+  html_file="$TMP/document.html"
+  if [[ ! -f "$source_file" ]]; then
+    echo "document not found: $source_file" >&2
+    exit 2
+  fi
+  pandoc "$source_file" -f gfm -t html5 -s --metadata title="${document##*/}" -H "$TMP/style.html" -o "$html_file"
   # pandoc's standalone template prints the metadata title; the document's own H1 is the title
-  sed -i '' '/<header id="title-block-header">/,/<\/header>/d' "$TMP/$name.html"
+  sed -i '' '/<header id="title-block-header">/,/<\/header>/d' "$html_file"
   # wide left-to-right diagrams shrink to unreadable on A4; lay them out top-to-bottom in print
-  sed -i '' 's/flowchart LR/flowchart TB/' "$TMP/$name.html"
+  sed -i '' 's/flowchart LR/flowchart TB/' "$html_file"
   "$CHROME" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=20000 \
-    --print-to-pdf="$DOCS/$name.pdf" "file://$TMP/$name.html" >/dev/null 2>&1
-  echo "wrote $DOCS/$name.pdf"
+    --print-to-pdf="$DOCS/$document.pdf" "file://$html_file" >/dev/null 2>&1
+  echo "wrote $DOCS/$document.pdf"
 done

@@ -1,10 +1,10 @@
 # RouteEvo backend
 
-The [shared core](../docs/requirements/shared-core-prd.md), M1–M3: three task families, the Qwen / GPT execution loop with a router,
+The [shared core](../docs/requirements/core-requirements.md), M1–M3: three task families, the Qwen / GPT execution loop with a router,
 a Docker sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots
 and rollback, frozen held-out comparisons, an online stream comparison, and an HTTP API that also serves the
-dashboard. Boundary conditions, case by case: [docs/archive/boundaries.md](../docs/archive/boundaries.md). Decisions follow
-[implementation-decisions.md](../docs/archive/implementation-decisions.md).
+dashboard. Boundary conditions, case by case: [docs/archive/legacy-runtime-rules.md](../docs/archive/legacy-runtime-rules.md). Decisions follow
+[initial implementation decisions](../docs/archive/initial-implementation-decisions.md).
 
 ## Setup
 
@@ -42,7 +42,7 @@ ablation).
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
 | `uv run routeevo comparison <id> [--json]` | Comparison summary |
-| `uv run routeevo ablate-routing B-01 … --snapshot v0 --repeats 3` | Four independent action/model routing combinations on one frozen snapshot; [protocol](../docs/design/routing-adapters.md) |
+| `uv run routeevo ablate-routing B-01 … --snapshot v0 --repeats 3` | Four independent action/model routing combinations on one frozen snapshot; [protocol](../docs/design/action-model-routing.md) |
 | `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Note on what experience changed / Markdown research record of one run |
 | `uv run routeevo export-run <run_id> --bundle DIR` | Research deliverable: record, `best.py`, all candidates, raw model calls, `report.json`, `reproduce.sh` |
 | `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
@@ -135,7 +135,7 @@ Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated im
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
 `run` and `learn` accept `--action-router llm|decisions` and `--model-router rule|decisions` (defaults: `llm`, `rule`).
 Decisions calls share the request/token/time budget with generation; reports split routing and generation usage.
-See [routing adapters](../docs/design/routing-adapters.md) for the execution flow, API fields and four-way ablation.
+See [routing adapters](../docs/design/action-model-routing.md) for the execution flow, API fields and four-way ablation.
 
 Decisions routing is supported for non-native `legacy` runs. Native tasks and `feedback`/`independent` research runs
 require the default `llm` + `rule` combination; unsupported combinations fail before sending a request.
@@ -168,10 +168,10 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `uv sync --extra benchmark --python 3.12.11` enables the pinned Python dataset importer.
 For example, `uv run routeevo tasks import-effibench codeforces/2104A --split smoke --dev-cases 3 --case-limit 6`
 imports a small trial task; use `--parquet PATH` for a local, checksum-verified shard.
-See [adapter boundaries, dataset size and evaluation protocol](../docs/design/benchmark-adapters.md)
-and [pilot validation](../docs/archive/effibench-pilot.md). Run `uv run --extra benchmark pytest` to include importer tests.
+See [adapter boundaries, dataset size and evaluation protocol](../docs/design/effibench-integration.md)
+and [pilot validation](../docs/archive/effibench-preflight.md). Run `uv run --extra benchmark pytest` to include importer tests.
 
 ALE-Bench, AlgoTune and KernelBench research subsets are available through `tasks import-ale-bench`,
 `tasks import-algotune` and `tasks import-kernelbench`. `research-compare` runs equal-budget feedback versus
 independent attempts within a task, using an empty snapshot and one fixed model.
-See [supported tasks, native evaluators and GPU worker setup](../docs/design/research-benchmarks.md).
+See [supported tasks, native evaluators and GPU worker setup](../docs/design/native-benchmarks.md).

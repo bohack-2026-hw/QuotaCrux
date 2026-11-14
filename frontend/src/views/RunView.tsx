@@ -4,7 +4,7 @@ import type { Report, Research, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
-import { ACTION, MODE, OUTCOME, ROUTE, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
+import { ACTION, MODE, OUTCOME, ROUTE, SPLIT, STOP, decision, fmt, rmode, roleName, stopDetail } from '../labels'
 
 export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   runId: string | null
@@ -106,15 +106,26 @@ function groupTasks(ts: TaskSummary[]): [string, TaskSummary[]][] {
   return order.map((s) => [s, ts.filter((t) => t.split === s)] as [string, TaskSummary[]]).filter(([, v]) => v.length)
 }
 
+/** List outcome. No final evaluation row means the final test did not run (dev-only, or the run ended early): that is
+    "final 未运行", never "未达标". */
+function runOutcome(r: RunRow): { text: string; tone: 'good' | 'bad' | 'muted' | null } {
+  if (r.status === 'running') return { text: '运行中', tone: null }
+  const stop = STOP[r.stop_reason ?? ''] ?? r.stop_reason ?? r.status
+  const finalRan = r.final_goal_met != null || r.final_speedup != null || r.final_score != null
+  if (!finalRan) return { text: `${r.final_evaluation === false ? '仅开发' : 'final 未运行'} · ${stop}`, tone: 'muted' }
+  if (r.final_score != null) return { text: `最终得分 ${fmt.n(r.final_score)}`, tone: null }
+  if (r.final_goal_met) return { text: `达标 ${fmt.x(r.final_speedup)}`, tone: 'good' }
+  return { text: `最终未达标${r.final_speedup != null ? ` ${fmt.x(r.final_speedup)}` : ''} · ${stop}`, tone: 'bad' }
+}
+
 function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) {
+  const o = runOutcome(r)
   return (
     <button className={on ? 'on' : ''} onClick={pick}>
-      <div className="spread">
-        <b>{r.task_id} · {MODE[r.mode] ?? r.mode} · 读 {r.snapshot_id}</b>
-        <span>{r.status === 'running' ? '运行中'
-          : r.final_score != null ? <span>得分 {fmt.n(r.final_score)}</span>
-          : r.final_goal_met ? <span style={{ color: 'var(--good-ink)' }}>达标 {fmt.x(r.final_speedup)}</span>
-          : `未达标 · ${STOP[r.stop_reason ?? ''] ?? r.status}`}</span>
+      <b className="id-wrap" style={{ display: 'block' }}>{r.task_id}</b>
+      <div className="spread" style={{ flexWrap: 'wrap', gap: '2px 10px' }}>
+        <span>{r.research_mode ? `研究 · ${rmode(r.research_mode).label}` : `${MODE[r.mode] ?? r.mode} · 读 ${r.snapshot_id}`}</span>
+        <span style={o.tone === 'good' ? { color: on ? undefined : 'var(--good-ink)' } : o.tone === 'muted' ? { opacity: 0.75 } : undefined}>{o.text}</span>
       </div>
       <div className="rid">{r.run_id}</div>
     </button>
@@ -134,17 +145,28 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
   const currentRole = fixedRole ?? (upgraded || routedLarge ? 'large' : 'small')
   const routeKey = rep.route?.reason ?? ((rep.iterations.model_requests ?? 0) === 0 && rep.outcome.best_from_reuse ? 'reuse' : null)
   const loopS = rep.timing.agent_loop_elapsed_s ?? 0
+  const protocol = rep.config.research_protocol
+  const score = rep.task.objective.metric === 'score'
+  const devOnly = protocol?.final_evaluation === false
+  const bestDev = rep.best_candidate?.dev_evaluations.at(-1) ?? null
+  const bestDevValue = score ? bestDev?.objective?.value ?? null
+    : bestDev?.speedup ?? (rep.best_candidate?.candidate_id === 'c0' && bestDev?.status === 'passed' ? 1 : null)
 
   useEffect(() => {
     if (!codeOf) return
     api.candidate(rep.run_id, codeOf).then((c) => setCode(c.code)).catch(() => setCode(null))
   }, [codeOf, rep.run_id])
 
-  const flags: [string, boolean | null][] = [
-    ['候选程序运行完成', o.candidate_ran],
-    ['开发验证通过', o.dev_validation_passed],
-    ['指标改善（全部样本快于基线）', o.dev_improved],
-    ['最终测试达到目标', live ? null : o.goal_met],
+  // The final flag is only yes/no once the final test ran; otherwise it says why it has no verdict.
+  const finalFlag: [string, boolean | null, string | null] = live ? ['最终测试', null, '待定']
+    : !o.final_evaluated ? ['最终测试', null, devOnly ? '未启用（仅开发）' : '未运行']
+    : score ? ['最终测试正确', o.final_correct ?? null, null]
+    : ['最终测试达到目标', o.goal_met, null]
+  const flags: [string, boolean | null, string | null][] = [
+    ['候选程序运行完成', o.candidate_ran, null],
+    ['开发验证通过', o.dev_validation_passed, null],
+    [score ? '开发得分高于基线' : '指标改善（全部样本快于基线）', o.dev_improved, null],
+    finalFlag,
   ]
 
   return (
@@ -154,6 +176,9 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
           <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} 批 · {MODE[rep.mode] ?? rep.mode}模式 · 读取 {rep.snapshot_id}</div>
           <div className="row">
             {routeKey && <Chip tone={ROUTE[routeKey]?.[1] ?? 'neutral'} icon="⇢">{ROUTE[routeKey]?.[0] ?? routeKey}</Chip>}
+            {protocol?.mode && <Chip tone="accent">研究 · {rmode(protocol.mode).label} {protocol.mode}</Chip>}
+            {protocol?.fixed_model && <Chip>固定 {rep.config.models[protocol.fixed_model]?.model ?? protocol.fixed_model}</Chip>}
+            {devOnly && <Chip tone="warn" icon="!">仅开发 · final 未启用</Chip>}
             {rep.scripted_model.length > 0 && <Chip tone="warn" icon="!">脚本模型：仅功能检查</Chip>}
             <StatusChip value={rep.status} />
             {rep.stop_reason && <Chip tone={rep.stop_reason === 'goal_reached' ? 'good' : 'neutral'}>{STOP[rep.stop_reason] ?? rep.stop_reason}</Chip>}
@@ -161,10 +186,10 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         </div>
         <div className="headline">{live ? '运行中……' : o.summary}</div>
         <div className="flags">
-          {flags.map(([k, v]) => (
+          {flags.map(([k, v, na]) => (
             <div key={k} className={`flag ${v == null ? 'na' : v ? 'yes' : 'no'}`}>
               <div className="k">{k}</div>
-              <div className="v">{v == null ? '待定' : v ? '✓ 是' : '✕ 否'}</div>
+              <div className="v">{v == null ? na ?? '待定' : v ? '✓ 是' : '✕ 否'}</div>
             </div>
           ))}
         </div>
@@ -187,7 +212,12 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
           <Stat k="Token 输入 / 输出" v={`${fmt.n(u.input_tokens)} / ${fmt.n(u.output_tokens)}`}
             s={u.reasoning_tokens != null ? `其中推理 ${fmt.n(u.reasoning_tokens)}` : u.input_tokens_unknown_calls ? `${u.input_tokens_unknown_calls} 次调用用量未知` : '推理 token 未单列'} />
           <Stat k="模型费用" v={fmt.usd(u.cost_usd)} s={costNote(u.cost_status)} />
-          <Stat k={rep.task.objective.metric === 'score' ? '最终原始得分' : '最终加速比'} v={rep.task.objective.metric === 'score' ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)} s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : '最终测试未运行'} />
+          <Stat k={score ? '开发集最佳原始得分' : '开发集最佳加速比'}
+            v={bestDevValue == null ? '—' : score ? fmt.n(bestDevValue) : `${bestDevValue.toFixed(4)}×`}
+            s={rep.best_candidate ? `${rep.best_candidate.candidate_id}${rep.best_candidate.candidate_id === 'c0' ? ' · 初始程序' : ''}${score && rep.task.objective.baseline != null ? ` · 基线 ${fmt.n(rep.task.objective.baseline)}` : ''}` : '尚无有效候选'} />
+          <Stat k={score ? '最终原始得分' : '最终加速比'}
+            v={!o.final_evaluated ? (live ? '—' : '未运行') : score ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)}
+            s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : devOnly ? '本次为开发预实验，final 未启用' : '最终测试未运行'} />
         </div>
       </div>
 

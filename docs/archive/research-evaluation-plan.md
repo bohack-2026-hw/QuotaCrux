@@ -73,7 +73,7 @@
 
 ## 5. Benchmark 安排
 
-详细来源、规模和限制见[长时研究与优化 benchmark 调研](../archive/long-horizon-benchmarks.md)。
+详细来源、规模和限制见[长时研究与优化 benchmark 调研](long-horizon-benchmarks.md)。
 
 1. **主线优先 ALE-Bench。** 原生目标是同一问题内持续提高解的质量；CPU 即可执行。候选为 Lite 中的 `ahc026`（搬箱子）和 `ahc024`（拓扑地图），按任务性质预选，尚未观察 RouteEvo 效果。pilot 和正式留出安排须在读取私有结果前冻结。
 2. **AlgoTune 作为性能优化备选。** 已适配 `convolve_1d` 与 `pagerank`，使用独立科学计算镜像、上游数值校验和函数计时。

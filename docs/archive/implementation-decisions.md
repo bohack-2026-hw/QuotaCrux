@@ -2,7 +2,7 @@
 
 版本：v0.2；日期：2026-11-14；适用阶段：Research Agent 主线 M1—M3。
 
-后续评测调整：本文保存首版实施口径。主线现按[单任务评测方案](../evaluation/research-evaluation-plan.md)验证研究过程中利用反馈的效果，跨任务经验对照作为扩展；本文的 1.10× 达标即停、300 秒 / 6 请求 / 4 候选仍是已实现的短运行默认值，新长时协议尚待实现。模型服务等实际运行配置见各批次报告，不以首版决策替代。
+后续评测调整：本文保存首版实施口径。主线现按[单任务评测方案](research-evaluation-plan.md)验证研究过程中利用反馈的效果，跨任务经验对照作为扩展；本文的 1.10× 达标即停、300 秒 / 6 请求 / 4 候选仍是已实现的短运行默认值，新长时协议尚待实现。模型服务等实际运行配置见各批次报告，不以首版决策替代。
 
 本文保存开发 agent 提出的 14 个问题摘要及实施答复，将[核心 PRD](../requirements/shared-core-prd.md)落实到首版样例、模型、数据、运行环境和交付边界。团队已选择 [Research Agent 赛道](../requirements/research-agent-track-prd.md)，企业方补充原文与团队确认见[补充说明](../requirements/research-agent-clarifications.md)。
 

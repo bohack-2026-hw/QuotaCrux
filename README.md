@@ -5,7 +5,7 @@
 团队已于 2026-11-14 确认选择倍漾量化 Research Agent 赛道。系统在给定数据、工具和资源限制下，自主完成“规划—收集证据—提出假设—实验—验证—修正”，交付可复现的成果，并将执行经验用于后续研究。
 
 - [文档总导航](docs/README.md)：需求、工程设计、评测批次、展示材料与历史归档。
-- 提交材料：[项目说明](docs/presentation/project-description.md)（[PDF](docs/presentation/project-description.pdf)） · [实验结果](docs/evaluation/results.md)（[PDF](docs/evaluation/results.pdf)） · [演示文稿](docs/presentation/RouteEvo.pptx)（[PDF](docs/presentation/RouteEvo.pdf)）
+- 提交材料：[项目说明](docs/presentation/project-description.md)（[PDF](docs/presentation/project-description.pdf)） · [实验批次与结果](docs/research/README.md) · [历史经验实验](docs/archive/results.md)（[PDF](docs/archive/results.pdf)） · [演示文稿](docs/presentation/RouteEvo.pptx)（[PDF](docs/presentation/RouteEvo.pdf)）
 - [RA 验收对照](docs/requirements/research-agent-acceptance.md)：RA-AC-01—08 逐条对应的实现与证据 · [研究成果样例](docs/research/) · [演示脚本](docs/presentation/demo.md)
 - [Research Agent 主线 PRD](docs/requirements/research-agent-track-prd.md) · [赛题补充说明与团队确认](docs/requirements/research-agent-clarifications.md)
 - [首版开工决策与 agent 问题答复](docs/archive/implementation-decisions.md) · [执行、经验与评测核心 PRD](docs/requirements/shared-core-prd.md)

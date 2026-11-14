@@ -1,5 +1,7 @@
 # OpenAI Decisions 在 RouteEvo 中的用途探索
 
+> 历史探索：本文结论仅针对本轮回放样本。“暂不接入在线 runner”是当时的决定。后续适配实现见[路由设计](../../design/routing-adapters.md)，端到端实验见[路由研究](../../research/native-routing/README.md)。
+
 2026-11-14；基线 `f8fbb3e`；分支 `explore/openai-decisions`。
 协作入口：[issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
 
@@ -108,13 +110,13 @@ uv sync --frozen --python 3.12.11
 
 # 使用含 OPENAI_API_KEY 的本地环境文件，替换示例路径；会发生 25 次真实 API 调用。
 .venv/bin/python scripts/decision_replay.py run \
-  --cases ../docs/decision-model/cases.json \
+  --cases ../docs/archive/decision-model/cases.json \
   --out var/decisions/replay-full \
   --env-file /path/to/private.env
 
 # 产生精简视图；随后执行 14 次真实调用。
 .venv/bin/python scripts/decision_replay.py compact \
-  --cases ../docs/decision-model/cases.json --out var/decisions/compact-cases.json
+  --cases ../docs/archive/decision-model/cases.json --out var/decisions/compact-cases.json
 .venv/bin/python scripts/decision_replay.py run \
   --cases var/decisions/compact-cases.json \
   --out var/decisions/replay-compact \

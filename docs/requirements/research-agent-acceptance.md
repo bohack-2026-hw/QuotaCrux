@@ -2,7 +2,7 @@
 
 范围说明：第 1—4 节保留原 PRD v0.3 下的实现与历史实验结论，其中 RA-08 / RA-AC-08 是原“经验快照与任务流对照”定义。2026-11-14 的 PRD v0.4 将主线调整为单任务反馈迭代，新增要求与未完成项见第 5 节；原有“满足”不代表新协议已经验收。
 
-依据：[Research Agent 主线 PRD](research-agent-track-prd.md) 第 5 节（RA-01—RA-08）与第 10 节（RA-AC-01—RA-AC-08）、[补充说明](research-agent-clarifications.md) comment4。数字均来自[实验结果](../evaluation/results.md)，样例来自[研究成果样例](../research/)，都由运行记录生成。
+依据：[Research Agent 主线 PRD](research-agent-track-prd.md) 第 5 节（RA-01—RA-08）与第 10 节（RA-AC-01—RA-AC-08）、[补充说明](research-agent-clarifications.md) comment4。数字均来自[实验结果](../archive/results.md)，样例来自[研究成果样例](../research/)，都由运行记录生成。
 
 系统有三版配置，每版都完整运行和报告。第一版的经验只有文字记录；第二版的经验另外保存完整的已验证程序，新任务先由程序复验，学习运行在已知最佳上继续超越；第三版加入分流器（相近的任务交给本地小模型，全新的任务族或新条件直接交给大模型）、在线模式（交付后写入经验）和两个新任务族。第一版的 C 对照是第二版修改的依据，第二版的最终验收用实现前封存的 D 批；第三版用运行前封存的 S 任务流验收。各种情况的处理见[边界条件](../archive/boundaries.md)。
 
@@ -17,7 +17,7 @@
 | RA-05 候选比较 | 只有通过且全部样本快于基线的候选才能替换最佳；复用的程序与模型候选同一规则；失败与退化候选保留代码和评测 | 运行页候选加速比条（↺ = 复用）；`report.json` 的 `best_rule` |
 | RA-06 最终独立评价 | 循环结束后冻结最佳候选，在隐藏最终数据上测一次；最终数据不进容器、不进检索、不回流 | 运行页第四个状态“最终测试达到目标”；研究记录“独立最终测试” |
 | RA-07 成果复现 | `export-run --bundle` 导出研究记录、最佳程序、全部候选、原始模型调用、报告与复核脚本；`experiment.sh` 重跑整条流水线 | [研究成果样例](../research/)；`reproduce.sh` |
-| 原 RA-08 系统对照 | 同一 Agent、同一配置，只换经验：第三版 S 任务流带记忆 vs 不带记忆（12 任务 × 3 次重放，每次重放从起点重新学起）；第二版 B 开发对照 + D 封存留出，第一版 B + C（各 6 任务 × 3 次，交替串行） | 对照页；[实验结果](../evaluation/results.md) 第 1—4 节 |
+| 原 RA-08 系统对照 | 同一 Agent、同一配置，只换经验：第三版 S 任务流带记忆 vs 不带记忆（12 任务 × 3 次重放，每次重放从起点重新学起）；第二版 B 开发对照 + D 封存留出，第一版 B + C（各 6 任务 × 3 次，交替串行） | 对照页；[实验结果](../archive/results.md) 第 1—4 节 |
 
 ## 2. 验收条件
 
@@ -60,14 +60,14 @@
 
 ## 4. 可选项与后置
 
-- 专用决策模型对照（PRD §9 可选项）：已实现独立动作路由、模型路由与 Decisions provider 适配器；四组合真实 smoke 和历史回放结果见[路由适配器](../design/routing-adapters.md)与[决策模型实验](../decision-model/README.md)。当前 Decisions 路由用于非 native 的 legacy 运行；native 与 feedback/independent 研究评测保持 llm + rule 和固定生成模型。四组合入口统一关闭初始经验分流，路由请求计入总预算；现有 smoke 记录保留，完整系统收益仍待正式对照。
+- 专用决策模型对照（PRD §9 可选项）：已实现独立动作路由、模型路由与 Decisions provider 适配器；四组合真实 smoke 和历史回放结果见[路由适配器](../design/routing-adapters.md)与[决策模型实验](../archive/decision-model/README.md)。当前 Decisions 路由用于非 native 的 legacy 运行；native 与 feedback/independent 研究评测保持 llm + rule 和固定生成模型。四组合入口统一关闭初始经验分流，路由请求计入总预算；现有 smoke 记录保留，完整系统收益仍待正式对照。
 - 多个独立 Agent、开放式文献检索、跨领域研究：未实现；首版只做一个研究循环，覆盖 3 个软件优化任务族。无法用程序验证的任务刻意不做，因为经验只存经过评测器验证的事实。
 - 复验未达标时，复验过的程序都留在提示词里，GPT 单次请求更长（第二版 B 的 B-05：平均输入 3.4k → 11.4k token）；只保留最佳一个程序是已知的下一步改进，未在本次冻结配置中修改。
 - 对照页的“过程中最佳开发验证结果”在每次运行的运行页查看，对照页汇总最终验收结果。
 
 ## 5. 单任务持续优化协议：当前状态
 
-新要求见[评测方案](../evaluation/research-evaluation-plan.md)，选题依据见[长时 benchmark 调研](../archive/long-horizon-benchmarks.md)，实现范围见[接入说明](../design/research-benchmarks.md)。历史结果保留，新协议单独报告。
+新要求见[评测方案](../archive/research-evaluation-plan.md)，选题依据见[长时 benchmark 调研](../archive/long-horizon-benchmarks.md)，实现范围见[接入说明](../design/research-benchmarks.md)。历史结果保留，新协议单独报告。
 
 | 新协议需要的证据 | 当前状态 |
 | --- | --- |

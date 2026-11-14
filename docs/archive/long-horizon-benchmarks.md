@@ -1,6 +1,6 @@
 # 长时研究与优化 benchmark 调研
 
-核查日期：2026-11-14。目标是展示单个研究任务内的“实验—反馈—修正—继续改进”；评测方法见[单任务评测方案](../evaluation/research-evaluation-plan.md)。本次读取上游文档、代码、数据目录和两个题目包的元数据，未运行这些 benchmark。
+核查日期：2026-11-14。目标是展示单个研究任务内的“实验—反馈—修正—继续改进”；评测方法见[单任务评测方案](research-evaluation-plan.md)。本次读取上游文档、代码、数据目录和两个题目包的元数据，未运行这些 benchmark。
 
 ## 1. 选择结论
 
@@ -84,4 +84,4 @@ CPU 串行小规模运行即可预检；上游建议统一机器来比较性能�
 
 ## 5. 本次完成范围
 
-本调研阶段完成任务结构、规模、官方接口与主要资源要求的核实，以及评测协议调整。后续用户已授权接入前三项，`feat/research-benchmarks` 提供 ALE-Bench、AlgoTune、KernelBench 首批适配器；CPU 原生裁判已预检，GPU worker 实机测试后置。当前接入范围、运行命令与环境检查见[接入文档](../design/research-benchmarks.md)，主线实施状态见[评测方案](../evaluation/research-evaluation-plan.md#6-实现与验收状态)。
+本调研阶段完成任务结构、规模、官方接口与主要资源要求的核实，以及评测协议调整。后续用户已授权接入前三项，`feat/research-benchmarks` 提供 ALE-Bench、AlgoTune、KernelBench 首批适配器；CPU 原生裁判已预检，GPU worker 实机测试后置。当前接入范围、运行命令与环境检查见[接入文档](../design/research-benchmarks.md)，主线实施状态见[评测方案](research-evaluation-plan.md#6-实现与验收状态)。

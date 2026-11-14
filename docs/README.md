@@ -20,11 +20,10 @@
 | --- | --- |
 | [requirements/](requirements/README.md) | 赛题原文、产品需求、核心 PRD 和验收对照 |
 | [design/](design/README.md) | Benchmark 接入和动作/模型路由设计 |
-| [evaluation/](evaluation/README.md) | 评测方法、旧经验对照汇总；具体运行以批次记录为准 |
+| [evaluation/](evaluation/README.md) | 当前评测协议与结果入口；历史方案和汇总统一放入 archive/ |
 | [research/](research/README.md) | 预实验、正式批次、冻结清单、候选、请求、报告和复现脚本 |
 | [presentation/](presentation/README.md) | 项目说明、演示脚本、PPT/PDF 和幻灯片图表素材 |
-| [archive/](archive/README.md) | 选题比较、首版决策、边界说明、接入预检与集成历史 |
-| [decision-model/](decision-model/README.md) | Decisions API 的独立接口探索与冒烟证据 |
+| [archive/](archive/README.md) | 旧方案、历史结果、首版决策、早期 Decisions 探索与集成记录 |
 | [poster/](poster/) | 海报 PDF、预览和图像素材 |
 | [licenses/](licenses/) | 第三方许可文本；总说明见 [THIRD_PARTY_NOTICES](../THIRD_PARTY_NOTICES.md) |
 

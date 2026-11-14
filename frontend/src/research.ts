@@ -214,6 +214,10 @@ export function costOf(r: RawRun, pricing: RawPricing | null | undefined): Cost 
   if (c) {
     if (c.status === 'no_model_calls') return { kind: 'none', amount: c.amount ?? 0, currency: c.currency ?? null, note: null }
     if (c.amount != null && c.currency) return { kind: c.status === 'billed' ? 'billed' : 'estimate', amount: c.amount, currency: c.currency, note: c.note ?? null }
+    // Some calls have no usage: the total stays unknown, but the priced part is a known lower bound.
+    const u = r.usage
+    const known = c.currency && pricing?.currency === c.currency ? priceOf(pricing, u?.input_tokens, u?.cached_input_tokens, u?.output_tokens) : null
+    if (known != null && c.currency) return { kind: 'partial', amount: null, currency: c.currency, note: '部分调用用量未知', parts: [{ currency: c.currency, amount: null, known }] }
     return { kind: 'unknown', amount: null, currency: c.currency ?? null, note: c.note ?? null }
   }
   const e = r.estimated_cost

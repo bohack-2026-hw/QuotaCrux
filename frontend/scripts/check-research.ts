@@ -175,11 +175,14 @@ check('ALE formal: scoreboards report final scores against the final-set c0', ()
   assert.ok(t024.runs.every((r) => !resultOf(t024, r).improved))
 })
 
-check('ALE formal: an API-failed run keeps its passing final and an unknown cost', () => {
+check('ALE formal: an API-failed run keeps its passing final; the total is a lower bound of CNY 7.445133', () => {
   const b = normalize(ale)
   const r10 = b.runs.find((r) => r.seq === 10)!
-  assert.deepEqual([r10.state, r10.final.state, r10.final.value, r10.cost.kind], ['failed', 'passed', 135088, 'unknown'])
-  assert.equal(costTotals(b.runs.map((r) => r.cost)).unknown, 1)
+  assert.deepEqual([r10.state, r10.final.state, r10.final.value, r10.cost.kind], ['failed', 'passed', 135088, 'partial'])
+  const t = costTotals(b.runs.map((r) => r.cost))
+  assert.equal(t.unknown, 0)
+  assert.ok(t.partial.has('CNY'))
+  assert.equal(t.byCurrency.CNY.toFixed(6), '7.445133')
 })
 
 console.log(`${n} checks passed`)

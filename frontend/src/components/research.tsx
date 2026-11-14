@@ -161,6 +161,7 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
   let lo = Math.min(...ys), hi = Math.max(...ys)
   const pad = (hi - lo || Math.abs(hi) || 1) * 0.12
   lo -= pad; hi += pad
+  if (task.metric !== 'score' && lo < 0) lo = 0  // a speedup is never negative
   const xMax = Math.max(...xs) * 1.02 || 1
   const left = task.metric === 'score' ? 62 : 50, right = 64, top = 14, bottom = 30
   const H = height

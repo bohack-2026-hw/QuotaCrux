@@ -5,6 +5,8 @@
 
 首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
 
+第二轮补齐实际任务画像、保留任务内分析，并完成 CPU 计时校准后，已执行固定 Qwen 的真实对照。AlgoTune feedback / independent 的保留开发加速分别为 1.8343× / 1.2101×；ALE independent 得分从 17,753 提高到 18,230，feedback 保持基线。完整指标、成本、过程曲线和冻结配置见[第二轮报告](research/native-r2-20261114/README.md)。两轮均未评测最终集。
+
 ## 已接入范围
 
 | Benchmark | 当前支持题目 | 原生评价 | 执行环境 |

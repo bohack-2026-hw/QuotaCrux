@@ -8,6 +8,9 @@
 - [RA 验收对照](docs/research-agent-acceptance.md)：RA-AC-01—08 逐条对应的实现与证据 · [研究成果样例](docs/research/) · [演示脚本](docs/demo.md)
 - [Research Agent 主线 PRD](docs/research-agent-track-prd.md) · [赛题补充说明与团队确认](docs/research-agent-clarifications.md)
 - [首版开工决策与 agent 问题答复](docs/implementation-decisions.md) · [执行、经验与评测核心 PRD](docs/shared-core-prd.md)
+- [主分支集成记录](docs/integration-20261114.md) · [原生 benchmark 第二轮真实评测](docs/research/native-r2-20261114/README.md) · [独立动作/模型路由](docs/routing-adapters.md)
+
+2026-11-14 已整合 shared-core、独立路由和外部 benchmark 开发线。除自建任务流外，现已接入 EffiBench-X、ALE-Bench、AlgoTune 与 KernelBench，并支持同一任务内 feedback / independent 对照。第二轮固定 Qwen 的 CPU 开发预实验中，AlgoTune 两组保留加速为 1.8343× / 1.2101×；ALE 独立组得分提高 2.69%。这批最终集与 KernelBench GPU 实机实验尚未执行，完整配置和费用见上述报告。
 
 首版评估任务是 Python 分组聚合程序的性能优化：初始程序正确，正确性为硬约束，程序处理耗时为主指标，同时统计 Agent 的总耗时、Token 和费用。使用自部署 Qwen + GPT-6.1 Sol（xhigh）、Python 3.12 + SQLite + FastAPI，在固定机器的 Docker 环境中运行。
 

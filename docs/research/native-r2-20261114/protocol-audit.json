@@ -1,0 +1,690 @@
+{
+  "comparison_id": "research-20261114T053410-bfde",
+  "scope": "development pilot; no final evaluation",
+  "rounds": {
+    "first": {
+      "runs": [
+        {
+          "run_id": "run-20261114T043630-000c",
+          "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+          "family": "ale-bench",
+          "mode": "feedback",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v4",
+          "model_requests": 17,
+          "recorded_actions": {
+            "analyze": 11,
+            "propose_candidate": 2,
+            "invalid": 3,
+            "finish": 1
+          },
+          "invalid_count": 3,
+          "invalid_types": {
+            "missing_field": 3
+          },
+          "invalid_intended_actions": {
+            "analyze": 3
+          },
+          "invalid_common_fields": {
+            "expected_result:absent": 1,
+            "verification:absent": 1,
+            "expected_result:null": 2,
+            "verification:null": 2
+          },
+          "candidates_proposed": 2,
+          "candidates_passed": 2,
+          "candidates_per_request": 0.11764705882352941,
+          "unique_code_hashes": 2,
+          "unique_ast_candidates": 2,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 17,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 17
+          },
+          "wall_clock_total_s": 232.127,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "feedback_retention": {
+            "analyze_steps": 11,
+            "null_analysis_steps": 4,
+            "next_request_checks": 11,
+            "retained_next_request_count": 0,
+            "missing_fields": [
+              {
+                "step": 2,
+                "next_call": 2,
+                "fields": [
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 3,
+                "next_call": 3,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 6,
+                "next_call": 5,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 9,
+                "next_call": 8,
+                "fields": [
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 11,
+                "next_call": 10,
+                "fields": [
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 12,
+                "next_call": 11,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 15,
+                "next_call": 13,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 16,
+                "next_call": 14,
+                "fields": [
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 17,
+                "next_call": 15,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 18,
+                "next_call": 16,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 19,
+                "next_call": 17,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              }
+            ],
+            "unavailable_next_requests": []
+          }
+        },
+        {
+          "run_id": "run-20261114T044022-922b",
+          "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+          "family": "ale-bench",
+          "mode": "independent",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v4",
+          "model_requests": 10,
+          "recorded_actions": {
+            "propose_candidate": 7,
+            "invalid": 2,
+            "finish": 1
+          },
+          "invalid_count": 2,
+          "invalid_types": {
+            "missing_field": 2
+          },
+          "invalid_intended_actions": {
+            "analyze": 1,
+            "finish": 1
+          },
+          "invalid_common_fields": {
+            "purpose:null": 1,
+            "expected_result:null": 2,
+            "verification:null": 2
+          },
+          "candidates_proposed": 7,
+          "candidates_passed": 6,
+          "candidates_per_request": 0.7,
+          "unique_code_hashes": 7,
+          "unique_ast_candidates": 7,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 10,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 10
+          },
+          "wall_clock_total_s": 158.903,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "independent_isolation": {
+            "checked_calls": 10,
+            "non_budget_body_versions": 1,
+            "changing_budget_fields": [
+              "model_requests_used",
+              "candidates_used",
+              "wall_clock_elapsed_s"
+            ],
+            "violations": []
+          }
+        },
+        {
+          "run_id": "run-20261114T044301-e2a7",
+          "task_id": "algotune-convolve_1d-smoke-901b0ea395",
+          "family": "algotune",
+          "mode": "independent",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v4",
+          "model_requests": 11,
+          "recorded_actions": {
+            "propose_candidate": 9,
+            "invalid": 1,
+            "finish": 1
+          },
+          "invalid_count": 1,
+          "invalid_types": {
+            "missing_field": 1
+          },
+          "invalid_intended_actions": {
+            "finish": 1
+          },
+          "invalid_common_fields": {
+            "purpose:null": 1,
+            "expected_result:null": 1,
+            "verification:null": 1
+          },
+          "candidates_proposed": 9,
+          "candidates_passed": 9,
+          "candidates_per_request": 0.8181818181818182,
+          "unique_code_hashes": 9,
+          "unique_ast_candidates": 5,
+          "ast_duplicate_groups": [
+            [
+              "c1",
+              "c2",
+              "c4",
+              "c8"
+            ],
+            [
+              "c6",
+              "c9"
+            ]
+          ],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 11,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 11
+          },
+          "wall_clock_total_s": 92.166,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "independent_isolation": {
+            "checked_calls": 11,
+            "non_budget_body_versions": 1,
+            "changing_budget_fields": [
+              "model_requests_used",
+              "candidates_used",
+              "wall_clock_elapsed_s"
+            ],
+            "violations": []
+          }
+        },
+        {
+          "run_id": "run-20261114T044433-9802",
+          "task_id": "algotune-convolve_1d-smoke-901b0ea395",
+          "family": "algotune",
+          "mode": "feedback",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v4",
+          "model_requests": 19,
+          "recorded_actions": {
+            "analyze": 8,
+            "propose_candidate": 3,
+            "invalid": 6,
+            "run_validation": 1,
+            "finish": 1
+          },
+          "invalid_count": 6,
+          "invalid_types": {
+            "missing_field": 6
+          },
+          "invalid_intended_actions": {
+            "analyze": 5,
+            "finish": 1
+          },
+          "invalid_common_fields": {
+            "expected_result:null": 6,
+            "verification:null": 6
+          },
+          "candidates_proposed": 3,
+          "candidates_passed": 3,
+          "candidates_per_request": 0.15789473684210525,
+          "unique_code_hashes": 3,
+          "unique_ast_candidates": 3,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 19,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 19
+          },
+          "wall_clock_total_s": 186.967,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "feedback_retention": {
+            "analyze_steps": 8,
+            "null_analysis_steps": 1,
+            "next_request_checks": 8,
+            "retained_next_request_count": 0,
+            "missing_fields": [
+              {
+                "step": 2,
+                "next_call": 2,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 6,
+                "next_call": 5,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 10,
+                "next_call": 9,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 14,
+                "next_call": 12,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 17,
+                "next_call": 14,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 18,
+                "next_call": 15,
+                "fields": [
+                  "hypothesis"
+                ]
+              },
+              {
+                "step": 19,
+                "next_call": 16,
+                "fields": [
+                  "analysis"
+                ]
+              },
+              {
+                "step": 20,
+                "next_call": 17,
+                "fields": [
+                  "analysis",
+                  "hypothesis"
+                ]
+              }
+            ],
+            "unavailable_next_requests": []
+          }
+        }
+      ],
+      "by_mode": {
+        "feedback": {
+          "model_requests": 36,
+          "invalid_count": 9,
+          "candidates_proposed": 5,
+          "candidates_passed": 5,
+          "unique_ast_candidates": 5,
+          "recorded_actions": {
+            "analyze": 19,
+            "propose_candidate": 5,
+            "invalid": 9,
+            "finish": 2,
+            "run_validation": 1
+          },
+          "invalid_types": {
+            "missing_field": 9
+          },
+          "invalid_intended_actions": {
+            "analyze": 8,
+            "finish": 1
+          },
+          "invalid_common_fields": {
+            "expected_result:absent": 1,
+            "verification:absent": 1,
+            "expected_result:null": 8,
+            "verification:null": 8
+          },
+          "candidates_per_request": 0.1388888888888889
+        },
+        "independent": {
+          "model_requests": 21,
+          "invalid_count": 3,
+          "candidates_proposed": 16,
+          "candidates_passed": 15,
+          "unique_ast_candidates": 12,
+          "recorded_actions": {
+            "propose_candidate": 16,
+            "invalid": 3,
+            "finish": 2
+          },
+          "invalid_types": {
+            "missing_field": 3
+          },
+          "invalid_intended_actions": {
+            "analyze": 1,
+            "finish": 2
+          },
+          "invalid_common_fields": {
+            "purpose:null": 2,
+            "expected_result:null": 3,
+            "verification:null": 3
+          },
+          "candidates_per_request": 0.7619047619047619
+        }
+      }
+    },
+    "second": {
+      "runs": [
+        {
+          "run_id": "run-20261114T053410-981e",
+          "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+          "family": "ale-bench",
+          "mode": "feedback",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v5",
+          "model_requests": 13,
+          "recorded_actions": {
+            "analyze": 7,
+            "propose_candidate": 4,
+            "invalid": 1,
+            "finish": 1
+          },
+          "invalid_count": 1,
+          "invalid_types": {
+            "missing_field": 1
+          },
+          "invalid_intended_actions": {
+            "analyze": 1
+          },
+          "invalid_common_fields": {
+            "expected_result:absent": 1,
+            "verification:absent": 1
+          },
+          "candidates_proposed": 4,
+          "candidates_passed": 4,
+          "candidates_per_request": 0.3076923076923077,
+          "unique_code_hashes": 4,
+          "unique_ast_candidates": 4,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 13,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 13
+          },
+          "wall_clock_total_s": 271.61,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "feedback_retention": {
+            "analyze_steps": 7,
+            "null_analysis_steps": 0,
+            "next_request_checks": 7,
+            "retained_next_request_count": 7,
+            "missing_fields": [],
+            "unavailable_next_requests": []
+          }
+        },
+        {
+          "run_id": "run-20261114T053842-37ca",
+          "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+          "family": "ale-bench",
+          "mode": "independent",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v5",
+          "model_requests": 11,
+          "recorded_actions": {
+            "propose_candidate": 9,
+            "analyze": 1,
+            "finish": 1
+          },
+          "invalid_count": 1,
+          "invalid_types": {
+            "independent_action": 1
+          },
+          "invalid_intended_actions": {
+            "analyze": 1
+          },
+          "invalid_common_fields": {},
+          "candidates_proposed": 9,
+          "candidates_passed": 8,
+          "candidates_per_request": 0.8181818181818182,
+          "unique_code_hashes": 9,
+          "unique_ast_candidates": 9,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 11,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 11
+          },
+          "wall_clock_total_s": 243.77,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "independent_isolation": {
+            "checked_calls": 11,
+            "non_budget_body_versions": 1,
+            "changing_budget_fields": [
+              "model_requests_used",
+              "candidates_used",
+              "wall_clock_elapsed_s"
+            ],
+            "violations": []
+          }
+        },
+        {
+          "run_id": "run-20261114T054245-d146",
+          "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+          "family": "algotune",
+          "mode": "independent",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v5",
+          "model_requests": 9,
+          "recorded_actions": {
+            "propose_candidate": 8,
+            "finish": 1
+          },
+          "invalid_count": 0,
+          "invalid_types": {},
+          "invalid_intended_actions": {},
+          "invalid_common_fields": {},
+          "candidates_proposed": 8,
+          "candidates_passed": 8,
+          "candidates_per_request": 0.8888888888888888,
+          "unique_code_hashes": 6,
+          "unique_ast_candidates": 5,
+          "ast_duplicate_groups": [
+            [
+              "c1",
+              "c4",
+              "c5",
+              "c8"
+            ]
+          ],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 9,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 9
+          },
+          "wall_clock_total_s": 81.4,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "independent_isolation": {
+            "checked_calls": 9,
+            "non_budget_body_versions": 1,
+            "changing_budget_fields": [
+              "model_requests_used",
+              "candidates_used",
+              "wall_clock_elapsed_s"
+            ],
+            "violations": []
+          }
+        },
+        {
+          "run_id": "run-20261114T054407-1e3b",
+          "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+          "family": "algotune",
+          "mode": "feedback",
+          "status": "completed",
+          "stop_reason": "agent_finished",
+          "prompt_version": "agent-prompt-v5",
+          "model_requests": 14,
+          "recorded_actions": {
+            "analyze": 7,
+            "propose_candidate": 5,
+            "invalid": 1,
+            "finish": 1
+          },
+          "invalid_count": 1,
+          "invalid_types": {
+            "missing_field": 1
+          },
+          "invalid_intended_actions": {
+            "analyze": 1
+          },
+          "invalid_common_fields": {
+            "expected_result:absent": 1,
+            "verification:absent": 1
+          },
+          "candidates_proposed": 5,
+          "candidates_passed": 4,
+          "candidates_per_request": 0.35714285714285715,
+          "unique_code_hashes": 5,
+          "unique_ast_candidates": 5,
+          "ast_duplicate_groups": [],
+          "unavailable_candidate_code": [],
+          "invalid_candidate_syntax": [],
+          "raw_calls_available": 14,
+          "raw_calls_complete": true,
+          "response_formats": {
+            "json_object": 14
+          },
+          "wall_clock_total_s": 141.833,
+          "final_evaluation_disabled": true,
+          "final_evaluation_absent": true,
+          "feedback_retention": {
+            "analyze_steps": 7,
+            "null_analysis_steps": 0,
+            "next_request_checks": 7,
+            "retained_next_request_count": 7,
+            "missing_fields": [],
+            "unavailable_next_requests": []
+          }
+        }
+      ],
+      "by_mode": {
+        "feedback": {
+          "model_requests": 27,
+          "invalid_count": 2,
+          "candidates_proposed": 9,
+          "candidates_passed": 8,
+          "unique_ast_candidates": 9,
+          "recorded_actions": {
+            "analyze": 14,
+            "propose_candidate": 9,
+            "invalid": 2,
+            "finish": 2
+          },
+          "invalid_types": {
+            "missing_field": 2
+          },
+          "invalid_intended_actions": {
+            "analyze": 2
+          },
+          "invalid_common_fields": {
+            "expected_result:absent": 2,
+            "verification:absent": 2
+          },
+          "candidates_per_request": 0.3333333333333333
+        },
+        "independent": {
+          "model_requests": 20,
+          "invalid_count": 1,
+          "candidates_proposed": 17,
+          "candidates_passed": 16,
+          "unique_ast_candidates": 14,
+          "recorded_actions": {
+            "propose_candidate": 17,
+            "analyze": 1,
+            "finish": 2
+          },
+          "invalid_types": {
+            "independent_action": 1
+          },
+          "invalid_intended_actions": {
+            "analyze": 1
+          },
+          "invalid_common_fields": {},
+          "candidates_per_request": 0.85
+        }
+      }
+    }
+  },
+  "all_second_round_final_evaluations_absent": true
+}

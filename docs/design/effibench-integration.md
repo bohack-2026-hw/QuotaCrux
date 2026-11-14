@@ -1,4 +1,4 @@
-# Benchmark 解耦与 EffiBench-X 接入
+# EffiBench-X 接入设计
 
 实现分支：`feat/effibench-x-adapter`；基线：`f8fbb3e`。本次把任务语义从研究执行循环中拆出，并加入 EffiBench-X 的 Python 导入入口。
 
@@ -88,6 +88,6 @@ uv run routeevo run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
 
 ## 5. 验证记录
 
-见 [EffiBench-X 试接入结果](../archive/effibench-pilot.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
+见 [EffiBench-X 试接入结果](../archive/effibench-preflight.md)，列出实际运行的题目、用例覆盖和检查结果。测试中的脚本模型只用于验证研究循环和报告链路。
 
-研究评测按[正式研究协议 v2](../research/native-formal-20261114/protocol.md)推进，主线验证同一轮研究 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生适配接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](research-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。
+研究评测按[正式研究协议 v2](../research/native-formal-20261114/protocol.md)推进，主线验证同一轮研究 利用反馈的效果。现有适配器和四题结果保留。ALE-Bench、AlgoTune、KernelBench 的首批子集已通过原生适配接口接入，分别提供原始分数、函数计时和 GPU worker；当前范围与命令见[研究任务 benchmark 接入](native-benchmarks.md)。`evaluator.evaluate` 按任务族选择原生执行器，Runner 继续复用预算、动作和记录链路。

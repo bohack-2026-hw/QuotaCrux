@@ -1,4 +1,4 @@
-"""Write docs/archive/results.md from stored records: learning runs, comparisons, per-task outcomes, costs.
+"""Write docs/archive/memory-learning-results.md from stored records: learning runs, comparisons, per-task outcomes, costs.
 
 Three configurations are reported. Version 3 (current) adds the router, online memory and two new task families; it is
 measured on the sealed S stream (memory vs fresh). Version 2 re-validates verified programs from experience before
@@ -15,7 +15,7 @@ from pathlib import Path
 
 from routeevo import compare, config, db, memory, narrative, report, research
 
-OUT = Path(__file__).resolve().parents[2] / "docs" / "archive" / "results.md"
+OUT = Path(__file__).resolve().parents[2] / "docs" / "archive" / "memory-learning-results.md"
 
 
 def x(v) -> str:
@@ -314,7 +314,7 @@ def section_stream(lines: list[str], s: dict) -> None:
     for fam, d in worse:
         lines.append(f"- {FAMILY_ZH.get(fam, fam)}：带记忆一侧最终加速比中位数 {x(d['memory']['final_speedup_median'])} 低于不带记忆的 "
                      f"{x(d['fresh']['final_speedup_median'])}。复用的程序在新任务上复验达标就交付，不再为这个任务专门研究；"
-                     "想继续提高要用学习模式（见[边界条件](boundaries.md)第 6 节）。")
+                     "想继续提高要用学习模式（见[边界条件](legacy-runtime-rules.md)第 6 节）。")
     lines.append("")
 
 
@@ -430,15 +430,15 @@ def section_summary(lines: list[str], cs: dict) -> None:
 
 
 def main() -> None:
-    lines = ["# RouteEvo 实验结果", "",
-             "数据由 `backend/scripts/write_results.py` 从运行记录生成。方法见[项目说明](../presentation/project-description.md)。", ""]
+    lines = ["# 经验学习实验结果（第一至三版）", "",
+             "数据由 `backend/scripts/write_results.py` 从运行记录生成。方法见[项目说明](../presentation/project-overview.md)。", ""]
     cs = comparisons()
     section_summary(lines, cs)
     if "S" in cs:
         lines += ["## 2. 第三版：分流器 + 在线记忆 + 3 个任务族（当前配置）", "",
                   "第二版只在一个任务族上验证。第三版新增两个任务族（访问日志统计、区间合并），并加入分流器：复用不达标时，"
                   "有同族相近成功经验的任务先用本地小模型，全新的任务族或没有相近成功经验的条件直接交给大模型。新增在线模式："
-                  "像评测一样交付，交付后把验证过的结果写入经验，下一个相似任务先复用。规则与边界见[边界条件](boundaries.md)。"
+                  "像评测一样交付，交付后把验证过的结果写入经验，下一个相似任务先复用。规则与边界见[边界条件](legacy-runtime-rules.md)。"
                   "S 批和 T 批在第三版任何运行之前提交并锁定（提交 `7f9cace`）。", ""]
         section_tuning(lines)
         section_stream(lines, cs["S"])

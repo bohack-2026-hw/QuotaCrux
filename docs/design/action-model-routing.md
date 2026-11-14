@@ -1,4 +1,4 @@
-# 动作与模型选择：适配器和四组对照
+# 动作与模型选择设计
 
 路由适配器最初基于 `f8fbb3e`，将两个决策点分开：**下一步做什么**和**由哪个生成模型处理**。
 当前集成保留默认 `action=llm, model=rule`，并与初始经验分流、在线任务流及 native 研究协议共存。
@@ -119,14 +119,14 @@ independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
 协调入口：[RouteEvo issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
 
-历史回放结果见 [decision-model/README.md](../archive/decision-model/README.md)。
+历史回放结果见 [decision-model/README.md](../archive/decisions-experiments/README.md)。
 本适配器提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
 实际批次范围与结果见[路由研究入口](../research/native-routing/README.md)；
-最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/native-routing-plan.md)。下方保留旧版接口联测结果，原生任务的 baseline 在对应批次重新运行。
+最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/routing-study-plan-v1.md)。下方保留旧版接口联测结果，原生任务的 baseline 在对应批次重新运行。
 
 ## 2026-11-14 接口联测结果
 
-执行代码为 `813db15`，任务为 [routing-smoke-spec.json](../archive/decision-model/routing-smoke-spec.json) 中固定的
+执行代码为 `813db15`，任务为 [routing-smoke-spec.json](../archive/decisions-experiments/routing-smoke-spec.json) 中固定的
 30 万行、5000 keys、skew=0.8 的 groupagg；dev/final 种子分别为 1114/1115。
 四组各运行一次，统一使用 v0、6 次请求、4 个候选、300 秒循环、120 秒请求超时、5 轮交替计时。
 生成模型配置为 AIPing `Qwen3.8-27B`（thinking=false）与 `gpt-6.1-sol`（xhigh）；
@@ -150,7 +150,7 @@ AIPing 的费用未查询，保留为未知。
 保留 baseline 为默认策略。
 
 逐调用 usage、路由概率、候选哈希、开发结果和 final 原始计时见
-[routing-smoke-results.json](../archive/decision-model/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
+[routing-smoke-results.json](../archive/decisions-experiments/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
 `backend/var/runs/<run_id>/`；批次汇总为
 `backend/var/routing-ablations/routing-20261114T032721-aad0.json`。
 
@@ -158,7 +158,7 @@ AIPing 的费用未查询，保留为未知。
 
 ```sh
 cd backend
-uv run routeevo tasks build --spec ../docs/archive/decision-model/routing-smoke-spec.json
+uv run routeevo tasks build --spec ../docs/archive/decisions-experiments/routing-smoke-spec.json
 uv run routeevo ablate-routing routing-smoke-01 --snapshot v0 --repeats 1 \
   --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
 ```

@@ -26,7 +26,7 @@
 
 ## 固定配置与选样
 
-- 数据：`EffiBench/effibench-x`，revision `49babbec95f0897d5f06276aaf274f9f1dcd036b`；上游 runner/checker 版本及接入边界见[适配方案](../../design/benchmark-adapters.md)。
+- 数据：`EffiBench/effibench-x`，revision `49babbec95f0897d5f06276aaf274f9f1dcd036b`；上游 runner/checker 版本及接入边界见[适配方案](../../design/effibench-integration.md)。
 - 选样在模型调用前写入 [issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1#issuecomment-6870725713)：从已缓存的同一分片选两道 io、两道 functional 题，覆盖不同程序结构；没有根据运行成绩更换题目。这是小规模方便样本，没有做难度分层。
 - 原始分片 `data/test-00009-of-00020.parquet`，7,321,349 bytes，SHA256 `958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc`。
 - 每题输入先去重，再按输入 SHA256 排序，前 5 个作 dev、后 15 个作 final；完整用例 ID、文件哈希和来源在 [plan.json](plan.json)。`leetcode/3188` 的 100 个原始用例有 92 个唯一输入，其余三题均为 100 个。
@@ -90,4 +90,4 @@ uv run python "$report_dir/run_subset.py" run --env-file .env --pricing-snapshot
 
 ## 本次验证
 
-8 项 actions/pricing 测试通过；80 个参考样例预检通过；4 次真实运行完成，9 个模型候选通过 dev，60 个 final 样例通过。公开文件中的 token/cost 汇总已与原始账本核对，OpenAI 已知费用按返回缓存字段逐次复算；最终代码 SHA256 已与运行记录核对。报告与复现脚本通过 JSON、Python/Bash 语法和 Git whitespace 检查；`best/` 中的模型代码按原始字节保存，保留生成时的行尾空格以保证哈希一致。前一轮的适配器与原有回归验证见[试接入记录](../../archive/effibench-pilot.md)。
+8 项 actions/pricing 测试通过；80 个参考样例预检通过；4 次真实运行完成，9 个模型候选通过 dev，60 个 final 样例通过。公开文件中的 token/cost 汇总已与原始账本核对，OpenAI 已知费用按返回缓存字段逐次复算；最终代码 SHA256 已与运行记录核对。报告与复现脚本通过 JSON、Python/Bash 语法和 Git whitespace 检查；`best/` 中的模型代码按原始字节保存，保留生成时的行尾空格以保证哈希一致。前一轮的适配器与原有回归验证见[试接入记录](../../archive/effibench-preflight.md)。

@@ -1,8 +1,8 @@
-# Research Agent 赛题补充说明与团队确认
+# 赛题原文与团队选择
 
 记录日期：2026-11-14；状态：当前开发依据。
 
-团队已确认选择倍漾量化 Research Agent 赛道。本文保存用户在讨论中提供的赛题描述、企业方 comment1—comment4 原文，以及后续团队确认；项目需求见 [Research Agent 主线 PRD](research-agent-track-prd.md)，开发 agent 的 14 个问题与答复见[开工决策](../archive/implementation-decisions.md)。
+本文保存赛题、企业方 comment1—comment4 原话和团队决定。由这些要求整理出的功能与验收目标见[产品需求](product-requirements.md)。
 
 赛题入口：[BoHack 赛道与赛题设置](https://tcnf5s7xd39g.feishu.cn/wiki/EpxXwbYkkieZrfk0QbRc7wWQnRc#doxcn2L75UoUOu4KCukBPrZHmxf)。下列原文来自用户提供的补充内容，项目采用的实现方式在后文单独说明。
 
@@ -57,12 +57,12 @@
 | 凭据 | 用户私下提供给开发 agent，不写入仓库文档 |
 | 开发与演示环境 | 可以使用 Docker，正式对照固定同一台机器和 Docker 环境 |
 
-上述是团队明确回复的内容。任务包数量、测量次数、初始升级规则等属于[开工决策](../archive/implementation-decisions.md)中的首版实施约定，可在开发数据上校准，正式对照前冻结。专用决策模型仍为后置实验项。
+上述是团队明确回复的内容。任务包数量、测量次数、初始升级规则等属于[开工决策](../archive/initial-implementation-decisions.md)中的首版实施约定，可在开发数据上校准，正式对照前冻结。专用决策模型仍为后置实验项。
 
 ## 5. 开发文档的使用顺序
 
-1. 按 [Research Agent PRD](research-agent-track-prd.md)完成研究过程及 RA-01—RA-08 的能力。
-2. 用[核心 PRD](shared-core-prd.md)约束执行、验证、账本、经验与版本行为。
-3. 按[开工决策](../archive/implementation-decisions.md)的 14 项答复落实任务、接口、环境、评测规模与人员边界。
+1. 按 [Research Agent PRD](product-requirements.md)完成研究过程及 RA-01—RA-08 的能力。
+2. 用[核心 PRD](core-requirements.md)约束执行、验证、账本、经验与版本行为。
+3. 按[开工决策](../archive/initial-implementation-decisions.md)的 14 项答复落实任务、接口、环境、评测规模与人员边界。
 
-历史[方向对比](../archive/track-differences.md)和[日新 PRD](../archive/rixin-track-prd.md)不覆盖当前已确认的赛道及实施约定。
+历史[方向对比](../archive/track-comparison.md)和[日新 PRD](../archive/rixin-requirements.md)不覆盖当前已确认的赛道及实施约定。

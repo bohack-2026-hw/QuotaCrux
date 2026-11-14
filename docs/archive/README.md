@@ -1,19 +1,17 @@
-# 历史方案与决策归档
+# 历史文档
 
-这里保存早期方案和开发记录，按文内日期阅读。后续实验见[批次索引](../research/README.md)。
+按“选题 → 首版实现 → 早期评测”保存开发过程。后续执行情况见[实验批次](../research/README.md)。
 
-| 文档 | 历史范围 |
-| --- | --- |
-| [两个方向的差异](track-differences.md) | Research Agent 与日新方向的选题比较 |
-| [日新方向 PRD](rixin-track-prd.md) | 未采用方案 |
-| [首版开工决策](implementation-decisions.md) | 初始范围、模型路径、预算及开发问答 |
-| [边界条件](boundaries.md) · [PDF](boundaries.pdf) | 早期任务族、经验学习与规则版本的行为边界 |
-| [长时 Benchmark 调研](long-horizon-benchmarks.md) | 接入之前的选型依据 |
-| [EffiBench-X 接入预检](effibench-pilot.md) | 首次适配与校验记录；后续真实模型结果见[四题批次](../research/effibench-x-20261114/README.md) |
-| [2026-11-14 集成记录](integration-20261114.md) | 并行开发线合并时的提交与验证记录 |
-| [早期双组评测方案](research-evaluation-plan.md) | 已被正式 v2 三模式协议替代的评测设计 |
-| [经验学习第一至三版结果](results.md) · [PDF](results.pdf) | groupagg、D 留出和 S 任务流历史汇总；由 `backend/scripts/write_results.py` 生成到本目录 |
-| [Decisions 接口探索](decision-model/README.md) | 早期回放、删减输入信息的对照及 legacy 功能检查数据；原始 JSON 保留原字节 |
-| [原 Native 路由研究计划](native-routing-plan.md) | 缩减为探索性短批之前的 24 轮计划与交接；[当前入口](../research/native-routing/README.md) |
+| 阶段 | 文档 | 为什么保留 |
+| --- | --- | --- |
+| 赛道选择 | [两个赛道比较](track-comparison.md)、[日新需求](rixin-requirements.md) | 记录选择 Research Agent 的依据与未采用方案 |
+| 首版实现 | [实现决定与问答](initial-implementation-decisions.md)、[运行规则](legacy-runtime-rules.md) · [PDF](legacy-runtime-rules.pdf) | 说明早期模型、预算、经验和版本规则 |
+| 接入选型 | [评测集调研](benchmark-survey.md)、[EffiBench-X 预检](effibench-preflight.md) | 保存选型和首次接入结果 |
+| 主分支整合 | [2026-11-14集成记录](integration-20261114.md) | 记录并行开发线合并的提交与检查 |
+| 反馈对照 | [初版双组方案](feedback-comparison-plan-v1.md) | 保存正式 v2 三模式协议之前的设计 |
+| 经验学习 | [第一至三版结果](memory-learning-results.md) · [PDF](memory-learning-results.pdf) | 保存 groupagg、D 留出和 S 任务流的完整汇总 |
+| Decisions 探索 | [接口探索与回放](decisions-experiments/README.md)、[原24轮计划](routing-study-plan-v1.md) | 保存初次接口验证和范围调整前的计划 |
+
+历史结果生成脚本 `backend/scripts/write_results.py` 输出到 `memory-learning-results.md`。后续路由实验见[当前入口](../research/native-routing/README.md)。
 
 [返回文档导航](../README.md)。

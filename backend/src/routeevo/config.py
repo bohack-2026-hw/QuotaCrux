@@ -1,4 +1,4 @@
-"""Paths, environment loading and the fixed run limits from docs/implementation-decisions.md."""
+"""Paths, environment loading and the fixed run limits from docs/archive/initial-implementation-decisions.md."""
 
 from __future__ import annotations
 

@@ -1,7 +1,7 @@
-# 研究任务 benchmark 接入
+# ALE、AlgoTune 与 KernelBench 接入
 
 分支：`feat/research-benchmarks`，基于 `feat/effibench-x-adapter@19ce8db`。
-正式评测按[研究协议 v2](../research/native-formal-20261114/protocol.md)执行；早期双组设计见[归档方案](../archive/research-evaluation-plan.md)。
+正式评测按[研究协议 v2](../research/native-formal-20261114/protocol.md)执行；早期双组设计见[归档方案](../archive/feedback-comparison-plan-v1.md)。
 
 首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](../research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
 

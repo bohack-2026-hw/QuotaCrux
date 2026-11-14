@@ -92,7 +92,7 @@ def pick_cases() -> list[tuple[str, str, str]]:
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    rows = ["# 研究成果样例", "",
+    rows = ["# 研究过程案例", "",
             "由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付："
             "研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、"
             "原始模型请求与回复 `model_calls/`、结构化报告 `report.json` 和复核脚本 `reproduce.sh`。"
@@ -107,7 +107,7 @@ def main() -> None:
         u = rep["usage"]["total"]
         rows.append(f"| [{title}]({run_id}/README.md) | {rep['task']['task_id']} · {rep['snapshot_id']} | {rep['outcome']['summary']} | "
                     f"{rep['iterations']['model_requests']} 次 · {'$%.3f' % u['cost_usd'] if u['cost_usd'] is not None else '未知'} | {why} |")
-    (OUT / "examples.md").write_text("\n".join(rows) + "\n")
+    (OUT / "case-studies.md").write_text("\n".join(rows) + "\n")
     print(f"wrote {OUT}")
 
 

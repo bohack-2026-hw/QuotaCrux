@@ -18,7 +18,7 @@ from pathlib import Path
 import segno
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO = "https://github.com/bohack-2026-hw/RouteEvo"
+REPO = "https://github.com/bohack-2026-hw/QuotaCrux"
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 BG, INK, GREY, LINE, ACCENT = "#F3F2EE", "#111113", "#8E8D88", "#D8D6CF", "#FF4D1F"
@@ -127,42 +127,43 @@ def page() -> str:
     fmt_x = lambda v: f"{v:.1f}×" if v >= 10 else f"{v:.2f}×"  # noqa: E731
     algo = "".join(f'<div class="algo"><div class="big">{fmt_x(sp)}</div><div class="cap">{name} 提速</div>'
                    f'<div class="how">{how}</div>{algo_bars(b, c)}</div>' for name, sp, b, c, how in ALGO)
-    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title><style>
+    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Noto+Sans+SC:wght@400..900&display=block"><style>
 @page {{ size: 800mm 1800mm; margin: 0; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html, body {{ width: 800mm; height: 1800mm; }}
-body {{ background: {BG}; color: {INK}; font-family: "PingFang SC", sans-serif; overflow: hidden;
+body {{ background: {BG}; color: {INK}; font-family: "Noto Sans SC", sans-serif; overflow: hidden;
   -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
 .page {{ width: 800mm; height: 1800mm; display: flex; flex-direction: column; justify-content: space-between; padding: 40mm 50mm 34mm; }}
 .head {{ display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2.4mm solid {INK}; padding-bottom: 8mm; }}
-.title {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 112mm; line-height: 0.82; letter-spacing: -4mm; margin-left: -5mm; }}
+.title {{ font-family: "Inter", sans-serif; font-weight: 800; font-size: 112mm; line-height: 0.82; letter-spacing: -4mm; margin-left: -5mm; }}
 .cn {{ font-size: 56mm; font-weight: 600; line-height: 1; letter-spacing: 3mm; white-space: nowrap; }}
 .sub {{ display: flex; justify-content: space-between; align-items: baseline; margin-top: 7mm; font-size: 24mm; font-weight: 600; }}
 .sub span {{ color: {ACCENT}; }}
 .kicker {{ font-size: 19mm; font-weight: 600; letter-spacing: 0.5mm; display: flex; gap: 6mm; align-items: baseline; }}
-.kicker b {{ font-family: "Avenir Next", sans-serif; font-weight: 700; color: {ACCENT}; }}
+.kicker b {{ font-family: "Inter", sans-serif; font-weight: 700; color: {ACCENT}; }}
 .hero {{ display: flex; align-items: flex-end; gap: 14mm; margin-top: 6mm; }}
-.hero .num {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.8; letter-spacing: -8mm; color: {ACCENT}; }}
+.hero .num {{ font-family: "Inter", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.8; letter-spacing: -8mm; color: {ACCENT}; }}
 .hero .cap {{ font-size: 32mm; font-weight: 600; line-height: 1.25; padding-bottom: 2mm; white-space: nowrap; }}
 .bars {{ margin-top: 12mm; }}
 svg text.bl {{ font-size: 15px; font-weight: 600; }}
-svg text.bv {{ font-size: 17px; font-weight: 700; font-family: "Avenir Next", sans-serif; }}
-svg text.ax {{ font-size: 11px; fill: {GREY}; font-family: "Avenir Next", "PingFang SC", sans-serif; }}
+svg text.bv {{ font-size: 17px; font-weight: 700; font-family: "Inter", sans-serif; }}
+svg text.ax {{ font-size: 11px; fill: {GREY}; font-family: "Inter", "Noto Sans SC", sans-serif; }}
 svg text.an {{ font-size: 13.5px; font-weight: 600; fill: {INK}; }}
 svg text.rl {{ font-size: 17px; font-weight: 600; fill: {INK}; }}
 h2 {{ font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm; line-height: 1.25; }}
 .algos {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20mm; margin-top: 10mm; }}
-.algo .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 96mm; line-height: 0.9; letter-spacing: -4mm; }}
+.algo .big {{ font-family: "Inter", sans-serif; font-weight: 800; font-size: 96mm; line-height: 0.9; letter-spacing: -4mm; }}
 .algo .cap {{ font-size: 28mm; font-weight: 600; margin-top: 4mm; }}
 .algo .how {{ font-size: 21mm; color: {ACCENT}; font-weight: 600; margin: 3mm 0 7mm; }}
 .route {{ margin-top: 10mm; }}
 .callout {{ border-top: 1.2mm solid {INK}; padding-top: 6mm; margin-bottom: 16mm; }}
-.callout .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 76mm; line-height: 0.9; letter-spacing: -2mm; }}
+.callout .big {{ font-family: "Inter", sans-serif; font-weight: 800; font-size: 76mm; line-height: 0.9; letter-spacing: -2mm; }}
 .callout .cap {{ font-size: 21mm; font-weight: 600; margin-top: 3mm; line-height: 1.3; }}
 .ledger {{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2.4mm solid {INK}; border-bottom: 1.2mm solid {INK}; }}
 .ledger > div {{ padding: 9mm 0 10mm; }}
 .ledger > div + div {{ border-left: 1.2mm solid {INK}; padding-left: 12mm; }}
-.ledger .big {{ font-family: "Avenir Next", sans-serif; font-weight: 800; font-size: 62mm; line-height: 0.9; letter-spacing: -2mm; }}
+.ledger .big {{ font-family: "Inter", sans-serif; font-weight: 800; font-size: 62mm; line-height: 0.9; letter-spacing: -2mm; }}
 .ledger .cap {{ font-size: 20mm; font-weight: 600; margin-top: 4mm; line-height: 1.3; }}
 .foot {{ display: flex; justify-content: space-between; align-items: center; }}
 .foot .t {{ font-size: 22mm; font-weight: 600; }}

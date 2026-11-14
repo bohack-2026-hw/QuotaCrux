@@ -1,8 +1,8 @@
 # 2026-11-14 路由批次准备
 
-执行基线为 `e0d23719b97928db0ab7b87de9469a6bf6c3a101`。当前已准备中央 24 项逻辑计划、
-desktop ahc026 的 12 项计划、模型与价格快照；等待独立执行环境核验。尚未开始本批付费调用。
-Mac 的 convolve_1d 任务和主机参数由 #4 补齐，不能将占位项当成已冻结或已执行记录。
+执行基线为 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。当前已准备中央 24 项逻辑计划、
+desktop ahc026 的 12 项计划、模型与价格快照；独立执行环境核验已通过，启动清单见 [ale-freeze.json](ale-freeze.json)。
+Mac 的主机及旧任务材料已由 #4 回传；GC v2 的新任务、镜像及校准待补齐，旧 v1 绑定只作历史记录。
 
 公开配置来自实际执行环境：small 为 AIPing Qwen3.8-27B，禁用 thinking、输出上限 8192；
 large 为官方 Responses API 的 gpt-6.1-sol，xhigh、输出上限 32000；Decisions 为官方端点的
@@ -31,7 +31,19 @@ desktop 复用已冻结的 ahc026 任务包、候选/裁判镜像及 CPU 4 测�
 每轮另计开发/初始化 60 秒及 final/设置 12 秒，研究循环按 900 秒封顶。
 费用按完整请求分配计算，提前 finish 或墙钟限制会减少实际请求；这些数值不是费用硬上限。
 旧 Sol/Decisions 记录来自其他工作负载，所以场景不构成原生路由的实测预测。
-Mac 的负载和测量参数尚未回传，其费用和墙钟不直接套用本表。
+Mac 的 GC v2 校准尚未回传，其费用和墙钟不直接套用本表。
 
-[preparation.json](preparation.json)仍标记为准备状态；正式启动前还需登记实际独立环境并冻结最终清单。
-原 30 轮反馈消融继续使用 `990f598`，两批结果分别汇总。
+[preparation.json](preparation.json)保留中央24项计划；desktop 的12项已独立冻结，Mac仍等待GC v2校准。
+[启动核验](ale-preflight/ale-preflight.json)记录干净源码、空账本、模型/任务/镜像/提示及价格一致性；
+[环境证据](ale-preflight/deployment.json)保存实际Python、CPU、依赖与公开配置。执行助手置于checkout外，按SHA256冻结；其`--execute`只允许新空账本启动一次。
+原反馈消融中 ALE 15 轮已在 `990f598` 完成，Mac 15 轮改用上述已合入的 GC v2 源码；原反馈消融与新路由批次分别汇总。
+
+启动命令（desktop）：
+
+```sh
+cd /home/hycx233/routeevo-routing-formal-20261114/repo/backend
+.venv/bin/python /home/hycx233/routeevo-routing-formal-20261114/run_ale_routing.py \
+  --freeze /home/hycx233/routeevo-routing-formal-20261114/ale-freeze.json --execute
+```
+
+后台启动信息与实际comparison ID在后续执行记录中登记；启动前不会将12项准备清单记为已运行。

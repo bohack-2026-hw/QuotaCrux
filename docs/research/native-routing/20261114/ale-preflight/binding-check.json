@@ -1,0 +1,13 @@
+{
+  "experiment_sha": true,
+  "executor_sha256": true,
+  "uv_lock_sha256": true,
+  "models": true,
+  "manifest_sha256": true,
+  "environment": true,
+  "measure": true,
+  "prompt_version": true,
+  "prompt_sha256": true,
+  "action_schema_sha256": true,
+  "routing_manifest": true
+}

@@ -281,6 +281,8 @@ def _run_command(run, cfg: dict) -> str:
     protocol = cfg.get("research_protocol", {})
     if protocol.get("mode"):
         argv += ["--research-mode", protocol["mode"]]
+    if protocol.get("model_policy") == "adaptive":
+        argv += ["--research-model-policy", "adaptive"]
     if protocol.get("fixed_model"):
         argv += ["--fixed-model", protocol["fixed_model"]]
     if protocol.get("final_evaluation") is False:

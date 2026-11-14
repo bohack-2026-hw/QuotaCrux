@@ -88,11 +88,16 @@ def comparison_view(comparison: dict) -> dict:
     out["dev_only"] = out.get("final_evaluation") is False
     snapshot = out.get("price_snapshot")
     validate_pricing(snapshot)
+    routing_study = out.get("study") == "routing"
+    if routing_study:
+        for model_price in out.get("price_snapshots", {}).values():
+            validate_pricing(model_price)
     for row in out["runs"]:
         row.setdefault("task", {"task_id": row["task_id"], "family": None, "objective": None})
         row["final_status"] = _final_status(row, not out["dev_only"])
         row["dev_status"] = (row.get("best_dev") or {}).get("status") or row.get("dev_status") or "not_run"
-        row.setdefault("cost", estimate_cost(row.get("usage") or {}, snapshot))
+        if not routing_study:
+            row.setdefault("cost", estimate_cost(row.get("usage") or {}, snapshot))
         if row["final_status"] == "failed" and row.get("status") == "completed":
             row["recorded_status"] = row["status"]
             row["status"] = "failed"
@@ -110,6 +115,8 @@ def comparison_view(comparison: dict) -> dict:
 def _total_cost(comparison: dict) -> dict:
     if comparison.get("cost") is not None:
         return comparison["cost"]
+    if comparison.get("study") == "routing":
+        return {"by_currency": {}, "by_model": {}, "status": "unknown"}
     rows = comparison["runs"]
     result = estimate_cost({}, comparison.get("price_snapshot"))
     if not rows or any(row["cost"]["amount"] is None for row in rows):
@@ -126,7 +133,10 @@ def comparison_summary(comparison: dict) -> dict:
     out = comparison_view(comparison)
     rows = out["runs"]
     return {"comparison_id": out["comparison_id"], "api_contract": API_CONTRACT,
-            "protocol": out.get("protocol"), "label": out.get("label"), "status": out.get("status"),
+            "protocol": out.get("protocol"), "study": out.get("study", "feedback"),
+            "variants": list(dict.fromkeys(row["variant"] for row in rows if row.get("variant"))),
+            "price_snapshots": out.get("price_snapshots"),
+            "label": out.get("label"), "status": out.get("status"),
             "fair": out["fair"], "final_evaluation": out.get("final_evaluation"), "dev_only": out["dev_only"],
             "created_at": out.get("created_at"), "ended_at": out.get("ended_at"),
             "task_ids": list(dict.fromkeys(row["task_id"] for row in rows)),

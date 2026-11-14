@@ -32,6 +32,10 @@ class StartRun(BaseModel):
     script: str | None = None
     action_router: Literal["llm", "decisions"] = "llm"
     model_router: Literal["rule", "decisions"] = "rule"
+    research_mode: Literal["legacy", "feedback", "independent", "no_feedback"] | None = None
+    research_model_policy: Literal["fixed", "adaptive"] = "fixed"
+    fixed_model: Literal["small", "large"] | None = None
+    final_evaluation: bool = True
 
 
 @app.get("/api/live")
@@ -138,6 +142,8 @@ def start_run(body: StartRun) -> dict:
     try:
         runner = Runner(RunOptions(task_id=body.task_id, mode=body.mode, snapshot_id=body.snapshot_id,
                                    label=body.label, script=script,
+                                   research_mode=body.research_mode, research_model_policy=body.research_model_policy,
+                                   fixed_model=body.fixed_model, final_evaluation=body.final_evaluation,
                                    routing=config.RoutingConfig(action=body.action_router, model=body.model_router)))
         run_id = runner.create()
     except RunBusy as exc:

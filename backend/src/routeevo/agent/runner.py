@@ -49,6 +49,7 @@ class RunOptions:
     script: Path | None = None  # scripted stand-in model, functional checks only
     label: str | None = None
     research_mode: str | None = None  # legacy | feedback | independent | no_feedback
+    research_model_policy: str = "fixed"  # adaptive is a separate feedback-only routing study
     fixed_model: str | None = None  # small | large; research comparisons default to small
     final_evaluation: bool = True
     router: bool = True  # False: every run starts on the small model (ablation; changes the fingerprint)
@@ -83,13 +84,21 @@ class Runner:
             raise ValueError("invalid research mode")
         if opts.fixed_model not in (None, "small", "large"):
             raise ValueError("fixed_model must be small or large")
+        if opts.research_model_policy not in ("fixed", "adaptive"):
+            raise ValueError("research_model_policy must be fixed or adaptive")
+        adaptive = opts.research_mode != "legacy" and opts.research_model_policy == "adaptive"
+        if adaptive and (opts.research_mode != "feedback" or opts.fixed_model is not None):
+            raise ValueError("adaptive research requires feedback and no fixed_model")
         if opts.research_mode != "legacy":
             if opts.mode != "eval" or opts.snapshot_id not in (None, "v0"):
                 raise ValueError("research comparisons require eval mode and empty snapshot v0")
             opts.snapshot_id = "v0"
-            opts.fixed_model = opts.fixed_model or "small"
-        if (opts.research_mode != "legacy" or self.task.is_native) and opts.routing != config.RoutingConfig():
-            raise ValueError("native and research runs require action_router=llm and model_router=rule")
+            if adaptive:
+                opts.router = False
+            else:
+                opts.fixed_model = opts.fixed_model or "small"
+        if (opts.research_mode != "legacy" or self.task.is_native) and not adaptive and opts.routing != config.RoutingConfig():
+            raise ValueError("fixed native and research runs require action_router=llm and model_router=rule")
         if opts.fixed_model or opts.routing.model == "decisions":
             # Explicit model selection takes precedence over the initial memory-based rule.
             opts.router = False
@@ -176,6 +185,7 @@ class Runner:
             "upgrade_rule": UPGRADE_RULE,
             "prompt": {"version": prompt.PROMPT_VERSION, "system_sha256": self.system_prompt_sha},
             "research_protocol": {"mode": self.opts.research_mode, "fixed_model": self.opts.fixed_model,
+                                  "model_policy": self.opts.research_model_policy,
                                   "final_evaluation": self.opts.final_evaluation},
             "action_schema_sha256": hashlib.sha256(json.dumps(actions.ACTION_SCHEMA, sort_keys=True).encode()).hexdigest(),
             "limits": self.limits.to_dict(),
@@ -519,6 +529,9 @@ class Runner:
                                       and (no_feedback or (c.get("latest_evaluation") or {}).get("status") != "static_check_failed")),
             generation_requests=1 + int(not self.opts.fixed_model and self.model_router.config_for(self.role) is not None),
             models={r: c.public_dict() for r, c in self.model_cfgs.items()},
+            objective=self.task.objective,
+            available_tools=() if self.task.is_native else actions.EVIDENCE_TOOLS,
+            can_validate=not independent, research_mode=self.opts.research_mode,
         )
 
     def _select_model(self) -> bool:

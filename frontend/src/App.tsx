@@ -18,13 +18,13 @@ type Tab = 'home' | 'res' | 'run' | 'admin' | 'hist' | 'exp' | 'cmp' | 'ver' | '
 const TABS: { id: Tab; lbl: string; minor?: boolean; title: string; en: string; snapshot?: boolean }[] = [
   { id: 'home', lbl: '总览', title: '总览', en: 'overview' },
   { id: 'res', lbl: '研究对照', title: '研究对照', en: 'within-task research' },
+  { id: 'live', lbl: '实时', title: '实时', en: 'live' },
   { id: 'run', lbl: '运行', title: '运行', en: 'runs' },
   { id: 'admin', lbl: '后台', title: '后台', en: 'console' },
   { id: 'hist', lbl: '经验阶段', minor: true, title: '经验阶段', en: 'experience phase', snapshot: true },
   { id: 'exp', lbl: '经验', minor: true, title: '经验', en: 'experience', snapshot: true },
   { id: 'cmp', lbl: '经验对照', minor: true, title: '经验对照', en: 'held-out comparison', snapshot: true },
   { id: 'ver', lbl: '版本', minor: true, title: '版本', en: 'snapshots', snapshot: true },
-  { id: 'live', lbl: '实时', minor: true, title: '实时进度', en: 'live' },
 ]
 
 type Theme = 'dark' | 'light'
@@ -116,7 +116,7 @@ export default function App() {
         {tab === 'hist' && <OverviewView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}
         {tab === 'cmp' && <CompareView selected={arg} onSelect={(id) => go('cmp', id)} onOpenRun={openRun} />}
-        {tab === 'live' && <LiveView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
+        {tab === 'live' && <LiveView onOpenRun={openRun} onOpenResearch={(id) => go('res', id)} />}
         {tab === 'ver' && <VersionView onOpenSnapshot={(s) => openExperience(s)} onOpenRun={openRun} onChanged={() => snaps.refresh()} />}
       </main>
     </div>

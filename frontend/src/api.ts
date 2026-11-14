@@ -1,6 +1,6 @@
 // Thin typed client for the FastAPI backend. Reports are large nested objects; only fields the UI reads are typed.
 
-import type { RawBatch, RawBatchRow } from './research'
+import type { RawBatch, RawBatchRow, RawPoint } from './research'
 
 export type Json = Record<string, unknown>
 export interface Objective { metric: string; direction: string; value?: number; baseline?: number | null }
@@ -128,6 +128,7 @@ export interface Research {
 export interface Report {
   run_id: string
   research: Research
+  progress?: RawPoint[]
   task: { task_id: string; split: string; family?: string; workload?: string; target_min_speedup: number | null; dev_params: Json; objective: Objective }
   route?: Route | null
   mode: string

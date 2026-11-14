@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs'
 import { strict as assert } from 'node:assert'
 import { VARIANTS, costTotals, fairLabel, finalState, normalize, runState } from '../src/research.ts'
+import { bestOf, modeSummary, resultOf } from '../src/researchFormat.ts'
 import type { RawBatch, RawRun } from '../src/research.ts'
 
 const sample: RawBatch = JSON.parse(readFileSync(new URL('../src/samples/research-native-r2.json', import.meta.url), 'utf8'))
@@ -156,6 +157,29 @@ check('routing study: small/large and routing/generation calls are read per run'
   assert.deepEqual(both.calls, { small: 7, large: 3, routing: 7, generation: 10, upgrades: 1 })
   assert.deepEqual(both.routing, { action: 'decisions', model: 'decisions' })
   assert.equal(b.model?.name, 'Qwen3.8-27B → gpt-fixture-large')
+})
+
+const ale: RawBatch = JSON.parse(readFileSync(new URL('../src/samples/research-ale-formal.json', import.meta.url), 'utf8'))
+
+check('ALE formal: scoreboards report final scores against the final-set c0', () => {
+  const b = normalize(ale)
+  assert.equal(b.runs.length, 15)
+  assert.ok(b.runs.every((r) => r.final.state === 'passed'))
+  const t026 = b.tasks.find((t) => t.id.includes('ahc026'))!
+  assert.equal(t026.source, 'final')
+  assert.equal(t026.finalBaseline, 131864)
+  assert.deepEqual(['feedback', 'independent', 'no_feedback'].map((m) => modeSummary(t026, m).value), [132273, 133031, 132428])
+  assert.deepEqual(bestOf(t026), { mode: 'independent', value: 133031 })
+  const t024 = b.tasks.find((t) => t.id.includes('ahc024'))!
+  assert.equal(bestOf(t024), null)
+  assert.ok(t024.runs.every((r) => !resultOf(t024, r).improved))
+})
+
+check('ALE formal: an API-failed run keeps its passing final and an unknown cost', () => {
+  const b = normalize(ale)
+  const r10 = b.runs.find((r) => r.seq === 10)!
+  assert.deepEqual([r10.state, r10.final.state, r10.final.value, r10.cost.kind], ['failed', 'passed', 135088, 'unknown'])
+  assert.equal(costTotals(b.runs.map((r) => r.cost)).unknown, 1)
 })
 
 console.log(`${n} checks passed`)

@@ -44,8 +44,8 @@ function TaskCard({ t, b, axis }: { t: RTask; b: RBatch; axis: Axis }) {
     <div className="card">
       <div className="head-row">
         <h2 style={{ margin: 0 }}>{t.title}</h2>
-        <span className="metric-pill">{metricName(t.metric)} ↑</span>
-        <span className="mono small muted" style={{ marginLeft: 'auto' }}>基线 {t.metric === 'score' ? fmt.n(t.baseline) : '1×'}</span>
+        <span className="metric-pill">{metricName(t.metric)} ↑ · {t.source === 'final' ? '最终集' : '开发集'}</span>
+        <span className="mono small muted" style={{ marginLeft: 'auto' }}>基线 {t.metric === 'score' ? fmt.n(t.source === 'final' ? t.finalBaseline : t.baseline) : '1×'}</span>
       </div>
       <Scoreboard task={t} lead={v.lead} planned={b.modes} />
       {t.repeats.length > 1 && <ModeLegend modes={t.modes} repeats={t.repeats} />}

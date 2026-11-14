@@ -141,6 +141,9 @@ def check_output(stdout: bytes, expected: bytes, max_examples: int = 3) -> dict:
     return check_keyed_csv(stdout, expected, header=OUTPUT_HEADER, key_fields=1, int_fields=(0, 1), max_examples=max_examples)
 
 
+TITLE_ZH = "区间合并"
+BASELINE_ZH = "c0：csv 读入整数元组 + sorted + 逐个合并（初始程序，正确）"
+
 # ---------- family hooks ----------
 
 BUCKET_FEATURES = ["rows", "order", "intervals_per_merged", "magnitude", "sign"]

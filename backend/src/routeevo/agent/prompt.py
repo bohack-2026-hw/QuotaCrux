@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v2"
+PROMPT_VERSION = "agent-prompt-v3"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -14,9 +14,8 @@ Each request you receive describes the full current state. Reply with exactly on
 Goal and rules
 - The program must stay correct for every input that satisfies the contract. An external evaluator checks the output
   against hidden reference data; you never see the evaluator, the reference output or the hidden final test data.
-  Before timing it also runs small public contract cases: empty input, a single row, interleaved repeated keys,
-  ASCII ordering of digits/upper/underscore/lower case, very large and negative integers, an almost-sorted input and
-  32-character keys. A program that is only right for this task's data distribution fails them.
+  Before timing it also runs the small public contract cases listed under Task. A program that is only right for this
+  task's data distribution fails them.
 - Primary metric: speedup = median runtime of the initial program / median runtime of the candidate, measured on the
   task's dev data in a Docker container (1 CPU, 1 GB memory, no network, read-only filesystem, a fresh process per
   sample, input on stdin). A candidate counts as improved only if every timed candidate sample is faster than every
@@ -45,9 +44,10 @@ current workload before relying on them, and mind their sample counts.
 
 Before your first request the program re-validates up to three verified programs from the experience snapshot whose
 conditions are closest to this workload; they appear as candidates with origin "experience" and their results are real
-measurements on this task. You are only asked when none of them reached the target, or in a learning run, where the
-target in Budget (`target_speedup`) is raised above the best of them: then a candidate must beat that program, so
-build on it (set it as parent) rather than on c0, and do not resubmit a program that is already in the list.
+measurements on this task. To keep requests short, only the code of the best of them is shown; the others are listed
+with their results. You are only asked when none of them reached the target, or in a learning run, where the target in
+Budget (`target_speedup`) is raised above the best of them: then a candidate must beat that program, so build on it
+(set it as parent) rather than on c0, and do not resubmit a program that is already in the list.
 """
 
 SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()
@@ -61,6 +61,7 @@ def build_state(
     *,
     task,
     candidates: list[dict],
+    hide_code: set[str] | None = None,
     evidence: list[dict],
     history: list[dict],
     experiences: list[dict] | None,
@@ -74,15 +75,20 @@ def build_state(
         for i, ex in enumerate(task.examples)
     )
     parts = [
-        _block("Task", f"task_id: {task.task_id}\ntarget: speedup >= {task.target_min_speedup}\n\n{task.contract}"),
+        _block("Task", f"task_id: {task.task_id}\nfamily: {task.family}\ntarget: speedup >= {task.target_min_speedup}\n\n"
+                       f"{task.contract}\nPublic contract cases run before timing: {task.fam.CONTRACT_CASES_NOTE}."),
         _block("Visible examples", examples),
         _block("Dev data profile (the timed input; computed by the program)", json.dumps(task.dev_profile, indent=2)),
     ]
 
     cand_lines = []
     for c in candidates:
-        head = {k: c[k] for k in ("candidate_id", "origin", "parent_candidate_id", "latest_evaluation") if k in c}
-        cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
+        head = {k: c[k] for k in ("candidate_id", "origin", "experience_id", "parent_candidate_id", "latest_evaluation") if k in c}
+        if c["candidate_id"] in (hide_code or set()):
+            cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n"
+                              "(code omitted: a re-validated program from experience that is not the best of them)")
+        else:
+            cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
     parts.append(_block("Candidates (c0 is the initial program; best so far is marked in budget)", "\n".join(cand_lines)))
 
     if evidence:
@@ -101,7 +107,7 @@ def build_state(
         if experience_summary:
             counts = (f"Snapshot holds {experience_summary['snapshot_size']} records; "
                       f"{sum(experience_summary['matched_by_outcome'].values())} match this workload on at least "
-                      f"{experience_summary['min_matches']} of 5 features "
+                      f"{experience_summary['min_matches']} of {experience_summary.get('features', 5)} features "
                       f"(by outcome: {json.dumps(experience_summary['matched_by_outcome'])}); "
                       f"{len(experiences)} are shown.\n")
         parts.append(_block(f"Experience records from snapshot {snapshot_id}", counts + "\n".join(exp_lines)))

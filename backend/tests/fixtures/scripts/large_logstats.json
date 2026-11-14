@@ -1,0 +1,24 @@
+{
+  "large": [
+    {
+      "action": "propose_candidate",
+      "purpose": "改写为整块读取并按切片取小时",
+      "expected_result": "正确且明显更快",
+      "verification": "外部评测器",
+      "hypothesis": "strptime 是主要开销",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/logstats_fast.py"
+    }
+  ],
+  "small": [
+    {
+      "action": "propose_candidate",
+      "purpose": "改写为整块读取并按切片取小时",
+      "expected_result": "正确且明显更快",
+      "verification": "外部评测器",
+      "hypothesis": "strptime 是主要开销",
+      "parent_candidate_id": "c0",
+      "code_file": "../cands/logstats_fast.py"
+    }
+  ]
+}

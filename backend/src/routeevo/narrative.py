@@ -9,7 +9,10 @@ from . import compare, config, memory, report
 
 ACTION_ZH = {"analyze": "分析", "get_evidence": "取证", "propose_candidate": "提出候选", "run_validation": "验证",
              "finish": "结束", "upgrade_model": "升级模型", "model_request": "模型请求", "invalid": "无效回复",
-             "reuse_candidate": "复用已验证程序", "set_target": "提高本次目标"}
+             "reuse_candidate": "复用已验证程序", "set_target": "提高本次目标", "route_model": "分流"}
+MODE_ZH = {"learn": "学习", "eval": "评测", "online": "在线（交付并写入经验）"}
+ROUTE_ZH = {"reuse": "复用直接交付", "familiar": "相近经验 → 本地小模型", "new_family": "全新任务族 → 大模型",
+            "new_conditions": "新条件 → 大模型", "router_off": "分流关闭 → 小模型", "no_model_request": "未请求模型"}
 STOP_ZH = {"goal_reached": "开发数据达标", "budget_exhausted": "预算耗尽", "agent_finished": "Agent 主动结束",
            "user_stopped": "用户停止", "model_api_error": "模型接口错误", "environment_error": "环境错误",
            "internal_error": "内部错误"}
@@ -29,7 +32,8 @@ DECISION_ZH = {"continue": "继续", "validate candidate": "验证候选", "re-m
                "upgrade rule met but no model requests left": "满足升级条件，但模型请求已用完",
                "validate re-used program": "复验", "validate next re-used program": "复验下一个",
                "re-use finished": "复用复验结束",
-               "continue with the model to beat the best known program": "交给模型，尝试超越已知最佳"}
+               "continue with the model to beat the best known program": "交给模型，尝试超越已知最佳",
+               "start model requests on the small model": "先用本地小模型", "start model requests on the large model": "直接用大模型"}
 
 
 def _decision(d: str) -> str:
@@ -67,8 +71,8 @@ def run_markdown(run_id: str) -> str:
     lines = [
         f"# 研究记录 {run_id}",
         "",
-        f"- 任务：{t['task_id']}（{t['split']} 批），目标：输出全对且加速比 ≥ {t['target_min_speedup']}×",
-        f"- 模式：{'学习' if r['mode'] == 'learn' else '评测'}；读取经验快照：{r['snapshot_id']}；配置指纹：`{r['config_fingerprint']}`",
+        f"- 任务：{t['task_id']}（{t['split']} 批，{t.get('workload', '')}），目标：输出全对且加速比 ≥ {t['target_min_speedup']}×",
+        f"- 模式：{MODE_ZH.get(r['mode'], r['mode'])}；读取经验快照：{r['snapshot_id']}；配置指纹：`{r['config_fingerprint']}`",
         f"- 结论：**{o['summary']}**（终止：{STOP_ZH.get(r['stop_reason'], r['stop_reason'])}）",
         f"- 状态拆分：候选运行完成 {o['candidate_ran']} · 开发验证通过 {o['dev_validation_passed']} · "
         f"指标改善 {o['dev_improved']} · 最终测试达标 {o['goal_met']}",
@@ -155,6 +159,8 @@ def run_markdown(run_id: str) -> str:
 def evolution_note(comparison_id: str) -> dict:
     """Three-line note on what experience changed: what was compared, what was learned, how to roll back — each tied to evidence."""
     c = compare.summarize(comparison_id)
+    if c.get("kind") == "stream":
+        return stream_note(c)
     a, b = c["snapshot_a"], c["snapshot_b"]
     A, B = c["sides"].get(a), c["sides"].get(b)
     lc = c["learning_cost"]
@@ -187,3 +193,31 @@ def evolution_note(comparison_id: str) -> dict:
     return {"comparison_id": comparison_id, "fair": c["fair"], "scripted_model": c["scripted_model"],
             "lines": [line1, line2, line3],
             "evidence": {"comparison": comparison_id, "added_experiences": diff["added"], "learn_runs": lc.get("learn_runs", [])}}
+
+
+def stream_note(c: dict) -> dict:
+    """Three-line note for an online stream: what was compared, what accumulated, how to roll back."""
+    M, F = c["sides"].get("memory"), c["sides"].get("fresh")
+    if not (M and F and M["runs"] and F["runs"]):
+        return {"comparison_id": c["comparison_id"], "lines": ["任务流尚未产生结果。"], "evidence": {}}
+    fams = sorted({p["family"] for p in c["positions"]})
+    start = c["start_snapshot"]
+    line1 = (f"比什么：同一串 {len(c['tasks'])} 个任务（{len(fams)} 个任务族，按固定顺序出现）× {c['repeats']} 次重放，带记忆（在线模式：交付后"
+             f"写入经验，下一个任务读取）与不带记忆（每个任务都只读 {start}）对比：达标 {F['goal_met']}/{F['runs']} → {M['goal_met']}/{M['runs']}，"
+             f"最终加速比中位数 {_x(F['final_speedup_median'])} → {_x(M['final_speedup_median'])}，大模型请求 {F['large_model_requests_total']} → "
+             f"{M['large_model_requests_total']} 次，费用 {_usd(F['cost_usd_total'])} → {_usd(M['cost_usd_total'])}，"
+             f"单次研究循环时长中位数 {F['agent_loop_s_median']:.0f}s → {M['agent_loop_s_median']:.0f}s，总耗时 {F['wall_clock_s_total']:.0f}s → "
+             f"{M['wall_clock_s_total']:.0f}s（不带记忆 → 带记忆）。")
+    first, later = c["first_of_family"]["memory"], c["repeats_of_family"]["memory"]
+    lf = c["repeats_of_family"]["fresh"]
+    g = c["growth"]
+    routes = "、".join(f"{ROUTE_ZH.get(k, k)} {v}" for k, v in sorted(M["routes"].items(), key=lambda kv: -kv[1]))
+    line2 = (f"学到什么：每次重放从 {start} 出发，经验从 {g[0]['experiences_start']} 条增长到 "
+             f"{'/'.join(str(x['experiences_end']) for x in g)} 条；任务族首次出现时由分流器直接交给大模型，之后的同族任务带记忆时 "
+             f"{later['runs_without_model_request']}/{later['runs']} 次没有调用模型（不带记忆 {lf['runs_without_model_request']}/{lf['runs']}），"
+             f"大模型请求 {lf['large_model_requests_total']} → {later['large_model_requests_total']} 次；带记忆一侧的分流：{routes}。"
+             f"首次出现的任务两侧条件相同（都没有该族经验），带记忆 {first['goal_met']}/{first['runs']} 达标。")
+    line3 = (f"如何回退：任务流结束后生效版本已恢复为实验前的版本；任何一次重放产生的版本都可在「04 版本管理」查看或设为生效，"
+             f"`uv run routeevo snapshots activate {start} --reason 回退` 回到起点，全部运行记录保留可查。")
+    return {"comparison_id": c["comparison_id"], "fair": c["fair"], "scripted_model": c["scripted_model"],
+            "lines": [line1, line2, line3], "evidence": {"comparison": c["comparison_id"], "growth": g}}

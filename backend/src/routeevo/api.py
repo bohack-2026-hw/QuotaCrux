@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
-from . import compare, config, db, memory, report, taskpkg
+from . import compare, config, db, families, memory, report, taskpkg
 from .agent.runner import RunBusy, RunOptions, Runner
 
 config.load_dotenv()
@@ -42,7 +42,9 @@ def list_tasks() -> list[dict]:
     out = []
     for r in db.all_rows("SELECT task_id, split, manifest_json, manifest_sha256 FROM tasks ORDER BY task_id"):
         m = json.loads(r["manifest_json"])
-        out.append({"task_id": r["task_id"], "split": r["split"], "notes": m.get("notes"),
+        fam = families.get(m["family"])
+        out.append({"task_id": r["task_id"], "split": r["split"], "family": m["family"], "family_title": fam.TITLE_ZH,
+                    "workload": fam.describe(m["dev_params"]), "notes": m.get("notes"),
                     "target": m["target"], "dev_params": m["dev_params"], "manifest_sha256": r["manifest_sha256"]})
     return out
 
@@ -54,7 +56,7 @@ def get_task(task_id: str) -> dict:
     except KeyError as exc:
         raise HTTPException(404, str(exc)) from None
     # Only agent-visible material plus the public target; hidden data never leaves the evaluator.
-    return {"task_id": t.task_id, "split": t.split, "target": t.manifest["target"], "contract": t.contract,
+    return {"task_id": t.task_id, "split": t.split, "family": t.family, "target": t.manifest["target"], "contract": t.contract,
             "initial_code": t.initial_code, "examples": t.examples, "dev_profile": t.dev_profile,
             "default_limits": config.RunLimits().to_dict()}
 
@@ -188,6 +190,31 @@ def get_experience(experience_id: str) -> dict:
         raise HTTPException(404, "experience not found") from None
 
 
+class StartStream(BaseModel):
+    task_ids: list[str]
+    start_snapshot: str
+    repeats: int = 1
+    label: str | None = None
+    script: str | None = None
+
+
+@app.post("/api/streams", status_code=202)
+def start_stream(body: StartStream) -> dict:
+    script = None
+    if body.script:
+        script = (SCRIPTS_DIR / f"{Path(body.script).stem}.json").resolve()
+        if not script.exists():
+            raise HTTPException(404, f"no scripted fixture {body.script!r}")
+    if db.one("SELECT run_id FROM runs WHERE status = 'running'"):
+        raise HTTPException(409, "a run is in progress")
+    try:
+        cid = compare.create_stream(body.task_ids, body.start_snapshot, body.repeats, body.label, str(script) if script else None)
+    except (KeyError, ValueError, RuntimeError) as exc:
+        raise HTTPException(400, str(exc)) from None
+    threading.Thread(target=compare.execute, args=(cid,), name=f"str-{cid}", daemon=True).start()
+    return {"comparison_id": cid}
+
+
 class StartComparison(BaseModel):
     task_ids: list[str]
     snapshot_a: str
@@ -221,7 +248,8 @@ def list_comparisons() -> list[dict]:
     out = []
     for r in rows:
         p = json.loads(r["plan_json"])
-        out.append({"comparison_id": r["comparison_id"], "status": r["status"], "label": r["label"], "tasks": p["tasks"],
+        out.append({"comparison_id": r["comparison_id"], "kind": p.get("kind", "snapshots"), "status": r["status"],
+                    "label": r["label"], "tasks": p["tasks"],
                     "snapshot_a": p["snapshot_a"], "snapshot_b": p["snapshot_b"], "repeats": p["repeats"],
                     "created_at": r["created_at"], "ended_at": r["ended_at"]})
     return out

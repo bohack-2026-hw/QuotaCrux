@@ -244,6 +244,9 @@ def check_output(stdout: bytes, expected: bytes, max_examples: int = 3) -> dict:
     }
 
 
+TITLE_ZH = "分组聚合"
+BASELINE_ZH = "c0：csv + 两个 dict + sorted（初始程序，正确）"
+
 # ---------- family hooks used by task packages, experience retrieval and the UI ----------
 
 BUCKET_FEATURES = ["rows", "distinct_keys", "rows_per_key", "order", "skew"]

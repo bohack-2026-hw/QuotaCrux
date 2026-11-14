@@ -12,11 +12,12 @@ import difflib
 import json
 from pathlib import Path
 
-from . import config, db
+from . import config, db, families
 
 RETRIEVAL = {
-    "version": "retrieval-v1",
-    "features": ["rows", "distinct_keys", "rows_per_key", "order", "skew"],
+    "version": "retrieval-v2",
+    "scope": "records of the same task family only",
+    "features": {name: fam.BUCKET_FEATURES for name, fam in families.REGISTRY.items()},
     "min_matches": 3,
     "max_per_outcome": {"success": 3, "failure": 2, "no_gain": 1},
     "rank": "matching features desc, then newest first",
@@ -33,13 +34,31 @@ REUSE = {
     "dedupe": "programs equal after stripping blank lines and trailing whitespace count once",
     "learn_target_margin": 0.05,
 }
-LEARNABLE_SPLITS = {"A", "smoke"}
-EXTRACTOR_VERSION = "extractor-v2"
+# Before the first model request the router picks which model starts, from what the snapshot covers. Familiar work
+# (a verified success under similar conditions) starts on the local small model; work the snapshot has no similar
+# success for (a new task family, or conditions none of its successes share) goes straight to the large model, and
+# what that run verifies becomes experience for the next similar task.
+ROUTER = {
+    "version": "router-v1",
+    "order": "re-validate verified programs first (no model); then route the model requests",
+    "small_if": "the snapshot holds a success record of the same task family matching the workload on >= min_matches "
+                "features",
+    "large_otherwise": ["new_family: no record of this task family", "new_conditions: records of the family exist but no "
+                        "success matches the workload on >= min_matches features"],
+    "min_matches": RETRIEVAL["min_matches"],
+    "after_start": "a run that starts small still switches to large by the upgrade rule",
+}
+# Splits whose runs may write experience: A (learning), S (the sealed online stream), T (tuning tasks for new families).
+LEARNABLE_SPLITS = {"A", "S", "T", "smoke"}
+WRITING_MODES = {"learn", "online"}
+EXTRACTOR_VERSION = "extractor-v3"
 NON_EVIDENCE_STATUSES = {"sandbox_error", "baseline_failed"}
 _NOTABLE_CALLS = {
     "reader", "writer", "DictReader", "read", "readline", "readlines", "splitlines", "split", "rsplit", "partition",
     "rpartition", "find", "index", "groupby", "Counter", "defaultdict", "sorted", "sort", "map", "zip", "join",
     "write", "writelines", "decode", "encode", "int", "get", "setdefault", "update", "accumulate", "compile",
+    "strptime", "strftime", "fromisoformat", "match", "fullmatch", "search", "findall", "itemgetter", "max", "min",
+    "append", "extend", "array", "bisect",
 }
 
 
@@ -49,33 +68,18 @@ class PointerLocked(RuntimeError):
 
 # ---------- conditions ----------
 
-def buckets(profile: dict) -> dict:
-    rows, dk = profile.get("rows", 0), profile.get("distinct_keys", 0)
-    if rows == 0:
-        return {"rows": "empty", "distinct_keys": "none", "rows_per_key": "none", "order": "none", "skew": "none"}
-    rpk = profile.get("avg_rows_per_key", 0)
-    sortedness = profile.get("sortedness", 0)
-    if sortedness >= 0.999:
-        order = "sorted"
-    elif profile.get("key_runs_per_key", 99) <= 1.01:
-        order = "clustered"
-    elif sortedness >= 0.9:
-        order = "nearly_sorted"
-    else:
-        order = "unsorted"
-    return {
-        "rows": "<100k" if rows < 100_000 else ("<1M" if rows < 1_000_000 else ">=1M"),
-        "distinct_keys": "<1k" if dk < 1_000 else ("<100k" if dk < 100_000 else ">=100k"),
-        "rows_per_key": "<=2" if rpk <= 2 else ("<=20" if rpk <= 20 else ">20"),
-        "order": order,
-        "skew": "high" if profile.get("top10_key_share", 0) >= 0.3 else "low",
-    }
+def features(family: str) -> list[str]:
+    return families.get(family).BUCKET_FEATURES
+
+
+def buckets(family: str, profile: dict) -> dict:
+    return families.get(family).buckets(profile)
 
 
 def _conditions(task_row, profile: dict) -> dict:
-    keep = ("rows", "distinct_keys", "avg_rows_per_key", "duplicate_rate", "top10_key_share", "sortedness", "key_runs_per_key")
+    keep = families.get(task_row["family"]).CONDITION_PROFILE_KEYS
     return {"family": task_row["family"], "task_id": task_row["task_id"], "split": task_row["split"],
-            "buckets": buckets(profile), "profile": {k: profile.get(k) for k in keep}}
+            "buckets": buckets(task_row["family"], profile), "profile": {k: profile.get(k) for k in keep}}
 
 
 # ---------- extraction ----------
@@ -216,8 +220,8 @@ def publish(run_id: str) -> str | None:
     Returns the new snapshot id, or None when the run produced no qualifying records (no empty versions).
     """
     run = db.one("SELECT * FROM runs WHERE run_id = ?", (run_id,))
-    if run["mode"] != "learn":
-        raise ValueError("only learn-mode runs publish experience")
+    if run["mode"] not in WRITING_MODES:
+        raise ValueError("only learn- and online-mode runs publish experience")
     records = extract(run_id)
     if not records:
         db.add_event(run_id, "learning_no_new_version", {"reason": "no qualifying experience records"})
@@ -262,9 +266,9 @@ def activate(snapshot_id: str, reason: str, actor: str = "user") -> dict:
     """Switch the snapshot future runs read. History and running runs are untouched."""
     if not db.one("SELECT 1 FROM snapshots WHERE snapshot_id = ?", (snapshot_id,)):
         raise KeyError(f"snapshot {snapshot_id} does not exist")
-    learning = db.one("SELECT run_id FROM runs WHERE mode = 'learn' AND status = 'running'")
+    learning = db.one("SELECT run_id, mode FROM runs WHERE mode IN ('learn', 'online') AND status = 'running'")
     if learning:
-        raise PointerLocked(f"learn run {learning['run_id']} is in progress; switch after it publishes")
+        raise PointerLocked(f"{learning['mode']} run {learning['run_id']} is in progress; switch after it publishes")
     prev = active_snapshot()
     db.update("settings", "key", "active_snapshot_id", {"value": snapshot_id})
     db.insert("pointer_history", {"ts": db.now(), "from_snapshot_id": prev, "to_snapshot_id": snapshot_id,
@@ -303,17 +307,20 @@ def compare_snapshots(a: str, b: str) -> dict:
 
 def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], dict]:
     """Deterministic selection of relevant experiences; returns (records for the prompt, selection summary)."""
-    current = buckets(profile)
+    feats = features(family)
+    current = buckets(family, profile)
+    family_records = 0
     scored = []
     for eid in snapshot_experience_ids(snapshot_id):
         e = experience(eid)
         if e["conditions"]["family"] != family:
             continue
+        family_records += 1
         theirs = e["conditions"]["buckets"]
-        matches = [f for f in RETRIEVAL["features"] if theirs.get(f) == current.get(f)]
+        matches = [f for f in feats if theirs.get(f) == current.get(f)]
         if len(matches) < RETRIEVAL["min_matches"]:
             continue
-        differs = {f: {"experience": theirs.get(f), "current": current.get(f)} for f in RETRIEVAL["features"] if f not in matches}
+        differs = {f: {"experience": theirs.get(f), "current": current.get(f)} for f in feats if f not in matches}
         scored.append((len(matches), e["created_at"], e, differs))
     scored.sort(key=lambda t: t[1], reverse=True)  # newest first ...
     scored.sort(key=lambda t: t[0], reverse=True)  # ... within the same number of matching features (stable sort)
@@ -331,7 +338,7 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
         records.append({
             "experience_id": e["experience_id"],
             "outcome": e["outcome"],
-            "match": {"matching_features": score, "of": len(RETRIEVAL["features"]), "differs": differs},
+            "match": {"matching_features": score, "of": len(feats), "differs": differs},
             "observed_conditions": {"task_id": e["conditions"]["task_id"], "buckets": e["conditions"]["buckets"],
                                     "profile": e["conditions"]["profile"]},
             "change": {"parent_candidate_id": e["action"]["parent_candidate_id"], "code_features": e["action"]["code_features"],
@@ -343,8 +350,9 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
                      "latency_s": e["resources"]["latency_s"]},
             "source": {"run_id": e["source"]["run_id"], "step_seq": e["source"]["step_seq"], "candidate_id": e["source"]["candidate_id"]},
         })
-    summary = {"retrieval": RETRIEVAL["version"], "min_matches": RETRIEVAL["min_matches"], "current_buckets": current,
-               "snapshot_size": len(snapshot_experience_ids(snapshot_id)),
+    summary = {"retrieval": RETRIEVAL["version"], "min_matches": RETRIEVAL["min_matches"], "features": len(feats),
+               "family": family, "current_buckets": current,
+               "snapshot_size": len(snapshot_experience_ids(snapshot_id)), "family_records": family_records,
                "matched_by_outcome": matched_counts, "selected": [r["experience_id"] for r in records],
                "scores": {r["experience_id"]: r["match"]["matching_features"] for r in records}}
     return records, summary
@@ -352,14 +360,15 @@ def retrieve(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], 
 
 def reusable_programs(snapshot_id: str, family: str, profile: dict) -> tuple[list[dict], dict]:
     """Verified programs to re-validate before the first model request (REUSE), closest workload first."""
-    current = buckets(profile)
+    feats = features(family)
+    current = buckets(family, profile)
     programs: dict[str, dict] = {}
     for eid in snapshot_experience_ids(snapshot_id):
         e = experience(eid)
         code = e["action"].get("code")
         if e["conditions"]["family"] != family or not code:
             continue
-        matches = sum(1 for f in RETRIEVAL["features"] if e["conditions"]["buckets"].get(f) == current.get(f))
+        matches = sum(1 for f in feats if e["conditions"]["buckets"].get(f) == current.get(f))
         p = programs.setdefault(normalized_code(code), {"code": code, "success": [], "other": []})
         (p["success"] if e["outcome"] == "success" else p["other"]).append((matches, e))
     chosen, skipped = [], []
@@ -370,10 +379,10 @@ def reusable_programs(snapshot_id: str, family: str, profile: dict) -> tuple[lis
         matches, rec = max(p["success"], key=lambda t: (t[0], t[1]["result"]["speedup"] or 0))
         against = [(m, e) for m, e in p["other"] if m > best_match]
         item = {"experience_id": rec["experience_id"], "code": p["code"], "matching_features": matches,
-                "of": len(RETRIEVAL["features"]), "speedup": rec["result"]["speedup"], "task_id": rec["conditions"]["task_id"],
+                "of": len(feats), "speedup": rec["result"]["speedup"], "task_id": rec["conditions"]["task_id"],
                 "buckets": rec["conditions"]["buckets"],
                 "differs": {f: {"experience": rec["conditions"]["buckets"].get(f), "current": current.get(f)}
-                            for f in RETRIEVAL["features"] if rec["conditions"]["buckets"].get(f) != current.get(f)},
+                            for f in feats if rec["conditions"]["buckets"].get(f) != current.get(f)},
                 "successes": len(p["success"]), "other_records": len(p["other"])}
         if against:
             m, e = max(against, key=lambda t: t[0])

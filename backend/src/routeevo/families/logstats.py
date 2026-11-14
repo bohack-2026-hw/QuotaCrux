@@ -188,6 +188,9 @@ def check_output(stdout: bytes, expected: bytes, max_examples: int = 3) -> dict:
                            max_examples=max_examples)
 
 
+TITLE_ZH = "访问日志统计"
+BASELINE_ZH = "c0：正则逐行解析 + datetime.strptime 取小时 + dict 汇总（初始程序，正确）"
+
 # ---------- family hooks ----------
 
 BUCKET_FEATURES = ["rows", "groups", "rows_per_group", "order", "errors"]

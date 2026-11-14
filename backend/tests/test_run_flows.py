@@ -23,8 +23,9 @@ def run(task, script: str, **limits):
     from routeevo import config
     from routeevo.agent.runner import RunOptions, Runner
 
-    # v0 holds no programs to re-use, so these flows exercise the model loop whatever earlier tests published
-    r = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=SCRIPTS / f"{script}.json",
+    # v0 holds no programs to re-use, so these flows exercise the model loop whatever earlier tests published; with the
+    # router on, v0 would send every run straight to the large model, so these upgrade-rule flows switch it off
+    r = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=SCRIPTS / f"{script}.json", router=False,
                           limits=dataclasses.replace(config.RunLimits(), **limits)))
     r.create()
     return r.execute()
@@ -109,7 +110,8 @@ def test_learning_publishes_snapshot_and_rollback(task):
         Runner(RunOptions(task_id=other.task_id, mode="learn", script=SCRIPTS / "success.json"))
 
     start = memory.active_snapshot()
-    learner = Runner(RunOptions(task_id=task.task_id, mode="learn", snapshot_id=start, script=SCRIPTS / "failure_upgrade.json"))
+    learner = Runner(RunOptions(task_id=task.task_id, mode="learn", snapshot_id=start, script=SCRIPTS / "failure_upgrade.json",
+                                  router=False))
     learner.create()
     rep = learner.execute()
     new = rep["experience"]["published_snapshot_id"]

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-from . import db, research
+from . import db, families, research
 
 
 def _secs(a: str | None, b: str | None) -> float | None:
@@ -84,6 +84,8 @@ def build(run_id: str) -> dict:
     passed = [cid for cid in passed_all if cid in model_ids]
     improved = [cid for cid in improved_all if cid in model_ids]
     raised = next((s for s in steps if s["action"] == "set_target"), None)
+    routed = next((s for s in steps if s["action"] == "route_model"), None)
+    route = json.loads(routed["result_json"]) if routed else None
 
     final_out = None
     if final:
@@ -108,7 +110,8 @@ def build(run_id: str) -> dict:
 
     out = {
         "run_id": run_id,
-        "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
+        "task": {"task_id": run["task_id"], "split": task["split"], "family": manifest["family"], "target_min_speedup": target,
+                 "workload": families.get(manifest["family"]).describe(manifest["dev_params"]),
                  "dev_params": manifest["dev_params"], "final_params": manifest["final_params"]},
         "mode": run["mode"], "snapshot_id": run["snapshot_id"], "label": cfg.get("label"),
         "scripted_model": cfg.get("scripted") or [],
@@ -142,6 +145,8 @@ def build(run_id: str) -> dict:
         "best_candidate": next((c for c in cand_out if c["candidate_id"] == best_id), None),
         "best_rule": "highest latest dev median speedup among passed candidates whose samples all beat the baseline's; else the initial c0",
         "run_target_speedup": json.loads(raised["result_json"])["run_target_speedup"] if raised else target,
+        # Which model the requests started on, and why (None: the run ended before any model request was routed).
+        "route": route,
         "final_evaluation": final_out,
         "candidates": cand_out,
         "iterations": {
@@ -158,6 +163,8 @@ def build(run_id: str) -> dict:
             "api_errors": sum(1 for s in steps if s["status"] == "api_error"),
             "evidence_calls": len(tools),
             "upgrades": len(upgrade_steps),
+            "large_model_requests": sum(1 for c in calls if c["role"] == "large"),
+            "small_model_requests": sum(1 for c in calls if c["role"] == "small"),
             "upgrade_at_step": upgrade_steps[0]["seq"] if upgrade_steps else None,
         },
         "usage": {

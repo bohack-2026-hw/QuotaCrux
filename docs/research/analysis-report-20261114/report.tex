@@ -1,0 +1,326 @@
+\documentclass[11pt,a4paper,UTF8,fontset=none]{ctexart}
+\usepackage[margin=20mm,top=19mm,bottom=20mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.82]
+\setCJKmainfont{Noto Serif CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}
+\setCJKmonofont{Noto Sans CJK SC}
+\usepackage{graphicx,booktabs,tabularx,array,multirow,amsmath}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr,lastpage,enumitem,caption,float,hyperref,xurl}
+\definecolor{ink}{HTML}{172C45}
+\definecolor{teal}{HTML}{087F8C}
+\definecolor{orange}{HTML}{BE6232}
+\definecolor{muted}{HTML}{54677A}
+\definecolor{pale}{HTML}{F0F5F8}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={RouteEvo 实验分析报告},pdfauthor={RouteEvo 项目组},bookmarksnumbered=true}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{muted}ROUTEEVO\quad /\quad 实验分析报告}
+\fancyhead[R]{\sffamily\small\color{muted}2026.11.14\quad v1.0}
+\fancyfoot[L]{\sffamily\scriptsize\color{muted}预算约束下的可验证研究优化}
+\fancyfoot[R]{\sffamily\small\color{muted}\thepage\ /\ \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\ctexset{section={format=\Large\sffamily\bfseries\color{ink},beforeskip=10pt,afterskip=10pt},subsection={format=\large\sffamily\bfseries\color{ink},beforeskip=10pt,afterskip=5pt}}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\linespread{1.15}
+\setlist[itemize]{leftmargin=1.4em,itemsep=3pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=4pt,topsep=3pt}
+\renewcommand{\arraystretch}{1.2}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false,skip=5pt}
+\newtcolorbox{finding}[1]{enhanced,colback=pale,colframe=teal,boxrule=0pt,borderline west={2pt}{0pt}{teal},arc=0mm,left=10pt,right=10pt,top=7pt,bottom=7pt,title={#1},coltitle=ink,fonttitle=\sffamily\bfseries,colbacktitle=pale,attach title to upper={\par}}
+\newcommand{\source}[1]{\par\vspace{2pt}{\footnotesize\color{muted}证据：#1\par}}
+\newcommand{\metric}[2]{\begin{minipage}[t]{0.31\linewidth}\sffamily\color{teal}{\LARGE\bfseries #1}\par\vspace{3pt}\small\color{ink}#2\end{minipage}}
+\newcommand{\reportfigure}[4][\linewidth]{\begin{figure}[H]\centering\includegraphics[width=#1]{figures/#2}\caption{#3}\label{#4}\end{figure}}
+\newcommand{\repo}{https://github.com/bohack-2026-hw/RouteEvo}
+\newcommand{\snap}{cd9cc4fcc7af46451acd2398042c9e9b8b255d67}
+\input{generated/metrics.tex}
+\begin{document}
+\thispagestyle{empty}
+{\sffamily\small\color{teal}\bfseries RESEARCH REPORT\hfill 2026 年 11 月 14 日}
+\vspace{14mm}
+
+{\sffamily\fontsize{34}{41}\selectfont\bfseries\color{ink}RouteEvo}\par
+\vspace{3mm}
+{\sffamily\fontsize{23}{31}\selectfont\bfseries\color{ink}预算约束下的可验证研究优化}\par
+\vspace{3mm}
+{\sffamily\large\color{muted}实验设计、数据分析与结论\quad /\quad v1.0}
+\vspace{9mm}
+
+\begin{finding}{核心问题}
+在有限时间、请求次数和候选数量下，研究代理应当怎样选择下一步动作、使用哪个生成模型，并把实验反馈转化为经过独立验证的改进？
+\end{finding}
+\vspace{4mm}
+\metric{15 轮}{固定 Qwen 研究策略对照}\hfill
+\metric{4 组合}{动作 / 模型路由短批探索}\hfill
+\metric{+6.15\%}{短批最佳 final 相对初始程序}
+\vspace{8mm}
+
+{\sffamily\large\bfseries\color{ink}摘要}\par
+RouteEvo 将动作选择、模型选择、候选生成和外部评测分离，记录研究轨迹与资源消耗。本报告分析 ALE-Bench 上的 15 轮固定 Qwen 研究策略对照，以及同一任务上四种路由组合的短批探索；Mac AlgoTune 结果单列为待原始文件核验的开发集探索。
+
+固定 Qwen 实验中，当前反馈驱动策略未表现出稳定优势。15 个最终交付均通过验证，其中 8 个保留初始程序；模型提出候选的开发通过率为 62.5\%。路由短批中，仅动作 Decisions 的最终得分相对初始程序提高 6.15\%，较默认路由提高约 0.17\%。双 Decisions 用时较少，但最终改进幅度也更小。
+
+这些结果支持研究闭环的可运行性，以及决策策略对质量、时间和成本取舍的影响。路由各组仅运行一次，当前证据用于描述行为与实际差异；稳定效果仍需重复实验检验。
+
+\vfill
+{\small\color{muted}
+报告对象：本轮外部 benchmark；历史自建任务作为能力背景。\par
+数据快照：\texttt{cd9cc4f}；执行源码和证据索引见第 10 页。\par
+交付物：LaTeX 源码、PDF、可重算 JSON、矢量图与分析脚本。\par
+仓库名称为 RouteEvo；现有海报展示名为 QuotaCrux（枢决）。
+}
+
+\newpage
+\section{研究问题与系统边界}
+\subsection{从生成一个答案，到管理一次研究过程}
+研究代理的输出不只是一段代码。它需要在预算内选择行动、生成可执行候选、获取裁判证据，并决定继续搜索还是交付。我们围绕三个问题组织分析：
+\begin{enumerate}
+\item \textbf{质量：}是否找到优于初始程序的方案，最终独立测试是否通过？
+\item \textbf{策略：}完整反馈、独立探索、隐藏后续反馈，会怎样改变候选与最终结果？
+\item \textbf{资源：}动作和模型路由如何改变调用分配、等待时间、费用与停止行为？
+\end{enumerate}
+
+\textbf{本轮任务。}ahc024 在保持区域连通性和邻接关系的前提下压缩地图、增加空白格；ahc026 规划箱子搬运，以较少能量按编号取出箱子。两者最大化原生裁判得分；Mac 的 AlgoTune 探索则衡量函数耗时加速比。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small\sffamily,node distance=7mm and 6mm,box/.style={draw=teal,fill=pale,rounded corners=2pt,align=center,minimum height=13mm,text width=26mm},arr/.style={-{Stealth[length=2mm]},thick,draw=muted}]
+\node[box] (task) {固定任务\\初始程序 c0};
+\node[box,right=of task] (route) {选择动作\\与生成模型};
+\node[box,right=of route] (code) {生成候选\\Qwen / Sol};
+\node[box,right=of code] (judge) {外部 dev 裁判\\正确性与得分};
+\node[box,below=12mm of judge] (best) {更新状态\\保留 dev 最优};
+\node[box,left=of best] (freeze) {结束研究\\冻结候选};
+\node[box,left=of freeze] (final) {独立 final\\导出结果与账本};
+\draw[arr] (task)--(route);\draw[arr] (route)--(code);\draw[arr] (code)--(judge);\draw[arr] (judge)--(best);
+\draw[arr] (best)--(freeze);\draw[arr] (freeze)--(final);
+\draw[arr] (best.east)--++(6mm,0) |- ([yshift=7mm]route.north) -- (route.north);
+\node[font=\scriptsize,above=7mm of code] {继续研究：历史与反馈按策略可见};
+\end{tikzpicture}
+\caption{本轮 native benchmark 的研究流程。动作选择可以决定结束；Decisions 负责离散决策，候选代码仍由生成模型产生。}
+\end{figure}
+
+\subsection{实验中的模型分工}
+\begin{tabularx}{\linewidth}{@{}lLL@{}}\toprule
+角色 & 配置 & 本轮用途\\\midrule
+small & 托管 Qwen3.8-27B；不启用 thinking；输出上限 8192 & 固定模型对照；路由短批的起始生成模型\\
+large & gpt-6.1-sol；xhigh；输出上限 32000 & 路由升级后的候选生成\\
+Decisions & gpt-6-luna；真实 Decisions API & 按组合选择动作、模型，或两者\\\bottomrule
+\end{tabularx}
+
+\subsection{任务内优化与跨任务经验是两套证据}
+系统早期实现了历史程序复验、经验版本、跨任务复用与在线经验积累。本轮 native 实验统一使用 \texttt{eval/v0}，从空经验快照开始，不写入跨任务经验。因此，本报告检验的是\textbf{同一研究任务内的候选改进和调度行为}。历史自建任务结果与本轮外部 benchmark 分开保留，避免把不同任务、机器和协议汇总成一个效果值。
+\source{[S1] runner / prompt / routing 实现；[S2--S3] 调用记录中的任务说明；[S6] 历史项目说明与结果。}
+
+\newpage
+\section{实验设计与证据口径}
+\begin{tabularx}{\linewidth}{@{}lLL@{}}\toprule
+项目 & 固定 Qwen 策略对照 & Decisions 路由短批\\\midrule
+任务与重复 & ahc024：F/I 各 3 次；ahc026：F/I/N 各 3 次 & ahc026：四种组合各 1 次\\
+研究预算上限 & 900 秒；20 请求；10 候选 & 360 秒；20 请求；10 候选\\
+评测 & 每题 5 dev / 15 final & 同左；先冻结 dev 最优，再 final\\
+模型 & 固定托管 Qwen & 从 Qwen 开始，允许单向升级 Sol\\
+研究状态 & 14 completed + 1 failed & 4 completed\\
+最终交付验证 & 15/15 通过 & 4/4 通过\\
+批次墙钟 & 43 分 41 秒，含 4 分 02 秒中断 & 21 分 24 秒\\\bottomrule
+\end{tabularx}
+
+\subsection{F / I / N 的含义}
+\begin{tabularx}{\linewidth}{@{}lL@{}}\toprule
+策略 & 模型可见信息与行为边界\\\midrule
+F：feedback & 保留研究历史与开发评测反馈，可以围绕已有候选继续改进。\\
+I：independent & 清空前序分析、历史和其它候选，只能从 c0 独立提案或结束。\\
+N：no\_feedback & 保留自身研究历史，但隐藏后续评测反馈；初始 c0 评测及协议格式错误仍可见。\\\bottomrule
+\end{tabularx}
+F 与 I 比较的是整套研究策略。F 与 N 更接近保留自身历史、移除后续评测反馈的消融；不能把 F/I 的差异单独归因于反馈。
+
+\subsection{五个统计约定}
+\begin{enumerate}
+\item \textbf{c0 与路由基线不同。}c0 是仓库采用的可行初始程序，不代表上游竞争性解法；路由 baseline 为 LLM 动作选择 + rule 模型路由。相对提升必须注明分母。
+\item \textbf{dev 与 final 分开。}曲线展示 5 例 dev 上的保留最优值；主结果表使用独立 15 例 final。ahc026 两者 c0 分别为 44120 和 131864。
+\item \textbf{相同预算上限允许不同实际用量。}主动结束是策略行为；路由调用与生成调用共同占用短批的 20 次 HTTP 请求额度。
+\item \textbf{状态与交付分开。}接口错误终止的研究可保留已有正确候选；最终通过率必须同时报告 c0 交付比例与候选通过率。
+\item \textbf{并行时长与费用分开。}等待占比以逐轮耗时之和为分母；CNY/USD 各自统计，失败调用未知用量保持未知。
+\end{enumerate}
+\source{[S2] 冻结计划、summary / comparison；[S3] 短批计划、comparison、逐轮 report。}
+
+\newpage
+\section{固定 Qwen：策略对照与反馈消融}
+\reportfigure{feedback_ablation.pdf}{各组展示全部重复与中位数，衡量 final 相对各自 c0 的提升。每组 3 次；ahc024 的 F/I 六轮均无提升。}{fig:feedback}
+\begin{tabularx}{\linewidth}{@{}llrrrL@{}}\toprule
+任务 & 策略 & final 中位数 & 相对 c0 & 候选通过 & c0 交付\\\midrule
+ahc024 & F & 15 & 0.000\% & 5/25 & 3/3\\
+ahc024 & I & 15 & 0.000\% & 15/23 & 3/3\\
+ahc026 & F & 132273 & 0.310\% & 14/20 & 1/3\\
+ahc026 & I & 133031 & 0.885\% & 10/12 & 1/3\\
+ahc026 & N & 132428 & 0.428\% & 16/16 & 0/3\\\bottomrule
+\end{tabularx}
+
+\begin{finding}{观察：当前反馈驱动策略没有表现出稳定优势}
+ahc026 的 F 中位数低于两个对照；ahc024 全部交付 c0。结果说明：让模型获得反馈，并不自动转化为有效的候选改进。本批支持进一步分析反馈利用与搜索策略，不能据此认定反馈机制本身无效。
+\end{finding}
+\textbf{正确性保护与优化成功需要分别解释。}共 96 个模型候选，60 个通过 dev（62.5\%）；15 个最终交付全部通过，但 8 个交付 c0。保留正确初始程序保障了交付，最终通过率不能替代模型候选成功率。
+
+\textbf{波动与失败保留在结果中。}ahc026/I/r2 在 HTTP 400 后结束，已有候选 final 得分为 135088；该轮状态仍为 failed。后续仅执行尚未启动的位置。三次重复用于展示差异和波动，本报告不做显著性或稳定排名推断。
+\source{[S2] 15 轮原始报告与聚合结果；完整逐轮 final 值见第 10 页。}
+
+\newpage
+\section{路由组合：质量与实际耗时}
+\reportfigure{routing_tradeoff.pdf}{ahc026 四组各一次。纵轴为 final 相对 c0 的提升，横轴为包含 final 的单轮总耗时。相同的是研究预算上限，实际运行时长不同。}{fig:tradeoff}
+\begin{tabularx}{\linewidth}{@{}Lrrrr@{}}\toprule
+动作 / 模型路由 & final 分数 & 相对 c0 & 总耗时（秒） & 相对路由基线\\\midrule
+LLM / rule & 139736 & +\ReportBaselineGain\% & 392.039 & 基线\\
+Decisions / rule & 139972 & +\ReportActionGain\% & 389.380 & +236 分\\
+LLM / Decisions & 139559 & +\ReportModelGain\% & 389.913 & $-177$ 分\\
+Decisions / Decisions & 132540 & +\ReportBothGain\% & 112.910 & $-7196$ 分\\\bottomrule
+\end{tabularx}
+
+\begin{finding}{观察：路由策略改变了本次质量与资源分配}
+仅动作 Decisions 得分最高，比默认路由提高约 0.17\%。双 Decisions 全程使用 Qwen、主动结束，总耗时比默认路由少约 71.2\%，同时最终改进幅度明显更小。这是研究运行时长与结果质量的取舍，不是候选程序的算法加速比。
+\end{finding}
+四组全部通过 15 例 final，24 个模型候选全部通过 dev。短批基线包含一次 Sol timeout；完整 HTTP 请求预算仍计入这次尝试。因此，基线与其它组的差异还受到实际服务事件影响。
+
+每组仅一次，不能分离随机生成、服务延迟和路由策略的稳定效应。当前结果适合用作行为案例和后续实验依据，不据此选定普遍最优路由。
+\source{[S3] comparison、report、model\_calls；c0 final=131864。}
+
+\newpage
+\section{过程证据：保留改进，也保留回退}
+\reportfigure[0.94\linewidth]{routing_trajectory.pdf}{开发集保留最优分数随真实研究时间变化；各组以 dev c0 归一化。阶梯在验证完成后更新，结束时延续最后保留值；不接入 final 分数。}{fig:trajectory}
+
+\subsection{案例：动作 Decisions + 规则模型路由}
+这一轮从 Qwen 起步。c1、c2 均未优于 c0，规则触发升级 Sol。后续 c3、c4 改进；c5 退步时，系统仍保留 c4。c6、c7 再次提升，最后冻结 c7，运行独立 final。
+
+\begin{tabularx}{\linewidth}{@{}lrrL@{}}\toprule
+完成验证的候选 & 研究耗时（秒） & 保留 dev 分数 & 研究状态\\\midrule
+c1 / c2 & 12.851 / 22.792 & 44120 & 两次无增益，随后升级生成模型\\
+c3 & 94.286 & 46506 & 接受改进\\
+c4 & 178.438 & 46798 & 接受改进\\
+c5 & 244.796 & 46798 & 候选回退，保留 c4\\
+c6 & 311.463 & 46800 & 接受小幅改进\\
+c7 & 357.026 & 46849 & 最后改进；冻结后 final=139972\\\bottomrule
+\end{tabularx}
+
+\begin{finding}{案例说明了什么}
+候选表现可以下降，交付选择器仍保留已验证的较好方案。模型升级与继续搜索在这条轨迹中产生改进；最终选优依赖 dev，独立 final 用于验收。它提供了一条可追踪的研究过程，而非只报告末端分数。
+\end{finding}
+该案例选自本次 final 得分最高的组，用于解释机制；它不代表平均轨迹，也不能把升级后的所有提升单独归因于 Decisions。
+\source{[S3] \texttt{run-20261114T085616-894b/report.json} 的 steps、progress、final\_evaluation。}
+
+\newpage
+\section{资源账本：请求、等待与费用}
+\reportfigure[0.94\linewidth]{routing_resources.pdf}{短批各组的请求分工、时间分解及分币种费用。USD 的基线数额为已知部分，包含一次用量未知的 timeout；不把未知记为零。}{fig:resources}
+\begin{tabularx}{\linewidth}{@{}Lrrrr@{}}\toprule
+组合 & small / large / 决策 & CNY & USD 已知部分 & 费用完整性\\\midrule
+LLM / rule & 3 / 6 / 0 & 0.066657 & 0.2772980 & USD 部分已知\\
+Decisions / rule & 2 / 5 / 7 & 0.039933 & 0.2747183 & 用量已报告\\
+LLM / Decisions & 7 / 4 / 8 & 0.150432 & 0.2415256 & 用量已报告\\
+Decisions / Decisions & 6 / 0 / 13 & 0.184455 & 0.0107416 & 用量已报告\\\bottomrule
+\end{tabularx}
+
+\textbf{调度也占用研究预算。}短批共 61 次 HTTP 请求：18 次 small、15 次 large（含一次 timeout）、28 次 Decisions。双 Decisions 的 19 次请求中有 13 次用于决策，因此调用次数多不一定代表生成了更多候选。
+
+\textbf{本轮的主要时间消耗是模型等待。}固定 Qwen 批次累计模型等待 3441.755 秒，逐轮总耗时之和 3665.581 秒，占比约 93.89\%。因为双 worker 并行，该比值不能用 2621.263 秒的批次墙钟作分母。路由各组模型等待约占单轮总耗时的 80\%--86\%。
+
+\textbf{费用按冻结单价估算。}CNY/USD 分别累加；reasoning tokens 已属于输出，不重复计费。desktop 使用托管 Qwen；设备和人工成本未核算。
+\source{[S2--S4] 冻结价表、调用用量和 timing；跨批费用见第 10 页。}
+
+\newpage
+\section{Mac 探索：独立列示的补充案例}
+Snowball 报告在 Mac 上完成四项 OpenAI-only 探索：固定 gpt-6.1-sol，每项上限 180 秒 / 5 请求 / 3 候选，每题仅 2 个 dev 用例，final 关闭，主机处于高负载。新探索的原始结果包尚未推送；本节来源为已归档的 issue 汇报。
+
+\begin{tabularx}{\linewidth}{@{}lLrr@{}}\toprule
+任务 & 模式 & 作者报告 dev 加速比 & final 用例数\\\midrule
+convolve & feedback & 1.298578$\times$ & 0\\
+convolve & independent & 2.669288$\times$ & 0\\
+PageRank & feedback & 25.041935$\times$ & 0\\
+PageRank & independent & 23.051415$\times$ & 0\\\bottomrule
+\end{tabularx}
+
+作者报告 12/12 模型调用成功；输入 34240 tokens、输出 26717 tokens，其中 reasoning 18884 tokens 包含在输出内。16 次 evaluation 全为 dev，累计 slot 耗时 567.385 秒，报告口径费用 USD 0.335650。累计 slot 时长不等于已核验的整批墙钟。
+
+\begin{finding}{证据用途}
+这组结果适合作为“不同优化任务可以产生怎样的候选”的探索入口。PageRank 约 25 倍是小开发集上的作者报告值；在原始计时、候选和独立 final 未补齐前，不作为主报告的正式性能结论，也不与 ALE 原生得分求平均。
+\end{finding}
+
+\subsection{远端本地 Qwen：失败与人工介入}
+LM Studio 的 \texttt{qwen3.8-27b-uncensored-mlx} 前三次请求因代理返回 HTTP 503。绕过代理后的请求耗时 120.19 秒，输出被上限截断，未产生完整模型候选。
+
+作者随后根据可见输出做了\textbf{人工语义重建}，并调整 import 与变量名。这个单独候选在两例 dev 上正确、加速 1.225486$\times$；它不计为模型自主交付，记录中的模型候选和正式结果资格均为 false。模型生成、人工协助和最终验证三者分别保留。
+
+\subsection{交付状态}
+远端准备分支截至 \texttt{a66d470} 的历史材料已合入主分支，包含环境、校准、GC 诊断与历史 runner；这些材料不能替代新探索的结果包。原固定 Qwen 15 轮与路由 12 轮计划本轮未启动。待补项是已完成实验的原始文件、用量、计时与哈希，不是继续启动旧计划。
+\source{[S5] issue \#4 完成汇报和人工介入更正；本报告 sources/ 保存引用文本。}
+
+\newpage
+\section{结论、解释与后续展示}
+\subsection{三个由当前证据支持的结论}
+\begin{enumerate}
+\item \textbf{闭环已经可用，改进能够落到验证后的程序。}路由短批四个最终候选都通过独立测试，最佳得分相对 c0 提高 6.15\%；真实轨迹展示了升级、候选回退与保留最优。正确交付与优化成功分开统计，使失败和无收益仍可追踪。
+\item \textbf{决策策略影响资源分配，也影响交付质量。}动作 Decisions 本次略高分；双 Decisions 全程 small、提前结束，降低实际耗时并牺牲改进幅度。应把 Decisions 展示为可替换的调度层，而不是预设它在所有条件下更优。
+\item \textbf{当前反馈策略仍有改进空间。}固定 Qwen 下，F 没有表现出稳定优势。下一步应围绕具体的失败候选、反馈可操作性和停止时机建立假设，再用受控实验验证，而不是仅增加反馈文本。
+\end{enumerate}
+
+\subsection{哪些解释还需要后续实验}
+路由每组一次，实际服务 timeout、任务单一和生成波动均会影响结果；不能稳定估计交互效应。F/I 同时改变历史与候选可见性，不能单独识别反馈因果效应。主结果衡量程序优化与调度过程，尚未覆盖长文献研究等任务，也不验证跨 session 学习。
+
+本次工作核验的是归档文件哈希与记录一致性；并未在当前机器重新执行全部裁判。归档审计中部分输入和 expected 文件未同步到本机。复现实验需要原 benchmark 环境与数据，生成模型也会引入新的随机性和费用。
+
+\begin{finding}{建议用于项目介绍的核心表述}
+RouteEvo 是一个预算约束下的研究优化代理：自主选择下一步动作与生成模型，通过外部实验验证持续改进方案，并交付可追踪、可复核的结果。
+\end{finding}
+
+\subsection{从本报告衍生展示材料}
+\begin{tabularx}{\linewidth}{@{}lLL@{}}\toprule
+材料 & 推荐内容 & 保留的关键口径\\\midrule
+PPT & 问题与流程；路由取舍；一条真实轨迹；结论 & n=1；相对 c0 / 路由基线分别标注\\
+海报 & 研究闭环、质量与耗时图、复核入口 & 托管模型事实；Mac 探索单列\\
+前端演示 & 真实轨迹重放，显示 dev、最佳候选和预算 & final 在候选冻结后执行；回放明确标识\\\bottomrule
+\end{tabularx}
+\textbf{当前收尾顺序：}补齐 Mac 已完成实验的证据；统一各材料的数据来源与命名；验证演示链路。若开展后续研究，优先重复路由短批并增加任务，而非扩展与结论无关的功能。
+
+\newpage
+\section{数据附录与复核入口}
+\subsection{完整重复与费用账本}
+\begin{tabularx}{\linewidth}{@{}llL@{}}\toprule
+任务 & 策略 & final 原始分数（r1 / r2 / r3）\\\midrule
+ahc024 & F & 15 / 15 / 15\\
+ahc024 & I & 15 / 15 / 15\\
+ahc026 & F & 133352 / 131864 / 132273\\
+ahc026 & I & 133031 / 135088 / 131864（r2 研究状态 failed）\\
+ahc026 & N & 132015 / 135718 / 132428\\\bottomrule
+\end{tabularx}
+\vspace{2mm}
+\begin{tabularx}{\linewidth}{@{}LrrL@{}}\toprule
+批次 & CNY 已知部分 & USD 已知部分 & 未知或范围说明\\\midrule
+固定 Qwen 15 轮 & 7.445133 & --- & 一次 HTTP 400 用量未知\\
+路由短批 4 轮 & 0.441477 & 0.8042835 & 一次 Sol timeout 用量未知\\
+停止长批 & 0.128631 & 0.7716757 & 一次 Sol timeout；非短批重复\\
+Mac OpenAI 探索 & --- & 0.3356500 & 作者报告，待文件核验\\\bottomrule
+\end{tabularx}
+desktop 三批已知小计为 \textbf{CNY \ReportDesktopCNY{} + USD \ReportDesktopUSD{}}；含 Mac 作者报告后为 \textbf{CNY \ReportDesktopCNY{} + USD 1.9116092}。均不代表全部实验完整成本，不含更早 pilot、设备和人工成本。
+
+原 900 秒路由长批共计划 12 轮：1 completed、1 user\_stopped、10 not\_run。完成的 baseline final=139950，停止的 action 轮未执行 final；批次约 17 分 17 秒。该批与短批协议不同，不能追加为短批重复，其 comparison.fair 为 null。
+
+\subsection{执行版本、文件核验与重建}
+固定 Qwen 执行源码 \texttt{990f598}；路由与 Mac 最终执行源码 \texttt{912b20a}；报告基于仓库快照 \texttt{cd9cc4f}。本次核验了三批 SHA256 清单的 \textbf{356 + 114 + 54 = 524} 个条目，全部匹配。哈希核验确认归档字节一致，不替代重新运行实验。
+
+报告目录提供 \texttt{scripts/analyze.py}、\texttt{generated/analysis.json}、\texttt{figures/} 和 \texttt{report.tex}；\texttt{build.sh} 从现有记录重算图表并编译 PDF，不调用模型。依赖与命令见同目录 README。
+
+\subsection{证据索引}
+{\footnotesize
+\begin{description}[style=nextline,leftmargin=2.7em,labelwidth=2.5em,itemsep=2pt,topsep=0pt]
+\item[S1] \href{\repo/tree/\snap/backend/src/routeevo/agent}{Agent 源码：runner.py、prompt.py、routing.py}。定义策略信息边界、动作及模型路由。
+\item[S2] \href{\repo/tree/\snap/docs/research/native-formal-20261114/ale/results}{ALE 固定 Qwen 归档}：summary.json、comparison.json、逐轮 report、SHA256SUMS。
+\item[S3] \href{\repo/tree/\snap/docs/research/native-routing/20261114/short-results}{Decisions 短批归档}：comparison.json、audit.json、report、model\_calls。
+\item[S4] \href{\repo/tree/\snap/docs/research/native-routing/20261114/long-batch-stopped}{停止长批归档}：comparison.json 与停止记录，单独保留。
+\item[S5] \href{\repo/issues/4\#issuecomment-6875147747}{Mac 完成汇报}、\href{\repo/issues/4\#issuecomment-6875164961}{人工介入更正}；本地 sources/ 中保留 issue 文本与时间。
+\item[S6] \href{\repo/blob/\snap/docs/project-description.md}{历史项目说明}、\href{\repo/blob/\snap/docs/results.md}{历史自建任务结果}；作为能力背景，不并入本轮样本。
+\end{description}
+}
+\end{document}

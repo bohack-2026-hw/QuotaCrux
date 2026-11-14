@@ -4,7 +4,7 @@ import type { Report, Research, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
-import { ACTION, MODE, OUTCOME, ROUTE, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
+import { ACTION, MODE, OUTCOME, ROUTE, SPLIT, STOP, decision, fmt, rmode, roleName, stopDetail } from '../labels'
 
 export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   runId: string | null
@@ -106,15 +106,30 @@ function groupTasks(ts: TaskSummary[]): [string, TaskSummary[]][] {
   return order.map((s) => [s, ts.filter((t) => t.split === s)] as [string, TaskSummary[]]).filter(([, v]) => v.length)
 }
 
+/** List outcome. No final evaluation row means the final test did not run (dev-only, or the run ended early): that is
+    "final 未运行", never "未达标". */
+function runOutcome(r: RunRow): { text: string; tone: 'good' | 'bad' | 'muted' | null } {
+  if (r.status === 'running') return { text: '运行中', tone: null }
+  const stop = STOP[r.stop_reason ?? ''] ?? r.stop_reason ?? r.status
+  // Current API: final_status is decided by the backend; older APIs fall back to the final evaluation row.
+  if (r.final_status === 'disabled') return { text: `仅开发 · ${stop}`, tone: 'muted' }
+  if (r.final_status === 'not_run' || r.final_status === 'pending') return { text: `final ${r.final_status === 'pending' ? '待评测' : '未运行'} · ${stop}`, tone: 'muted' }
+  if (r.final_status === 'failed') return { text: r.final_error ? 'final 异常' : `最终未通过${r.final_speedup != null ? ` ${fmt.x(r.final_speedup)}` : ''}`, tone: 'bad' }
+  const finalRan = r.final_goal_met != null || r.final_speedup != null || r.final_score != null
+  if (!finalRan) return { text: `${r.dev_only ? '仅开发' : 'final 未运行'} · ${stop}`, tone: 'muted' }
+  if (r.final_score != null) return { text: `最终得分 ${fmt.n(r.final_score)}`, tone: null }
+  if (r.final_goal_met) return { text: `达标 ${fmt.x(r.final_speedup)}`, tone: 'good' }
+  return { text: `最终未达标${r.final_speedup != null ? ` ${fmt.x(r.final_speedup)}` : ''} · ${stop}`, tone: 'bad' }
+}
+
 function RunItem({ r, on, pick }: { r: RunRow; on: boolean; pick: () => void }) {
+  const o = runOutcome(r)
   return (
     <button className={on ? 'on' : ''} onClick={pick}>
-      <div className="spread">
-        <b>{r.task_id} · {MODE[r.mode] ?? r.mode} · 读 {r.snapshot_id}</b>
-        <span>{r.status === 'running' ? '运行中'
-          : r.final_score != null ? <span>得分 {fmt.n(r.final_score)}</span>
-          : r.final_goal_met ? <span style={{ color: 'var(--good-ink)' }}>达标 {fmt.x(r.final_speedup)}</span>
-          : `未达标 · ${STOP[r.stop_reason ?? ''] ?? r.status}`}</span>
+      <b className="id-wrap" style={{ display: 'block' }}>{r.task_id}</b>
+      <div className="spread" style={{ flexWrap: 'wrap', gap: '2px 10px' }}>
+        <span>{r.research_mode && r.research_mode !== 'legacy' ? `研究 · ${rmode(r.research_mode).label}` : `${MODE[r.mode] ?? r.mode} · 读 ${r.snapshot_id}`}</span>
+        <span style={o.tone === 'good' ? { color: on ? undefined : 'var(--good-ink)' } : o.tone === 'muted' ? { opacity: 0.75 } : undefined}>{o.text}</span>
       </div>
       <div className="rid">{r.run_id}</div>
     </button>
@@ -134,17 +149,28 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
   const currentRole = fixedRole ?? (upgraded || routedLarge ? 'large' : 'small')
   const routeKey = rep.route?.reason ?? ((rep.iterations.model_requests ?? 0) === 0 && rep.outcome.best_from_reuse ? 'reuse' : null)
   const loopS = rep.timing.agent_loop_elapsed_s ?? 0
+  const protocol = rep.config.research_protocol
+  const score = rep.task.objective.metric === 'score'
+  const devOnly = protocol?.final_evaluation === false
+  const bestDev = rep.best_candidate?.dev_evaluations.at(-1) ?? null
+  const bestDevValue = score ? bestDev?.objective?.value ?? null
+    : bestDev?.speedup ?? (rep.best_candidate?.candidate_id === 'c0' && bestDev?.status === 'passed' ? 1 : null)
 
   useEffect(() => {
     if (!codeOf) return
     api.candidate(rep.run_id, codeOf).then((c) => setCode(c.code)).catch(() => setCode(null))
   }, [codeOf, rep.run_id])
 
-  const flags: [string, boolean | null][] = [
-    ['候选程序运行完成', o.candidate_ran],
-    ['开发验证通过', o.dev_validation_passed],
-    ['指标改善（全部样本快于基线）', o.dev_improved],
-    ['最终测试达到目标', live ? null : o.goal_met],
+  // The final flag is only yes/no once the final test ran; otherwise it says why it has no verdict.
+  const finalFlag: [string, boolean | null, string | null] = live ? ['最终测试', null, '待定']
+    : !o.final_evaluated ? ['最终测试', null, devOnly ? '未启用（仅开发）' : '未运行']
+    : score ? ['最终测试正确', o.final_correct ?? null, null]
+    : ['最终测试达到目标', o.goal_met, null]
+  const flags: [string, boolean | null, string | null][] = [
+    ['候选程序运行完成', o.candidate_ran, null],
+    ['开发验证通过', o.dev_validation_passed, null],
+    [score ? '开发得分高于基线' : '指标改善（全部样本快于基线）', o.dev_improved, null],
+    finalFlag,
   ]
 
   return (
@@ -154,21 +180,29 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
           <div className="eyebrow">{rep.task.task_id} · {SPLIT[rep.task.split] ?? rep.task.split} 批 · {MODE[rep.mode] ?? rep.mode}模式 · 读取 {rep.snapshot_id}</div>
           <div className="row">
             {routeKey && <Chip tone={ROUTE[routeKey]?.[1] ?? 'neutral'} icon="⇢">{ROUTE[routeKey]?.[0] ?? routeKey}</Chip>}
+            {protocol?.mode && <Chip tone="accent">研究 · {rmode(protocol.mode).label} {protocol.mode}</Chip>}
+            {protocol?.fixed_model && <Chip>固定 {rep.config.models[protocol.fixed_model]?.model ?? protocol.fixed_model}</Chip>}
+            {devOnly && <Chip tone="warn" icon="!">仅开发 · final 未启用</Chip>}
             {rep.scripted_model.length > 0 && <Chip tone="warn" icon="!">脚本模型：仅功能检查</Chip>}
             <StatusChip value={rep.status} />
             {rep.stop_reason && <Chip tone={rep.stop_reason === 'goal_reached' ? 'good' : 'neutral'}>{STOP[rep.stop_reason] ?? rep.stop_reason}</Chip>}
           </div>
         </div>
-        <div className="headline">{live ? '运行中……' : o.summary}</div>
+        <div className="headline">{live ? '运行中……' : runHeadline(rep, score, devOnly, bestDevValue)}</div>
         <div className="flags">
-          {flags.map(([k, v]) => (
+          {flags.map(([k, v, na]) => (
             <div key={k} className={`flag ${v == null ? 'na' : v ? 'yes' : 'no'}`}>
               <div className="k">{k}</div>
-              <div className="v">{v == null ? '待定' : v ? '✓ 是' : '✕ 否'}</div>
+              <div className="v">{v == null ? na ?? '待定' : v ? '✓ 是' : '✕ 否'}</div>
             </div>
           ))}
         </div>
-        {rep.stop_detail && !live && <p className="small muted" style={{ marginBottom: 0 }}>终止依据：{stopDetail(rep.stop_detail)}</p>}
+        {rep.stop_detail && !live && (
+          <details className="fold">
+            <summary>{rep.stop_reason === 'agent_finished' ? 'Agent 自述的结束理由（模型原文，未验证）' : '终止依据'}</summary>
+            <p className="small muted" style={{ margin: 0 }}>{stopDetail(rep.stop_detail)}</p>
+          </details>
+        )}
       </div>
 
       <TaskDefinition r={rep.research} />
@@ -187,7 +221,12 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
           <Stat k="Token 输入 / 输出" v={`${fmt.n(u.input_tokens)} / ${fmt.n(u.output_tokens)}`}
             s={u.reasoning_tokens != null ? `其中推理 ${fmt.n(u.reasoning_tokens)}` : u.input_tokens_unknown_calls ? `${u.input_tokens_unknown_calls} 次调用用量未知` : '推理 token 未单列'} />
           <Stat k="模型费用" v={fmt.usd(u.cost_usd)} s={costNote(u.cost_status)} />
-          <Stat k={rep.task.objective.metric === 'score' ? '最终原始得分' : '最终加速比'} v={rep.task.objective.metric === 'score' ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)} s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : '最终测试未运行'} />
+          <Stat k={score ? '开发集最佳原始得分' : '开发集最佳加速比'}
+            v={bestDevValue == null ? '—' : score ? fmt.n(bestDevValue) : `${bestDevValue.toFixed(4)}×`}
+            s={rep.best_candidate ? `${rep.best_candidate.candidate_id}${rep.best_candidate.candidate_id === 'c0' ? ' · 初始程序' : ''}${score && rep.task.objective.baseline != null ? ` · 基线 ${fmt.n(rep.task.objective.baseline)}` : ''}` : '尚无有效候选'} />
+          <Stat k={score ? '最终原始得分' : '最终加速比'}
+            v={!o.final_evaluated ? (live ? '—' : '未运行') : score ? fmt.n(o.final_objective?.value) : fmt.x(o.final_speedup)}
+            s={rep.final_evaluation ? `最终测试 ${rep.final_evaluation.correct ? '正确' : '未通过'}` : devOnly ? '本次为开发预实验，final 未启用' : '最终测试未运行'} />
         </div>
       </div>
 
@@ -311,6 +350,19 @@ function Experiments({ r }: { r: Research }) {
   )
 }
 
+/** The headline is written here from the recorded outcome, not taken from the backend's summary string. */
+function runHeadline(rep: Report, score: boolean, devOnly: boolean, best: number | null): string {
+  const o = rep.outcome
+  const cid = rep.best_candidate?.candidate_id
+  if (!cid) return '没有得到有效程序'
+  const value = best == null ? '—' : score ? `${fmt.n(best)} 分` : `${best.toFixed(4)}×`
+  const dev = cid === 'c0' ? `保留初始程序（${value}）` : `开发集最佳 ${value}（${cid}）`
+  if (!o.final_evaluated) return `${dev} · 最终集${devOnly ? '未启用' : '未运行'}`
+  if (!o.final_correct) return `${dev} · 最终集未通过`
+  const fin = score ? `${fmt.n(o.final_objective?.value)} 分` : fmt.x(o.final_speedup)
+  return `最终集通过：${fin}${!score && o.goal_met ? '，达到目标' : ''}`
+}
+
 function costNote(s: string) {
   return ({ estimated: '按官方价表估算', local_no_api_fee: '本地 Qwen 无 API 费用', not_applicable: '脚本模型不计费', no_model_calls: '没有调用模型', partial: '部分调用费用未知', unknown: '费用未知' } as Record<string, string>)[s] ?? s
 }
@@ -354,7 +406,7 @@ function feedback(r: Record<string, unknown>) {
   if (f) {
     const ex = (f.examples as Record<string, unknown>[] | undefined)?.[0]
     return (
-      <p className="small" style={{ color: '#8e2424' }}>
+      <p className="small" style={{ color: 'var(--critical-ink)' }}>
         反馈：{String(f.category ?? '')}{f.contract_case ? ` · 用例 ${String(f.contract_case)}` : ''}{f.message ? ` · ${String(f.message).slice(0, 120)}` : ''}
         {ex ? ` · 例：期望 ${String(ex.expected)}，得到 ${String(ex.got)}` : ''}
         {f.stderr_tail ? ` · ${String(f.stderr_tail).split('\n').slice(-1)[0]}` : ''}
@@ -362,7 +414,7 @@ function feedback(r: Record<string, unknown>) {
     )
   }
   if (r.analysis) return <p className="small muted">分析：{String(r.analysis).slice(0, 220)}</p>
-  if (r.error_kind) return <p className="small" style={{ color: '#8e2424' }}>{String(r.error_kind)}：{String(r.message ?? '').slice(0, 160)}</p>
+  if (r.error_kind) return <p className="small" style={{ color: 'var(--critical-ink)' }}>{String(r.error_kind)}：{String(r.message ?? '').slice(0, 160)}</p>
   if (r.finish_reason) return <p className="small muted">结束理由：{String(r.finish_reason)}</p>
   if (r.to) return <p className="small">切换到 {String(r.to)}（连续 {String(r.misses)} 次未达标）</p>
   return null

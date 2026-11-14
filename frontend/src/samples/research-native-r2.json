@@ -1,0 +1,792 @@
+{
+  "api_contract": "research-comparison-v1",
+  "comparison_id": "research-20261114T053410-bfde",
+  "status": "completed",
+  "label": "ALE-Bench and AlgoTune second native pilot 2026-11-14",
+  "protocol": "within-task-feedback-v1",
+  "scope": "development pilot; final data not evaluated",
+  "fair": true,
+  "created_at": "2026-11-14T05:34:10.401+00:00",
+  "ended_at": "2026-11-14T05:46:29.124+00:00",
+  "code_commit": "7408358977a5c83e890f4bb8f7af5f54041db6fa",
+  "prompt_version": "agent-prompt-v5",
+  "fixed_model": "small",
+  "model": {
+    "role": "small",
+    "name": "Qwen3.8-27B",
+    "provider": "chat_compat",
+    "host": "aiping.cn",
+    "hosted": true
+  },
+  "final_evaluation": false,
+  "dev_only": true,
+  "modes": [
+    "feedback",
+    "independent"
+  ],
+  "repeats": 1,
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120,
+    "measurement_timeout_s": 10,
+    "min_request_window_s": 15,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "measure": {
+    "repeats": 5,
+    "function_warmups": 3,
+    "cpus": 1,
+    "cpuset_cpus": "2",
+    "memory": "1g",
+    "pids_limit": 64,
+    "max_output_bytes": 67108864,
+    "ready_timeout_s": 30
+  },
+  "price_snapshot": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models"
+  },
+  "runs": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+      "repeat": 1,
+      "mode": "feedback",
+      "run_id": "run-20261114T053410-981e",
+      "status": "completed",
+      "stop_reason": "agent_finished",
+      "started_at": "2026-11-14T05:34:10.467+00:00",
+      "ended_at": "2026-11-14T05:38:42.077+00:00",
+      "task": {
+        "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+        "family": "ale-bench",
+        "title": "ALE-Bench · ahc026",
+        "workload": "ahc026 · 2 public cases",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "baseline": 17753,
+          "min_speedup": null
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": false,
+        "best_from_reuse": false,
+        "best_is_initial": true,
+        "final_evaluated": false,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "未执行最终测试（agent_finished）；最佳候选 c0 仅有开发验证结果"
+      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
+      "best_candidate_id": "c0",
+      "best_dev": {
+        "evaluation_id": "0cfdb0bee9ef",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 0,
+        "goal_met": 0,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 17753,
+          "direction": "maximize",
+          "metric": "score",
+          "value": 17753
+        },
+        "eligible_for_selection": true
+      },
+      "candidates": {
+        "proposed": 4,
+        "passed": 4,
+        "unique_ast": 4
+      },
+      "iterations": {
+        "model_requests": 13,
+        "candidates_proposed": 4,
+        "candidates_passed": 4,
+        "candidates_improved": 0,
+        "candidates_no_gain": 4,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 1,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 271.61,
+        "agent_loop_s": 271.608,
+        "agent_loop_elapsed_s": 271.608,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0,
+        "final_evaluation_s": null,
+        "model_wait_s": 267.479,
+        "dev_evaluation_s": 4.011,
+        "evidence_tool_s": 0,
+        "container_startup_s": 1.455
+      },
+      "usage": {
+        "requests": 13,
+        "ok": 13,
+        "errors": {},
+        "input_tokens": 133095,
+        "cached_input_tokens": 61440,
+        "output_tokens": 13096,
+        "reasoning_tokens": null,
+        "cost_usd": null,
+        "cost_status": "unknown"
+      },
+      "cost": {
+        "amount": 0.556437,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
+      },
+      "progress": [
+        {
+          "elapsed_s": 40.241,
+          "model_requests": 2,
+          "tokens": 9974,
+          "input_tokens": 8164,
+          "cached_input_tokens": 0,
+          "output_tokens": 1810,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 81.84,
+          "model_requests": 4,
+          "tokens": 24442,
+          "input_tokens": 20808,
+          "cached_input_tokens": 4096,
+          "output_tokens": 3634,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 143.363,
+          "model_requests": 6,
+          "tokens": 45918,
+          "input_tokens": 39146,
+          "cached_input_tokens": 4096,
+          "output_tokens": 6772,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 245.058,
+          "model_requests": 10,
+          "tokens": 99476,
+          "input_tokens": 87616,
+          "cached_input_tokens": 34816,
+          "output_tokens": 11860,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        }
+      ],
+      "record": "docs/research/native-r2-20261114/run-20261114T053410-981e/research.md"
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+      "repeat": 1,
+      "mode": "independent",
+      "run_id": "run-20261114T053842-37ca",
+      "status": "completed",
+      "stop_reason": "agent_finished",
+      "started_at": "2026-11-14T05:38:42.101+00:00",
+      "ended_at": "2026-11-14T05:42:45.871+00:00",
+      "task": {
+        "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+        "family": "ale-bench",
+        "title": "ALE-Bench · ahc026",
+        "workload": "ahc026 · 2 public cases",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize",
+          "baseline": 17753,
+          "min_speedup": null
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": false,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "未执行最终测试（agent_finished）；最佳候选 c7 仅有开发验证结果"
+      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
+      "best_candidate_id": "c7",
+      "best_dev": {
+        "evaluation_id": "f7dcb6431d0c",
+        "status": "passed",
+        "correct": 1,
+        "speedup": null,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": {
+          "aggregation": "sum",
+          "baseline": 17753,
+          "direction": "maximize",
+          "metric": "score",
+          "value": 18230
+        },
+        "eligible_for_selection": true
+      },
+      "candidates": {
+        "proposed": 9,
+        "passed": 8,
+        "unique_ast": 9
+      },
+      "iterations": {
+        "model_requests": 11,
+        "candidates_proposed": 9,
+        "candidates_passed": 8,
+        "candidates_improved": 1,
+        "candidates_no_gain": 7,
+        "candidates_failed": 1,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 1,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 243.77,
+        "agent_loop_s": 243.768,
+        "agent_loop_elapsed_s": 243.768,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0,
+        "final_evaluation_s": null,
+        "model_wait_s": 234.915,
+        "dev_evaluation_s": 8.731,
+        "evidence_tool_s": 0,
+        "container_startup_s": 2.907
+      },
+      "usage": {
+        "requests": 11,
+        "ok": 11,
+        "errors": {},
+        "input_tokens": 36525,
+        "cached_input_tokens": 16640,
+        "output_tokens": 12362,
+        "reasoning_tokens": null,
+        "cost_usd": null,
+        "cost_status": "unknown"
+      },
+      "cost": {
+        "amount": 0.257919,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
+      },
+      "progress": [
+        {
+          "elapsed_s": 22.143,
+          "model_requests": 1,
+          "tokens": 4500,
+          "input_tokens": 3319,
+          "cached_input_tokens": 0,
+          "output_tokens": 1181,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 58.396,
+          "model_requests": 3,
+          "tokens": 12981,
+          "input_tokens": 9959,
+          "cached_input_tokens": 3328,
+          "output_tokens": 3022,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 75.683,
+          "model_requests": 4,
+          "tokens": 17158,
+          "input_tokens": 13279,
+          "cached_input_tokens": 4992,
+          "output_tokens": 3879,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 87.918,
+          "model_requests": 5,
+          "tokens": 21171,
+          "input_tokens": 16599,
+          "cached_input_tokens": 6656,
+          "output_tokens": 4572,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 104.049,
+          "model_requests": 6,
+          "tokens": 25374,
+          "input_tokens": 19919,
+          "cached_input_tokens": 8320,
+          "output_tokens": 5455,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 122.895,
+          "model_requests": 7,
+          "tokens": 29711,
+          "input_tokens": 23240,
+          "cached_input_tokens": 9984,
+          "output_tokens": 6471,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 157.755,
+          "model_requests": 8,
+          "tokens": 34765,
+          "input_tokens": 26561,
+          "cached_input_tokens": 11648,
+          "output_tokens": 8204,
+          "metric": "score",
+          "value": 18230,
+          "best_candidate_id": "c7"
+        },
+        {
+          "elapsed_s": 217.966,
+          "model_requests": 9,
+          "tokens": 40993,
+          "input_tokens": 29882,
+          "cached_input_tokens": 13312,
+          "output_tokens": 11111,
+          "metric": "score",
+          "value": 18230,
+          "best_candidate_id": "c7"
+        },
+        {
+          "elapsed_s": 239.881,
+          "model_requests": 10,
+          "tokens": 45381,
+          "input_tokens": 33203,
+          "cached_input_tokens": 14976,
+          "output_tokens": 12178,
+          "metric": "score",
+          "value": 18230,
+          "best_candidate_id": "c7"
+        }
+      ],
+      "record": "docs/research/native-r2-20261114/run-20261114T053842-37ca/research.md"
+    },
+    {
+      "seq": 3,
+      "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+      "repeat": 1,
+      "mode": "independent",
+      "run_id": "run-20261114T054245-d146",
+      "status": "completed",
+      "stop_reason": "agent_finished",
+      "started_at": "2026-11-14T05:42:45.881+00:00",
+      "ended_at": "2026-11-14T05:44:07.281+00:00",
+      "task": {
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+        "family": "algotune",
+        "title": "AlgoTune · convolve_1d",
+        "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize",
+          "baseline": 1,
+          "min_speedup": 1.1
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": false,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "未执行最终测试（agent_finished）；最佳候选 c5 仅有开发验证结果"
+      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
+      "best_candidate_id": "c5",
+      "best_dev": {
+        "evaluation_id": "10758ba75c8d",
+        "status": "passed",
+        "correct": 1,
+        "speedup": 1.2100715604780834,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": null,
+        "eligible_for_selection": true
+      },
+      "candidates": {
+        "proposed": 8,
+        "passed": 8,
+        "unique_ast": 5
+      },
+      "iterations": {
+        "model_requests": 9,
+        "candidates_proposed": 8,
+        "candidates_passed": 8,
+        "candidates_improved": 1,
+        "candidates_no_gain": 7,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 81.4,
+        "agent_loop_s": 81.398,
+        "agent_loop_elapsed_s": 81.398,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0,
+        "final_evaluation_s": null,
+        "model_wait_s": 48.305,
+        "dev_evaluation_s": 32.984,
+        "evidence_tool_s": 0,
+        "container_startup_s": 5.733
+      },
+      "usage": {
+        "requests": 9,
+        "ok": 9,
+        "errors": {},
+        "input_tokens": 19763,
+        "cached_input_tokens": 5376,
+        "output_tokens": 2263,
+        "reasoning_tokens": null,
+        "cost_usd": null,
+        "cost_status": "unknown"
+      },
+      "cost": {
+        "amount": 0.086445,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
+      },
+      "progress": [
+        {
+          "elapsed_s": 10.877,
+          "model_requests": 1,
+          "tokens": 2381,
+          "input_tokens": 2195,
+          "cached_input_tokens": 0,
+          "output_tokens": 186,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 21.315,
+          "model_requests": 2,
+          "tokens": 4941,
+          "input_tokens": 4391,
+          "cached_input_tokens": 768,
+          "output_tokens": 550,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 28.624,
+          "model_requests": 3,
+          "tokens": 7344,
+          "input_tokens": 6587,
+          "cached_input_tokens": 1536,
+          "output_tokens": 757,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 37.694,
+          "model_requests": 4,
+          "tokens": 9765,
+          "input_tokens": 8783,
+          "cached_input_tokens": 2304,
+          "output_tokens": 982,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 45.947,
+          "model_requests": 5,
+          "tokens": 12197,
+          "input_tokens": 10979,
+          "cached_input_tokens": 3072,
+          "output_tokens": 1218,
+          "metric": "speedup",
+          "value": 1.2100715604780834,
+          "best_candidate_id": "c5"
+        },
+        {
+          "elapsed_s": 56.604,
+          "model_requests": 6,
+          "tokens": 14752,
+          "input_tokens": 13175,
+          "cached_input_tokens": 3840,
+          "output_tokens": 1577,
+          "metric": "speedup",
+          "value": 1.2100715604780834,
+          "best_candidate_id": "c5"
+        },
+        {
+          "elapsed_s": 63.781,
+          "model_requests": 7,
+          "tokens": 17143,
+          "input_tokens": 15371,
+          "cached_input_tokens": 3840,
+          "output_tokens": 1772,
+          "metric": "speedup",
+          "value": 1.2100715604780834,
+          "best_candidate_id": "c5"
+        },
+        {
+          "elapsed_s": 75.551,
+          "model_requests": 8,
+          "tokens": 19587,
+          "input_tokens": 17567,
+          "cached_input_tokens": 4608,
+          "output_tokens": 2020,
+          "metric": "speedup",
+          "value": 1.2100715604780834,
+          "best_candidate_id": "c5"
+        }
+      ],
+      "record": "docs/research/native-r2-20261114/run-20261114T054245-d146/research.md"
+    },
+    {
+      "seq": 4,
+      "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+      "repeat": 1,
+      "mode": "feedback",
+      "run_id": "run-20261114T054407-1e3b",
+      "status": "completed",
+      "stop_reason": "agent_finished",
+      "started_at": "2026-11-14T05:44:07.291+00:00",
+      "ended_at": "2026-11-14T05:46:29.124+00:00",
+      "task": {
+        "task_id": "algotune-convolve_1d-smoke-eeb3cd9d83",
+        "family": "algotune",
+        "title": "AlgoTune · convolve_1d",
+        "workload": "convolve_1d · generator scale=1000 · 2 dev cases",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize",
+          "baseline": 1,
+          "min_speedup": 1.1
+        },
+        "dev_cases": 2,
+        "final_cases": null
+      },
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": false,
+        "final_correct": null,
+        "final_speedup": null,
+        "final_objective": null,
+        "goal_met": false,
+        "valid_artifact": null,
+        "summary": "未执行最终测试（agent_finished）；最佳候选 c3 仅有开发验证结果"
+      },
+      "final_status": "disabled",
+      "dev_status": "passed",
+      "final_evaluation": null,
+      "best_candidate_id": "c3",
+      "best_dev": {
+        "evaluation_id": "9779fb4e30ae",
+        "status": "passed",
+        "correct": 1,
+        "speedup": 1.8342501948017726,
+        "improved": 1,
+        "goal_met": 1,
+        "objective": null,
+        "eligible_for_selection": true
+      },
+      "candidates": {
+        "proposed": 5,
+        "passed": 4,
+        "unique_ast": 5
+      },
+      "iterations": {
+        "model_requests": 14,
+        "candidates_proposed": 5,
+        "candidates_passed": 4,
+        "candidates_improved": 2,
+        "candidates_no_gain": 2,
+        "candidates_failed": 1,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 1,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 141.833,
+        "agent_loop_s": 141.831,
+        "agent_loop_elapsed_s": 141.831,
+        "agent_loop_limit_s": 900,
+        "agent_loop_overrun_s": 0,
+        "final_evaluation_s": null,
+        "model_wait_s": 121.457,
+        "dev_evaluation_s": 20.234,
+        "evidence_tool_s": 0,
+        "container_startup_s": 3.805
+      },
+      "usage": {
+        "requests": 14,
+        "ok": 14,
+        "errors": {},
+        "input_tokens": 75331,
+        "cached_input_tokens": 31232,
+        "output_tokens": 5692,
+        "reasoning_tokens": null,
+        "cost_usd": null,
+        "cost_status": "unknown"
+      },
+      "cost": {
+        "amount": 0.294297,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://aiping.cn/api/v1/models",
+        "note": "Standard CNY token-price estimate, not an invoice; discounts/account credits excluded."
+      },
+      "progress": [
+        {
+          "elapsed_s": 21.945,
+          "model_requests": 2,
+          "tokens": 5512,
+          "input_tokens": 4860,
+          "cached_input_tokens": 768,
+          "output_tokens": 652,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 39.397,
+          "model_requests": 4,
+          "tokens": 13255,
+          "input_tokens": 11861,
+          "cached_input_tokens": 3200,
+          "output_tokens": 1394,
+          "metric": "speedup",
+          "value": 1,
+          "best_candidate_id": "c0"
+        },
+        {
+          "elapsed_s": 61.395,
+          "model_requests": 6,
+          "tokens": 23067,
+          "input_tokens": 20830,
+          "cached_input_tokens": 5632,
+          "output_tokens": 2237,
+          "metric": "speedup",
+          "value": 1.8342501948017726,
+          "best_candidate_id": "c3"
+        },
+        {
+          "elapsed_s": 82.786,
+          "model_requests": 8,
+          "tokens": 35093,
+          "input_tokens": 31970,
+          "cached_input_tokens": 5632,
+          "output_tokens": 3123,
+          "metric": "speedup",
+          "value": 1.8342501948017726,
+          "best_candidate_id": "c3"
+        },
+        {
+          "elapsed_s": 100.556,
+          "model_requests": 10,
+          "tokens": 48478,
+          "input_tokens": 44655,
+          "cached_input_tokens": 12288,
+          "output_tokens": 3823,
+          "metric": "speedup",
+          "value": 1.8342501948017726,
+          "best_candidate_id": "c3"
+        }
+      ],
+      "record": "docs/research/native-r2-20261114/run-20261114T054407-1e3b/research.md"
+    }
+  ],
+  "source": {
+    "kind": "archive",
+    "path": "docs/research/native-r2-20261114"
+  }
+}

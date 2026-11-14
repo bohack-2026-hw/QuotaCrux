@@ -1,29 +1,40 @@
 import { useEffect, useState } from 'react'
 import { api } from './api'
 import { usePoll } from './hooks'
+import { useResearchBatch, useResearchList } from './researchData'
 import { CompareView } from './views/CompareView'
-import { OverviewView } from './views/OverviewView'
+import { ConsoleView } from './views/ConsoleView'
 import { ExperienceView } from './views/ExperienceView'
+import { HomeView } from './views/HomeView'
+import { LiveView } from './views/LiveView'
+import { OverviewView } from './views/OverviewView'
+import { ResearchView } from './views/ResearchView'
 import { RunView } from './views/RunView'
 import { VersionView } from './views/VersionView'
-import { LiveView } from './views/LiveView'
 
-type Tab = 'home' | 'run' | 'exp' | 'cmp' | 'ver' | 'live'
+type Tab = 'home' | 'res' | 'run' | 'admin' | 'hist' | 'exp' | 'cmp' | 'ver' | 'live'
 
-const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en: string; desc: string }[] = [
-  { id: 'home', num: '00', lbl: '总览', sub: '研究成果 · 系统评估', title: '总览', en: 'Research Agent',
-    desc: '研究闭环：规划—取证—假设—实验—验证—修正。模型、提示词、预算与评测全部固定，只有经验快照在变化；下面是学习过程、留出任务上有无经验的对照，以及由数据自动填写的结论。' },
-  { id: 'run', num: '01', lbl: '研究运行', sub: '证据 · 假设 · 实验', title: '研究运行', en: 'Research run',
-    desc: '研究问题、基线、工具与预算在开始前固定；Agent 取证、提出假设并做实验，固定评测器给出判定，反馈决定下一步。每一步的目的、预期与实际结果都记录在案。' },
-  { id: 'exp', num: '02', lbl: '经验查看', sub: '已验证的执行事实', title: '经验', en: 'Verified experience',
-    desc: '经验来自学习运行中经过评测的候选：在什么条件下、做了什么改动、实测结果如何、证据在哪里。模型解释单独标为未验证。' },
-  { id: 'cmp', num: '03', lbl: '对照结果', sub: '旧经验 vs 新经验', title: '对照', en: 'Held-out comparison',
-    desc: '同一批未参与学习的任务、同一配置，只替换经验快照，串行交替运行并保留全部结果，包括失败与无收益。' },
-  { id: 'ver', num: '04', lbl: '版本管理', sub: '快照 · 差异 · 回退', title: '版本', en: 'Snapshots & rollback',
-    desc: '每次学习发布一个不可变快照；回退只切换后续运行读取的版本，历史记录全部保留。' },
-  { id: 'live', num: '05', lbl: '实时进度', sub: '正在做什么 · 实验进度', title: '实时进度', en: 'Live progress',
-    desc: '工作计划与日志、正在运行的实验（逐任务、逐次重放）、正在执行的运行和机器负载，每 2 秒刷新。' },
+// Primary pages tell the within-task research story; minor pages keep the experience-phase records reachable.
+const TABS: { id: Tab; lbl: string; minor?: boolean; title: string; en: string; snapshot?: boolean }[] = [
+  { id: 'home', lbl: '总览', title: '总览', en: 'overview' },
+  { id: 'res', lbl: '研究对照', title: '研究对照', en: 'within-task research' },
+  { id: 'live', lbl: '实时', title: '实时', en: 'live' },
+  { id: 'run', lbl: '运行', title: '运行', en: 'runs' },
+  { id: 'admin', lbl: '后台', title: '后台', en: 'console' },
+  { id: 'hist', lbl: '经验阶段', minor: true, title: '经验阶段', en: 'experience phase', snapshot: true },
+  { id: 'exp', lbl: '经验', minor: true, title: '经验', en: 'experience', snapshot: true },
+  { id: 'cmp', lbl: '经验对照', minor: true, title: '经验对照', en: 'held-out comparison', snapshot: true },
+  { id: 'ver', lbl: '版本', minor: true, title: '版本', en: 'snapshots', snapshot: true },
 ]
+
+type Theme = 'dark' | 'light'
+
+/** ?theme=light|dark wins (for links and screenshots), then the viewer's last choice; storage may be unavailable. */
+function initialTheme(): Theme {
+  const q = new URLSearchParams(window.location.search).get('theme')
+  if (q === 'light' || q === 'dark') return q
+  try { return window.localStorage.getItem('routeevo.theme') === 'light' ? 'light' : 'dark' } catch { return 'dark' }
+}
 
 function readHash(): { tab: Tab; arg: string | null } {
   const [tab, arg] = window.location.hash.replace('#', '').split('/')
@@ -35,13 +46,21 @@ export default function App() {
   const [runId, setRunId] = useState<string | null>(tab === 'run' ? arg : null)
   const [snapshot, setSnapshot] = useState<string | null>(null)
   const [focusExp, setFocusExp] = useState<string | null>(null)
+  const [theme, setTheme] = useState<Theme>(initialTheme)
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try { window.localStorage.setItem('routeevo.theme', theme) } catch { /* per-viewer convenience only */ }
+  }, [theme])
   const health = usePoll(api.health, [], 3000)
-  const snaps = usePoll(api.snapshots, [], 3000)
+  const snaps = usePoll(api.snapshots, [], 5000)
   const active = snaps.data?.active_snapshot_id ?? 'v0'
   const activeRow = snaps.data?.snapshots.find((s) => s.snapshot_id === active)
+  // The model shown is what the latest research batch actually ran, not a fixed label.
+  const research = useResearchList()
+  const latest = useResearchBatch(research.entries.find((e) => e.study !== 'routing') ?? research.entries[0] ?? null).batch
 
   useEffect(() => {
-    const on = () => setRoute(readHash())
+    const on = () => { setRoute(readHash()); window.scrollTo(0, 0) }
     window.addEventListener('hashchange', on)
     return () => window.removeEventListener('hashchange', on)
   }, [])
@@ -50,45 +69,54 @@ export default function App() {
   const openRun = (id: string) => { setRunId(id); go('run', id) }
   const openExperience = (snap: string, exp?: string) => { setSnapshot(snap); setFocusExp(exp ?? null); go('exp') }
   const meta = TABS.find((t) => t.id === tab)!
+  const running = !!health.data?.running_run_id
 
   return (
     <div className="app">
-      <aside className="rail">
-        <div className="brand">
-          <div className="brand-name">Route<em>Evo</em></div>
-          <div className="brand-sub">进化实验记录本</div>
-        </div>
+      <header className="topbar">
+        <div className="brand"><span className="logo">R</span><span className="name">routeevo</span></div>
         <nav className="nav">
-          {TABS.map((t) => (
-            <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>
-              <span className="num">{t.num}</span>
-              <span className="lbl">{t.lbl}<small>{t.sub}</small></span>
-            </button>
+          {TABS.filter((t) => !t.minor).map((t) => (
+            <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>{t.lbl}</button>
           ))}
         </nav>
-        <div className="rail-foot">
-          <div><span className={`pulse ${health.data?.running_run_id ? '' : 'idle'}`} />{health.data?.running_run_id ? '有运行在执行' : '空闲'}</div>
-          <div>Qwen（本地）→ GPT-6.1 Sol（xhigh）</div>
-          <div>Docker 沙箱 · 外部评测器</div>
-          {health.error && <div style={{ color: 'var(--accent)' }}>后端未连接</div>}
+        <details className={`more ${meta.minor ? 'on' : ''}`} key={tab}>
+          <summary>{meta.minor ? meta.lbl : '更多'} ▾</summary>
+          <div className="menu">
+            <div className="menu-cap">经验复用阶段</div>
+            {TABS.filter((t) => t.minor).map((t) => (
+              <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>{t.lbl}</button>
+            ))}
+          </div>
+        </details>
+        <div className="status">
+          {latest?.model?.name && <span className="model" title="最近研究批次使用的固定模型"><b>{latest.model.name}</b>{latest.model.hosted == null ? '' : latest.model.hosted ? ' · 托管' : ' · 本地'}</span>}
+          {running && <span><span className="pulse" />运行中</span>}
+          <button className="theme-btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? '切换到浅色' : '切换到深色'} title={theme === 'dark' ? '浅色（投影仪）' : '深色'}>{theme === 'dark' ? '☀' : '☾'}</button>
         </div>
-      </aside>
+      </header>
       <main>
-        <header className="masthead">
-          <div>
-            <h1>{meta.title}<span className="en">{meta.en}</span></h1>
-            <p>{meta.desc}</p>
-          </div>
-          <div className="stamp" title="后续运行默认读取的经验快照">
-            <div className="v">{active}</div>
-            <div className="t">生效经验版本<b>{activeRow ? `${activeRow.experience_count} 条经验` : '—'}</b></div>
-          </div>
-        </header>
-        {tab === 'home' && <OverviewView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
+        {tab !== 'home' && (
+          <header className="masthead">
+            <div>
+              <h1>{meta.title}<span className="en">{meta.en}</span></h1>
+            </div>
+            {meta.snapshot && (
+              <div className="stamp" title="后续运行默认读取的经验快照">
+                <div className="v">{active}</div>
+                <div className="t">生效快照<b>{activeRow ? `${activeRow.experience_count} 条经验` : '—'}</b></div>
+              </div>
+            )}
+          </header>
+        )}
+        {tab === 'home' && <HomeView onOpenResearch={(id) => go('res', id)} />}
+        {tab === 'res' && <ResearchView selected={arg} onSelect={(id) => go('res', id)} onOpenConsole={(id) => go('admin', id)} />}
+        {tab === 'admin' && <ConsoleView selected={arg} onSelect={(id) => go('admin', id)} onOpenRun={openRun} />}
         {tab === 'run' && <RunView runId={runId} setRunId={openRun} activeSnapshot={active} onOpenExperience={openExperience} />}
+        {tab === 'hist' && <OverviewView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}
         {tab === 'cmp' && <CompareView selected={arg} onSelect={(id) => go('cmp', id)} onOpenRun={openRun} />}
-        {tab === 'live' && <LiveView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
+        {tab === 'live' && <LiveView onOpenRun={openRun} onOpenResearch={(id) => go('res', id)} />}
         {tab === 'ver' && <VersionView onOpenSnapshot={(s) => openExperience(s)} onOpenRun={openRun} onChanged={() => snaps.refresh()} />}
       </main>
     </div>

@@ -1,0 +1,3404 @@
+{
+  "comparison_id": "research-routing-fixture",
+  "fixture": true,
+  "label": "Fixture only: not an experimental result",
+  "study": "routing",
+  "protocol": "within-task-routing-v2",
+  "status": "interrupted",
+  "snapshot_id": "v0",
+  "research_mode": "feedback",
+  "final_evaluation": true,
+  "variants": [
+    "baseline",
+    "action_decisions",
+    "model_decisions",
+    "both_decisions"
+  ],
+  "plan": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 3,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 4,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 5,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      }
+    },
+    {
+      "seq": 6,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 7,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      }
+    },
+    {
+      "seq": 8,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      }
+    }
+  ],
+  "plan_sha256": "e170f190198f80997e8c3c54f39a10dc6d565c947aa6937dce9f0b57197ecdce",
+  "plan_id": "routing-fixture",
+  "price_snapshots": {
+    "small": {
+      "model": "Qwen3.8-27B",
+      "currency": "CNY",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 3,
+      "output_per_1m": 12,
+      "source": "https://example.test/fixture-price",
+      "retrieved_at": "2026-11-14T08:00:00+00:00"
+    },
+    "large": {
+      "model": "gpt-fixture-large",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 2,
+      "output_per_1m": 8,
+      "source": "https://example.test/fixture-price",
+      "retrieved_at": "2026-11-14T08:00:00+00:00"
+    },
+    "decisions": {
+      "model": "gpt-fixture-decisions",
+      "currency": "USD",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.4,
+      "source": "https://example.test/fixture-price",
+      "retrieved_at": "2026-11-14T08:00:00+00:00"
+    }
+  },
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900
+  },
+  "created_at": "2026-11-14T08:00:00+00:00",
+  "ended_at": null,
+  "runs": [
+    {
+      "seq": 1,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "ale-bench-ahc026-fixture",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-1",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": null,
+        "objective": {
+          "metric": "score",
+          "value": 17753,
+          "baseline": 17753
+        }
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "objective": {
+          "value": 17753
+        },
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 10,
+        "routing_requests": 0,
+        "generation_requests": 10,
+        "small_model_requests": 10,
+        "large_model_requests": 0,
+        "upgrades": 0,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 300.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 10,
+        "latency_s": 40.0,
+        "errors": {},
+        "input_tokens": 40000,
+        "input_tokens_unknown_calls": 0,
+        "output_tokens": 5000,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 1
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "output_tokens": 5000,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 0,
+          "latency_s": 0,
+          "errors": {},
+          "input_tokens": 0,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 5000,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        }
+      },
+      "action_counts": {},
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.18,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.18,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "output_tokens": 5000,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.18,
+            "known_amount": 0.18,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    },
+    {
+      "seq": 2,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "ale-bench-ahc026-fixture",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-2",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": null,
+        "objective": {
+          "metric": "score",
+          "value": 17873,
+          "baseline": 17753
+        }
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "objective": {
+          "value": 17873
+        },
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 4,
+        "generation_requests": 10,
+        "small_model_requests": 10,
+        "large_model_requests": 0,
+        "upgrades": 0,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 310.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 14,
+        "latency_s": 56.0,
+        "errors": {},
+        "input_tokens": 40000,
+        "input_tokens_unknown_calls": 1,
+        "output_tokens": 5080,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "output_tokens": 5000,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "router_action:openai_decisions:gpt-fixture-decisions": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": null,
+          "output_tokens": 80,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 1,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": null,
+          "input_tokens_unknown_calls": 1,
+          "output_tokens": 80,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 5000,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        }
+      },
+      "action_counts": {
+        "propose_candidate": 6,
+        "run_validation": 5,
+        "analyze": 2
+      },
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "score",
+          "value": 17873,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.18,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.18,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "output_tokens": 5000,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "router_action:openai_decisions:gpt-fixture-decisions": {
+            "amount": null,
+            "currency": "USD",
+            "status": "partial",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-decisions",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0.4,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "known_amount": 3.2e-05,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-fixture-decisions",
+            "usage": {
+              "requests": 4,
+              "latency_s": 16.0,
+              "errors": {},
+              "input_tokens": null,
+              "output_tokens": 80,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 1,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.18,
+            "known_amount": 0.18,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": null,
+            "known_amount": 3.2e-05,
+            "status": "partial"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    },
+    {
+      "seq": 3,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "ale-bench-ahc026-fixture",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-3",
+      "status": "failed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": null,
+        "objective": {
+          "metric": "score",
+          "value": 17993,
+          "baseline": 17753
+        }
+      },
+      "final_status": "failed",
+      "final_evaluation": {
+        "status": "wrong_output",
+        "correct": false,
+        "speedup": null,
+        "objective": {
+          "value": 17993
+        },
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 4,
+        "generation_requests": 10,
+        "small_model_requests": 7,
+        "large_model_requests": 3,
+        "upgrades": 1,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 320.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 14,
+        "latency_s": 56.0,
+        "errors": {},
+        "input_tokens": 47200,
+        "input_tokens_unknown_calls": 0,
+        "output_tokens": 6280,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 7,
+          "latency_s": 28.0,
+          "errors": {},
+          "input_tokens": 28000,
+          "output_tokens": 3500,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "large:openai_responses:gpt-fixture-large": {
+          "requests": 3,
+          "latency_s": 12.0,
+          "errors": {},
+          "input_tokens": 18000,
+          "output_tokens": 2700,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "router_action:openai_decisions:gpt-fixture-decisions": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": 1200,
+          "output_tokens": 80,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": 1200,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 80,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 46000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 6200,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2
+        }
+      },
+      "action_counts": {
+        "propose_candidate": 6,
+        "run_validation": 5,
+        "analyze": 2
+      },
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "score",
+          "value": 17993,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.126,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.126,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 7,
+              "latency_s": 28.0,
+              "errors": {},
+              "input_tokens": 28000,
+              "output_tokens": 3500,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "large:openai_responses:gpt-fixture-large": {
+            "amount": 0.0576,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-large",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 2,
+              "output_per_1m": 8,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.0576,
+            "purpose": "generation",
+            "role": "large",
+            "provider": "openai_responses",
+            "model": "gpt-fixture-large",
+            "usage": {
+              "requests": 3,
+              "latency_s": 12.0,
+              "errors": {},
+              "input_tokens": 18000,
+              "output_tokens": 2700,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "router_action:openai_decisions:gpt-fixture-decisions": {
+            "amount": 0.000152,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-decisions",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0.4,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.000152,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-fixture-decisions",
+            "usage": {
+              "requests": 4,
+              "latency_s": 16.0,
+              "errors": {},
+              "input_tokens": 1200,
+              "output_tokens": 80,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.126,
+            "known_amount": 0.126,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": 0.057752,
+            "known_amount": 0.057752,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed",
+      "recorded_status": "completed"
+    },
+    {
+      "seq": 4,
+      "task_id": "ale-bench-ahc026-fixture",
+      "repeat": 1,
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "ale-bench-ahc026-fixture",
+        "family": "ale-bench",
+        "objective": {
+          "metric": "score",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-4",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": null,
+        "objective": {
+          "metric": "score",
+          "value": 18113,
+          "baseline": 17753
+        }
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": null,
+        "objective": {
+          "value": 18113
+        },
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 17,
+        "routing_requests": 7,
+        "generation_requests": 10,
+        "small_model_requests": 7,
+        "large_model_requests": 3,
+        "upgrades": 1,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 330.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 17,
+        "latency_s": 68.0,
+        "errors": {},
+        "input_tokens": 48100,
+        "input_tokens_unknown_calls": 0,
+        "output_tokens": 6340,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 7,
+          "latency_s": 28.0,
+          "errors": {},
+          "input_tokens": 28000,
+          "output_tokens": 3500,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "large:openai_responses:gpt-fixture-large": {
+          "requests": 3,
+          "latency_s": 12.0,
+          "errors": {},
+          "input_tokens": 18000,
+          "output_tokens": 2700,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "router_action:openai_decisions:gpt-fixture-decisions": {
+          "requests": 7,
+          "latency_s": 28.0,
+          "errors": {},
+          "input_tokens": 2100,
+          "output_tokens": 140,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 7,
+          "latency_s": 28.0,
+          "errors": {},
+          "input_tokens": 2100,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 140,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 46000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 6200,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2
+        }
+      },
+      "action_counts": {
+        "propose_candidate": 6,
+        "run_validation": 5,
+        "analyze": 2
+      },
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "score",
+          "value": 17753,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "score",
+          "value": 18113,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.126,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.126,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 7,
+              "latency_s": 28.0,
+              "errors": {},
+              "input_tokens": 28000,
+              "output_tokens": 3500,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "large:openai_responses:gpt-fixture-large": {
+            "amount": 0.0576,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-large",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 2,
+              "output_per_1m": 8,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.0576,
+            "purpose": "generation",
+            "role": "large",
+            "provider": "openai_responses",
+            "model": "gpt-fixture-large",
+            "usage": {
+              "requests": 3,
+              "latency_s": 12.0,
+              "errors": {},
+              "input_tokens": 18000,
+              "output_tokens": 2700,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "router_action:openai_decisions:gpt-fixture-decisions": {
+            "amount": 0.000266,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-decisions",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0.4,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.000266,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-fixture-decisions",
+            "usage": {
+              "requests": 7,
+              "latency_s": 28.0,
+              "errors": {},
+              "input_tokens": 2100,
+              "output_tokens": 140,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.126,
+            "known_amount": 0.126,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": 0.057866,
+            "known_amount": 0.057866,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    },
+    {
+      "seq": 5,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "action_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "algotune-convolve_1d-fixture",
+        "family": "algotune",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-5",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": 1.8,
+        "objective": null
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": 1.8,
+        "objective": null,
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 4,
+        "generation_requests": 10,
+        "small_model_requests": 10,
+        "large_model_requests": 0,
+        "upgrades": 0,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 340.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 14,
+        "latency_s": 56.0,
+        "errors": {},
+        "input_tokens": 40000,
+        "input_tokens_unknown_calls": 1,
+        "output_tokens": 5080,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 2
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "output_tokens": 5000,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "router_action:openai_decisions:gpt-fixture-decisions": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": null,
+          "output_tokens": 80,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 1,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": null,
+          "input_tokens_unknown_calls": 1,
+          "output_tokens": 80,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 5000,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        }
+      },
+      "action_counts": {
+        "propose_candidate": 6,
+        "run_validation": 5,
+        "analyze": 2
+      },
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "speedup",
+          "value": 1.0,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "speedup",
+          "value": 1.8,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.18,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.18,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "output_tokens": 5000,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "router_action:openai_decisions:gpt-fixture-decisions": {
+            "amount": null,
+            "currency": "USD",
+            "status": "partial",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-decisions",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0.4,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "known_amount": 3.2e-05,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-fixture-decisions",
+            "usage": {
+              "requests": 4,
+              "latency_s": 16.0,
+              "errors": {},
+              "input_tokens": null,
+              "output_tokens": 80,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 1,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.18,
+            "known_amount": 0.18,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": null,
+            "known_amount": 3.2e-05,
+            "status": "partial"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    },
+    {
+      "seq": 6,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "model_decisions",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "algotune-convolve_1d-fixture",
+        "family": "algotune",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-6",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": 2.0,
+        "objective": null
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": 2.0,
+        "objective": null,
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 14,
+        "routing_requests": 4,
+        "generation_requests": 10,
+        "small_model_requests": 7,
+        "large_model_requests": 3,
+        "upgrades": 1,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 350.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 14,
+        "latency_s": 56.0,
+        "errors": {},
+        "input_tokens": 47200,
+        "input_tokens_unknown_calls": 0,
+        "output_tokens": 6280,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 3
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 7,
+          "latency_s": 28.0,
+          "errors": {},
+          "input_tokens": 28000,
+          "output_tokens": 3500,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "large:openai_responses:gpt-fixture-large": {
+          "requests": 3,
+          "latency_s": 12.0,
+          "errors": {},
+          "input_tokens": 18000,
+          "output_tokens": 2700,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "router_action:openai_decisions:gpt-fixture-decisions": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": 1200,
+          "output_tokens": 80,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 4,
+          "latency_s": 16.0,
+          "errors": {},
+          "input_tokens": 1200,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 80,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 46000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 6200,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2
+        }
+      },
+      "action_counts": {
+        "propose_candidate": 6,
+        "run_validation": 5,
+        "analyze": 2
+      },
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "speedup",
+          "value": 1.0,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "speedup",
+          "value": 2.0,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.126,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.126,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 7,
+              "latency_s": 28.0,
+              "errors": {},
+              "input_tokens": 28000,
+              "output_tokens": 3500,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "large:openai_responses:gpt-fixture-large": {
+            "amount": 0.0576,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-large",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 2,
+              "output_per_1m": 8,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.0576,
+            "purpose": "generation",
+            "role": "large",
+            "provider": "openai_responses",
+            "model": "gpt-fixture-large",
+            "usage": {
+              "requests": 3,
+              "latency_s": 12.0,
+              "errors": {},
+              "input_tokens": 18000,
+              "output_tokens": 2700,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          },
+          "router_action:openai_decisions:gpt-fixture-decisions": {
+            "amount": 0.000152,
+            "currency": "USD",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "gpt-fixture-decisions",
+              "currency": "USD",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 0.1,
+              "output_per_1m": 0.4,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.000152,
+            "purpose": "routing",
+            "role": "router_action",
+            "provider": "openai_decisions",
+            "model": "gpt-fixture-decisions",
+            "usage": {
+              "requests": 4,
+              "latency_s": 16.0,
+              "errors": {},
+              "input_tokens": 1200,
+              "output_tokens": 80,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.126,
+            "known_amount": 0.126,
+            "status": "estimated"
+          },
+          "USD": {
+            "amount": 0.057752,
+            "known_amount": 0.057752,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    },
+    {
+      "seq": 7,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "both_decisions",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "algotune-convolve_1d-fixture",
+        "family": "algotune",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize"
+        }
+      },
+      "status": "not_run",
+      "final_status": "not_run",
+      "dev_status": "not_run"
+    },
+    {
+      "seq": 8,
+      "task_id": "algotune-convolve_1d-fixture",
+      "repeat": 1,
+      "variant": "baseline",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "mode": "feedback",
+      "task": {
+        "task_id": "algotune-convolve_1d-fixture",
+        "family": "algotune",
+        "objective": {
+          "metric": "speedup",
+          "direction": "maximize"
+        }
+      },
+      "run_id": "run-fixture-8",
+      "status": "completed",
+      "best_candidate_id": "c2",
+      "best_dev": {
+        "status": "passed",
+        "correct": 1,
+        "improved": 1,
+        "speedup": 2.4,
+        "objective": null
+      },
+      "final_status": "completed",
+      "final_evaluation": {
+        "status": "passed",
+        "correct": true,
+        "speedup": 2.4,
+        "objective": null,
+        "normalized": false,
+        "measured": true
+      },
+      "iterations": {
+        "model_requests": 10,
+        "routing_requests": 0,
+        "generation_requests": 10,
+        "small_model_requests": 10,
+        "large_model_requests": 0,
+        "upgrades": 0,
+        "candidates_proposed": 5,
+        "candidates_passed": 4
+      },
+      "timing": {
+        "wall_clock_total_s": 370.0,
+        "model_wait_s": 250.0,
+        "dev_evaluation_s": 20.0,
+        "final_evaluation_s": 15.0
+      },
+      "usage": {
+        "requests": 10,
+        "latency_s": 40.0,
+        "errors": {},
+        "input_tokens": 40000,
+        "input_tokens_unknown_calls": 0,
+        "output_tokens": 5000,
+        "output_tokens_unknown_calls": 0,
+        "cached_input_tokens": 0,
+        "cached_input_tokens_unknown_calls": 0,
+        "reasoning_tokens": null,
+        "reasoning_tokens_unknown_calls": 1
+      },
+      "usage_by_model": {
+        "small:chat_compat:Qwen3.8-27B": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "output_tokens": 5000,
+          "cached_input_tokens": 0,
+          "reasoning_tokens": null,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        }
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 0,
+          "latency_s": 0,
+          "errors": {},
+          "input_tokens": 0,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0
+        },
+        "generation": {
+          "requests": 10,
+          "latency_s": 40.0,
+          "errors": {},
+          "input_tokens": 40000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 5000,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1
+        }
+      },
+      "action_counts": {},
+      "progress": [
+        {
+          "elapsed_s": 30.0,
+          "metric": "speedup",
+          "value": 1.0,
+          "best_candidate_id": "c0",
+          "usage": {
+            "input_tokens": 4000,
+            "output_tokens": 500
+          }
+        },
+        {
+          "elapsed_s": 200.0,
+          "metric": "speedup",
+          "value": 2.4,
+          "best_candidate_id": "c2",
+          "usage": {
+            "input_tokens": 30000,
+            "output_tokens": 4000
+          }
+        }
+      ],
+      "cost": {
+        "by_model": {
+          "small:chat_compat:Qwen3.8-27B": {
+            "amount": 0.18,
+            "currency": "CNY",
+            "status": "estimated",
+            "source": "https://example.test/fixture-price",
+            "price_snapshot": {
+              "model": "Qwen3.8-27B",
+              "currency": "CNY",
+              "unit": "per_1m_tokens",
+              "input_per_1m": 3,
+              "output_per_1m": 12,
+              "source": "https://example.test/fixture-price",
+              "retrieved_at": "2026-11-14T08:00:00+00:00"
+            },
+            "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+            "known_amount": 0.18,
+            "purpose": "generation",
+            "role": "small",
+            "provider": "chat_compat",
+            "model": "Qwen3.8-27B",
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "output_tokens": 5000,
+              "cached_input_tokens": 0,
+              "reasoning_tokens": null,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            }
+          }
+        },
+        "by_currency": {
+          "CNY": {
+            "amount": 0.18,
+            "known_amount": 0.18,
+            "status": "estimated"
+          }
+        },
+        "unpriced_model_ledgers": 0,
+        "scope": "recorded calls only; unexecuted slots remain in planned count"
+      },
+      "dev_status": "passed"
+    }
+  ],
+  "fair": null,
+  "fairness": {
+    "tasks_with_mixed_configurations": [],
+    "plan_matches": true,
+    "complete_variant_matrix": true,
+    "all_planned_runs_recorded": false,
+    "all_planned_runs_completed": false,
+    "all_final_evaluations_completed": false
+  },
+  "summary": {
+    "tasks": [
+      {
+        "task": {
+          "task_id": "ale-bench-ahc026-fixture",
+          "family": "ale-bench",
+          "objective": {
+            "metric": "score",
+            "direction": "maximize"
+          }
+        },
+        "variants": [
+          {
+            "variant": "baseline",
+            "routing": {
+              "action": "llm",
+              "model": "rule"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              17753
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 17753,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 0,
+            "upgrade_rate": 0.0,
+            "generation_roles": {
+              "small": 10,
+              "large": 0
+            },
+            "action_counts": {},
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 5000,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 1
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 40000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 5000,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              }
+            },
+            "cost": {
+              "by_model": {
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.18,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.18,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 10,
+                    "latency_s": 40.0,
+                    "errors": {},
+                    "input_tokens": 40000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 5000,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.18,
+                  "known_amount": 0.18,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 300.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "action_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "rule"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              17873
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 17873,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 0,
+            "upgrade_rate": 0.0,
+            "generation_roles": {
+              "small": 10,
+              "large": 0
+            },
+            "action_counts": {
+              "propose_candidate": 6,
+              "run_validation": 5,
+              "analyze": 2
+            },
+            "usage": {
+              "requests": 14,
+              "latency_s": 56.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "input_tokens_unknown_calls": 1,
+              "output_tokens": 5080,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 2
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 4,
+                "latency_s": 16.0,
+                "errors": {},
+                "input_tokens": null,
+                "input_tokens_unknown_calls": 1,
+                "output_tokens": 80,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 40000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 5000,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              }
+            },
+            "cost": {
+              "by_model": {
+                "router_action:openai_decisions:gpt-fixture-decisions": {
+                  "amount": null,
+                  "currency": "USD",
+                  "status": "partial",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-decisions",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0.4,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "known_amount": 3.2e-05,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-fixture-decisions",
+                  "usage": {
+                    "requests": 4,
+                    "latency_s": 16.0,
+                    "errors": {},
+                    "input_tokens": null,
+                    "input_tokens_unknown_calls": 1,
+                    "output_tokens": 80,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.18,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.18,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 10,
+                    "latency_s": 40.0,
+                    "errors": {},
+                    "input_tokens": 40000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 5000,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.18,
+                  "known_amount": 0.18,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": null,
+                  "known_amount": 3.2e-05,
+                  "status": "partial"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 310.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "model_decisions",
+            "routing": {
+              "action": "llm",
+              "model": "decisions"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "failed": 1
+            },
+            "final_correct": 0,
+            "final_values": [
+              null
+            ],
+            "final_metric_observations": 0,
+            "final_metric_median": null,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 1,
+            "upgrade_rate": 1.0,
+            "generation_roles": {
+              "small": 7,
+              "large": 3
+            },
+            "action_counts": {
+              "propose_candidate": 6,
+              "run_validation": 5,
+              "analyze": 2
+            },
+            "usage": {
+              "requests": 14,
+              "latency_s": 56.0,
+              "errors": {},
+              "input_tokens": 47200,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 6280,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 3
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 4,
+                "latency_s": 16.0,
+                "errors": {},
+                "input_tokens": 1200,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 80,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 46000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 6200,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 2
+              }
+            },
+            "cost": {
+              "by_model": {
+                "large:openai_responses:gpt-fixture-large": {
+                  "amount": 0.0576,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-large",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 2,
+                    "output_per_1m": 8,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.0576,
+                  "purpose": "generation",
+                  "role": "large",
+                  "provider": "openai_responses",
+                  "model": "gpt-fixture-large",
+                  "usage": {
+                    "requests": 3,
+                    "latency_s": 12.0,
+                    "errors": {},
+                    "input_tokens": 18000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 2700,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "router_action:openai_decisions:gpt-fixture-decisions": {
+                  "amount": 0.000152,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-decisions",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0.4,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.000152,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-fixture-decisions",
+                  "usage": {
+                    "requests": 4,
+                    "latency_s": 16.0,
+                    "errors": {},
+                    "input_tokens": 1200,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 80,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.126,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.126,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 7,
+                    "latency_s": 28.0,
+                    "errors": {},
+                    "input_tokens": 28000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 3500,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.126,
+                  "known_amount": 0.126,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": 0.057752,
+                  "known_amount": 0.057752,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 320.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "both_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "decisions"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              18113
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 18113,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 1,
+            "upgrade_rate": 1.0,
+            "generation_roles": {
+              "small": 7,
+              "large": 3
+            },
+            "action_counts": {
+              "propose_candidate": 6,
+              "run_validation": 5,
+              "analyze": 2
+            },
+            "usage": {
+              "requests": 17,
+              "latency_s": 68.0,
+              "errors": {},
+              "input_tokens": 48100,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 6340,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 3
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 7,
+                "latency_s": 28.0,
+                "errors": {},
+                "input_tokens": 2100,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 140,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 46000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 6200,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 2
+              }
+            },
+            "cost": {
+              "by_model": {
+                "large:openai_responses:gpt-fixture-large": {
+                  "amount": 0.0576,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-large",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 2,
+                    "output_per_1m": 8,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.0576,
+                  "purpose": "generation",
+                  "role": "large",
+                  "provider": "openai_responses",
+                  "model": "gpt-fixture-large",
+                  "usage": {
+                    "requests": 3,
+                    "latency_s": 12.0,
+                    "errors": {},
+                    "input_tokens": 18000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 2700,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "router_action:openai_decisions:gpt-fixture-decisions": {
+                  "amount": 0.000266,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-decisions",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0.4,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.000266,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-fixture-decisions",
+                  "usage": {
+                    "requests": 7,
+                    "latency_s": 28.0,
+                    "errors": {},
+                    "input_tokens": 2100,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 140,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.126,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.126,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 7,
+                    "latency_s": 28.0,
+                    "errors": {},
+                    "input_tokens": 28000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 3500,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.126,
+                  "known_amount": 0.126,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": 0.057866,
+                  "known_amount": 0.057866,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 330.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          }
+        ]
+      },
+      {
+        "task": {
+          "task_id": "algotune-convolve_1d-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          }
+        },
+        "variants": [
+          {
+            "variant": "baseline",
+            "routing": {
+              "action": "llm",
+              "model": "rule"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              2.4
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 2.4,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 0,
+            "upgrade_rate": 0.0,
+            "generation_roles": {
+              "small": 10,
+              "large": 0
+            },
+            "action_counts": {},
+            "usage": {
+              "requests": 10,
+              "latency_s": 40.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 5000,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 1
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 40000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 5000,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              }
+            },
+            "cost": {
+              "by_model": {
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.18,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.18,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 10,
+                    "latency_s": 40.0,
+                    "errors": {},
+                    "input_tokens": 40000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 5000,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.18,
+                  "known_amount": 0.18,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 370.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "action_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "rule"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              1.8
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 1.8,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 0,
+            "upgrade_rate": 0.0,
+            "generation_roles": {
+              "small": 10,
+              "large": 0
+            },
+            "action_counts": {
+              "propose_candidate": 6,
+              "run_validation": 5,
+              "analyze": 2
+            },
+            "usage": {
+              "requests": 14,
+              "latency_s": 56.0,
+              "errors": {},
+              "input_tokens": 40000,
+              "input_tokens_unknown_calls": 1,
+              "output_tokens": 5080,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 2
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 4,
+                "latency_s": 16.0,
+                "errors": {},
+                "input_tokens": null,
+                "input_tokens_unknown_calls": 1,
+                "output_tokens": 80,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 40000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 5000,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              }
+            },
+            "cost": {
+              "by_model": {
+                "router_action:openai_decisions:gpt-fixture-decisions": {
+                  "amount": null,
+                  "currency": "USD",
+                  "status": "partial",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-decisions",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0.4,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "known_amount": 3.2e-05,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-fixture-decisions",
+                  "usage": {
+                    "requests": 4,
+                    "latency_s": 16.0,
+                    "errors": {},
+                    "input_tokens": null,
+                    "input_tokens_unknown_calls": 1,
+                    "output_tokens": 80,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.18,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.18,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 10,
+                    "latency_s": 40.0,
+                    "errors": {},
+                    "input_tokens": 40000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 5000,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.18,
+                  "known_amount": 0.18,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": null,
+                  "known_amount": 3.2e-05,
+                  "status": "partial"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 340.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "model_decisions",
+            "routing": {
+              "action": "llm",
+              "model": "decisions"
+            },
+            "planned": 1,
+            "completed": 1,
+            "failed": 0,
+            "not_run": 0,
+            "final_status_counts": {
+              "completed": 1
+            },
+            "final_correct": 1,
+            "final_values": [
+              2.0
+            ],
+            "final_metric_observations": 1,
+            "final_metric_median": 2.0,
+            "c0_deliveries": 0,
+            "candidates_proposed": 5,
+            "candidates_passed": 4,
+            "candidate_pass_rate": 0.8,
+            "upgraded_runs": 1,
+            "upgrade_rate": 1.0,
+            "generation_roles": {
+              "small": 7,
+              "large": 3
+            },
+            "action_counts": {
+              "propose_candidate": 6,
+              "run_validation": 5,
+              "analyze": 2
+            },
+            "usage": {
+              "requests": 14,
+              "latency_s": 56.0,
+              "errors": {},
+              "input_tokens": 47200,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 6280,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": null,
+              "reasoning_tokens_unknown_calls": 3
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 4,
+                "latency_s": 16.0,
+                "errors": {},
+                "input_tokens": 1200,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 80,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 1
+              },
+              "generation": {
+                "requests": 10,
+                "latency_s": 40.0,
+                "errors": {},
+                "input_tokens": 46000,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 6200,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": null,
+                "reasoning_tokens_unknown_calls": 2
+              }
+            },
+            "cost": {
+              "by_model": {
+                "large:openai_responses:gpt-fixture-large": {
+                  "amount": 0.0576,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-large",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 2,
+                    "output_per_1m": 8,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.0576,
+                  "purpose": "generation",
+                  "role": "large",
+                  "provider": "openai_responses",
+                  "model": "gpt-fixture-large",
+                  "usage": {
+                    "requests": 3,
+                    "latency_s": 12.0,
+                    "errors": {},
+                    "input_tokens": 18000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 2700,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "router_action:openai_decisions:gpt-fixture-decisions": {
+                  "amount": 0.000152,
+                  "currency": "USD",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "gpt-fixture-decisions",
+                    "currency": "USD",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 0.1,
+                    "output_per_1m": 0.4,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.000152,
+                  "purpose": "routing",
+                  "role": "router_action",
+                  "provider": "openai_decisions",
+                  "model": "gpt-fixture-decisions",
+                  "usage": {
+                    "requests": 4,
+                    "latency_s": 16.0,
+                    "errors": {},
+                    "input_tokens": 1200,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 80,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                },
+                "small:chat_compat:Qwen3.8-27B": {
+                  "amount": 0.126,
+                  "currency": "CNY",
+                  "status": "estimated",
+                  "source": "https://example.test/fixture-price",
+                  "price_snapshot": {
+                    "model": "Qwen3.8-27B",
+                    "currency": "CNY",
+                    "unit": "per_1m_tokens",
+                    "input_per_1m": 3,
+                    "output_per_1m": 12,
+                    "source": "https://example.test/fixture-price",
+                    "retrieved_at": "2026-11-14T08:00:00+00:00"
+                  },
+                  "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+                  "known_amount": 0.126,
+                  "purpose": "generation",
+                  "role": "small",
+                  "provider": "chat_compat",
+                  "model": "Qwen3.8-27B",
+                  "usage": {
+                    "requests": 7,
+                    "latency_s": 28.0,
+                    "errors": {},
+                    "input_tokens": 28000,
+                    "input_tokens_unknown_calls": 0,
+                    "output_tokens": 3500,
+                    "output_tokens_unknown_calls": 0,
+                    "cached_input_tokens": 0,
+                    "cached_input_tokens_unknown_calls": 0,
+                    "reasoning_tokens": null,
+                    "reasoning_tokens_unknown_calls": 1
+                  }
+                }
+              },
+              "by_currency": {
+                "CNY": {
+                  "amount": 0.126,
+                  "known_amount": 0.126,
+                  "status": "estimated"
+                },
+                "USD": {
+                  "amount": 0.057752,
+                  "known_amount": 0.057752,
+                  "status": "estimated"
+                }
+              },
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 350.0,
+              "model_wait_s": 250.0,
+              "dev_evaluation_s": 20.0,
+              "final_evaluation_s": 15.0
+            }
+          },
+          {
+            "variant": "both_decisions",
+            "routing": {
+              "action": "decisions",
+              "model": "decisions"
+            },
+            "planned": 1,
+            "completed": 0,
+            "failed": 0,
+            "not_run": 1,
+            "final_status_counts": {
+              "not_run": 1
+            },
+            "final_correct": 0,
+            "final_values": [
+              null
+            ],
+            "final_metric_observations": 0,
+            "final_metric_median": null,
+            "c0_deliveries": 0,
+            "candidates_proposed": 0,
+            "candidates_passed": 0,
+            "candidate_pass_rate": null,
+            "upgraded_runs": 0,
+            "upgrade_rate": null,
+            "generation_roles": {
+              "small": 0,
+              "large": 0
+            },
+            "action_counts": {},
+            "usage": {
+              "requests": 0,
+              "latency_s": 0,
+              "errors": {},
+              "input_tokens": 0,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens": 0,
+              "output_tokens_unknown_calls": 0,
+              "cached_input_tokens": 0,
+              "cached_input_tokens_unknown_calls": 0,
+              "reasoning_tokens": 0,
+              "reasoning_tokens_unknown_calls": 0
+            },
+            "usage_by_purpose": {
+              "routing": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              },
+              "generation": {
+                "requests": 0,
+                "latency_s": 0,
+                "errors": {},
+                "input_tokens": 0,
+                "input_tokens_unknown_calls": 0,
+                "output_tokens": 0,
+                "output_tokens_unknown_calls": 0,
+                "cached_input_tokens": 0,
+                "cached_input_tokens_unknown_calls": 0,
+                "reasoning_tokens": 0,
+                "reasoning_tokens_unknown_calls": 0
+              }
+            },
+            "cost": {
+              "by_model": {},
+              "by_currency": {},
+              "unpriced_model_ledgers": 0,
+              "scope": "recorded calls only; unexecuted slots remain in planned count"
+            },
+            "timing": {
+              "wall_clock_total_s": 0,
+              "model_wait_s": 0,
+              "dev_evaluation_s": 0,
+              "final_evaluation_s": 0
+            }
+          }
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "action_decisions",
+        "value_a": 17753,
+        "value_b": 17873,
+        "status": "completed",
+        "difference_a_minus_b": -120
+      },
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "model_decisions",
+        "value_a": 17753,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "both_decisions",
+        "value_a": 17753,
+        "value_b": 18113,
+        "status": "completed",
+        "difference_a_minus_b": -360
+      },
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "model_decisions",
+        "value_a": 17873,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "both_decisions",
+        "value_a": 17873,
+        "value_b": 18113,
+        "status": "completed",
+        "difference_a_minus_b": -240
+      },
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "variant_a": "model_decisions",
+        "variant_b": "both_decisions",
+        "value_a": null,
+        "value_b": 18113,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "action_decisions",
+        "value_a": 2.4,
+        "value_b": 1.8,
+        "status": "completed",
+        "difference_a_minus_b": 0.5999999999999999
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "model_decisions",
+        "value_a": 2.4,
+        "value_b": 2.0,
+        "status": "completed",
+        "difference_a_minus_b": 0.3999999999999999
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "baseline",
+        "variant_b": "both_decisions",
+        "value_a": 2.4,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "model_decisions",
+        "value_a": 1.8,
+        "value_b": 2.0,
+        "status": "completed",
+        "difference_a_minus_b": -0.19999999999999996
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "action_decisions",
+        "variant_b": "both_decisions",
+        "value_a": 1.8,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "variant_a": "model_decisions",
+        "variant_b": "both_decisions",
+        "value_a": 2.0,
+        "value_b": null,
+        "status": "missing_or_failed",
+        "difference_a_minus_b": null
+      }
+    ],
+    "interactions": [
+      {
+        "task_id": "ale-bench-ahc026-fixture",
+        "repeat": 1,
+        "status": "missing_or_failed",
+        "both_minus_action_minus_model_plus_baseline": null
+      },
+      {
+        "task_id": "algotune-convolve_1d-fixture",
+        "repeat": 1,
+        "status": "missing_or_failed",
+        "both_minus_action_minus_model_plus_baseline": null
+      }
+    ],
+    "planned": 8,
+    "not_run": 1
+  },
+  "cost": {
+    "by_model": {
+      "large:openai_responses:gpt-fixture-large": {
+        "amount": 0.1728,
+        "currency": "USD",
+        "status": "estimated",
+        "source": "https://example.test/fixture-price",
+        "price_snapshot": {
+          "model": "gpt-fixture-large",
+          "currency": "USD",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 2,
+          "output_per_1m": 8,
+          "source": "https://example.test/fixture-price",
+          "retrieved_at": "2026-11-14T08:00:00+00:00"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+        "known_amount": 0.1728,
+        "purpose": "generation",
+        "role": "large",
+        "provider": "openai_responses",
+        "model": "gpt-fixture-large",
+        "usage": {
+          "requests": 9,
+          "latency_s": 36.0,
+          "errors": {},
+          "input_tokens": 54000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 8100,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 3
+        }
+      },
+      "router_action:openai_decisions:gpt-fixture-decisions": {
+        "amount": null,
+        "currency": "USD",
+        "status": "partial",
+        "source": "https://example.test/fixture-price",
+        "price_snapshot": {
+          "model": "gpt-fixture-decisions",
+          "currency": "USD",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 0.1,
+          "output_per_1m": 0.4,
+          "source": "https://example.test/fixture-price",
+          "retrieved_at": "2026-11-14T08:00:00+00:00"
+        },
+        "known_amount": 0.000634,
+        "purpose": "routing",
+        "role": "router_action",
+        "provider": "openai_decisions",
+        "model": "gpt-fixture-decisions",
+        "usage": {
+          "requests": 23,
+          "latency_s": 92.0,
+          "errors": {},
+          "input_tokens": 4500,
+          "input_tokens_unknown_calls": 2,
+          "output_tokens": 460,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 5
+        }
+      },
+      "small:chat_compat:Qwen3.8-27B": {
+        "amount": 1.098,
+        "currency": "CNY",
+        "status": "estimated",
+        "source": "https://example.test/fixture-price",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://example.test/fixture-price",
+          "retrieved_at": "2026-11-14T08:00:00+00:00"
+        },
+        "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded.",
+        "known_amount": 1.098,
+        "purpose": "generation",
+        "role": "small",
+        "provider": "chat_compat",
+        "model": "Qwen3.8-27B",
+        "usage": {
+          "requests": 61,
+          "latency_s": 244.0,
+          "errors": {},
+          "input_tokens": 244000,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens": 30500,
+          "output_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 7
+        }
+      }
+    },
+    "by_currency": {
+      "CNY": {
+        "amount": 1.098,
+        "known_amount": 1.098,
+        "status": "estimated"
+      },
+      "USD": {
+        "amount": null,
+        "known_amount": 0.173434,
+        "status": "partial"
+      }
+    },
+    "unpriced_model_ledgers": 0,
+    "scope": "recorded calls only; unexecuted slots remain in planned count"
+  },
+  "sides": {
+    "baseline": {
+      "model_requests": 20,
+      "routing_requests": 0,
+      "generation_requests": 20
+    },
+    "action_decisions": {
+      "model_requests": 28,
+      "routing_requests": 8,
+      "generation_requests": 20
+    },
+    "model_decisions": {
+      "model_requests": 28,
+      "routing_requests": 8,
+      "generation_requests": 20
+    },
+    "both_decisions": {
+      "model_requests": 17,
+      "routing_requests": 7,
+      "generation_requests": 10
+    }
+  },
+  "api_contract": "research-comparison-v1",
+  "dev_only": false
+}

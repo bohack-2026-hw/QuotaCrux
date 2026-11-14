@@ -5,7 +5,7 @@ import { Chip, Empty } from '../components/ui'
 import { usePoll } from '../hooks'
 import { ROUTE, STOP, fmt } from '../labels'
 
-/* The first screen for judges: what was learned, what the held-out comparisons show, and where the evidence is. */
+/* The experience phase: task stream, router, learning runs and held-out comparisons, kept with their links. */
 export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: string) => void; onOpenComparison: (id: string) => void }) {
   const runs = usePoll(() => api.runs(), [], 5000)
   const list = usePoll(api.comparisons, [], 5000)

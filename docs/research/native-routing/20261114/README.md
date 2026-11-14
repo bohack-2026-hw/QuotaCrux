@@ -1,6 +1,8 @@
 # 原生路由探索性小样本
 
-用户于2026-11-14将当前交付缩为“半小时左右、最多1小时”的小子集。当前采用 ahc026 四种路由各1轮，每轮统一360秒、20个全部HTTP请求、10候选；5 dev / 15 final不变。评测上限合计24分钟，随后导出真实结果。样本用于展示行为、效应与成本，明确每组仅1次。
+**已完成：4/4运行结束，4/4 final通过，实际墙钟21分24秒。** [结果摘要](RESULTS.md)与[完整证据/曲线](short-results/README.md)。
+
+用户于2026-11-14将当前交付缩为“半小时左右、最多1小时”的小子集。当前采用 ahc026 四种路由各1轮，每轮统一360秒、20个全部HTTP请求、10候选；5 dev / 15 final不变。研究循环预算合计24分钟，另计final、启动与导出时间。样本用于展示行为、效应与成本，明确每组仅1次。
 
 执行源码固定 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。四组顺序仍为 baseline、action_decisions、model_decisions、both_decisions；均为feedback/adaptive、eval/v0、fixed_model=None，small起步且可单向升级。所有生成与Decisions请求共用预算。
 

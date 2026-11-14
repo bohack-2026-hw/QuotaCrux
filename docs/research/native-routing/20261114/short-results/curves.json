@@ -1,0 +1,978 @@
+[
+  {
+    "variant": "baseline",
+    "repeat": 1,
+    "run_id": "run-20261114T084944-7558",
+    "points": [
+      {
+        "elapsed_s": 1.145,
+        "model_requests": 0,
+        "tokens": 0,
+        "value": 44120,
+        "cost": {
+          "CNY": 0,
+          "USD": 0
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 28.875,
+        "metric": "score",
+        "model_requests": 2,
+        "tokens": 9335,
+        "value": 44120,
+        "usage": {
+          "requests": 2,
+          "ok": 2,
+          "errors": {},
+          "latency_s": 26.433,
+          "input_tokens": 8172,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1163,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 2,
+          "price_versions": []
+        },
+        "cost": {
+          "CNY": 0.038472,
+          "USD": 0
+        }
+      },
+      {
+        "best_candidate_id": "c2",
+        "elapsed_s": 91.743,
+        "metric": "score",
+        "model_requests": 4,
+        "tokens": 25764,
+        "value": 46404,
+        "usage": {
+          "requests": 4,
+          "ok": 4,
+          "errors": {},
+          "latency_s": 86.828,
+          "input_tokens": 21666,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 4098,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 1034,
+          "reasoning_tokens_unknown_calls": 3,
+          "cost_usd": 0.039596,
+          "cost_status": "partial",
+          "cost_unknown_calls": 3,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.066657,
+          "USD": 0.035834
+        }
+      },
+      {
+        "best_candidate_id": "c3",
+        "elapsed_s": 163.819,
+        "metric": "score",
+        "model_requests": 5,
+        "tokens": 38162,
+        "value": 46663,
+        "usage": {
+          "requests": 5,
+          "ok": 5,
+          "errors": {},
+          "latency_s": 149.097,
+          "input_tokens": 30906,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 7256,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 2735,
+          "reasoning_tokens_unknown_calls": 3,
+          "cost_usd": 0.094274,
+          "cost_status": "partial",
+          "cost_unknown_calls": 3,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.066657,
+          "USD": 0.085894
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 230.56,
+        "metric": "score",
+        "model_requests": 6,
+        "tokens": 52356,
+        "value": 46778,
+        "usage": {
+          "requests": 6,
+          "ok": 6,
+          "errors": {},
+          "latency_s": 206.045,
+          "input_tokens": 41978,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 10378,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 4147,
+          "reasoning_tokens_unknown_calls": 3,
+          "cost_usd": 0.153172,
+          "cost_status": "partial",
+          "cost_unknown_calls": 3,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.066657,
+          "USD": 0.139258
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 289.875,
+        "metric": "score",
+        "model_requests": 8,
+        "tokens": null,
+        "value": 46778,
+        "usage": {
+          "requests": 8,
+          "ok": 7,
+          "errors": {
+            "timeout": 1
+          },
+          "latency_s": 255.45,
+          "input_tokens": 55179,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 13076,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 4889,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.213153,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.066657,
+          "USD": null
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 359.656,
+        "metric": "score",
+        "model_requests": 9,
+        "tokens": null,
+        "value": 46778,
+        "usage": {
+          "requests": 8,
+          "ok": 7,
+          "errors": {
+            "timeout": 1
+          },
+          "latency_s": 255.45,
+          "input_tokens": 55179,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 13076,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 4889,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.213153,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.066657,
+          "USD": null
+        }
+      }
+    ]
+  },
+  {
+    "variant": "action_decisions",
+    "repeat": 1,
+    "run_id": "run-20261114T085616-894b",
+    "points": [
+      {
+        "elapsed_s": 1.317,
+        "model_requests": 0,
+        "tokens": 0,
+        "value": 44120,
+        "cost": {
+          "CNY": 0,
+          "USD": 0
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 12.85,
+        "metric": "score",
+        "model_requests": 2,
+        "tokens": 8637,
+        "value": 44120,
+        "usage": {
+          "requests": 2,
+          "ok": 2,
+          "errors": {},
+          "latency_s": 10.238,
+          "input_tokens": 8119,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 518,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": 0.000427,
+          "cost_status": "partial",
+          "cost_unknown_calls": 1,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.01776,
+          "USD": 0.00042710000000000003
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 22.792,
+        "metric": "score",
+        "model_requests": 4,
+        "tokens": 20270,
+        "value": 44120,
+        "usage": {
+          "requests": 4,
+          "ok": 4,
+          "errors": {},
+          "latency_s": 18.907,
+          "input_tokens": 19234,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1036,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.001007,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.0010067000000000001
+        }
+      },
+      {
+        "best_candidate_id": "c3",
+        "elapsed_s": 94.286,
+        "metric": "score",
+        "model_requests": 6,
+        "tokens": 36701,
+        "value": 46506,
+        "usage": {
+          "requests": 6,
+          "ok": 6,
+          "errors": {},
+          "latency_s": 89.092,
+          "input_tokens": 32463,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 4238,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 2070,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.049213,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.046118200000000005
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 178.438,
+        "metric": "score",
+        "model_requests": 8,
+        "tokens": 57212,
+        "value": 46798,
+        "usage": {
+          "requests": 8,
+          "ok": 8,
+          "errors": {},
+          "latency_s": 163.481,
+          "input_tokens": 49036,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 8176,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 4140,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.108943,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.1019546
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 244.796,
+        "metric": "score",
+        "model_requests": 10,
+        "tokens": 82209,
+        "value": 46798,
+        "usage": {
+          "requests": 10,
+          "ok": 10,
+          "errors": {},
+          "latency_s": 219.984,
+          "input_tokens": 70380,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 11829,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 5560,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.171783,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.1597596
+        }
+      },
+      {
+        "best_candidate_id": "c6",
+        "elapsed_s": 311.463,
+        "metric": "score",
+        "model_requests": 12,
+        "tokens": 112275,
+        "value": 46800,
+        "usage": {
+          "requests": 12,
+          "ok": 12,
+          "errors": {},
+          "latency_s": 276.659,
+          "input_tokens": 97231,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 15044,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 6958,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.237159,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.21877410000000003
+        }
+      },
+      {
+        "best_candidate_id": "c7",
+        "elapsed_s": 357.026,
+        "metric": "score",
+        "model_requests": 14,
+        "tokens": 146253,
+        "value": 46849,
+        "usage": {
+          "requests": 14,
+          "ok": 14,
+          "errors": {},
+          "latency_s": 312.311,
+          "input_tokens": 128777,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 17476,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 7474,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.300594,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.2747183
+        }
+      },
+      {
+        "best_candidate_id": "c7",
+        "elapsed_s": 357.028,
+        "metric": "score",
+        "model_requests": 14,
+        "tokens": 146253,
+        "value": 46849,
+        "usage": {
+          "requests": 14,
+          "ok": 14,
+          "errors": {},
+          "latency_s": 312.311,
+          "input_tokens": 128777,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 17476,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 7474,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.300594,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.039932999999999996,
+          "USD": 0.2747183
+        }
+      }
+    ]
+  },
+  {
+    "variant": "model_decisions",
+    "repeat": 1,
+    "run_id": "run-20261114T090245-3188",
+    "points": [
+      {
+        "elapsed_s": 1.273,
+        "model_requests": 0,
+        "tokens": 0,
+        "value": 44120,
+        "cost": {
+          "CNY": 0,
+          "USD": 0
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 20.975,
+        "metric": "score",
+        "model_requests": 4,
+        "tokens": 17474,
+        "value": 44120,
+        "usage": {
+          "requests": 4,
+          "ok": 4,
+          "errors": {},
+          "latency_s": 18.413,
+          "input_tokens": 16806,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 668,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.00088,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.032043,
+          "USD": 0.0008797000000000001
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 36.584,
+        "metric": "score",
+        "model_requests": 8,
+        "tokens": 41426,
+        "value": 44120,
+        "usage": {
+          "requests": 8,
+          "ok": 8,
+          "errors": {},
+          "latency_s": 32.659,
+          "input_tokens": 40106,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 4864,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1320,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.002094,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.073335,
+          "USD": 0.0020941
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 56.477,
+        "metric": "score",
+        "model_requests": 12,
+        "tokens": 71221,
+        "value": 44120,
+        "usage": {
+          "requests": 12,
+          "ok": 12,
+          "errors": {},
+          "latency_s": 51.241,
+          "input_tokens": 69249,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 11392,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1972,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 6,
+          "cost_usd": 0.003612,
+          "cost_status": "partial",
+          "cost_unknown_calls": 6,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.123066,
+          "USD": 0.0036115
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 175.432,
+        "metric": "score",
+        "model_requests": 16,
+        "tokens": 111213,
+        "value": 46253,
+        "usage": {
+          "requests": 16,
+          "ok": 16,
+          "errors": {},
+          "latency_s": 161.12,
+          "input_tokens": 104259,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 13824,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 6954,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 3381,
+          "reasoning_tokens_unknown_calls": 7,
+          "cost_usd": 0.074468,
+          "cost_status": "partial",
+          "cost_unknown_calls": 7,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.150432,
+          "USD": 0.07025959999999999
+        }
+      },
+      {
+        "best_candidate_id": "c5",
+        "elapsed_s": 282.037,
+        "metric": "score",
+        "model_requests": 17,
+        "tokens": 126657,
+        "value": 46541,
+        "usage": {
+          "requests": 17,
+          "ok": 17,
+          "errors": {},
+          "latency_s": 258.489,
+          "input_tokens": 114741,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 13824,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 11916,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 6183,
+          "reasoning_tokens_unknown_calls": 7,
+          "cost_usd": 0.150292,
+          "cost_status": "partial",
+          "cost_unknown_calls": 7,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.150432,
+          "USD": 0.14084359999999999
+        }
+      },
+      {
+        "best_candidate_id": "c6",
+        "elapsed_s": 341.389,
+        "metric": "score",
+        "model_requests": 18,
+        "tokens": 143358,
+        "value": 46625,
+        "usage": {
+          "requests": 18,
+          "ok": 18,
+          "errors": {},
+          "latency_s": 308.274,
+          "input_tokens": 127692,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 13824,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 15666,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 7217,
+          "reasoning_tokens_unknown_calls": 7,
+          "cost_usd": 0.220168,
+          "cost_status": "partial",
+          "cost_unknown_calls": 7,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.150432,
+          "USD": 0.20424559999999997
+        }
+      },
+      {
+        "best_candidate_id": "c6",
+        "elapsed_s": 358.704,
+        "metric": "score",
+        "model_requests": 19,
+        "tokens": 159818,
+        "value": 46625,
+        "usage": {
+          "requests": 18,
+          "ok": 18,
+          "errors": {},
+          "latency_s": 308.274,
+          "input_tokens": 127692,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 13824,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 15666,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 7217,
+          "reasoning_tokens_unknown_calls": 7,
+          "cost_usd": 0.220168,
+          "cost_status": "partial",
+          "cost_unknown_calls": 7,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14",
+            "openai/gpt-6.1-sol/standard/2026-11-13"
+          ]
+        },
+        "cost": {
+          "CNY": 0.150432,
+          "USD": 0.24152559999999998
+        }
+      }
+    ]
+  },
+  {
+    "variant": "both_decisions",
+    "repeat": 1,
+    "run_id": "run-20261114T090915-276e",
+    "points": [
+      {
+        "elapsed_s": 1.232,
+        "model_requests": 0,
+        "tokens": 0,
+        "value": 44120,
+        "cost": {
+          "CNY": 0,
+          "USD": 0
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 18.475,
+        "metric": "score",
+        "model_requests": 3,
+        "tokens": 13099,
+        "value": 44120,
+        "usage": {
+          "requests": 3,
+          "ok": 3,
+          "errors": {},
+          "latency_s": 15.712,
+          "input_tokens": 12435,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 664,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": 0.000852,
+          "cost_status": "partial",
+          "cost_unknown_calls": 1,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.019701,
+          "USD": 0.0008524000000000001
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 34.81,
+        "metric": "score",
+        "model_requests": 6,
+        "tokens": 31205,
+        "value": 44120,
+        "usage": {
+          "requests": 6,
+          "ok": 6,
+          "errors": {},
+          "latency_s": 30.75,
+          "input_tokens": 29853,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 1352,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": 0.002039,
+          "cost_status": "partial",
+          "cost_unknown_calls": 2,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.044604000000000005,
+          "USD": 0.0020393
+        }
+      },
+      {
+        "best_candidate_id": "c0",
+        "elapsed_s": 48.806,
+        "metric": "score",
+        "model_requests": 9,
+        "tokens": 53252,
+        "value": 44120,
+        "usage": {
+          "requests": 9,
+          "ok": 9,
+          "errors": {},
+          "latency_s": 43.484,
+          "input_tokens": 51212,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 2432,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 2040,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 3,
+          "cost_usd": 0.003491,
+          "cost_status": "partial",
+          "cost_unknown_calls": 3,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.073377,
+          "USD": 0.0034913
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 67.264,
+        "metric": "score",
+        "model_requests": 12,
+        "tokens": 79259,
+        "value": 44374,
+        "usage": {
+          "requests": 12,
+          "ok": 12,
+          "errors": {},
+          "latency_s": 60.587,
+          "input_tokens": 76527,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 4864,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 2732,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 4,
+          "cost_usd": 0.00521,
+          "cost_status": "partial",
+          "cost_unknown_calls": 4,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.106059,
+          "USD": 0.0052102
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 83.413,
+        "metric": "score",
+        "model_requests": 15,
+        "tokens": 109284,
+        "value": 44374,
+        "usage": {
+          "requests": 15,
+          "ok": 15,
+          "errors": {},
+          "latency_s": 75.42,
+          "input_tokens": 105886,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 7296,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 3398,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 5,
+          "cost_usd": 0.007202,
+          "cost_status": "partial",
+          "cost_unknown_calls": 5,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.142374,
+          "USD": 0.007201999999999999
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 104.27,
+        "metric": "score",
+        "model_requests": 18,
+        "tokens": 143416,
+        "value": 44374,
+        "usage": {
+          "requests": 18,
+          "ok": 18,
+          "errors": {},
+          "latency_s": 94.934,
+          "input_tokens": 139194,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 9728,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 4222,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 6,
+          "cost_usd": 0.00946,
+          "cost_status": "partial",
+          "cost_unknown_calls": 6,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.184455,
+          "USD": 0.0094597
+        }
+      },
+      {
+        "best_candidate_id": "c4",
+        "elapsed_s": 106.286,
+        "metric": "score",
+        "model_requests": 19,
+        "tokens": 156235,
+        "value": 44374,
+        "usage": {
+          "requests": 18,
+          "ok": 18,
+          "errors": {},
+          "latency_s": 94.934,
+          "input_tokens": 139194,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 9728,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 4222,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 6,
+          "cost_usd": 0.00946,
+          "cost_status": "partial",
+          "cost_unknown_calls": 6,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "cost": {
+          "CNY": 0.184455,
+          "USD": 0.0107416
+        }
+      }
+    ]
+  }
+]

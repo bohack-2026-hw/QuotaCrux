@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
+from functools import cache
 import json
 import os
 from pathlib import Path
@@ -25,15 +26,39 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def load_dev_task(task_id: str) -> taskpkg.Task:
     directory = config.TASK_DATA_DIR / task_id
-    manifest = json.loads((directory / "manifest.json").read_text())
+    manifest_path = directory / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
     if manifest["task_id"] != task_id or manifest["family"] != "algotune":
         raise ValueError("calibration requires an existing AlgoTune task")
-    # taskpkg.load verifies every package file, including the reserved final data.
-    for key in ("initial", "dev_input"):
-        meta = manifest["files"][key]
-        if taskpkg.sha256_file(directory / meta["file"]) != meta["sha256"]:
-            raise ValueError(f"modified task file: {meta['file']}")
-    return taskpkg.Task(task_id, manifest["split"], directory, manifest)
+    row = db.one("SELECT family, split, manifest_json, manifest_sha256 FROM tasks WHERE task_id = ?", (task_id,))
+    manifest_sha = taskpkg.sha256_bytes(json.dumps(manifest, sort_keys=True).encode())
+    if (row is None or row["family"] != "algotune" or row["split"] != manifest["split"] or
+            json.loads(row["manifest_json"]) != manifest or row["manifest_sha256"] != manifest_sha):
+        raise ValueError("task manifest does not match its immutable SQLite registration")
+    # This verifies every package file, including the reserved final data, without evaluating final inputs.
+    return taskpkg.load(task_id, verify=True)
+
+
+def host_affinity() -> list[int] | None:
+    get_affinity = getattr(os, "sched_getaffinity", None)
+    return sorted(get_affinity(0)) if get_affinity is not None else None
+
+
+@cache
+def docker_cpu_ids() -> list[int]:
+    try:
+        count = int(subprocess.check_output(
+            ["docker", "info", "--format", "{{.NCPU}}"], text=True, timeout=15).strip())
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        raise RuntimeError(f"could not determine Docker VM CPU count: {exc}") from exc
+    if count < 1:
+        raise RuntimeError(f"Docker reported an invalid CPU count: {count}")
+    return list(range(count))
+
+
+def available_cpuset_cpus() -> list[int]:
+    affinity = host_affinity()
+    return affinity if affinity is not None else docker_cpu_ids()
 
 
 def environment() -> dict:
@@ -46,9 +71,18 @@ def environment() -> dict:
             if field.exists():
                 values[name] = field.read_text().strip()
         cpus[path.name] = values
+    affinity = host_affinity()
+    system = platform.system()
     return {"platform": platform.platform(), "host_python": platform.python_version(),
-            "host_affinity": sorted(os.sched_getaffinity(0)), "load_average": list(os.getloadavg()),
-            "cpus": cpus}
+            "host_logical_cpu_count": os.cpu_count(), "host_affinity": affinity,
+            "host_affinity_supported": affinity is not None,
+            "cpuset_cpu_ids": available_cpuset_cpus(),
+            "cpuset_scope": "docker_vm_vcpu" if affinity is None else "host_cpu",
+            "physical_core_exclusive": False,
+            "cpu_topology_source": "linux_sysfs" if cpus else None,
+            "load_average": list(os.getloadavg()), "cpus": cpus,
+            "notes": (["Docker VM vCPU affinity does not identify or reserve a physical Apple Silicon core."]
+                      if system == "Darwin" else [])}
 
 
 def slowed_program(code: bytes, delay_ms: float) -> bytes:
@@ -172,11 +206,12 @@ def main() -> None:
         parser.error("rounds must be 1..10, repeats 2..100, and control delay 0..100 ms")
     if not 1 <= args.warmups <= 20:
         parser.error("warmups must be 1..20")
-    if not args.cpuset_cpus.isdecimal() or int(args.cpuset_cpus) not in os.sched_getaffinity(0):
-        parser.error("cpuset-cpus must name one CPU available to this process")
+    if not args.cpuset_cpus.isdecimal() or int(args.cpuset_cpus) not in available_cpuset_cpus():
+        parser.error("cpuset-cpus must name one CPU available to the Docker execution environment")
     if args.output.exists():
         parser.error(f"output already exists: {args.output}")
     task = load_dev_task(args.task_id)
+    registered = db.one("SELECT manifest_sha256 FROM tasks WHERE task_id = ?", (task.task_id,))
     measures = {"default": config.MeasureConfig(repeats=args.repeats, function_warmups=args.warmups),
                 "pinned": config.MeasureConfig(repeats=args.repeats, function_warmups=args.warmups,
                                                cpuset_cpus=args.cpuset_cpus)}
@@ -191,6 +226,8 @@ def main() -> None:
               "control_delay_ms": args.control_delay_ms,
               "control_method": "sleep after the original solve; adds at least the requested wall time per case",
               "task_manifest_sha256": taskpkg.sha256_file(task.dir / "manifest.json"),
+              "task_manifest_canonical_sha256": registered["manifest_sha256"],
+              "task_package_files": {key: meta["sha256"] for key, meta in task.manifest["files"].items()},
               "dev_sha256": task.manifest["files"]["dev_input"]["sha256"],
               "candidate_image": task.manifest["native"]["candidate_image"],
               "judge_image": task.manifest["native"]["judge_image"],
@@ -218,6 +255,8 @@ def main() -> None:
                               "improved": measured["evaluation"]["improved"]}), flush=True)
             if measured["evaluation"]["status"] != "passed":
                 raise RuntimeError(f"calibration comparison failed: {measured['evaluation']['status']}")
+            if not measured["expected_outcome_observed"]:
+                raise RuntimeError(f"calibration outcome did not match the frozen expectation: {step['kind']}")
         result["status"] = "completed"
     except BaseException as exc:
         result.update(status="failed", failure=f"{type(exc).__name__}: {exc}")

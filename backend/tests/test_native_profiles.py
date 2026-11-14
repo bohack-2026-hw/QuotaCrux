@@ -7,6 +7,9 @@ import pytest
 
 from routeevo import config, taskpkg
 from routeevo.benchmarks import algotune, native
+from routeevo.sandbox import executor
+
+from conftest import requires_docker
 
 
 def array(length):
@@ -117,3 +120,22 @@ def test_profile_changes_task_identity_without_rewriting_old_packages(monkeypatc
     assert taskpkg.load(first.task_id).manifest == first_manifest
     assert (old.dir / "manifest.json").read_bytes() == old_manifest
     assert (old.dir / "dev_profile.json").read_bytes() == old_profile
+
+
+@requires_docker
+def test_scientific_harness_disables_gc_only_during_solve():
+    image = algotune.scientific_image()
+    code = b"""import gc
+gc_enabled_at_exec = gc.isenabled()
+def solve(problem):
+    return [gc_enabled_at_exec, gc.isenabled()]
+"""
+    measure = config.MeasureConfig(repeats=2, function_warmups=2)
+    sample = executor.run_sample(
+        code, json.dumps({"problem": None, "repeats": 2, "warmups": 2}).encode(),
+        config.RunLimits().measurement_timeout_s, measure,
+        image=image["image_id"], harness="/opt/routeevo/scientific_harness.py")
+    assert sample.status == "ok", sample.stderr_tail
+    payload = json.loads(sample.stdout)
+    assert payload["solutions"] == [[True, False]] * 4
+    assert payload["gc_policy"] == "automatic_gc_disabled_during_solve"

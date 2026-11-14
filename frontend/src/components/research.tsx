@@ -65,7 +65,7 @@ export function CostTotal({ costs }: { costs: Cost[] }) {
   const t = costTotals(costs)
   const parts = Object.entries(t.byCurrency).map(([cur, v]) => `${t.partial.has(cur) ? '≥' : ''}${money(v, cur)}`)
   if (!parts.length) return <>未知</>
-  return <>{parts.join(' + ')}{t.kinds.has('estimate') ? ' 估' : ''}{t.unknown ? `（另 ${t.unknown} 轮未知）` : ''}</>
+  return <>{parts.join(' + ')}{t.kinds.has('estimate') ? ' 估' : ''}{t.unknown ? <span className="unknown-note">{t.unknown} 轮未知</span> : null}</>
 }
 
 export function RunLink({ run, onOpenRun, archive }: { run: RRun; onOpenRun?: (id: string) => void; archive: boolean }) {
@@ -171,10 +171,14 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
   const xFmt = (v: number) => (axis === 'time' ? `${Math.round(v)}s` : axis === 'tokens' ? fmt.rows(v) : money(v, currency).replace(/(\.\d{2})\d+/, '$1'))
   const yFmt = (v: number) => (task.metric === 'score' ? fmt.n(v) : `${v.toFixed(2)}×`)
 
-  // Direct labels at each line's end, nudged apart so they never overlap.
-  const ends = series.map((s) => {
-    const last = s.pts[s.pts.length - 1]
-    return { key: `${s.r.mode}-${s.r.repeat}`, mode: s.r.mode, repeat: s.r.repeat, y: y(last.y), x: x(s.end ?? last.x) }
+  // Direct labels: one per group, at the end of its best line, nudged apart so they never overlap.
+  const lastOf = (s: (typeof series)[number]) => s.pts[s.pts.length - 1]
+  const better = (a: number, b: number) => (task.direction === 'minimize' ? a < b : a > b)
+  const bestLine = new Map<string, (typeof series)[number]>()
+  for (const s of series) { const cur = bestLine.get(s.r.mode); if (!cur || better(lastOf(s).y, lastOf(cur).y)) bestLine.set(s.r.mode, s) }
+  const ends = [...bestLine.values()].map((s) => {
+    const last = lastOf(s)
+    return { key: s.r.mode, mode: s.r.mode, repeat: s.r.repeat, y: y(last.y), x: x(s.end ?? last.x) }
   }).sort((a, b) => a.y - b.y)
   for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14
   const multiRepeat = task.repeats.length > 1
@@ -219,7 +223,7 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
           )
         })}
         {ends.map((e) => (
-          <text key={e.key} x={Math.min(e.x + 8, W - right + 8)} y={e.y + 4} className="lbl-strong">{rmode(e.mode).short}{multiRepeat ? `·r${e.repeat}` : ''}</text>
+          <text key={e.key} x={Math.min(e.x + 8, W - right + 8)} y={e.y + 4} className="lbl-strong">{rmode(e.mode).short}</text>
         ))}
       </svg>
       {tip && <div className="tip" style={{ left: tip.x, top: tip.y }}>{tip.text}</div>}
@@ -276,12 +280,13 @@ function ModeUsage({ runs }: { runs: RRun[] }) {
 
 /** One tile per mode: the median development result, its change against the baseline, and nothing else. */
 export function Scoreboard({ task, lead, planned, usage = false }: { task: RTask; lead: string | null; planned: string[]; usage?: boolean }) {
+  const tiles = task.modes.length + planned.filter((m) => !task.modes.includes(m)).length
   return (
-    <div className="scores" style={{ ['--cols' as string]: task.modes.length > 3 ? 2 : Math.max(1, task.modes.length) }}>
+    <div className="scores" style={{ ['--cols' as string]: tiles > 3 ? 2 : Math.max(1, tiles) }}>
       {task.modes.map((m) => {
         const s = modeSummary(task, m)
         const [n, unit] = bigNumber(task.metric, s.value)
-        const g = s.improved > 0 ? gainOf(task, s.value) : null
+        const g = gainOf(task, s.value)
         const isLead = lead === m
         return (
           <div key={m} className={`score ${isLead ? 'lead' : ''}`} style={{ ['--mode' as string]: rmode(m).color }}>

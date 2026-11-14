@@ -5,6 +5,7 @@ import { api } from './api'
 import { usePoll } from './hooks'
 import { normalize } from './research'
 import type { RawBatch, RBatch } from './research'
+import archivedAle from './samples/research-ale-formal.json'
 import archivedR2 from './samples/research-native-r2.json'
 
 export interface BatchEntry {
@@ -12,7 +13,8 @@ export interface BatchEntry {
   source: 'api' | 'archive'; archivePath: string | null
 }
 
-const ARCHIVE: RawBatch[] = [archivedR2 as RawBatch]
+// Newest first: the audited ALE formal batch (#3), then the second dev pilot.
+const ARCHIVE: RawBatch[] = [archivedAle as unknown as RawBatch, archivedR2 as RawBatch]
 export const REPO_BLOB = 'https://github.com/bohack-2026-hw/RouteEvo/blob/main/'
 
 export type ApiState = 'ok' | 'missing' | 'error' | 'loading'

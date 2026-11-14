@@ -108,7 +108,7 @@ export interface RRun {
   seq: number; taskId: string; repeat: number; mode: string; runId: string | null; state: RunState; stopReason: string | null
   metric: Metric
   dev: { value: number | null; improved: boolean | null; candidate: string | null; initial: boolean; status: string | null }
-  final: { state: FinalState; correct: boolean | null; value: number | null; error: string | null; normalized: boolean }
+  final: { state: FinalState; correct: boolean | null; value: number | null; baseline: number | null; error: string | null; normalized: boolean }
   requests: number | null; inputTokens: number | null; outputTokens: number | null; tokens: number | null
   wallS: number | null; modelWaitS: number | null; devEvalS: number | null
   proposed: number | null; passed: number | null
@@ -122,6 +122,8 @@ export interface RRun {
 export interface RTask {
   id: string; family: string; title: string; metric: Metric; direction: string; baseline: number | null; minSpeedup: number | null
   devCases: number | null; finalCases: number | null; modes: string[]; repeats: number[]; runs: RRun[]
+  /** Which result the scoreboard reports: final once any run passed the final test, else the dev best. */
+  source: 'final' | 'dev'; finalBaseline: number | null
 }
 export interface RBatch {
   id: string; label: string | null; status: string; running: boolean; protocol: string | null; scope: string | null
@@ -300,6 +302,7 @@ export function normalize(raw: RawBatch): RBatch {
         correct: r.final?.correct ?? r.final_evaluation?.correct ?? r.outcome?.final_correct ?? null,
         value: r.final?.value ?? num(r.final_evaluation?.objective?.value) ?? num(r.final_evaluation?.speedup)
           ?? num(r.outcome?.final_objective?.value) ?? num(r.outcome?.final_speedup),
+        baseline: num(r.final_evaluation?.objective?.baseline),
         error: r.final?.error ?? r.outcome?.final_error ?? null,
         normalized: !!r.final_evaluation?.normalized,
       },
@@ -335,6 +338,8 @@ export function normalize(raw: RawBatch): RBatch {
       modes: order.filter((m) => own.some((r) => r.mode === m)).concat([...new Set(own.map((r) => r.mode))].filter((m) => !order.includes(m))),
       repeats: [...new Set(own.map((r) => r.repeat))].sort((a, b) => a - b),
       runs: own,
+      source: own.some((r) => r.final.state === 'passed' && r.final.value != null) ? 'final' : 'dev',
+      finalBaseline: metric === 'speedup' ? 1 : own.find((r) => r.final.baseline != null)?.final.baseline ?? null,
     }
   })
   const modes = study === 'routing' ? (raw.variants?.length ? raw.variants : order.filter((m) => runs.some((r) => r.mode === m)))

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { BatchBadges, CostTotal, ModeMark, ProgressChart, Scoreboard } from '../components/research'
+import { BatchBadges, CostTotal, ModeLegend, ModeMark, ProgressChart, Scoreboard } from '../components/research'
 import { Empty } from '../components/ui'
 import { STUDY, fmt, rmode } from '../labels'
 import type { RBatch, RTask } from '../research'
@@ -39,7 +39,7 @@ function Study({ entry, titled, onOpen }: { entry: BatchEntry; titled: boolean; 
       </section>
       <Kpis b={b} />
       <Groups b={b} />
-      <div className="board">
+      <div className="board" style={b.modes.length >= 3 ? { gridTemplateColumns: 'minmax(0, 1fr)' } : undefined}>
         {b.tasks.map((t) => <TaskCard key={t.id} t={t} b={b} />)}
       </div>
     </>
@@ -98,7 +98,7 @@ function Highlights({ b }: { b: RBatch }) {
           <div key={t.id} className="highlight">
             <div className="label mono">{t.title}</div>
             <div className={`big ${g ? 'gain-text' : 'muted'}`}>{g ? <>{g.big}<small>{g.unit}</small></> : '—'}</div>
-            <div className="cap">{t.metric === 'score' ? '得分' : '提速'}{best ? <> · <span style={{ color: rmode(best.mode).color }}>●</span> {rmode(best.mode).label}</> : ''}</div>
+            <div className="cap">{t.metric === 'score' ? '得分' : '提速'} · {t.source === 'final' ? '最终集' : '开发集'}{best ? <> · <span style={{ color: rmode(best.mode).color }}>●</span> {rmode(best.mode).label}</> : ''}</div>
           </div>
         )
       })}
@@ -112,9 +112,10 @@ function TaskCard({ t, b }: { t: RTask; b: RBatch }) {
     <div className="card task-card">
       <div className="head">
         <h2>{t.title}</h2>
-        <span className="metric-pill">{t.metric === 'score' ? '原始得分 ↑' : '加速比 ↑'}</span>
+        <span className="metric-pill">{t.metric === 'score' ? '原始得分 ↑' : '加速比 ↑'} · {t.source === 'final' ? '最终集' : '开发集'}</span>
       </div>
       <Scoreboard task={t} lead={v.lead} planned={b.modes} usage />
+      {t.repeats.length > 1 && <ModeLegend modes={t.modes} repeats={t.repeats} />}
       <ProgressChart task={t} axis="time" currency={b.pricing?.currency ?? null} height={170} />
     </div>
   )

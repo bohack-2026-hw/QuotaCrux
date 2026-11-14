@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from routeevo import compare, db, memory, narrative, report, research
+from routeevo import compare, config, db, memory, narrative, report, research
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "results.md"
 
@@ -287,6 +287,24 @@ def section_stream(lines: list[str], s: dict) -> None:
     lines += ["", "| 重放 | 带记忆一侧的版本链 | 新发布版本 | 经验条数 |", "|---|---|---|---|"]
     for gr in s["growth"]:
         lines.append(f"| 第 {gr['repeat']} 次 | {gr['start']} → {gr['end']} | {gr['published_versions']} | {gr['experiences_start']} → {gr['experiences_end']} |")
+    stopped = [r for r in db.all_rows("SELECT comparison_id, created_at FROM comparisons WHERE label LIKE 'S online stream%' AND status = 'stopped'"
+                                      " ORDER BY created_at")]
+    for r in stopped:
+        st = compare.summarize(r["comparison_id"])
+        ev = db.one("SELECT payload_json FROM events WHERE run_id = ? AND type = 'stream_stopped_by_operator'", (r["comparison_id"],))
+        api = sum(1 for p in st["positions"] for a in ("memory", "fresh") for x_ in p["arms"][a] if x_["stop_reason"] == "model_api_error")
+        F0, M0 = st["sides"]["fresh"], st["sides"]["memory"]
+        lines += ["", f"**中止的第一次运行**（`{r['comparison_id']}`，记录全部保留）：运行到 {st['finished_runs']}/{st['planned_runs']} 时人工停止。"
+                  "原因：03:32 UTC 起 OpenAI 接口连续出现网络错误（SSL EOF、服务器断开），"
+                  f"不带记忆一侧有 {api} 次运行因此以 model_api_error 结束；继续运行只会测到网络故障。停止前的结果方向与重跑一致："
+                  f"大模型请求 {F0['large_model_requests_total']} → {M0['large_model_requests_total']}，费用 {usd(F0['cost_usd_total'])} → {usd(M0['cost_usd_total'])}，"
+                  f"达标 {F0['goal_met']}/{F0['runs']} → {M0['goal_met']}/{M0['runs']}（不带记忆 → 带记忆）。两次运行之间没有修改任何代码或配置。"]
+    load = config.VAR_DIR / "env" / f"load-{s['comparison_id']}.log"
+    if load.exists():
+        vals = [float(line.split("{")[1].split()[0]) for line in load.read_text().splitlines() if "{" in line]
+        if vals:
+            lines += ["", f"运行期间每 30 秒采样的系统 1 分钟负载（16 核）：中位数 {sorted(vals)[len(vals) // 2]:.0f}，范围 {min(vals):.0f}—{max(vals):.0f}。"
+                      "同机还有一个常驻的本地模型服务（约占 2 核）和 iCloud 文件同步；两侧按任务交替运行，承受同样的环境。"]
     lines += ["", "观察（由数据生成）：", ""]
     note = narrative.stream_note(s)["lines"]
     lines += [f"- {note[0]}", f"- {note[1]}"]

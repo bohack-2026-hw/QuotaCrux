@@ -1,8 +1,9 @@
 # RouteEvo backend
 
-The [shared core](../docs/shared-core-prd.md), M1–M3: one task family, the Qwen → GPT execution loop, a Docker
-sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots and
-rollback, frozen held-out comparisons, and an HTTP API that also serves the dashboard. Decisions follow
+The [shared core](../docs/shared-core-prd.md), M1–M3: three task families, the Qwen / GPT execution loop with a router,
+a Docker sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots
+and rollback, frozen held-out comparisons, an online stream comparison, and an HTTP API that also serves the
+dashboard. Boundary conditions, case by case: [docs/boundaries.md](../docs/boundaries.md). Decisions follow
 [implementation-decisions.md](../docs/implementation-decisions.md).
 
 ## Setup
@@ -20,13 +21,14 @@ Docker (OrbStack) must be running; the sandbox image is built on first use. Loca
 (`QWEN_MODEL=qwen3.8:27b-mlx`, thinking off via `QWEN_REASONING_EFFORT=none`). The project `.env` overrides the
 shell, which matters because the shell may export `OPENAI_API_KEY=ollama` for local tools.
 
-Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then compare B and C).
+Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, compare B and D, the S stream, the router
+ablation).
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `uv run routeevo run A-01 [--mode learn\|eval] [--snapshot v0]` | One agent run with the real models; prints the summary and writes `var/runs/<id>/report.json` |
+| `uv run routeevo run A-01 [--mode eval\|online\|learn] [--snapshot v0] [--no-router]` | One agent run with the real models; prints the summary and writes `var/runs/<id>/report.json` |
 | `uv run routeevo run A-01 --script tests/fixtures/scripts/success.json` | Same loop with a scripted model; functional checks only, labelled in reports |
 | `uv run routeevo report <run_id> [--json]` | Rebuild the report from stored records |
 | `uv run routeevo runs` / `stop <run_id>` | List runs / request a stop after the current step |
@@ -34,7 +36,8 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo calibrate A-01` | Time the initial program and fixed input-transfer overhead |
 | `uv run routeevo tasks list` / `tasks lock` | Show tasks / pin manifests in `tasks/lock.json` before B/C comparisons |
 | `uv run routeevo learn A-01 A-02 …` | Serial learn-mode runs; each publishes a snapshot on top of the previous one |
-| `scripts/experiment.sh [learn\|compare-b\|compare-d]` | The formal experiment: two A learning rounds from v0, B comparison, sealed D comparison |
+| `scripts/experiment.sh [learn\|compare-b\|compare-d\|stream\|ablation]` | The formal experiment: two A learning rounds from v0, B comparison, sealed D comparison, sealed S stream, router ablation |
+| `uv run routeevo stream S-01 … --start v19 --repeats 3` | Online stream: the same task sequence with accumulating memory (online mode) vs from a fixed start (eval), alternating, serial |
 | `uv run routeevo snapshots list\|show v3\|diff v0 v3\|activate v1 --reason …` | Snapshots, diffs and rollback |
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
@@ -45,14 +48,22 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
 | `uv run pytest` | Unit tests plus end-to-end flows (needs Docker) |
 
-## Task family `groupagg`
+## Task families
 
-Group CSV rows `key,value` by key, output `key,count,sum` sorted by key ([contract](src/routeevo/families/groupagg.py)).
-The initial program is a plain `csv` + dict implementation. A task package (`tasks/spec.json` → `var/tasks/<id>/`)
-holds the contract, initial code, visible examples, a dev data profile, dev data and an independent final test set,
-all hash-pinned in `manifest.json`. Only contract, initial code, examples and dev profile reach the model.
-Splits: A (learning), B (development comparison), C (held-out for the text-experience version), D (sealed on
-2026-11-14 before re-use was built, held out for the re-use version), smoke (tests).
+| Family | Task | Initial program |
+| --- | --- | --- |
+| `groupagg` | group CSV rows `key,value`, output `key,count,sum` sorted by key | `csv` + dicts + `sorted` |
+| `logstats` | access log lines → per (hour, method, path): count, 5xx count, latency sum and max | regex + `datetime.strptime` |
+| `intervals` | merge overlapping or touching closed integer intervals (values up to ±10^12) | `csv` + tuple sort |
+
+Each family is one module in `src/routeevo/families/`: contract, initial program, deterministic generator, trusted
+reference output, workload profile and 5 condition buckets, 7 public contract cases, output checker. The evaluator,
+experience store, router and UI dispatch on the task's family. A task package (`tasks/spec*.json` →
+`var/tasks/<id>/`) holds the contract, initial code, visible examples, a dev data profile, dev data and an independent
+final test set, all hash-pinned in `manifest.json`. Only contract, initial code, examples and dev profile reach the
+model. Splits: A (learning), B (development comparison), C (held-out for the text-experience version), D (sealed
+before re-use was built), T (tuning tasks for the new families), S (sealed mixed-family stream, run once for version
+3), smoke (tests). Writable splits: A, S, T, smoke.
 
 ## Evaluation
 
@@ -64,19 +75,21 @@ Splits: A (learning), B (development comparison), C (held-out for the text-exper
   Speedup = baseline median / candidate median.
 - **Improved** means every candidate sample beat every baseline sample (one-sided Mann-Whitney U = 0, p = 1/252).
   Only improved candidates can replace the best artifact; the goal is improved and speedup ≥ 1.10.
-- Before timing, candidates must also pass small public contract cases (empty input, interleaved repeats, ASCII
-  order, big integers, an almost-sorted trap, 32-char keys), so data-specific shortcuts without a fallback fail.
+- Before timing, candidates must also pass the family's 7 public contract cases (groupagg: empty input,
+  interleaved repeats, ASCII order, big integers, an almost-sorted trap, 32-char keys; logstats: hour and day
+  boundaries, out-of-order lines, status 499/500/599; intervals: touching vs gap of one, transitive merges, ±10^12),
+  so data-specific shortcuts without a fallback fail.
 - After the loop the best candidate is frozen and tested once on the final data; that result never feeds back.
 
 ## Experience, snapshots, comparison
 
-- Learn-mode runs (A and smoke tasks only) end by extracting one record per model or re-validated candidate with a
+- Learn- and online-mode runs (writable splits only) end by extracting one record per model or re-validated candidate with a
   usable dev evaluation: workload conditions (profile + buckets), the change (the full program, code features, diff
-  vs the initial program), the measured result, resources and source ids (`extractor-v2`). Success, no-gain and failure are all kept. Model explanations are
+  vs the initial program), the measured result, resources and source ids (`extractor-v3`). Success, no-gain and failure are all kept. Model explanations are
   stored as unverified hypotheses. Records are published atomically as `v{n}` (parent = the snapshot the run read)
   and the active pointer moves to it; no qualifying records means no new version.
-- Every run reads one snapshot fixed at start. Retrieval is deterministic: at least 3 of 5 workload buckets must
-  match; up to 3 successes, 2 failures, 1 no-gain are injected with match details and sample counts. The run
+- Every run reads one snapshot fixed at start. Retrieval is deterministic and family-scoped (`retrieval-v2`): at
+  least 3 of the family's 5 workload buckets must match; up to 3 successes, 2 failures, 1 no-gain are injected with match details and sample counts. The run
   records exactly which experiences it read.
 - Re-use (`reuse-v1`, `memory.REUSE`): before the first model request a run re-validates up to 3 verified programs
   from its snapshot with the normal dev evaluation — programs from success records, ranked by how many workload
@@ -86,10 +99,22 @@ Splits: A (learning), B (development comparison), C (held-out for the text-exper
   `re-used cN …; no model request needed`). A learn run instead raises its own target to 5% above the best re-used
   program (`set_target` step) so its model requests go to beating it. Each re-use is an experiment with a
   program-written hypothesis (source, recorded speedup, differing buckets) and a program verdict.
-- Rollback switches the active pointer only (refused while a learn run is in progress); history stays.
+- Router (`router-v1`, `memory.ROUTER`): when re-use did not reach the target, the run starts on the small model if
+  the snapshot holds a success of the same family matching at least 3 of 5 buckets (`familiar`); otherwise it goes
+  straight to the large model — `new_family` (no record of the family) or `new_conditions` (records, but no similar
+  success). The decision is a `route_model` program step with its reason. `--no-router` always starts small (ablation;
+  changes the fingerprint).
+- Modes: `eval` reads a frozen snapshot and writes nothing; `online` delivers like eval (stops when re-use reaches the
+  target) and then publishes what it verified; `learn` raises the target above re-used programs and publishes.
+- Rollback switches the active pointer only (refused while a learn or online run is in progress); history stays.
 - `compare` runs held-out tasks with two frozen snapshots, alternating order, serially, rejects tasks that
   contributed experience to either snapshot, checks that all runs share one config fingerprint, and reports
   per-side and per-task results plus the learning cost along the snapshot lineage.
+- `stream` runs a task sequence twice per repeat: arm `memory` in online mode, each task reading what the previous
+  task of the same repeat published; arm `fresh` in eval mode on the start snapshot. Arms alternate per task; each
+  repeat replays the learning from the start snapshot; the active pointer is restored afterwards. The summary
+  reports both arms, first-of-family vs later tasks, per family, per position, cumulative large-model cost and
+  snapshot growth.
 - A two-round session (`POST /api/sessions`) learns one task from a base snapshot, publishes the new version (which
   becomes active), then runs a one-repeat comparison of base vs new on an unseen task. Re-activate the formal
   snapshot afterwards.
@@ -107,7 +132,7 @@ formal runs; `scripts/export_research.py` exports rule-selected sample bundles t
 
 Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated immediately), `run_validation`,
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
-The small model runs first; after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model
+The router picks the starting model; a run that starts small switches after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model
 requests without an on-target candidate (`upgrade-rule-v2`; B ran under v1, which only had the first condition), the
 run switches to the large model for good. `goal_reached` means the dev-data goal stopped the loop; the frozen best
 candidate's final test is reported separately and can still miss. Stop reasons: `goal_reached`, `budget_exhausted`, `agent_finished`, `user_stopped`,
@@ -121,6 +146,6 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `GET /api/tasks`, `GET /api/tasks/{id}`, `GET|POST /api/runs`, `GET /api/runs/{id}` (report, also while running),
 `GET /api/runs/{id}/events?after=N`, `POST /api/runs/{id}/stop`, `GET /api/runs/{id}/candidates/{cid}`,
 `GET /api/snapshots`, `GET /api/snapshots/{id}`, `GET /api/snapshots/{a}/diff/{b}`, `PUT /api/snapshots/active`,
-`GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `GET /api/comparisons/{id}`,
+`GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `POST /api/streams`, `GET /api/comparisons/{id}` (streams too),
 `POST /api/comparisons/{id}/stop`, `GET /api/comparisons/{id}/note` (three-line evolution note),
 `GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `routeevo serve` is running.

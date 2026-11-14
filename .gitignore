@@ -1,4 +1,2 @@
 .DS_Store
 
-# poster build intermediate (images inlined)
-docs/poster/*.html

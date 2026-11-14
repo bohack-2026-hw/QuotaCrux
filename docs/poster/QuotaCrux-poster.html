@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>QuotaCrux 枢决 poster</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=block"><style>
+@page { size: 800mm 1800mm; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 800mm; height: 1800mm; }
+body { background: #F3F2EE; color: #111113; font-family: "Inter", "PingFang SC", sans-serif; overflow: hidden;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 800mm; height: 1800mm; display: flex; flex-direction: column; justify-content: space-between; padding: 40mm 50mm 34mm; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2.4mm solid #111113; padding-bottom: 8mm; }
+.title { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 800; font-size: 112mm; line-height: 0.82; letter-spacing: -4mm; margin-left: -5mm; }
+.cn { font-size: 56mm; font-weight: 600; line-height: 1; letter-spacing: 3mm; white-space: nowrap; }
+.sub { display: flex; justify-content: space-between; align-items: baseline; margin-top: 7mm; font-size: 24mm; font-weight: 600; }
+.sub span { color: #FF4D1F; }
+.kicker { font-size: 19mm; font-weight: 600; letter-spacing: 0.5mm; display: flex; gap: 6mm; align-items: baseline; }
+.kicker b { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 700; color: #FF4D1F; }
+.hero { display: flex; align-items: flex-end; gap: 14mm; margin-top: 6mm; }
+.hero .num { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 800; font-size: 150mm; line-height: 0.8; letter-spacing: -8mm; color: #FF4D1F; }
+.hero .cap { font-size: 32mm; font-weight: 600; line-height: 1.25; padding-bottom: 2mm; white-space: nowrap; }
+.bars { margin-top: 12mm; }
+svg text.bl { font-size: 15px; font-weight: 600; }
+svg text.bv { font-size: 17px; font-weight: 700; font-family: "Inter", "PingFang SC", sans-serif; }
+svg text.ax { font-size: 11px; fill: #8E8D88; font-family: "Inter", "PingFang SC", sans-serif; }
+svg text.an { font-size: 13.5px; font-weight: 600; fill: #111113; }
+svg text.rl { font-size: 17px; font-weight: 600; fill: #111113; }
+h2 { font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm; line-height: 1.25; }
+.algos { display: grid; grid-template-columns: 1fr 1fr; gap: 20mm; margin-top: 10mm; }
+.algo .big { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 800; font-size: 96mm; line-height: 0.9; letter-spacing: -4mm; }
+.algo .cap { font-size: 28mm; font-weight: 600; margin-top: 4mm; }
+.algo .how { font-size: 21mm; color: #FF4D1F; font-weight: 600; margin: 3mm 0 7mm; }
+.route { margin-top: 10mm; }
+.callout { border-top: 1.2mm solid #111113; padding-top: 6mm; margin-bottom: 16mm; }
+.callout .big { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 800; font-size: 76mm; line-height: 0.9; letter-spacing: -2mm; }
+.callout .cap { font-size: 21mm; font-weight: 600; margin-top: 3mm; line-height: 1.3; }
+.ledger { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2.4mm solid #111113; border-bottom: 1.2mm solid #111113; }
+.ledger > div { padding: 9mm 0 10mm; }
+.ledger > div + div { border-left: 1.2mm solid #111113; padding-left: 12mm; }
+.ledger .big { font-family: "Inter", "PingFang SC", sans-serif; font-weight: 800; font-size: 62mm; line-height: 0.9; letter-spacing: -2mm; }
+.ledger .cap { font-size: 20mm; font-weight: 600; margin-top: 4mm; line-height: 1.3; }
+.foot { display: flex; justify-content: space-between; align-items: center; }
+.foot .t { font-size: 22mm; font-weight: 600; }
+.foot svg { width: 56mm; height: 56mm; display: block; }
+</style></head><body><div class="page">
+
+<div>
+  <div class="head"><div class="title">QuotaCrux</div><div class="cn">枢决</div></div>
+  <div class="sub"><div>预算有限的研究 Agent：小模型先跑，卡住才升级</div><span>●</span></div>
+</div>
+
+<section>
+  <div class="kicker"><b>01</b>搬箱子难题 · 15 个最终用例全部通过</div>
+  <div class="hero"><div class="num">−44.7%</div><div class="cap">箱子搬运<br>能耗</div></div>
+  <div class="bars"><svg viewBox="0 0 700 74" width="700mm" height="74mm"><rect x="0" y="4" width="600" height="26" fill="#D8D6CF"/><text x="610" y="25" class="bv" fill="#8E8D88">18,136</text><text x="8" y="23" class="bl" fill="#111113">初始程序</text><rect x="0" y="42" width="331.8" height="26" fill="#FF4D1F"/><text x="341.8" y="63" class="bv" fill="#111113">10,028</text><text x="8" y="61" class="bl" fill="#fff">QuotaCrux</text></svg></div>
+</section>
+
+<section>
+  <div class="kicker"><b>02</b>一次研究的全过程</div>
+  <h2>7 个方案逐个验证，只保留更好的那个</h2>
+  <div style="margin-top: 8mm"><svg viewBox="0 0 700 260" width="700mm" height="260mm"><line x1="58" x2="680" y1="207.6" y2="207.6" stroke="#D8D6CF" stroke-width="0.8"/><text x="50" y="211.6" class="ax" text-anchor="end">44,000</text><line x1="58" x2="680" y1="146.5" y2="146.5" stroke="#D8D6CF" stroke-width="0.8"/><text x="50" y="150.5" class="ax" text-anchor="end">45,000</text><line x1="58" x2="680" y1="85.3" y2="85.3" stroke="#D8D6CF" stroke-width="0.8"/><text x="50" y="89.3" class="ax" text-anchor="end">46,000</text><line x1="58" x2="680" y1="24.1" y2="24.1" stroke="#D8D6CF" stroke-width="0.8"/><text x="50" y="28.1" class="ax" text-anchor="end">47,000</text><text x="58.0" y="252" class="ax" text-anchor="middle">0s</text><text x="161.7" y="252" class="ax" text-anchor="middle">60s</text><text x="265.3" y="252" class="ax" text-anchor="middle">120s</text><text x="369.0" y="252" class="ax" text-anchor="middle">180s</text><text x="472.7" y="252" class="ax" text-anchor="middle">240s</text><text x="576.3" y="252" class="ax" text-anchor="middle">300s</text><text x="680.0" y="252" class="ax" text-anchor="middle">360s</text><line x1="159.1" x2="159.1" y1="18" y2="186.3" stroke="#111113" stroke-width="1.2" stroke-dasharray="5 5"/><text x="167.1" y="34" class="an">换用大模型</text><path d="M58.0,200.30588235294118 L80.20367222222222,200.30588235294118 L80.20367222222222,200.30588235294118 L97.3795111111111,200.30588235294118 L97.3795111111111,200.30588235294118 L220.90525555555556,200.30588235294118 L220.90525555555556,54.33882352941176 L366.30121111111106,54.33882352941176 L366.30121111111106,36.47529411764707 L480.9530888888889,36.47529411764707 L480.9530888888889,36.47529411764707 L596.13885,36.47529411764707 L596.13885,36.352941176470594 L674.861588888889,36.352941176470594 L674.861588888889,33.35529411764706 L680.0,33.35529411764706" fill="none" stroke="#FF4D1F" stroke-width="4" stroke-linejoin="round"/><circle cx="80.2" cy="200.3" r="7" fill="#fff" stroke="#111113" stroke-width="2.4"/><circle cx="97.4" cy="200.3" r="7" fill="#fff" stroke="#111113" stroke-width="2.4"/><circle cx="220.9" cy="54.3" r="7" fill="#FF4D1F" stroke="#FF4D1F" stroke-width="2.4"/><circle cx="366.3" cy="36.5" r="7" fill="#FF4D1F" stroke="#FF4D1F" stroke-width="2.4"/><circle cx="481.0" cy="40.9" r="7" fill="#fff" stroke="#111113" stroke-width="2.4"/><circle cx="596.1" cy="36.4" r="7" fill="#FF4D1F" stroke="#FF4D1F" stroke-width="2.4"/><circle cx="674.9" cy="33.4" r="7" fill="#FF4D1F" stroke="#FF4D1F" stroke-width="2.4"/><text x="74.2" y="226.3" class="an" text-anchor="start">小模型两次交了同一份代码</text><text x="232.9" y="84.3" class="an" text-anchor="start">分段规划 +2,386</text><text x="481.0" y="74.9" class="an" text-anchor="middle">这一版退步，没被采纳</text><text x="670.9" y="13.4" class="an" text-anchor="end">复用相同后缀 · 最高 46,849</text></svg></div>
+</section>
+
+<section>
+  <div class="kicker"><b>03</b>函数级优化</div>
+  <div class="algos"><div class="algo"><div class="big">25.0×</div><div class="cap">PageRank 提速</div><div class="how">稀疏矩阵直接迭代</div><svg viewBox="0 0 320 46" width="320mm" height="46mm"><rect x="0" y="2" width="230" height="16" fill="#D8D6CF"/><text x="238" y="15" class="ax">11.15 ms</text><rect x="0" y="26" width="9.2" height="16" fill="#FF4D1F"/><text x="17.2" y="39" class="ax">0.45 ms</text></svg></div><div class="algo"><div class="big">2.67×</div><div class="cap">一维卷积 提速</div><div class="how">float32 实数 FFT</div><svg viewBox="0 0 320 46" width="320mm" height="46mm"><rect x="0" y="2" width="230" height="16" fill="#D8D6CF"/><text x="238" y="15" class="ax">1.12 ms</text><rect x="0" y="26" width="86.2" height="16" fill="#FF4D1F"/><text x="94.2" y="39" class="ax">0.42 ms</text></svg></div></div>
+</section>
+
+<section>
+  <div class="kicker"><b>04</b>谁来决定下一步</div>
+  <h2>决策模型全权调度：快 71%</h2>
+  <div class="route"><svg viewBox="0 -24 700 214" width="700mm" height="214mm"><text x="230" y="-8" class="ax">最终得分提升</text><text x="700" y="-8" class="ax" text-anchor="end">单轮用时</text><text x="0" y="31" class="rl">规则调度</text><rect x="230" y="12" width="281.4" height="26" fill="#111113"/><text x="521.4" y="32" class="bv">+5.97%</text><text x="700" y="32" class="bv" text-anchor="end" fill="#111113">392 秒</text><text x="0" y="77" class="rl">决策模型选动作</text><rect x="230" y="58" width="289.9" height="26" fill="#FF4D1F"/><text x="529.9" y="78" class="bv">+6.15%</text><text x="700" y="78" class="bv" text-anchor="end" fill="#111113">389 秒</text><text x="0" y="123" class="rl">决策模型选模型</text><rect x="230" y="104" width="275.1" height="26" fill="#111113"/><text x="515.1" y="124" class="bv">+5.84%</text><text x="700" y="124" class="bv" text-anchor="end" fill="#111113">390 秒</text><text x="0" y="169" class="rl">全部交给决策模型</text><rect x="230" y="150" width="24.2" height="26" fill="#111113"/><text x="264.2" y="170" class="bv">+0.51%</text><text x="700" y="170" class="bv" text-anchor="end" fill="#FF4D1F">113 秒</text></svg></div>
+</section>
+
+<div class="ledger">
+  <div><div class="big" style="color: #FF4D1F">−79%</div><div class="cap">云端花费</div></div>
+  <div><div class="big">+44%</div><div class="cap">典型加速比</div></div>
+  <div><div class="big">&gt;99%</div><div class="cap">合格率</div></div>
+</div>
+
+<div class="foot"><div class="t">QuotaCrux 枢决 · 扫码查看代码与实验报告</div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#111113" d="M0 0.5h7m1 0h1m2 0h2m1 0h1m1 0h4m1 0h3m2 0h7m-33 1h1m5 0h1m4 0h6m1 0h1m1 0h1m2 0h2m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m1 0h3m1 0h5m1 0h3m2 0h1m2 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h2m1 0h2m3 0h2m2 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m2 0h2m1 0h1m1 0h4m1 0h2m2 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h2m2 0h2m5 0h2m3 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h3m2 0h2m1 0h2m3 0h4m-24 1h1m1 0h1m1 0h5m1 0h1m1 0h2m1 0h1m4 0h3m1 0h3m1 0h2m1 0h1m-32 1h3m1 0h1m1 0h1m1 0h3m3 0h1m1 0h1m2 0h2m2 0h4m3 0h2m-32 1h3m2 0h1m3 0h3m1 0h3m1 0h3m1 0h1m1 0h1m2 0h2m1 0h3m-33 1h1m2 0h1m3 0h1m6 0h3m1 0h1m1 0h2m4 0h1m1 0h2m-29 1h1m4 0h2m4 0h4m2 0h1m1 0h2m1 0h1m1 0h2m2 0h1m-30 1h2m5 0h1m1 0h2m1 0h1m1 0h1m3 0h1m3 0h1m1 0h1m1 0h3m1 0h3m-33 1h3m1 0h1m1 0h1m1 0h2m4 0h1m1 0h1m4 0h1m1 0h1m1 0h2m3 0h2m-32 1h3m1 0h2m3 0h2m3 0h4m1 0h1m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m-32 1h1m3 0h1m1 0h1m1 0h1m2 0h4m1 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m-32 1h1m2 0h1m3 0h2m2 0h1m4 0h3m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1m-31 1h2m1 0h1m1 0h1m5 0h4m6 0h1m1 0h1m5 0h3m-32 1h1m1 0h1m3 0h1m2 0h2m3 0h7m1 0h2m2 0h1m3 0h2m-33 1h3m3 0h4m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m1 0h1m-27 1h1m3 0h1m1 0h1m1 0h1m3 0h1m2 0h3m1 0h2m1 0h2m1 0h2m1 0h1m1 0h2m-33 1h3m2 0h4m4 0h2m2 0h1m1 0h1m1 0h1m4 0h1m1 0h1m3 0h1m-32 1h1m2 0h2m3 0h4m2 0h3m1 0h1m1 0h4m2 0h1m-28 1h1m1 0h2m2 0h3m1 0h1m2 0h1m3 0h1m2 0h2m1 0h7m-22 1h1m3 0h1m2 0h3m1 0h1m1 0h2m1 0h1m3 0h2m2 0h1m-33 1h7m1 0h1m1 0h2m2 0h1m3 0h1m1 0h3m1 0h1m1 0h1m1 0h4m-32 1h1m5 0h1m1 0h1m4 0h1m1 0h1m2 0h5m1 0h1m3 0h1m-29 1h1m1 0h3m1 0h1m6 0h3m5 0h2m1 0h6m1 0h2m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m2 0h1m3 0h2m2 0h1m1 0h1m2 0h1m-32 1h1m1 0h3m1 0h1m2 0h1m2 0h1m1 0h3m1 0h1m1 0h2m6 0h1m1 0h1m1 0h1m-33 1h1m5 0h1m1 0h1m1 0h3m1 0h6m1 0h1m1 0h3m3 0h1m-30 1h7m3 0h1m2 0h1m1 0h1m5 0h1m1 0h4m1 0h1m2 0h1"/></svg>
+</div>
+</div></body></html>

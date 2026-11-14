@@ -31,6 +31,14 @@ class StartRun(BaseModel):
     script: str | None = None
 
 
+@app.get("/api/live")
+def get_live() -> dict:
+    """Live progress: operator work plan and log, the running experiment and run, machine load (cheap reads only)."""
+    from . import live
+
+    return live.live()
+
+
 @app.get("/api/health")
 def health() -> dict:
     running = db.one("SELECT run_id FROM runs WHERE status = 'running' ORDER BY started_at DESC LIMIT 1")

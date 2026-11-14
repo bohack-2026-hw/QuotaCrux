@@ -315,6 +315,21 @@ def cmd_probe(args) -> None:
             "within_request_timeout": res.latency_s <= config.RunLimits().model_request_timeout_s})
 
 
+def cmd_progress(args) -> None:
+    from . import live
+
+    if args.pcmd == "plan":
+        steps = [tuple(x.split("=", 1)) if "=" in x else (x, x) for x in args.steps]
+        live.plan(args.title, steps)
+    elif args.pcmd == "step":
+        live.step(args.step_id, args.status, args.note)
+    elif args.pcmd == "log":
+        live.log(" ".join(args.text))
+    p = live.load_progress()
+    for st in p["steps"]:
+        print(f"  [{st['status']:<7}] {st['id']:<12} {st['title']}{' · ' + st['note'] if st['note'] else ''}")
+
+
 def cmd_serve(args) -> None:
     import uvicorn
 
@@ -434,6 +449,20 @@ def main(argv: list[str] | None = None) -> None:
     pr.add_argument("--task-id", default="A-01")
     pr.add_argument("--timeout", type=float, default=300.0)
     pr.set_defaults(fn=cmd_probe)
+
+    pg = sub.add_parser("progress", help="operator work plan and log shown on the live dashboard page")
+    pgsub = pg.add_subparsers(dest="pcmd", required=True)
+    pp = pgsub.add_parser("plan")
+    pp.add_argument("title")
+    pp.add_argument("steps", nargs="+", help="id=title")
+    ps_ = pgsub.add_parser("step")
+    ps_.add_argument("step_id")
+    ps_.add_argument("status", choices=["pending", "running", "done", "skipped", "failed"])
+    ps_.add_argument("--note")
+    pl = pgsub.add_parser("log")
+    pl.add_argument("text", nargs="+")
+    pgsub.add_parser("show")
+    pg.set_defaults(fn=cmd_progress)
 
     s = sub.add_parser("serve")
     s.add_argument("--host", default="127.0.0.1")

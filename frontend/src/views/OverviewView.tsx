@@ -12,10 +12,10 @@ export function OverviewView({ onOpenRun, onOpenComparison }: { onOpenRun: (id: 
   const snaps = usePoll(api.snapshots, [], 5000)
   const pick = (p: string) => list.data?.find((c) => (c.label ?? '').startsWith(p))?.comparison_id ?? null
   const bId = pick('B'), cId = pick('C'), dId = pick('D')
+  const running = (id: string | null) => list.data?.find((x) => x.comparison_id === id)?.status === 'running'
   const sId = list.data?.find((c) => c.kind === 'stream' && (c.label ?? '').startsWith('S online'))?.comparison_id ?? null
   const st = usePoll(() => (sId ? api.stream(sId) : Promise.resolve(null)), [sId], 8000, running(sId))
   const sNote = usePoll(() => (sId ? api.note(sId) : Promise.resolve(null)), [sId, st.data?.finished_runs], 10000, false)
-  const running = (id: string | null) => list.data?.find((x) => x.comparison_id === id)?.status === 'running'
   const b = usePoll(() => (bId ? api.comparison(bId) : Promise.resolve(null)), [bId], 8000, running(bId))
   const c = usePoll(() => (cId ? api.comparison(cId) : Promise.resolve(null)), [cId], 8000, running(cId))
   const d = usePoll(() => (dId ? api.comparison(dId) : Promise.resolve(null)), [dId], 8000, running(dId))

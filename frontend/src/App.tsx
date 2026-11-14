@@ -6,8 +6,9 @@ import { OverviewView } from './views/OverviewView'
 import { ExperienceView } from './views/ExperienceView'
 import { RunView } from './views/RunView'
 import { VersionView } from './views/VersionView'
+import { LiveView } from './views/LiveView'
 
-type Tab = 'home' | 'run' | 'exp' | 'cmp' | 'ver'
+type Tab = 'home' | 'run' | 'exp' | 'cmp' | 'ver' | 'live'
 
 const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en: string; desc: string }[] = [
   { id: 'home', num: '00', lbl: '总览', sub: '研究成果 · 系统评估', title: '总览', en: 'Research Agent',
@@ -20,6 +21,8 @@ const TABS: { id: Tab; num: string; lbl: string; sub: string; title: string; en:
     desc: '同一批未参与学习的任务、同一配置，只替换经验快照，串行交替运行并保留全部结果，包括失败与无收益。' },
   { id: 'ver', num: '04', lbl: '版本管理', sub: '快照 · 差异 · 回退', title: '版本', en: 'Snapshots & rollback',
     desc: '每次学习发布一个不可变快照；回退只切换后续运行读取的版本，历史记录全部保留。' },
+  { id: 'live', num: '05', lbl: '实时进度', sub: '正在做什么 · 实验进度', title: '实时进度', en: 'Live progress',
+    desc: '工作计划与日志、正在运行的实验（逐任务、逐次重放）、正在执行的运行和机器负载，每 2 秒刷新。' },
 ]
 
 function readHash(): { tab: Tab; arg: string | null } {
@@ -85,6 +88,7 @@ export default function App() {
         {tab === 'run' && <RunView runId={runId} setRunId={openRun} activeSnapshot={active} onOpenExperience={openExperience} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}
         {tab === 'cmp' && <CompareView selected={arg} onSelect={(id) => go('cmp', id)} onOpenRun={openRun} />}
+        {tab === 'live' && <LiveView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
         {tab === 'ver' && <VersionView onOpenSnapshot={(s) => openExperience(s)} onOpenRun={openRun} onChanged={() => snaps.refresh()} />}
       </main>
     </div>

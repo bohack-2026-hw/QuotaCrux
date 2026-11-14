@@ -259,6 +259,37 @@ export interface Stream {
   notes: string[]
 }
 
+export interface LiveCell {
+  seq: number; task_id: string; arm: string; repeat: number; position: number | null; run_id: string | null
+  state: 'planned' | 'running' | 'done'; status: string | null; stop_reason: string | null; route: string | null
+  requests: number; large: number; cost_usd: number | null; final_speedup: number | null; goal_met: boolean | null; error: string | null
+}
+
+export interface LiveData {
+  now: string
+  progress: {
+    title: string | null
+    steps: { id: string; title: string; status: string; note: string | null; started_at: string | null; ended_at: string | null }[]
+    log: { ts: string; text: string }[]
+  }
+  comparison: {
+    comparison_id: string; kind: string; label: string | null; status: string; tasks: string[]; repeats: number
+    start_snapshot: string | null; snapshot_a: string | null; snapshot_b: string | null; planned: number; done: number
+    avg_run_s: number | null; eta_s: number | null
+    totals: Record<string, { runs: number; goal_met: number; large_requests: number; cost_usd: number; no_model: number; seconds: number }>
+    cells: LiveCell[]
+  } | null
+  run: {
+    run_id: string; task_id: string; mode: string; snapshot_id: string; label: string | null; started_at: string; elapsed_s: number
+    route: Route | null; requests: number; cost_usd: number | null
+    last_event: { type: string; ts: string; payload: Json } | null
+    steps: { seq: number; actor: string; action: string; status: string; purpose: string | null; candidate_id: string | null; speedup: number | null; next_decision: string | null }[]
+  } | null
+  machine: { load: { ts: string; load1: number }[]; icloud_sync: string }
+  active_snapshot: string
+  gpt_today: { calls: number; cost_usd: number }
+}
+
 export interface Session {
   session_id: string
   learn_task: string
@@ -275,6 +306,7 @@ export interface Session {
 
 export const api = {
   health: () => call<{ ok: boolean; running_run_id: string | null }>('/health'),
+  live: () => call<LiveData>('/live'),
   tasks: () => call<TaskSummary[]>('/tasks'),
   runs: (taskId?: string) => call<RunRow[]>(`/runs?limit=300${taskId ? `&task_id=${taskId}` : ''}`),
   startRun: (body: { task_id: string; mode: string; snapshot_id?: string; label?: string }) => post<{ run_id: string }>('/runs', body),

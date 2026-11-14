@@ -12,6 +12,9 @@ dependencies = [
     "uvicorn[standard]>=0.54.0",
 ]
 
+[project.optional-dependencies]
+benchmark = ["pyarrow>=26.0.0"]
+
 [project.scripts]
 routeevo = "routeevo.cli:main"
 

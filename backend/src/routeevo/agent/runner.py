@@ -278,14 +278,14 @@ class Runner:
                        hypothesis=(f"该程序在 {prog['task_id']} 上实测 {prog['speedup']}×（{prog['successes']} 条成功记录）；本任务 "
                                    f"{prog['matching_features']}/{prog['of']} 项负载条件相同，不同项：{differs}。预计在本任务上仍正确且有改善"),
                        expected=f"正确，且全部样本快于基线、加速比 ≥ {target}",
-                       verification="与模型候选相同的开发验证：正确性、7 个契约用例、交替计时 5 轮",
+                       verification=f"{self.task.presentation['validation']}，交替计时 {self.measure.repeats} 轮",
                        params={"experience_id": prog["experience_id"], "source_task_id": prog["task_id"],
                                "recorded_speedup": prog["speedup"], "matching_features": prog["matching_features"]},
                        next_decision="validate re-used program")
             ev = self._validate(cid)
             fb = ev.public_feedback()
             self.candidates[cid]["latest_evaluation"] = {k: fb.get(k) for k in ("status", "correct", "speedup", "improved", "goal_met", "failure", "timing_spread")}
-            if ev.status in ("sandbox_error", "baseline_failed"):
+            if ev.status in ("sandbox_error", "baseline_failed", "checker_error"):
                 self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
                            result=fb, next_decision="stop: environment_error")
                 return self._stop("environment_error", f"evaluation of {cid}: {ev.status} {ev.detail.get('failure')}")
@@ -531,7 +531,7 @@ class Runner:
     def _after_validation(self, cid: str, ev: evaluator.Evaluation, counts_as_attempt: bool) -> None:
         fb = ev.public_feedback()
         self.candidates[cid]["latest_evaluation"] = {k: fb.get(k) for k in ("status", "correct", "speedup", "improved", "goal_met", "failure", "timing_spread")}
-        if ev.status == "sandbox_error" or ev.status == "baseline_failed":
+        if ev.status in ("sandbox_error", "baseline_failed", "checker_error"):
             self._step("program", "run_validation", ev.status, candidate_id=cid, evaluation_id=ev.evaluation_id,
                        result=fb, next_decision="stop: environment_error")
             return self._stop("environment_error", f"evaluation of {cid}: {ev.status} {ev.detail.get('failure')}")

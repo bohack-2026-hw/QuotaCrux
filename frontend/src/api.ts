@@ -23,7 +23,9 @@ export interface TaskSummary {
   split: string
   notes: string
   target: { min_speedup: number }
-  dev_params: { rows: number; keys: number; order: string; skew: number }
+  family: string
+  presentation: { title: string; workload: string }
+  dev_params: Json
 }
 
 export interface RunRow {
@@ -127,7 +129,7 @@ export interface Report {
   }
   experience: {
     snapshot_read: string
-    retrieval: { matched_by_outcome: Record<string, number>; current_buckets: Record<string, string>; snapshot_size: number } | null
+    retrieval: { feature_count?: number; matched_by_outcome: Record<string, number>; current_buckets: Record<string, string>; snapshot_size: number } | null
     read: { experience_id: string; rank: number; matching_features: number; outcome: string; task_id: string; source_run_id: string }[]
     published_snapshot_id: string | null
     published_experiences: string[]
@@ -146,7 +148,7 @@ export interface Report {
 export interface Experience {
   experience_id: string
   outcome: 'success' | 'no_gain' | 'failure'
-  conditions: { task_id: string; split: string; buckets: Record<string, string>; profile: Record<string, number> }
+  conditions: { task_id: string; split: string; workload: string; buckets: Record<string, string>; profile: Json }
   action: { parent_candidate_id: string | null; code_features: { calls?: string[]; imports?: string[] }; diff_vs_initial: string; model_stated_purpose: string | null }
   hypothesis: string | null
   result: { status: string; speedup: number | null; improved: boolean | null; failure_category: string | null; failure_kinds: string[] | null; failure_example: unknown }

@@ -42,7 +42,8 @@ def list_tasks() -> list[dict]:
     out = []
     for r in db.all_rows("SELECT task_id, split, manifest_json, manifest_sha256 FROM tasks ORDER BY task_id"):
         m = json.loads(r["manifest_json"])
-        out.append({"task_id": r["task_id"], "split": r["split"], "notes": m.get("notes"),
+        from .benchmarks import get
+        out.append({"family": m["family"], "presentation": get(m["family"]).presentation(m), "task_id": r["task_id"], "split": r["split"], "notes": m.get("notes"),
                     "target": m["target"], "dev_params": m["dev_params"], "manifest_sha256": r["manifest_sha256"]})
     return out
 

@@ -9,13 +9,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-import platform
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
 from . import config, db
-from .families import groupagg
 
 TARGET_MIN_SPEEDUP = 1.10
 LOCK_PATH = config.TASK_SPEC_DIR / "lock.json"
@@ -57,29 +55,24 @@ class Task:
     def dev_profile(self) -> dict:
         return json.loads((self.dir / "dev_profile.json").read_text())
 
+    @property
+    def adapter(self):
+        from .benchmarks import get
+        return get(self.manifest["family"])
+
+    @property
+    def presentation(self) -> dict:
+        return self.adapter.presentation(self.manifest)
+
     # Evaluator-only.
     def dataset(self, name: str) -> tuple[Path, Path]:
         if name not in ("dev", "final"):
             raise ValueError(name)
-        return self.dir / f"{name}_input.csv", self.dir / f"{name}_expected.csv"
+        return tuple(self.dir / self.manifest["files"][f"{name}_{kind}"]["file"] for kind in ("input", "expected"))
 
     @property
     def target_min_speedup(self) -> float:
         return float(self.manifest["target"]["min_speedup"])
-
-
-def _examples(seed: int, order: str) -> list[dict]:
-    """Small visible input/output pairs, generated from seeds unrelated to dev/final data."""
-    cases = [
-        groupagg.GenParams(rows=0, keys=1, seed=seed),
-        groupagg.GenParams(rows=10, keys=4, seed=seed + 1, key_len_min=1, key_len_max=3, order=order, value_min=-20, value_max=20),
-        groupagg.GenParams(rows=8, keys=8, seed=seed + 2, key_len_min=1, key_len_max=4, value_min=-5, value_max=5),
-    ]
-    out = []
-    for p in cases:
-        data = groupagg.generate(p)
-        out.append({"input": data.decode(), "output": groupagg.reference_output(data).decode()})
-    return out
 
 
 def _write(path: Path, data: bytes) -> dict:
@@ -88,46 +81,18 @@ def _write(path: Path, data: bytes) -> dict:
 
 
 def build_task(family: str, entry: dict, out_root: Path = config.TASK_DATA_DIR) -> Task:
-    if family != groupagg.FAMILY:
-        raise ValueError(f"unsupported family {family!r}")
-    task_id, split = entry["task_id"], entry["split"]
-    if split not in ("A", "B", "C", "D", "smoke"):
-        raise ValueError(f"{task_id}: split must be A, B, C, D or smoke")
-    params = dict(entry["params"])
-    dev_p = groupagg.GenParams(**params, seed=entry["dev_seed"])
-    final_p = groupagg.GenParams(**{**params, **entry.get("final_overrides", {})}, seed=entry["final_seed"])
+    from .benchmarks import get
 
-    tmp = out_root / f".{task_id}.building"
-    shutil.rmtree(tmp, ignore_errors=True)
-    tmp.mkdir(parents=True)
-    files = {}
-    for name, p in (("dev", dev_p), ("final", final_p)):
-        data = groupagg.generate(p)
-        files[f"{name}_input"] = _write(tmp / f"{name}_input.csv", data)
-        files[f"{name}_expected"] = _write(tmp / f"{name}_expected.csv", groupagg.reference_output(data))
-        if name == "dev":
-            dev_profile = groupagg.profile(data)
-    files["dev_profile"] = _write(tmp / "dev_profile.json", json.dumps(dev_profile, indent=2).encode())
-    files["examples"] = _write(tmp / "examples.json", json.dumps(_examples(entry.get("examples_seed", 7), params.get("order", "random")), indent=2).encode())
-    files["contract"] = _write(tmp / "contract.txt", groupagg.CONTRACT.encode())
-    files["initial"] = _write(tmp / "initial.py", groupagg.INITIAL_CODE_PATH.read_bytes())
+    out_root.mkdir(parents=True, exist_ok=True)
+    adapter = get(family)
+    if not hasattr(adapter, "build"):
+        raise ValueError(f"{family} uses `routeevo tasks import-effibench`, not a generator spec")
+    return adapter.build(entry, out_root)
 
-    manifest = {
-        "task_id": task_id,
-        "family": family,
-        "split": split,
-        "notes": entry.get("notes", ""),
-        "generator_version": groupagg.GENERATOR_VERSION,
-        "checker_version": groupagg.CHECKER_VERSION,
-        "generator_python": platform.python_version(),
-        "dev_params": dev_p.to_dict(),
-        "final_params": final_p.to_dict(),
-        "examples_seed": entry.get("examples_seed", 7),
-        "target": {"metric": "speedup", "definition": "baseline_median_s / candidate_median_s", "min_speedup": TARGET_MIN_SPEEDUP},
-        "files": files,
-        # Only these files may be shown to the model; the rest are evaluator-only.
-        "agent_visible": ["contract", "initial", "examples", "dev_profile"],
-    }
+
+def register_package(tmp: Path, manifest: dict, out_root: Path) -> Task:
+    """Register an immutable package produced by a benchmark adapter."""
+    task_id, family, split = (manifest[k] for k in ("task_id", "family", "split"))
     (tmp / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
     manifest_sha = sha256_bytes(json.dumps(manifest, sort_keys=True).encode())
 
@@ -179,3 +144,14 @@ def write_lock(task_ids: list[str] | None = None) -> dict:
             lock[r["task_id"]] = r["manifest_sha256"]
     LOCK_PATH.write_text(json.dumps(dict(sorted(lock.items())), indent=2) + "\n")
     return lock
+
+
+def rebuild_command(task_id: str) -> str:
+    import shlex
+    task = load(task_id)
+    if task.manifest["family"] == "groupagg":
+        return "uv run routeevo tasks build >/dev/null  # verify frozen groupagg packages"
+    m = task.manifest
+    return shlex.join(["uv", "run", "--extra", "benchmark", "routeevo", "tasks", "import-effibench", m["problem"]["key"],
+                       "--split", task.split, "--task-id", task_id, "--dev-cases", str(m["dev_params"]["cases"]),
+                       "--case-limit", str(m["selection"]["selected_cases"])])

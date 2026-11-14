@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from . import db
 
-QUESTION = "在输出完全正确的前提下，能否让这段分组聚合程序在该工作负载上至少快 {target}×？"
+QUESTION = "在输出完全正确的前提下，能否让这段程序在该工作负载上至少快 {target}×？"
 SCOPE = ("只能整体替换程序文件；仅 Python 标准库；代码不超过 {max_code_bytes} 字节；输入经 stdin、输出到 stdout；"
          "评测器、参考输出和最终测试数据不可见、不可改")
 TOOLS = [
@@ -17,8 +17,6 @@ TOOLS = [
     ("run_validation", "运行验证：重新评测已有候选"),
     ("finish", "结束：交付当前最佳已验证候选"),
 ]
-VERIFICATION = ("开发数据正确性 + 7 个公开契约用例 + 基线与候选各预热一次、交替计时 5 轮；"
-                "全部候选样本快于全部基线样本才算改善，加速比 = 两者中位数之比")
 VERDICTS = {
     "supported": "得到支持",
     "partial": "部分支持（改善，但未达目标）",
@@ -31,22 +29,23 @@ VERDICTS = {
 def definition(rep: dict) -> dict:
     """RA-01: question, goal, baseline, allowed scope, tools and budget — all fixed when the run was created."""
     lim = rep["config"]["limits"]
-    dev = rep["task"]["dev_params"]
+    presentation = rep["task"]["presentation"]
     base = db.one("SELECT baseline_median_s FROM evaluations WHERE run_id = ? AND dataset = 'dev' AND baseline_median_s IS NOT NULL"
                   " ORDER BY started_at LIMIT 1", (rep["run_id"],))
     final = rep["final_evaluation"]
     return {
         "question": QUESTION.format(target=rep["task"]["target_min_speedup"]),
         "goal": f"输出全对；全部样本快于基线；加速比 ≥ {rep['task']['target_min_speedup']}×",
-        "workload": f"{dev['rows']:,} 行 · {dev['keys']:,} 个 key · {dev['order']} · 偏斜 {dev['skew']}",
+        "workload": presentation["workload"],
         "baseline": {
-            "program": "c0：csv + 两个 dict + sorted（初始程序，正确）",
+            "program": presentation["baseline"],
             "dev_median_s": base["baseline_median_s"] if base else None,
             "final_median_s": final["baseline_median_s"] if final else None,
         },
         "scope": SCOPE.format(max_code_bytes=lim["max_code_bytes"]),
         "tools": [{"action": a, "label": t} for a, t in TOOLS],
-        "verification": VERIFICATION,
+        "verification": (f"{presentation['validation']}；基线与候选各预热一次、交替计时 "
+                         f"{rep['config']['measure']['repeats']} 轮；每轮累加各用例运行时间，全部候选样本快于全部基线样本才算改善"),
         "budget": {"model_requests": lim["max_model_requests"], "candidates": lim["max_candidates"],
                    "loop_s": lim["wall_clock_s"], "request_timeout_s": lim["model_request_timeout_s"],
                    "measurement_timeout_s": lim["measurement_timeout_s"]},

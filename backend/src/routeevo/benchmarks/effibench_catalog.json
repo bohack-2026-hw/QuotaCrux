@@ -1,0 +1,3848 @@
+{
+  "dataset": "EffiBench/effibench-x",
+  "revision": "49babbec95f0897d5f06276aaf274f9f1dcd036b",
+  "upstream_revision": "21b6668a49a342c843e679cc5ed16081064a5768",
+  "parquet_bytes": 2341977516,
+  "shards": [
+    {
+      "file": "data/test-00000-of-00020.parquet",
+      "bytes": 104537456,
+      "sha256": "3ccb0d715bcbe73436d0c263cee108cac0845ecb872d407a7b367c0e2cc42f62"
+    },
+    {
+      "file": "data/test-00001-of-00020.parquet",
+      "bytes": 197189077,
+      "sha256": "c0584995d0896367dbfc460b67087cb6081ad2335f4bf2217ac28c02077e91fd"
+    },
+    {
+      "file": "data/test-00002-of-00020.parquet",
+      "bytes": 500458175,
+      "sha256": "396ef3c2ee561e25ab06c369f920541f297233d0ef2f0de0d4c3b4b36c9e4012"
+    },
+    {
+      "file": "data/test-00003-of-00020.parquet",
+      "bytes": 357475382,
+      "sha256": "ac6090fbde1981bec1186dd9297c1a8f15586453c4f97103607633c3e183209d"
+    },
+    {
+      "file": "data/test-00004-of-00020.parquet",
+      "bytes": 494319382,
+      "sha256": "0ef756931947d592807d7a57c28ac42aaf41cfdc261f398a16d6beab060dc0be"
+    },
+    {
+      "file": "data/test-00005-of-00020.parquet",
+      "bytes": 252954948,
+      "sha256": "040f2fed0d5f70a78acec42e0f61c84db4bd0ad73b928453db0dc6fdfbb315d2"
+    },
+    {
+      "file": "data/test-00006-of-00020.parquet",
+      "bytes": 221901011,
+      "sha256": "8941eb47e80f5073cda0ca5fb58be091a7d2a70e98e86205af680fd324964c40"
+    },
+    {
+      "file": "data/test-00007-of-00020.parquet",
+      "bytes": 53430759,
+      "sha256": "9c647216e99b23272ebfa0aba54cad03c55f43dc05ef4591f0cbdc034a465f87"
+    },
+    {
+      "file": "data/test-00008-of-00020.parquet",
+      "bytes": 54597958,
+      "sha256": "01832363498406d3cd8cf0c161e01333517eb12352d7ec5d420e039d7b0de7c2"
+    },
+    {
+      "file": "data/test-00009-of-00020.parquet",
+      "bytes": 7321349,
+      "sha256": "958c052cd9b3f61c70acd476bb3c75bf1e62f574dae5b43ba1e7fcde2aebacdc"
+    },
+    {
+      "file": "data/test-00010-of-00020.parquet",
+      "bytes": 14657174,
+      "sha256": "b7a1bcd430ac0205434f1745c0d4cd73d72baebd349ab777a5395bb20a18c0bc"
+    },
+    {
+      "file": "data/test-00011-of-00020.parquet",
+      "bytes": 3283193,
+      "sha256": "5c5d1541d218181a616dd8a233ee49f466d2d9e73efc949839426b3afb0e7788"
+    },
+    {
+      "file": "data/test-00012-of-00020.parquet",
+      "bytes": 5013753,
+      "sha256": "b6d60172c2c113218d727b1611af1d1ca6e6e41c80b772acac495bb5c701dbac"
+    },
+    {
+      "file": "data/test-00013-of-00020.parquet",
+      "bytes": 7519839,
+      "sha256": "1739df6a263307a11e80bf325f18902683323768f0437f445e06aec22eb392a4"
+    },
+    {
+      "file": "data/test-00014-of-00020.parquet",
+      "bytes": 14830384,
+      "sha256": "87210f90aa04baedf229bf32d23755994745e95afa60b1752dcf5b6929820490"
+    },
+    {
+      "file": "data/test-00015-of-00020.parquet",
+      "bytes": 4455536,
+      "sha256": "83092f027d07e07872741b9a7c473b1b65c55af5cf22455341cf4349ff1c6507"
+    },
+    {
+      "file": "data/test-00016-of-00020.parquet",
+      "bytes": 41546151,
+      "sha256": "5f52ce6a554cbff6b6d1d2120cb24b57b69cf1a8e659ef1c39bbaf84601cbd6e"
+    },
+    {
+      "file": "data/test-00017-of-00020.parquet",
+      "bytes": 1696795,
+      "sha256": "6f358284d07adccbf7b8bd257398058463a53a6f09e3257e414464e375083526"
+    },
+    {
+      "file": "data/test-00018-of-00020.parquet",
+      "bytes": 2599535,
+      "sha256": "76e3a5f04f53391058c0cd5a113742e3a163cd5af9a128c5e4e547964371f789"
+    },
+    {
+      "file": "data/test-00019-of-00020.parquet",
+      "bytes": 2189659,
+      "sha256": "fccab1df0041b7ddcc2b847a8bca9db02a0688ed1b0f8c0309f266bf49a1f65f"
+    }
+  ],
+  "problems": [
+    {
+      "key": "aizu/1444",
+      "title": "Yokohama Phenomena",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1447",
+      "title": "Nested Repetition Compression",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1448",
+      "title": "Chayas",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1449",
+      "title": "Color Inversion on a Huge Chessboard",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1455",
+      "title": "Ribbon on the Christmas Present",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1456",
+      "title": "The Sparsest Number in Between",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1459",
+      "title": "E-Circuit Is Now on Sale!",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1460",
+      "title": "The Farthest Point",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1464",
+      "title": "Mixing Solutions",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1664",
+      "title": "Which Team Should Receive the Sponsor Prize?",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1665",
+      "title": "Amidakuji",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1666",
+      "title": "Changing the Sitting Arrangement",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1668",
+      "title": "Tampered Records",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1672",
+      "title": "Snacks within 300 Yen",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1673",
+      "title": "Overtaking",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1674",
+      "title": "Honeycomb Distance",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/1678",
+      "title": "Two Sets of Cards",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3600",
+      "title": "Sum of Product of Binomial Coefficients",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3612",
+      "title": "Roller Coaster",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3613",
+      "title": "Break a Prison",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3614",
+      "title": "Camp room assignment",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3616",
+      "title": "Gacha 101",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3619",
+      "title": "LCP Queries",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3627",
+      "title": "Expression Sum",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3629",
+      "title": "Give Me a Lot of Triangles",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3630",
+      "title": "Half Plane Painting",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3631",
+      "title": "I Love Square Number",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3636",
+      "title": "Noncoprime Subsequences",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3637",
+      "title": "Tower Defense",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3638",
+      "title": "Renovation",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3639",
+      "title": "Commutativity",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3640",
+      "title": "Paper Cut Game",
+      "type": "io",
+      "shard": 0
+    },
+    {
+      "key": "aizu/3647",
+      "title": "Equal or Not Equal",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380a",
+      "title": "A - 123233",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380b",
+      "title": "B - Hurdle Parsing",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380c",
+      "title": "C - Move Segment",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380d",
+      "title": "D - Strange Mirroring",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380e",
+      "title": "E - 1D Bucket Tool",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc380f",
+      "title": "F - Exchange Game",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc381a",
+      "title": "A - 11/22 String",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc381b",
+      "title": "B - 1122 String",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc381c",
+      "title": "C - 11/22 Substring",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc381d",
+      "title": "D - 1122 Substring",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc382b",
+      "title": "B - Daily Cookie 2",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc383a",
+      "title": "A - Humidifier 1",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc383b",
+      "title": "B - Humidifier 2",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc383d",
+      "title": "D - 9 Divisors",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc383e",
+      "title": "E - Sum of Max Matching",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc383f",
+      "title": "F - Diversity",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc384a",
+      "title": "A - aaaadaa",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc384c",
+      "title": "C - Perfect Standings",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc384d",
+      "title": "D - Repeated Sequence",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc384e",
+      "title": "E - Takahashi is Slime 2",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc384f",
+      "title": "F - Double Sum 2",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc385a",
+      "title": "A - Equally",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc385b",
+      "title": "B - Santa Claus 1",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc385e",
+      "title": "E - Snowflake Tree",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc385f",
+      "title": "F - Visible Buildings",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc386a",
+      "title": "A - Full House 2",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc386b",
+      "title": "B - Calculator",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc386e",
+      "title": "E -  Maximize XOR",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc386f",
+      "title": "F - Operate K",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc387a",
+      "title": "A - Happy New Year 2025",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc387b",
+      "title": "B - 9x9 Sum",
+      "type": "io",
+      "shard": 1
+    },
+    {
+      "key": "atcoder/abc387c",
+      "title": "C - Snake Numbers",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc387d",
+      "title": "D - Snaky Walk",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc387e",
+      "title": "E - Digit Sum Divisible 2",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388a",
+      "title": "A - ?UPC",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388b",
+      "title": "B - Heavy Snake",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388c",
+      "title": "C - Various Kagamimochi",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388d",
+      "title": "D - Coming of Age Celebration",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388f",
+      "title": "F - Dangerous Sugoroku",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc388g",
+      "title": "G - Simultaneous Kagamimochi 2",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389a",
+      "title": "A - 9x9",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389b",
+      "title": "B - tcaF",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389c",
+      "title": "C - Snake Queue",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389d",
+      "title": "D - Squares in Circle",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389e",
+      "title": "E - Square Price",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc389f",
+      "title": "F - Rated Range",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc390b",
+      "title": "B - Geometric Sequence",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc390c",
+      "title": "C - Paint to make a rectangle",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc390d",
+      "title": "D - Stone XOR",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc390f",
+      "title": "F - Double Sum 3",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391a",
+      "title": "A - Lucky Direction",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391b",
+      "title": "B - Seek Grid",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391c",
+      "title": "C - Pigeonhole Query",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391e",
+      "title": "E - Hierarchical Majority Vote",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391f",
+      "title": "F - K-th Largest Triplet",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc391g",
+      "title": "G - Many LCS",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc392a",
+      "title": "A - Shuffled Equation",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc392b",
+      "title": "B - Who is Missing?",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc392c",
+      "title": "C - Bib",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc392e",
+      "title": "E - Cables and Servers",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc392f",
+      "title": "F - Insert",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc393a",
+      "title": "A - Poisonous Oyster",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc393c",
+      "title": "C - Make it Simple",
+      "type": "io",
+      "shard": 2
+    },
+    {
+      "key": "atcoder/abc393e",
+      "title": "E - GCD of Subset",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc393f",
+      "title": "F - Prefix LIS Query",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc394a",
+      "title": "A - 22222",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc394b",
+      "title": "B - cat",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc394c",
+      "title": "C - Debug",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc394g",
+      "title": "G - Dense Buildings",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc395a",
+      "title": "A - Strictly Increasing?",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc395c",
+      "title": "C - Shortest Duplicate Subarray",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc395d",
+      "title": "D - Pigeon Swap",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc396a",
+      "title": "A - Triple Four",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc396b",
+      "title": "B - Card Pile",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc396d",
+      "title": "D - Minimum XOR Path",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc396g",
+      "title": "G - Flip Row or Col",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc397a",
+      "title": "A - Thermometer",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc397b",
+      "title": "B - Ticket Gate Log",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc397c",
+      "title": "C - Variety Split Easy",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc397e",
+      "title": "E - Path Decomposition of a Tree",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc398a",
+      "title": "A - Doors in the Center",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc398b",
+      "title": "B - Full House 3",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc398c",
+      "title": "C - Uniqueness",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc399a",
+      "title": "A - Hamming Distance",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc399b",
+      "title": "B - Ranking with Ties",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc400a",
+      "title": "A - ABC400 Party",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc400b",
+      "title": "B - Sum of Geometric Series",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc400e",
+      "title": "E - Ringo's Favorite Numbers 3",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc400g",
+      "title": "G - Patisserie ABC 3",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc401a",
+      "title": "A - Status Code",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc401b",
+      "title": "B - Unauthorized",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc402a",
+      "title": "A - CBC",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc402b",
+      "title": "B - Restaurant Queue",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc402c",
+      "title": "C - Dislike Foods",
+      "type": "io",
+      "shard": 3
+    },
+    {
+      "key": "atcoder/abc402d",
+      "title": "D - Line Crossing",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc402e",
+      "title": "E - Payment Required",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc402f",
+      "title": "F - Path to Integer",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc403a",
+      "title": "A - Odd Position Sum",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc403b",
+      "title": "B - Four Hidden",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc403d",
+      "title": "D - Forbidden Difference",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/abc403e",
+      "title": "E - Forbidden Prefix",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc168a",
+      "title": "A - <Inversion>",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc168c",
+      "title": "C - Swap Characters",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc169a",
+      "title": "A - Please Sign",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc170a",
+      "title": "A - Yet Another AB Problem",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc170b",
+      "title": "B - Arithmetic Progression Subsequence",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc170d",
+      "title": "D - Triangle Card Game",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc170e",
+      "title": "E - BDFS",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc171a",
+      "title": "A - No Attacking",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc171b",
+      "title": "B - Chmax",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc172b",
+      "title": "B - AtCoder Language",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc172c",
+      "title": "C - Election",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc173a",
+      "title": "A - Neq Number",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc173b",
+      "title": "B - Make Many Triangles",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc174a",
+      "title": "A - A Multiply",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc174d",
+      "title": "D - Digit vs Square Root",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc175b",
+      "title": "B - Parenthesis Arrangement",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc177a",
+      "title": "A - Exchange",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc177e",
+      "title": "E - Wrong Scoreboard",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc178a",
+      "title": "A - Good Permutation 2",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc178b",
+      "title": "B - 1 + 6 = 7",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc178c",
+      "title": "C - Sum of Abs 2",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc179a",
+      "title": "A - Partition",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc180c",
+      "title": "C - Subsequence and Prefix Sum",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc181a",
+      "title": "A - Sort Left and Right",
+      "type": "io",
+      "shard": 4
+    },
+    {
+      "key": "atcoder/arc181b",
+      "title": "B - Annoying String Problem",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc181d",
+      "title": "D - Prefix Bubble Sort",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc182a",
+      "title": "A - Chmax Rush!",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc183b",
+      "title": "B - Near Assignment",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc183c",
+      "title": "C - Not Argmax",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc184c",
+      "title": "C - Mountain and Valley Folds",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc185a",
+      "title": "A - mod M Game 2",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc185b",
+      "title": "B - +1 and -1",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc188b",
+      "title": "B - Symmetric Painting",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc189b",
+      "title": "B - Minimize Sum",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc189c",
+      "title": "C - Balls and Boxes",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc190a",
+      "title": "A - Inside or Outside",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc192a",
+      "title": "A - ARC Arc",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc192b",
+      "title": "B - Fennec VS. Snuke 2",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc193a",
+      "title": "A - Complement Interval Graph",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc194a",
+      "title": "A - Operations on a Stack",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc194b",
+      "title": "B - Minimum Cost Sort",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc195a",
+      "title": "A - Twice Subsequence",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc195b",
+      "title": "B - Uniform Sum",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc195c",
+      "title": "C - Hamiltonian Pieces",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc195d",
+      "title": "D - Swap and Erase",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc197a",
+      "title": "A - Union of Grid Paths",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc197b",
+      "title": "B - Greater Than Average",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "atcoder/arc197e",
+      "title": "E - Four Square Tiles",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/ADJSUMLOST",
+      "title": "Adjacent Sum Array",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/ADVITIYA",
+      "title": "Advitiya",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/ALTUNI",
+      "title": "Alternate Universe",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/ASSIGNSCORE",
+      "title": "Assignment Score",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/BDISC",
+      "title": "Bulk Discount",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/BINARYSUM",
+      "title": "Binary Sum",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/BINREM",
+      "title": "Binary Removals",
+      "type": "io",
+      "shard": 5
+    },
+    {
+      "key": "codechef/BOX2",
+      "title": "2 Boxes",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/BRKSTICK",
+      "title": "Breaking Sticks",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CALINTAKE",
+      "title": "Calorie Intake",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CARDGAME1",
+      "title": "Card Game",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CDMT",
+      "title": "CodeMat",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CHEFSOCKS",
+      "title": "Chef and Socks",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CHESSCOLOUR",
+      "title": "Chess Colouring",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CLSI",
+      "title": "Conquer the Fest!!",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CNTDISJOINT",
+      "title": "Count Disjoint Arrays",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/COUNT0110",
+      "title": "Counting 01 and 10",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CPYD",
+      "title": "No Two Alike",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/CRCK",
+      "title": "Christmas Cake",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/DELDIF",
+      "title": "Deletion and Difference",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/DONUTSELL",
+      "title": "Selling Donuts",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/DPOWER",
+      "title": "Distinct Power",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/FLIPPRE",
+      "title": "Flip Prefix",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/FOODBAL",
+      "title": "Food Balance",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/GGMM",
+      "title": "Short Piles",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/GOODMATRIX",
+      "title": "The Best Matrix",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/HJJ",
+      "title": "Can You Bench",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/HWFIN",
+      "title": "Too Much Homework!",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/ICECONE",
+      "title": "Icecream and Cone",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/INPL",
+      "title": "IPL",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/KOMON",
+      "title": "Monster Monster",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/LARGSMALL",
+      "title": "Larger Smaller",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/LOTTERYTICK",
+      "title": "Lottery Tickets",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/LSU",
+      "title": "Costly Summit",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/MAX6",
+      "title": "Max Sixers",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/MDGT",
+      "title": "Lost in the Fest!!",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/MINA2B",
+      "title": "A to B",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/MINBOTTLES",
+      "title": "Minimum Bottles",
+      "type": "io",
+      "shard": 6
+    },
+    {
+      "key": "codechef/MINCOL",
+      "title": "Minimum Colours (Easy)",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MINMAXSUB",
+      "title": "Min-Max Game",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MODINDROME",
+      "title": "Modindrome",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MOVEMENT",
+      "title": "Move Grid",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MOVPR",
+      "title": "Movie Snacks",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MSATP",
+      "title": "Friendly Binary Strings",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MXFREQ",
+      "title": "Multiplexer",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/MXON",
+      "title": "Maximum Ones",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/NEWYEAR",
+      "title": "Happy New Year!",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/NUGGET",
+      "title": "Moneymaking",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/ORANGES",
+      "title": "Too Many Oranges",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P1169",
+      "title": "Entry Check",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P1175",
+      "title": "Assignment Due",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P2169",
+      "title": "Opposite Attract",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P2175",
+      "title": "Technex Tickets",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P2P",
+      "title": "Make Odd",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P3169",
+      "title": "Make K Most Frequent",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P3175",
+      "title": "Make same",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P4169",
+      "title": "Hamming equivalent",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P4172",
+      "title": "Transform String",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P4175",
+      "title": "Alternate It!",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/P5169",
+      "title": "Constant Subsequence",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/PERMCON",
+      "title": "Permutation Construct",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/PERMMODK",
+      "title": "Permutation Mod K",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/PERMUTATION2",
+      "title": "Permutation Pair",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/PIVOTALREV",
+      "title": "Pivotal Reversal",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/PLACE0110",
+      "title": "Placing 01 And 10",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/POSTPERI",
+      "title": "Poster Perimeter",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/QUICKEXIT0",
+      "title": "Quick Exit",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/RBGM",
+      "title": "Red-Blue Sort",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/RURT",
+      "title": "Run for Fun",
+      "type": "io",
+      "shard": 7
+    },
+    {
+      "key": "codechef/SAMEAND",
+      "title": "Same And",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SMOOTHINC",
+      "title": "Smoothly Increasing",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SORTTHEM",
+      "title": "Sort Them",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SPC2025Q2",
+      "title": "Itz Simple",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SPC2025Q5",
+      "title": "Halloween Array",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SPC2025Q6",
+      "title": "Connecting Wells",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SPC2025",
+      "title": "New-Pro Coder",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SQUIDBANK",
+      "title": "Squid Game - Piggy Bank",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/STKSTR",
+      "title": "Streak Star",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/STOT",
+      "title": "S to T",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/STRANGENIM",
+      "title": "Strange Nim Game",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SUMBYOR",
+      "title": "Sum By OR",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/SWPG",
+      "title": "Shall we play a game",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/TEMPBAL",
+      "title": "Temperature Balance",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/TIMA",
+      "title": "Time Machine",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/TMPTMP",
+      "title": "Temporary Temperature",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/TRICHECK",
+      "title": "Triangle Checking",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/USELEC",
+      "title": "Elections",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/VOLCANO",
+      "title": "Volcanic Eruption",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/WAPEN",
+      "title": "Time Penalty",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/WECNITK",
+      "title": "Access Code Equality",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/WHITEWALL",
+      "title": "White Wall",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/WRAPGIFTS",
+      "title": "Christmas Gifts",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codechef/XLSL",
+      "title": "Clothing Store",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2093A",
+      "title": "A. Ideal Generator",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2095C",
+      "title": "C. Would It Be Unrated?",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2095D",
+      "title": "D. Where Am I?",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2095F",
+      "title": "F. ⅓ оf а Рrоblеm",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2095I",
+      "title": "I. Mysterious Script",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2098A",
+      "title": "A. Vadim's Collection",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2103A",
+      "title": "A. Common Multiple",
+      "type": "io",
+      "shard": 8
+    },
+    {
+      "key": "codeforces/2104A",
+      "title": "A. Three Decks",
+      "type": "io",
+      "shard": 9
+    },
+    {
+      "key": "codeforces/2106A",
+      "title": "A. Dr. TC",
+      "type": "io",
+      "shard": 9
+    },
+    {
+      "key": "codeforces/2108A",
+      "title": "A. Permutation Warm-Up",
+      "type": "io",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3188",
+      "title": "Find Champion I",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3190",
+      "title": "Minimum Operations to Maximize Last Elements in Arrays",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3191",
+      "title": "Maximum Score After Applying Operations on a Tree",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3192",
+      "title": "Maximum Xor Product",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3193",
+      "title": "Maximum Strong Pair XOR I",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3194",
+      "title": "Find Words Containing Character",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3195",
+      "title": "Separate Black and White Balls",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3197",
+      "title": "Maximum Strong Pair XOR II",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3199",
+      "title": "Distribute Candies Among Children I",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3200",
+      "title": "Number of Strings Which Can Be Rearranged to Contain Substring",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3201",
+      "title": "Distribute Candies Among Children II",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3202",
+      "title": "High-Access Employees",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3203",
+      "title": "Palindrome Rearrangement Queries",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3207",
+      "title": "Make Three Strings Equal",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3208",
+      "title": "Count Beautiful Substrings II",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3209",
+      "title": "Minimum Number of Coins for Fruits",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3210",
+      "title": "Count Beautiful Substrings I",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3211",
+      "title": "Find Maximum Non-decreasing Array Length",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3212",
+      "title": "Count the Number of Good Partitions",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3213",
+      "title": "Count Subarrays Where Max Element Appears at Least K Times",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3214",
+      "title": "Maximize Area of Square Hole in Grid",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3215",
+      "title": "Matrix Similarity After Cyclic Shifts",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3218",
+      "title": "Find Number of Coins to Place in Tree Nodes",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3219",
+      "title": "Make Lexicographically Smallest Array by Swapping Elements",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3220",
+      "title": "Count Tested Devices After Test Operations",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3221",
+      "title": "Find the Peaks",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3223",
+      "title": "Count Complete Substrings",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3224",
+      "title": "Count the Number of Infection Sequences",
+      "type": "functional",
+      "shard": 9
+    },
+    {
+      "key": "leetcode/3225",
+      "title": "Length of Longest Subarray With at Most K Frequency",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3226",
+      "title": "Minimum Number Game",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3227",
+      "title": "Find Missing and Repeated Values",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3228",
+      "title": "Maximum Size of a Set After Removals",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3229",
+      "title": "Minimum Cost to Make Array Equalindromic",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3230",
+      "title": "Remove Adjacent Almost-Equal Characters",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3231",
+      "title": "Minimum Number of Coins to be Added",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3233",
+      "title": "Maximize the Number of Partitions After Operations",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3234",
+      "title": "Double Modular Exponentiation",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3235",
+      "title": "Minimum Cost to Convert String I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3236",
+      "title": "Smallest Missing Integer Greater Than Sequential Prefix Sum",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3238",
+      "title": "Minimum Cost to Convert String II",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3239",
+      "title": "Minimum Number of Operations to Make X and Y Equal",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3240",
+      "title": "Maximum Number That Sum of the Prices Is Less Than or Equal to K",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3241",
+      "title": "Divide Array Into Arrays With Max Difference",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3242",
+      "title": "Count Elements With Maximum Frequency",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3243",
+      "title": "Count the Number of Powerful Integers",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3244",
+      "title": "Minimize Length of Array Using Operations",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3245",
+      "title": "Find Beautiful Indices in the Given Array I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3246",
+      "title": "Check if Bitwise OR Has Trailing Zeros",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3248",
+      "title": "Count the Number of Incremovable Subarrays II",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3250",
+      "title": "Maximum Square Area by Removing Fences From a Field",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3252",
+      "title": "Count the Number of Incremovable Subarrays I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3262",
+      "title": "Find Polygon With the Largest Perimeter",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3263",
+      "title": "Divide an Array Into Subarrays With Minimum Cost I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3264",
+      "title": "Maximum Points After Enemy Battles",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3265",
+      "title": "Maximum Good Subarray Sum",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3266",
+      "title": "Find Longest Special Substring That Occurs Thrice II",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3267",
+      "title": "Find Longest Special Substring That Occurs Thrice I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3269",
+      "title": "Number of Subarrays That Match a Pattern I",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3270",
+      "title": "Minimum Moves to Capture The Queen",
+      "type": "functional",
+      "shard": 10
+    },
+    {
+      "key": "leetcode/3271",
+      "title": "Count the Number of Houses at a Certain Distance I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3275",
+      "title": "Minimum Number of Pushes to Type Word I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3276",
+      "title": "Minimum Number of Pushes to Type Word II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3277",
+      "title": "Find the Number of Ways to Place People II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3278",
+      "title": "Find the Number of Ways to Place People I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3279",
+      "title": "Alice and Bob Playing Flower Game",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3289",
+      "title": "Earliest Second to Mark Indices II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3291",
+      "title": "Find if Array Can Be Sorted",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3292",
+      "title": "Earliest Second to Mark Indices I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3296",
+      "title": "Minimum Time to Revert Word to Initial State II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3297",
+      "title": "Minimum Time to Revert Word to Initial State I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3298",
+      "title": "Maximize Consecutive Elements in an Array After Modification",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3303",
+      "title": "Find Beautiful Indices in the Given Array II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3305",
+      "title": "Count Prefix and Suffix Pairs II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3306",
+      "title": "Mark Elements on Array by Performing Queries",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3308",
+      "title": "Apply Operations to Make String Empty",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3309",
+      "title": "Count Prefix and Suffix Pairs I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3310",
+      "title": "Count the Number of Houses at a Certain Distance II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3311",
+      "title": "Ant on the Boundary",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3312",
+      "title": "Number of Changing Keys",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3313",
+      "title": "Maximum Strength of K Disjoint Subarrays",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3314",
+      "title": "Most Frequent Prime",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3316",
+      "title": "Find the Sum of Subsequence Powers",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3317",
+      "title": "Maximum Palindromes After Operations",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3318",
+      "title": "Maximum Number of Operations With the Same Score II",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3320",
+      "title": "Maximum Number of Operations With the Same Score I",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3321",
+      "title": "Type of Triangle",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3324",
+      "title": "Split the Array",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3325",
+      "title": "Find the Largest Area of Square Inside Two Rectangles",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3326",
+      "title": "Count Pairs of Connectable Servers in a Weighted Tree Network",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3327",
+      "title": "Minimum Moves to Pick K Ones",
+      "type": "functional",
+      "shard": 11
+    },
+    {
+      "key": "leetcode/3328",
+      "title": "Apply Operations to Make Sum of Array Greater Than or Equal to k",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3330",
+      "title": "Modify the Matrix",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3331",
+      "title": "Minimum Operations to Exceed Threshold Value I",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3334",
+      "title": "Apple Redistribution into Boxes",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3335",
+      "title": "Minimum Operations to Write the Letter Y on a Grid",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3336",
+      "title": "Water Bottles II",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3337",
+      "title": "Count Substrings Starting and Ending with Given Character",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3338",
+      "title": "Count Submatrices with Top-Left Element and Sum Less Than k",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3344",
+      "title": "Minimize Manhattan Distances",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3345",
+      "title": "Find the Sum of the Power of All Subsequences",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3346",
+      "title": "Lexicographically Smallest String After Operations With Constraint",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3347",
+      "title": "Distribute Elements Into Two Arrays I",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3348",
+      "title": "Minimum Cost Walk in Weighted Graph",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3349",
+      "title": "Maximum Length Substring With Two Occurrences",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3350",
+      "title": "Distribute Elements Into Two Arrays II",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3353",
+      "title": "Existence of a Substring in a String and Its Reverse",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3354",
+      "title": "Replace Question Marks in String to Minimize Its Value",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3355",
+      "title": "Minimum Levels to Gain More Points",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3356",
+      "title": "Shortest Uncommon Substring in an Array",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3360",
+      "title": "Minimum Deletions to Make String K-Special",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3361",
+      "title": "Latest Time You Can Obtain After Replacing Characters",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3362",
+      "title": "Find the Median of the Uniqueness Array",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3363",
+      "title": "Most Frequent IDs",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3364",
+      "title": "Minimum Sum of Values by Dividing Array",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3367",
+      "title": "Find the Sum of Encrypted Integers",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3371",
+      "title": "Harshad Number",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3372",
+      "title": "Longest Strictly Increasing or Strictly Decreasing Subarray",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3373",
+      "title": "Maximum Prime Difference",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3374",
+      "title": "Count Alternating Subarrays",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3375",
+      "title": "Kth Smallest Amount With Single Denomination Combination",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3376",
+      "title": "Longest Common Suffix Queries",
+      "type": "functional",
+      "shard": 12
+    },
+    {
+      "key": "leetcode/3379",
+      "title": "Score of a String",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3380",
+      "title": "Shortest Subarray With OR at Least K II",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3381",
+      "title": "Shortest Subarray With OR at Least K I",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3382",
+      "title": "Find the Number of Subarrays Where Boundary Elements Are Maximum",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3383",
+      "title": "Taking Maximum Energy From the Mystic Dungeon",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3384",
+      "title": "Minimum Number of Operations to Make Word K-Periodic",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3387",
+      "title": "Minimum Operations to Make Median of Array Equal to K",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3388",
+      "title": "Right Triangles",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3389",
+      "title": "Minimum Time to Visit Disappearing Nodes",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3390",
+      "title": "Minimum Rectangles to Cover Points",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3391",
+      "title": "Maximum Difference Score in a Grid",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3394",
+      "title": "Minimum Array End",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3395",
+      "title": "Minimum Length of Anagram Concatenation",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3397",
+      "title": "Find the Integer Added to Array I",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3398",
+      "title": "Make a Square with the Same Color",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3399",
+      "title": "Find the Integer Added to Array II",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3402",
+      "title": "Minimum Cost to Equalize Array",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3404",
+      "title": "Minimum Number of Operations to Satisfy Conditions",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3405",
+      "title": "Count the Number of Special Characters II",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3406",
+      "title": "Find All Possible Stable Binary Arrays I",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3407",
+      "title": "Find All Possible Stable Binary Arrays II",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3408",
+      "title": "Count the Number of Special Characters I",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3411",
+      "title": "Find Products of Elements of Big Array",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3412",
+      "title": "Permutation Difference between Two Strings",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3413",
+      "title": "Find The First Player to win K Games in a Row",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3414",
+      "title": "Find Number of Ways to Reach the K-th Stair",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3415",
+      "title": "Check if Grid Satisfies Conditions",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3416",
+      "title": "Sum of Digit Differences of All Pairs",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3418",
+      "title": "Count Pairs That Form a Complete Day II",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3420",
+      "title": "Find Occurrences of an Element in an Array",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3421",
+      "title": "Count Pairs That Form a Complete Day I",
+      "type": "functional",
+      "shard": 13
+    },
+    {
+      "key": "leetcode/3422",
+      "title": "Find the N-th Value After K Seconds",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3423",
+      "title": "Maximum Sum of Subsequence With Non-adjacent Elements",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3426",
+      "title": "Minimum Number of Chairs in a Waiting Room",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3427",
+      "title": "Special Array II",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3428",
+      "title": "Find the XOR of Numbers Which Appear Twice",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3429",
+      "title": "Special Array I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3430",
+      "title": "Count Days Without Meetings",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3431",
+      "title": "Find the Minimum Cost Array Permutation",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3434",
+      "title": "Find the Number of Distinct Colors Among the Balls",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3435",
+      "title": "Block Placement Queries",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3436",
+      "title": "Find Subarray With Bitwise OR Closest to K",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3437",
+      "title": "Maximum Total Damage With Spell Casting",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3442",
+      "title": "Maximum Total Reward Using Operations I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3443",
+      "title": "Maximum Total Reward Using Operations II",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3444",
+      "title": "Find the Number of Good Pairs II",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3445",
+      "title": "Lexicographically Minimum String After Removing Stars",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3446",
+      "title": "Find the Number of Good Pairs I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3447",
+      "title": "Clear Digits",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3450",
+      "title": "Find the Child Who Has the Ball After K Seconds",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3451",
+      "title": "String Compression III",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3452",
+      "title": "Find the Maximum Length of a Good Subsequence II",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3453",
+      "title": "Generate Binary Strings Without Adjacent Zeros",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3454",
+      "title": "Minimum Operations to Make Array Equal to Target",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3455",
+      "title": "Minimum Length of String After Operations",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3456",
+      "title": "Find the Maximum Length of a Good Subsequence I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3460",
+      "title": "Count the Number of Inversions",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3461",
+      "title": "Find the Minimum Area to Cover All Ones I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3462",
+      "title": "Vowels Game in a String",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3463",
+      "title": "Alternating Groups I",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3464",
+      "title": "Maximize Total Cost of Alternating Subarrays",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3466",
+      "title": "Number of Subarrays With AND Value of K",
+      "type": "functional",
+      "shard": 14
+    },
+    {
+      "key": "leetcode/3468",
+      "title": "Find the Encrypted String",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3469",
+      "title": "Maximum Height of a Triangle",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3470",
+      "title": "Maximum Score From Grid Operations",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3471",
+      "title": "Minimum Average of Smallest and Largest Elements",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3475",
+      "title": "Minimum Operations to Make Binary Array Elements Equal to One I",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3476",
+      "title": "Find Minimum Operations to Make All Elements Divisible by Three",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3477",
+      "title": "Minimum Operations to Make Binary Array Elements Equal to One II",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3479",
+      "title": "Count the Number of Substrings With Dominant Ones",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3483",
+      "title": "Alternating Groups II",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3484",
+      "title": "Lexicographically Smallest String After a Swap",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3485",
+      "title": "Maximize Score of Numbers in Ranges",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3490",
+      "title": "Find the Maximum Length of Valid Subsequence I",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3491",
+      "title": "Find the Maximum Length of Valid Subsequence II",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3492",
+      "title": "Count Submatrices With Equal Frequency of X and Y",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3493",
+      "title": "Maximum Number of Operations to Move Ones to the End",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3494",
+      "title": "Minimum Cost for Cutting Cake I",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3495",
+      "title": "K-th Nearest Obstacle Queries",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3496",
+      "title": "Minimum Number of Seconds to Make Mountain Height Zero",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3498",
+      "title": "Minimum Array Changes to Make Differences Equal",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3500",
+      "title": "Minimum Cost for Cutting Cake II",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3502",
+      "title": "Count Substrings With K-Frequency Characters I",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3507",
+      "title": "Find the Count of Numbers Which Are Not Special",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3508",
+      "title": "Number of Bit Changes to Make Two Integers Equal",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3509",
+      "title": "K-th Largest Perfect Subtree Size in Binary Tree",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3510",
+      "title": "Maximize the Total Height of Unique Towers",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3511",
+      "title": "Find the Winning Player in Coin Game",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3514",
+      "title": "Shortest Distance After Road Addition Queries II",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3515",
+      "title": "Find if Digit Game Can Be Won",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3516",
+      "title": "Design Neighbor Sum Service",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3517",
+      "title": "Shortest Distance After Road Addition Queries I",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3518",
+      "title": "Maximum Multiplication Score",
+      "type": "functional",
+      "shard": 15
+    },
+    {
+      "key": "leetcode/3519",
+      "title": "Find the Number of Winning Players",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3522",
+      "title": "Find the Power of K-Size Subarrays I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3523",
+      "title": "Find the Power of K-Size Subarrays II",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3524",
+      "title": "Minimum Number of Flips to Make Binary Grid Palindromic II",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3525",
+      "title": "Maximum Energy Boost From Two Drinks",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3527",
+      "title": "Alternating Groups III",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3528",
+      "title": "Reach End of Array With Max Score",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3531",
+      "title": "Minimum Amount of Damage Dealt to Bob",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3532",
+      "title": "Time Taken to Mark All Nodes",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3533",
+      "title": "Snake in Matrix",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3534",
+      "title": "Count Almost Equal Pairs I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3535",
+      "title": "Find the Count of Monotonic Pairs I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3536",
+      "title": "Find the Count of Monotonic Pairs II",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3540",
+      "title": "Hash Divided String",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3541",
+      "title": "Report Spam Message",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3542",
+      "title": "Maximum Value Sum by Placing Three Rooks II",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3543",
+      "title": "Count Substrings That Satisfy K-Constraint I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3548",
+      "title": "Find the Count of Good Integers",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3550",
+      "title": "Maximum Value Sum by Placing Three Rooks I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3552",
+      "title": "Find the Largest Palindrome Divisible by K",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3553",
+      "title": "Check if Two Chessboard Squares Have the Same Color",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3555",
+      "title": "Final Array State After K Multiplication Operations I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3557",
+      "title": "Minimum Number of Valid Strings to Form Target II",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3558",
+      "title": "Find a Safe Walk Through a Grid",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3559",
+      "title": "Minimum Number of Valid Strings to Form Target I",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3561",
+      "title": "Remove Methods From Project",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3562",
+      "title": "Maximum Score of Non-overlapping Intervals",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3563",
+      "title": "Select Cells in Grid With Maximum Score",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3566",
+      "title": "Find the Sequence of Strings Appeared on the Screen",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3567",
+      "title": "Convert Date to Binary",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3568",
+      "title": "Find the Key of the Numbers",
+      "type": "functional",
+      "shard": 16
+    },
+    {
+      "key": "leetcode/3569",
+      "title": "Count of Substrings Containing Every Vowel and K Consonants II",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3570",
+      "title": "Count of Substrings Containing Every Vowel and K Consonants I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3571",
+      "title": "Length of the Longest Increasing Path",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3573",
+      "title": "Count Substrings That Can Be Rearranged to Contain a String I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3576",
+      "title": "Find Subtree Sizes After Changes",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3579",
+      "title": "Maximum Possible Number by Binary Concatenation",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3580",
+      "title": "Find the Occurrence of First Almost Equal Substring",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3581",
+      "title": "The Two Sneaky Numbers of Digitville",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3582",
+      "title": "Find Indices of Stable Mountains",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3583",
+      "title": "Sorted GCD Pair Queries",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3584",
+      "title": "Find the Lexicographically Smallest Valid Sequence",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3588",
+      "title": "Count The Number of Winning Sequences",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3591",
+      "title": "Shift Distance Between Two Strings",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3593",
+      "title": "Find the Maximum Factor Score of Array",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3594",
+      "title": "Identify the Largest Outlier in an Array",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3595",
+      "title": "Rearrange K Substrings to Form Target String",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3600",
+      "title": "Find the K-th Character in String Game I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3601",
+      "title": "Find the K-th Character in String Game II",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3604",
+      "title": "Find the Number of Possible Ways for an Event",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3605",
+      "title": "Construct the Minimum Bitwise Array I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3606",
+      "title": "Minimum Element After Replacement With Digit Sum",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3607",
+      "title": "Minimum Division Operations to Make Array Non Decreasing",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3610",
+      "title": "Find X-Sum of All K-Long Subarrays I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3611",
+      "title": "Construct the Minimum Bitwise Array II",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3612",
+      "title": "Adjacent Increasing Subarrays Detection I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3613",
+      "title": "Maximize Amount After Two Days of Conversions",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3616",
+      "title": "Make Array Elements Equal to Zero",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3617",
+      "title": "Find the Original Typed String I",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3618",
+      "title": "Find the Original Typed String II",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3619",
+      "title": "Adjacent Increasing Subarrays Detection II",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3620",
+      "title": "Maximum Number of Distinct Elements After Operations",
+      "type": "functional",
+      "shard": 17
+    },
+    {
+      "key": "leetcode/3621",
+      "title": "Minimum Operations to Make Array Values Equal to K",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3622",
+      "title": "Maximum Frequency of an Element After Performing Operations I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3625",
+      "title": "Stone Removal Game",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3626",
+      "title": "Smallest Divisible Digit Product I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3627",
+      "title": "Find Minimum Time to Reach Last Room I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3629",
+      "title": "Total Characters in String After Transformations I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3630",
+      "title": "Total Characters in String After Transformations II",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3631",
+      "title": "Count K-Reducible Numbers Less Than N",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3632",
+      "title": "Button with Longest Push Time",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3633",
+      "title": "Maximize the Number of Target Nodes After Connecting Trees I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3634",
+      "title": "Find Mirror Score of a String",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3636",
+      "title": "Check Balanced String",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3637",
+      "title": "Count Number of Balanced Permutations",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3639",
+      "title": "Zero Array Transformation I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3640",
+      "title": "Maximum Frequency of an Element After Performing Operations II",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3643",
+      "title": "Zero Array Transformation II",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3644",
+      "title": "Minimum Positive Sum Subarray ",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3646",
+      "title": "Sum of Good Subsequences",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3647",
+      "title": "Zero Array Transformation III",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3648",
+      "title": "Find the Maximum Number of Fruits Collected",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3649",
+      "title": "Minimum Time to Break Locks I",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3651",
+      "title": "Transformed Array",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3653",
+      "title": "Maximum Subarray Sum With Length Divisible by K",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3654",
+      "title": "Minimum Array Sum",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3656",
+      "title": "Minimum Number of Operations to Make Elements in Array Distinct",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3657",
+      "title": "Check if Grid can be Cut into Sections",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3659",
+      "title": "Count Paths With the Given XOR Value",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3675",
+      "title": "Maximize Sum of Weights after Edge Removals",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3676",
+      "title": "Smallest Number With All Set Bits",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3677",
+      "title": "Maximum Amount of Money Robot Can Earn",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3680",
+      "title": "Count Connected Components in LCM Graph",
+      "type": "functional",
+      "shard": 18
+    },
+    {
+      "key": "leetcode/3681",
+      "title": "Maximum Area Rectangle With Point Constraints I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3682",
+      "title": "Count the Number of Arrays with K Matching Adjacent Elements",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3683",
+      "title": "Find the Lexicographically Largest String From the Box I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3684",
+      "title": "Substring Matching Pattern",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3685",
+      "title": "Count Subarrays of Length Three With a Condition",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3687",
+      "title": "Longest Special Path",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3689",
+      "title": "Maximum Area Rectangle With Point Constraints II",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3690",
+      "title": "Smallest Substring With Identical Characters I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3691",
+      "title": "Minimum Operations to Make Columns Strictly Increasing",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3696",
+      "title": "Count Substrings Divisible By Last Digit",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3702",
+      "title": "Maximum Subarray With Equal Products",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3704",
+      "title": "Count Partitions with Even Sum Difference",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3708",
+      "title": "Zigzag Grid Traversal With Skip",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3709",
+      "title": "Find Special Substring of Length K",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3712",
+      "title": "Minimum Cost to Make Arrays Identical",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3721",
+      "title": "Count Mentions Per User",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3723",
+      "title": "Sum of Good Numbers",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3731",
+      "title": "Sum of Variable Length Subarrays",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3733",
+      "title": "Length of Longest V-Shaped Diagonal Segment",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3736",
+      "title": "Find Valid Pair of Adjacent Digits in String",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3737",
+      "title": "Paint House IV",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3739",
+      "title": "Manhattan Distances of All Arrangements of Pieces",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3741",
+      "title": "Reschedule Meetings for Maximum Free Time II",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3743",
+      "title": "Reschedule Meetings for Maximum Free Time I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3747",
+      "title": "Maximum Difference Between Adjacent Elements in a Circular Array",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3748",
+      "title": "Sort Matrix by Diagonals",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3753",
+      "title": "Maximum Difference Between Even and Odd Frequency I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3760",
+      "title": "Assign Elements to Groups with Constraints",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3763",
+      "title": "Separate Squares I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3768",
+      "title": "Check If Digits Are Equal in String After Operations I",
+      "type": "functional",
+      "shard": 19
+    },
+    {
+      "key": "leetcode/3774",
+      "title": "Check If Digits Are Equal in String After Operations II",
+      "type": "functional",
+      "shard": 19
+    }
+  ]
+}

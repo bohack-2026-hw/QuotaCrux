@@ -4,7 +4,7 @@ import type { Report, Research, RunRow, Step, TaskSummary } from '../api'
 import { SpeedupBars } from '../components/charts'
 import { Chip, Empty, Meter, Stat, StatusChip } from '../components/ui'
 import { usePoll } from '../hooks'
-import { ACTION, ORDER, OUTCOME, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
+import { ACTION, OUTCOME, SPLIT, STOP, decision, fmt, roleName, stopDetail } from '../labels'
 
 export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
   runId: string | null
@@ -51,14 +51,14 @@ export function RunView({ runId, setRunId, activeSnapshot, onOpenExperience }: {
             <select value={taskId} onChange={(e) => setTaskId(e.target.value)}>
               {groupTasks(tasks.data ?? []).map(([split, ts]) => (
                 <optgroup key={split} label={SPLIT[split] ?? split}>
-                  {ts.map((t) => <option key={t.task_id} value={t.task_id}>{t.task_id} · {ORDER[t.dev_params.order] ?? t.dev_params.order} · {fmt.rows(t.dev_params.rows)} 行 · {fmt.rows(t.dev_params.keys)} key</option>)}
+                  {ts.map((t) => <option key={t.task_id} value={t.task_id}>{t.task_id} · {t.presentation.workload}</option>)}
                 </optgroup>
               ))}
             </select>
           </label>
           {task && (
             <p className="small muted" style={{ margin: '-6px 0 14px' }}>
-              {ORDER[task.dev_params.order] ?? task.dev_params.order} · {fmt.rows(task.dev_params.rows)} 行 · {fmt.rows(task.dev_params.keys)} key · 偏斜 {task.dev_params.skew} · 目标 {task.target.min_speedup}×
+              {task.presentation.workload} · 目标 {task.target.min_speedup}×
             </p>
           )}
           <div className="field"><span>运行模式</span>
@@ -205,7 +205,7 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
                     <td>{e.rank}</td>
                     <td><button className="link mono" onClick={() => onOpenExperience(rep.experience.snapshot_read, e.experience_id)}>{e.experience_id.slice(-10)}</button></td>
                     <td><Chip tone={tone} icon={icon}>{label}</Chip></td>
-                    <td>{e.matching_features} / 5</td>
+                    <td>{e.matching_features} / {rep.experience.retrieval?.feature_count ?? 5}</td>
                     <td>{e.task_id}</td>
                   </tr>
                 )

@@ -19,7 +19,7 @@ STATUS_ZH = {"passed": "通过", "submitted": "已提交", "done": "完成", "re
              "format_error": "格式错误", "contract_violation": "违反契约", "runtime_error": "运行错误", "timeout": "超时",
              "memory_limit": "内存超限", "output_limit": "输出超限", "compile_error": "编译错误",
              "static_check_failed": "静态检查失败", "unstable": "结果不稳定", "sandbox_error": "环境错误",
-             "baseline_failed": "基线失败", "invalid_action": "无效动作", "api_error": "接口错误",
+             "baseline_failed": "基线失败", "checker_error": "校验器错误", "invalid_action": "无效动作", "api_error": "接口错误",
              "unusable_reply": "回复不可用", "tool_failed": "工具失败"}
 
 DECISION_ZH = {"continue": "继续", "validate candidate": "验证候选", "re-measure candidate": "重新测量",
@@ -132,7 +132,7 @@ def run_markdown(run_id: str) -> str:
     lines += ["", "## 读取的经验", ""]
     if r["experience"]["read"]:
         for e in r["experience"]["read"]:
-            lines.append(f"- #{e['rank']} `{e['experience_id']}`（{e['outcome']}，{e['matching_features']}/5 特征匹配，来自 {e['task_id']}）")
+            lines.append(f"- #{e['rank']} `{e['experience_id']}`（{e['outcome']}，{e['matching_features']}/{(r['experience']['retrieval'] or {}).get('feature_count', 5)} 特征匹配，来自 {e['task_id']}）")
     else:
         lines.append(f"- 无（{r['snapshot_id']} 中没有匹配当前工作负载的经验）")
     if r["experience"]["published_snapshot_id"]:

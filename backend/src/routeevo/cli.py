@@ -26,8 +26,18 @@ def cmd_tasks_build(args) -> None:
 def cmd_tasks_list(args) -> None:
     for r in db.all_rows("SELECT task_id, split, manifest_sha256, manifest_json FROM tasks ORDER BY task_id"):
         m = json.loads(r["manifest_json"])
-        p = m["dev_params"]
-        print(f"{r['task_id']:<10} {r['split']:<6} rows={p['rows']:<9} keys={p['keys']:<8} order={p['order']:<14} skew={p['skew']:<5} {r['manifest_sha256'][:12]}")
+        from .benchmarks import get
+        desc = get(m["family"]).presentation(m)
+        print(f"{r['task_id']:<10} {r['split']:<6} {desc['workload']} {r['manifest_sha256'][:12]}")
+
+
+def cmd_tasks_import_effibench(args) -> None:
+    from .benchmarks.effibench import import_problem
+    task = import_problem(args.problem, split=args.split, dev_cases=args.dev_cases, case_limit=args.case_limit,
+                          parquet=Path(args.parquet) if args.parquet else None, task_id=args.task_id)
+    _print({"task_id": task.task_id, "split": task.split, "source": task.manifest["source"],
+            "selection": task.manifest["selection"], "workload": task.presentation["workload"]})
+
 
 
 def cmd_tasks_lock(args) -> None:
@@ -232,7 +242,7 @@ def export_bundle(run_id: str, out: Path, text: str) -> None:
              "set -euo pipefail",
              'HERE="$(cd "$(dirname "$0")" && pwd)"',
              'cd "$(git -C "$HERE" rev-parse --show-toplevel)/backend"',
-             "uv run routeevo tasks build >/dev/null   # frozen task packages, hashes checked against tasks/lock.json"]
+             taskpkg.rebuild_command(task)]
     if best:
         lines += ["# 1. Re-check the delivered program on the hidden final dataset (same evaluator, fresh containers)",
                   f'uv run routeevo check {task} "$HERE/best.py" --dataset final']
@@ -297,6 +307,15 @@ def main(argv: list[str] | None = None) -> None:
     b.add_argument("--spec", default=str(config.TASK_SPEC_DIR / "spec.json"))
     b.set_defaults(fn=cmd_tasks_build)
     tsub.add_parser("list").set_defaults(fn=cmd_tasks_list)
+    eb = tsub.add_parser("import-effibench", help="import a pinned EffiBench-X Python problem (downloads its shard)")
+    eb.add_argument("problem", help="source/id, e.g. codeforces/2104A or leetcode/3188")
+    eb.add_argument("--split", choices=["A", "B", "C", "D", "smoke"], required=True,
+                    help="RouteEvo task split; separate from upstream's single test split")
+    eb.add_argument("--dev-cases", type=int, default=20)
+    eb.add_argument("--case-limit", type=int, help="explicit pilot subset; default: all unique cases")
+    eb.add_argument("--parquet", help="use a local shard instead of downloading; pinned SHA256 still checked")
+    eb.add_argument("--task-id")
+    eb.set_defaults(fn=cmd_tasks_import_effibench)
     lk = tsub.add_parser("lock", help="pin manifests in tasks/lock.json")
     lk.add_argument("task_ids", nargs="*")
     lk.set_defaults(fn=cmd_tasks_lock)

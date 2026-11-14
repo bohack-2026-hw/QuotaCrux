@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 
 from . import db, research
+from .benchmarks import get as benchmark
 
 
 def _secs(a: str | None, b: str | None) -> float | None:
@@ -109,7 +110,9 @@ def build(run_id: str) -> dict:
     out = {
         "run_id": run_id,
         "task": {"task_id": run["task_id"], "split": task["split"], "target_min_speedup": target,
-                 "dev_params": manifest["dev_params"], "final_params": manifest["final_params"]},
+                 "family": manifest["family"], "presentation": benchmark(manifest["family"]).presentation(manifest),
+                 "dev_params": manifest["dev_params"], "final_params": manifest["final_params"],
+                 "source": manifest.get("source"), "selection": manifest.get("selection")},
         "mode": run["mode"], "snapshot_id": run["snapshot_id"], "label": cfg.get("label"),
         "scripted_model": cfg.get("scripted") or [],
         "status": run["status"], "stop_reason": run["stop_reason"], "stop_detail": run["stop_detail"],

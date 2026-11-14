@@ -13,7 +13,7 @@ const STATUS: Record<string, [string, Tone]> = {
   wrong_output: ['输出错误', 'bad'], format_error: ['格式错误', 'bad'], contract_violation: ['违反契约', 'bad'],
   runtime_error: ['运行错误', 'bad'], timeout: ['超时', 'bad'], memory_limit: ['内存超限', 'bad'], output_limit: ['输出超限', 'bad'],
   compile_error: ['编译错误', 'bad'], static_check_failed: ['静态检查失败', 'bad'], unstable: ['结果不稳定', 'bad'],
-  sandbox_error: ['环境错误', 'warn'], baseline_failed: ['基线失败', 'warn'], invalid_action: ['无效动作', 'warn'],
+  sandbox_error: ['环境错误', 'warn'], checker_error: ['校验器错误', 'warn'], baseline_failed: ['基线失败', 'warn'], invalid_action: ['无效动作', 'warn'],
   api_error: ['接口错误', 'warn'], unusable_reply: ['回复不可用', 'warn'], tool_failed: ['工具失败', 'warn'],
   running: ['运行中', 'accent'], completed: ['已完成', 'neutral'], stopped: ['已停止', 'warn'], failed: ['失败', 'bad'],
   interrupted: ['已中断', 'warn'],

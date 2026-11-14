@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v2"
+PROMPT_VERSION = "agent-prompt-v3"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -14,12 +14,11 @@ Each request you receive describes the full current state. Reply with exactly on
 Goal and rules
 - The program must stay correct for every input that satisfies the contract. An external evaluator checks the output
   against hidden reference data; you never see the evaluator, the reference output or the hidden final test data.
-  Before timing it also runs small public contract cases: empty input, a single row, interleaved repeated keys,
-  ASCII ordering of digits/upper/underscore/lower case, very large and negative integers, an almost-sorted input and
-  32-character keys. A program that is only right for this task's data distribution fails them.
+  Task-specific correctness checks and any public contract cases are described in the task state.
 - Primary metric: speedup = median runtime of the initial program / median runtime of the candidate, measured on the
   task's dev data in a Docker container (1 CPU, 1 GB memory, no network, read-only filesystem, a fresh process per
-  sample, input on stdin). A candidate counts as improved only if every timed candidate sample is faster than every
+  case, input on stdin). A timing sample sums the runtimes of all cases in the selected suite.
+  A candidate counts as improved only if every timed candidate sample is faster than every
   baseline sample; the goal is an improved candidate with speedup >= the target. When a candidate reaches it, the run
   stops and that candidate is frozen and tested once on hidden final data of the same task.
 - Candidates are complete single-file programs using only the Python 3.12 standard library. They read stdin and write
@@ -75,6 +74,7 @@ def build_state(
     )
     parts = [
         _block("Task", f"task_id: {task.task_id}\ntarget: speedup >= {task.target_min_speedup}\n\n{task.contract}"),
+        _block("Evaluation protocol", task.presentation["agent_notes"]),
         _block("Visible examples", examples),
         _block("Dev data profile (the timed input; computed by the program)", json.dumps(task.dev_profile, indent=2)),
     ]
@@ -101,7 +101,7 @@ def build_state(
         if experience_summary:
             counts = (f"Snapshot holds {experience_summary['snapshot_size']} records; "
                       f"{sum(experience_summary['matched_by_outcome'].values())} match this workload on at least "
-                      f"{experience_summary['min_matches']} of 5 features "
+                      f"{experience_summary['min_matches']} of {experience_summary['feature_count']} features "
                       f"(by outcome: {json.dumps(experience_summary['matched_by_outcome'])}); "
                       f"{len(experiences)} are shown.\n")
         parts.append(_block(f"Experience records from snapshot {snapshot_id}", counts + "\n".join(exp_lines)))

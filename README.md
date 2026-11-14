@@ -78,34 +78,13 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 ## 系统架构与研究闭环
 
-```mermaid
-flowchart LR
-    T[冻结任务包<br/>契约 · 初始程序 c0 · 开发/最终集] --> R
-    K[(不可变经验快照 vN)] -->|已验证程序与条件特征| R
+**图 1 端到端流程。** 每次运行先在沙箱里复验经验快照中最相近的已验证程序，达标就直接交付；未达标时由分流器按经验覆盖情况选择模型档位，进入任务内研究循环。交付后，learn / online 模式把验证过的结果原子发布为新快照，供下一次运行读取。
 
-    R[模型前程序复验<br/>最多 3 个最相近历史方案] -->|评测/在线模式达标| F
-    R -->|未达标，或学习模式提高目标| Triage{经验覆盖分流器}
+<img src="docs/assets/readme/architecture-pipeline-zh.png" alt="QuotaCrux 端到端流程：任务包与经验快照 → 模型前复验 → 经验覆盖分流器 → 轻量 / 强模型 → 任务内研究循环 → 冻结最佳与最终测试 → 交付与新快照" width="780" />
 
-    Triage -->|同族相近条件| Small[轻量模型层<br/>本地 / 托管 Qwen]
-    Triage -->|全新任务族或新条件| Large[云端强模型层<br/>gpt-6.1-sol]
+**图 2 任务内研究循环。** `ActionRouter` 决定下一步做什么，`ModelRouter` 决定生成步骤交给哪个模型档位；所有候选都由独立裁判实测，只有严格优于当前最佳才会替换。
 
-    Small --> Loop
-    Large --> Loop
-
-    subgraph Loop[受预算约束的任务内研究循环]
-        direction TB
-        S[可见状态构造<br/>契约 · 候选 · 裁判事实 · 剩余预算] --> AR{ActionRouter<br/>llm 或 decisions}
-        AR -->|analyze / propose| MR{ModelRouter<br/>rule 或 decisions}
-        MR --> Gen[生成候选代码或分析]
-        AR -->|profile / validate / finish| Exec
-        Gen --> Check[静态检查] --> Exec[隔离沙箱 / 原生裁判<br/>交替计时与契约用例校验]
-        Exec -->|仅严格优于当前最佳才更新| S
-    end
-
-    Loop -->|达标 / 预算耗尽 / 主动结束| F[冻结开发最佳候选<br/>隐藏最终集独立测试]
-    F --> Bundle[研究报告 · 资源账本 · 一键复现包]
-    Bundle -->|learn / online 可写分片| K2[(原子发布新快照 vN+1)]
-```
+<img src="docs/assets/readme/research-loop-zh.png" alt="QuotaCrux 任务内研究循环：可见状态 → ActionRouter → ModelRouter → 生成 → 静态检查 → 独立裁判 → 严格更优才更新最佳，否则留档并继续" width="780" />
 
 ---
 
@@ -211,6 +190,8 @@ flowchart LR
 - **Node.js 与 `pnpm`**（用于构建前端可视化控制台）
 - **模型配置：** `OPENAI_API_KEY`（用于 `gpt-6.1-sol` / `gpt-6-luna`）以及兼容 OpenAI 接口的轻量模型服务（本地 Ollama `qwen3.8:27b-mlx` 或托管 `Qwen3.8-27B`）
 
+启用 Jev 路由时，在 `backend/.env` 中另行设置 `TYPESAFE_API_KEY`；`TYPESAFE_MODEL` 默认固定为 `jev-1.14.0`。
+
 ### 1. 安装依赖并启动控制台
 
 ```bash
@@ -237,6 +218,9 @@ cd backend
 
 # 使用 Decisions 动作路由运行单个任务
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
+
+# 使用 Jev 动作路由；模型路由也可改为 --model-router jev
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # 在线边交付边进化（自动发布新快照），或串行多任务自主学习
 uv run quotacrux run B-01 --mode online --snapshot v19

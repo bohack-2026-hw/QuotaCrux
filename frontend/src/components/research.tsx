@@ -67,14 +67,18 @@ export function RunLink({ run, onOpenRun, archive }: { run: RRun; onOpenRun?: (i
 
 export function BatchFacts({ b }: { b: RBatch }) {
   const L = b.limits, M = b.measure, P = b.pricing
+  const dash = '—'
   const items: [string, ReactNode][] = [
-    ['模型', b.model?.name ? `${b.model.name}${b.model.hosted == null ? '' : b.model.hosted ? ' · 托管' : ' · 本地'} · 固定，不升级` : b.model?.role ? `固定 ${b.model.role} 角色（模型名未记录）` : '未记录'],
-    ['对照组', b.modes.map((m) => rmode(m).label).join(' / ')],
-    ['预算上限（每轮）', L ? `${L.wall_clock_s ?? '?'} 秒 · ${L.max_model_requests ?? '?'} 次请求 · ${L.max_candidates ?? '?'} 个候选` : '未记录'],
-    ['计时', M ? `${M.function_warmups ?? '?'} 次预热 · ${M.repeats ?? '?'} 次计时${M.cpuset_cpus ? ` · CPU ${M.cpuset_cpus}` : ''}` : '未记录'],
-    ['最终集', b.finalEnabled === false ? '未启用：本批只有开发集结果' : b.finalEnabled ? '启用：研究结束、冻结候选后评测' : '未记录'],
-    ['费用依据', P ? `${P.currency} 标价估算：输入 ${P.input} / 输出 ${P.output}${P.cached_input != null && P.cached_input !== P.input ? ` / 缓存 ${P.cached_input}` : '（缓存按普通输入计）'} ${P.unit ? `· ${P.unit.replace('per 1M tokens', '每百万 Token')}` : ''}；非账单` : '无价格快照：费用按记录显示，缺失即未知'],
-    ['冻结版本', [b.codeCommit ? `代码 ${b.codeCommit.slice(0, 7)}` : null, b.promptVersion ? `提示 ${b.promptVersion}` : null, b.protocol ? `协议 ${b.protocol}` : null].filter(Boolean).join(' · ') || '未记录'],
+    ['模型', b.model?.name ? `${b.model.name}${b.model.hosted == null ? '' : b.model.hosted ? ' · 托管' : ' · 本地'} · 固定` : b.model?.role ?? dash],
+    ['对照组', b.modes.map((m) => `${rmode(m).label} ${m}`).join(' / ')],
+    ['每轮上限', L ? `${L.wall_clock_s ?? '?'}s · ${L.max_model_requests ?? '?'} 请求 · ${L.max_candidates ?? '?'} 候选` : dash],
+    ['计时', M ? `预热 ${M.function_warmups ?? '?'} · 计时 ${M.repeats ?? '?'}${M.cpuset_cpus ? ` · CPU ${M.cpuset_cpus}` : ''}` : dash],
+    ['最终集', b.finalEnabled === false ? '未启用（dev-only）' : b.finalEnabled ? '启用' : dash],
+    ['价格', P ? `${P.currency} / 百万 Token · 输入 ${P.input} · 输出 ${P.output} · 缓存 ${P.cached_input ?? P.input}` : dash],
+    ['代码', b.codeCommit ? b.codeCommit.slice(0, 7) : dash],
+    ['提示', b.promptVersion ?? dash],
+    ['协议', b.protocol ?? dash],
+    ['契约', b.contract ?? dash],
   ]
   return <dl className="facts">{items.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
 }

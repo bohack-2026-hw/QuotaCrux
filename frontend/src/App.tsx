@@ -3,6 +3,7 @@ import { api } from './api'
 import { usePoll } from './hooks'
 import { useResearchBatch, useResearchList } from './researchData'
 import { CompareView } from './views/CompareView'
+import { ConsoleView } from './views/ConsoleView'
 import { ExperienceView } from './views/ExperienceView'
 import { HomeView } from './views/HomeView'
 import { LiveView } from './views/LiveView'
@@ -11,18 +12,19 @@ import { ResearchView } from './views/ResearchView'
 import { RunView } from './views/RunView'
 import { VersionView } from './views/VersionView'
 
-type Tab = 'home' | 'res' | 'run' | 'hist' | 'exp' | 'cmp' | 'ver' | 'live'
+type Tab = 'home' | 'res' | 'run' | 'admin' | 'hist' | 'exp' | 'cmp' | 'ver' | 'live'
 
 // Primary pages tell the within-task research story; minor pages keep the experience-phase records reachable.
-const TABS: { id: Tab; lbl: string; minor?: boolean; title: string; en: string; desc: string; snapshot?: boolean }[] = [
-  { id: 'home', lbl: '总览', title: '总览', en: 'overview', desc: '' },
-  { id: 'res', lbl: '研究对照', title: '研究对照', en: 'within-task research', desc: '同一任务、同一预算上限，比较三种研究方式。' },
-  { id: 'run', lbl: '运行', title: '运行', en: 'runs', desc: '每次运行的假设、实验与评测反馈。' },
-  { id: 'hist', lbl: '经验阶段', minor: true, title: '经验阶段', en: 'experience phase', desc: '跨任务经验复用阶段的记录：任务流、分流器与留出对照。', snapshot: true },
-  { id: 'exp', lbl: '经验', minor: true, title: '经验', en: 'experience', desc: '学习运行中经过评测的候选，及其条件、改动与实测结果。', snapshot: true },
-  { id: 'cmp', lbl: '经验对照', minor: true, title: '经验对照', en: 'held-out comparison', desc: '同一批留出任务，只替换经验快照。', snapshot: true },
-  { id: 'ver', lbl: '版本', minor: true, title: '版本', en: 'snapshots', desc: '不可变的经验快照；回退只切换后续运行读取的版本。', snapshot: true },
-  { id: 'live', lbl: '实时', minor: true, title: '实时进度', en: 'live', desc: '正在运行的实验与机器负载，每 2 秒刷新。' },
+const TABS: { id: Tab; lbl: string; minor?: boolean; title: string; en: string; snapshot?: boolean }[] = [
+  { id: 'home', lbl: '总览', title: '总览', en: 'overview' },
+  { id: 'res', lbl: '研究对照', title: '研究对照', en: 'within-task research' },
+  { id: 'run', lbl: '运行', title: '运行', en: 'runs' },
+  { id: 'admin', lbl: '后台', title: '后台', en: 'console' },
+  { id: 'hist', lbl: '经验阶段', minor: true, title: '经验阶段', en: 'experience phase', snapshot: true },
+  { id: 'exp', lbl: '经验', minor: true, title: '经验', en: 'experience', snapshot: true },
+  { id: 'cmp', lbl: '经验对照', minor: true, title: '经验对照', en: 'held-out comparison', snapshot: true },
+  { id: 'ver', lbl: '版本', minor: true, title: '版本', en: 'snapshots', snapshot: true },
+  { id: 'live', lbl: '实时', minor: true, title: '实时进度', en: 'live' },
 ]
 
 type Theme = 'dark' | 'light'
@@ -98,7 +100,6 @@ export default function App() {
           <header className="masthead">
             <div>
               <h1>{meta.title}<span className="en">{meta.en}</span></h1>
-              {meta.desc && <p>{meta.desc}</p>}
             </div>
             {meta.snapshot && (
               <div className="stamp" title="后续运行默认读取的经验快照">
@@ -109,7 +110,8 @@ export default function App() {
           </header>
         )}
         {tab === 'home' && <HomeView onOpenResearch={(id) => go('res', id)} />}
-        {tab === 'res' && <ResearchView selected={arg} onSelect={(id) => go('res', id)} onOpenRun={openRun} />}
+        {tab === 'res' && <ResearchView selected={arg} onSelect={(id) => go('res', id)} onOpenConsole={(id) => go('admin', id)} />}
+        {tab === 'admin' && <ConsoleView selected={arg} onSelect={(id) => go('admin', id)} onOpenRun={openRun} />}
         {tab === 'run' && <RunView runId={runId} setRunId={openRun} activeSnapshot={active} onOpenExperience={openExperience} />}
         {tab === 'hist' && <OverviewView onOpenRun={openRun} onOpenComparison={(id) => go('cmp', id)} />}
         {tab === 'exp' && <ExperienceView snapshotId={snapshot ?? active} setSnapshotId={setSnapshot} focus={focusExp} onOpenRun={openRun} />}

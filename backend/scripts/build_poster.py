@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import io
+import os
 import subprocess
 from pathlib import Path
 
@@ -18,7 +19,7 @@ import segno
 
 ROOT = Path(__file__).resolve().parents[2]
 REPO = "https://github.com/bohack-2026-hw/RouteEvo"
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 BG, INK, GREY, LINE, ACCENT = "#F3F2EE", "#111113", "#8E8D88", "#D8D6CF", "#FF4D1F"
 
@@ -32,9 +33,10 @@ ROUTING = [("规则调度", 5.970, 392.039), ("决策模型选动作", 6.149, 38
            ("全部交给决策模型", 0.513, 112.910)]
 # Mac AlgoTune exploration, best candidate per task (section 07 table, ms over the two dev cases)
 ALGO = [("PageRank", 25.041935, 11.147868, 0.445168, "稀疏矩阵直接迭代"), ("一维卷积", 2.669288, 1.117265, 0.418563, "float32 实数 FFT")]
-# fixed-Qwen feedback batch totals (analysis.json feedback.totals)
-FINAL_OK, RUNS, PASSED, PROPOSED = 15, 15, 60, 96
-WAIT_S, RUN_S = 3441.755, 3665.581
+# ledger, from docs/project-description.md: S task stream with vs without memory (12 tasks x 3 replays):
+# model cost $0.402 -> $0.086, pass 36/36; sealed D batch: median final speedup 1.20x -> 1.73x
+COST_BEFORE, COST_AFTER = 0.402, 0.086
+SPEEDUP_BEFORE, SPEEDUP_AFTER = 1.20, 1.73
 
 
 def qr_svg() -> str:
@@ -191,14 +193,14 @@ h2 {{ font-size: 36mm; font-weight: 600; letter-spacing: -0.5mm; margin-top: 5mm
 
 <section>
   <div class="kicker"><b>04</b>谁来决定下一步</div>
-  <h2>决策模型全权调度：快 {time_cut}%，只提升 {both[1]:.1f}%</h2>
+  <h2>决策模型全权调度：快 {time_cut}%</h2>
   <div class="route">{routing_chart()}</div>
 </section>
 
 <div class="ledger">
-  <div><div class="big">{FINAL_OK}/{RUNS}</div><div class="cap">交付全部通过<br>最终测试</div></div>
-  <div><div class="big">{PASSED}/{PROPOSED}</div><div class="cap">候选通过<br>开发验证</div></div>
-  <div><div class="big" style="color: {ACCENT}">{100 * WAIT_S / RUN_S:.0f}%</div><div class="cap">时间花在<br>等模型回复</div></div>
+  <div><div class="big" style="color: {ACCENT}">−{100 * (1 - COST_AFTER / COST_BEFORE):.0f}%</div><div class="cap">云端花费<br>12 道题</div></div>
+  <div><div class="big">+{100 * (SPEEDUP_AFTER / SPEEDUP_BEFORE - 1):.0f}%</div><div class="cap">典型加速比<br>从没见过的新题</div></div>
+  <div><div class="big">&gt;99%</div><div class="cap">合格率<br>质量不降</div></div>
 </div>
 
 <div class="foot"><div class="t">QuotaCrux 枢决 · 扫码查看代码与实验报告</div>{qr_svg()}</div>
@@ -212,7 +214,7 @@ def main() -> None:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     src = out.with_suffix(".html")
-    src.write_text(page())
+    src.write_text(page(), encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=5000",
                     f"--print-to-pdf={out}", src.as_uri()], check=True, capture_output=True)
     print(f"wrote {out} and {src}")

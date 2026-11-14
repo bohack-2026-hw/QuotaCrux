@@ -135,16 +135,28 @@ formal runs; `scripts/export_research.py` exports rule-selected sample bundles t
 
 Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated immediately), `run_validation`,
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
-`run` and `learn` accept `--action-router llm|decisions` and `--model-router rule|decisions` (defaults: `llm`, `rule`).
-Decisions calls share the request/token/time budget with generation; reports split routing and generation usage.
+`run` and `learn` accept `--action-router llm|decisions|jev` and `--model-router rule|decisions|jev` (defaults: `llm`, `rule`).
+Both decision providers share the request/token/time budget with generation; reports split routing and generation usage.
 See [routing adapters](../docs/design/action-model-routing.md) for the execution flow, API fields and four-way ablation.
 
-Decisions routing is supported for non-native `legacy` runs. Native tasks and `feedback`/`independent` research runs
-require the default `llm` + `rule` combination; unsupported combinations fail before sending a request.
+OpenAI Decisions and TypeSafe Jev routing support non-native `legacy` runs and explicit
+`--research-mode feedback --research-model-policy adaptive` research, including native tasks.
+Fixed research and independent runs require the default `llm` + `rule` combination.
 `--fixed-model small|large` fixes the generation role and skips model-router requests and upgrades.
 Initial routing from experience is separate: `--no-router` starts on the small model unless a model is fixed;
-`--model-router decisions` also disables initial memory routing so Decisions can make the model choice.
-`ablate-routing` runs all four combinations with initial memory routing disabled and one frozen snapshot.
+`--model-router decisions|jev` also disables initial memory routing so the selected provider can make the model choice.
+`ablate-routing` retains its existing four OpenAI Decisions combinations with initial memory routing disabled and one frozen snapshot.
+
+For Jev, set `TYPESAFE_API_KEY` in the ignored `backend/.env`. `TYPESAFE_MODEL` defaults to the pinned
+`jev-1.14.0`; responses record the actual model version, choice, confidence, full distribution, tokens and latency.
+The adapter uses the existing `httpx` dependency and makes one HTTP attempt per budgeted call. For example:
+
+```sh
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
+uv run quotacrux run B-01 --snapshot v0 --action-router jev --model-router jev
+```
+
+The HTTP `POST /api/runs` fields `action_router` and `model_router` also accept `jev`.
 
 For legacy runs with rule-based model selection, the initial router picks the starting model. A run that starts small
 switches after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model requests without an

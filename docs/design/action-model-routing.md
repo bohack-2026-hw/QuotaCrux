@@ -2,7 +2,7 @@
 
 路由适配器最初基于 `f8fbb3e`，将两个决策点分开：**下一步做什么**和**由哪个生成模型处理**。
 当前集成保留默认 `action=llm, model=rule`，并与初始经验分流、在线任务流及 native 研究协议共存。
-legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`），
+legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`）或 TypeSafe Jev（`jev-1.14.0`），
 其输出为离散选择和概率；代码与分析仍由 Qwen/GPT 生成。下方接口联测数据保留原执行版本与结果。
 
 ## 执行流程
@@ -12,10 +12,10 @@ flowchart TD
     S[固定任务、快照与预算] --> R[既有经验检索及程序复验]
     R -->|未达标| I[按配置固定模型或执行初始分流]
     I --> A{动作 adaptor}
-    A -->|llm| M[生成模型: fixed / rule / decisions]
+    A -->|llm| M[生成模型: fixed / rule / decisions / jev]
     M --> L[Qwen / GPT 选择动作并返回内容]
-    A -->|decisions| D[Decisions 选择离散动作]
-    D -->|分析或提出候选| N[生成模型: fixed / rule / decisions]
+    A -->|decisions / jev| D[决策模型选择离散动作]
+    D -->|分析或提出候选| N[生成模型: fixed / rule / decisions / jev]
     N --> G[Qwen / GPT 仅生成已选动作的内容]
     D -->|取证、复验、结束| E[既有 Runner 执行与外部评测]
     L --> E
@@ -32,7 +32,7 @@ flowchart TD
   `DecisionsModelRouter` 在每个待生成请求前选择 small/large，升级后保持 large。
   两者只替换选择依据，沿用基线的单向升级约束。
 - 决策输入为当时的 agent 可见状态、预算和模型配置。隐藏 final 数据及事后评测结果不进入路由请求。
-  两个 Decisions 适配器共用 `llm/openai_decisions.py` 的严格响应校验；凭证仅从环境读取。
+  两层适配器共用动作菜单和解析逻辑；`llm/openai_decisions.py` 与 `llm/typesafe_jev.py` 分别校验供应商响应，凭证仅从环境读取。
 - Runner 保有候选静态检查、沙箱、实测判定、停止与资源记账。生成模型返回与已选动作不同的 action
   会记为 `invalid_action/route_mismatch`；外部调用错误沿用既有错误记录与停止规则。
 
@@ -40,6 +40,8 @@ flowchart TD
 `_select_model` 和 `_invoke`。没有更改任务、经验或 evaluator 接口。
 
 ## 四组配置
+
+此四组消融继续使用 OpenAI Decisions。Jev 可通过下节的单次运行配置独立选择。
 
 | 组 | `--action-router` | `--model-router` | 变化 |
 | --- | --- | --- | --- |
@@ -84,10 +86,41 @@ uv run quotacrux ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
 
 请求发往既有 `POST /api/runs`，省略两个字段即为 baseline。界面的现有启动方式仍使用默认值。
 
+## TypeSafe Jev
+
+在 `backend/.env` 配置 `TYPESAFE_API_KEY` 和 `TYPESAFE_MODEL=jev-1.14.0`，然后选择
+`--action-router jev`、`--model-router jev`，或同时选择两者。也可与 `llm`、`rule`、`decisions` 混合。
+HTTP 单次运行对应字段同样接受 `jev`。native feedback 任务还需 `--research-model-policy adaptive`。
+
+```sh
+uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
+uv run quotacrux run B-01 --snapshot v0 --action-router jev --model-router jev
+```
+
+Jev 使用官方 `POST https://api.typesafe.ai/v1/systemone`，把现有可见状态映射到 `state`，
+将合法动作或 small/large 映射为 Choice 的 `criteria`。输出归一化为 Runner 已有的选择与概率列表；
+缺失选项、非法概率、未知动作或不合法用量均作为 `bad_response` 记录。原始响应单独保留。
+实现复用 `httpx`，单次调用只发一次请求，错误恢复仍由 Runner 在总预算内决定。
+
+动作和模型判断保留为两个决策点：模型问题可以读取本轮动作选择后的状态，且直接取证、复验或结束
+无需模型分档请求。每次调用记录 `typesafe_jev`、请求模型与返回模型、用量、延迟和估算费用。
+配置指纹增加 Jev 模型、端点及证据处理指令 hash；`jev-latest` 可用于探索，正式比较应固定版本。
+
+按 [TypeSafe 官方模型页](https://docs.typesafe.ai/models)（2026-11-15 核对），Jev 1.13/1.14
+输入为 `$0.042 / 1M tokens`，输出免费；只有已知版本与已报告用量可估价，未来未知版本的费用保留 unknown。
+默认上下文为每请求 64k、每问题 32k；本适配器保留服务端的长度校验，不截断任务状态。
+协议依据 [System One API](https://docs.typesafe.ai/api/system-one) 和 [Choice](https://docs.typesafe.ai/primitives/choice)。
+
+2026-11-15 接口联测复用公开开发包 `docs/research/run-20261113T212515-d6bd/model_calls/m1.json`
+中的请求前状态，分别调用动作与模型路由各一次：返回模型均为 `jev-1.14.0`，动作选择
+`propose_candidate`（0.828s，输入 10,935 token），模型选择 `small`（0.635s，输入 10,666 token）。
+两次估算费用合计 `$0.000907242`。该联测验证真实接口、概率解析与路由映射，未运行生成或评测器，
+不能据此判断完整优化实验的收益；两层路由都使用相同历史状态，未模拟顺序执行中的状态更新。
+
 ## 预算与报告含义
 
-每次 Decisions 或生成请求都计入同一个 `max_model_requests`、已报告 token 和 wall-clock 预算。
-一次“Decisions 选动作 → Decisions 选模型 → Qwen/GPT 生成”最多消耗 3 次请求。
+每次 OpenAI Decisions、Jev 或生成请求都计入同一个 `max_model_requests`、已报告 token 和 wall-clock 预算。
+一次“决策模型选动作 → 决策模型选模型档位 → Qwen/GPT 生成”最多消耗 3 次请求。
 模型选择前至少预留路由和生成的 2 次配额；生成前重新检查停止标记、token 和时间预算。
 因此固定总请求预算下，Decisions 组可能有更少生成机会，这是本消融测量的实际开销。
 
@@ -104,8 +137,8 @@ AIPing Qwen 暂无本仓库计价表，费用标记为 unknown；与已知 OpenA
 
 初始经验分流 `_route()` 与运行中的 `ActionRouter`、`ModelRouter` 是独立配置。
 默认 legacy 运行先按经验覆盖度选择起始模型，后续再由动作路由与模型升级规则推进。
-`--no-router` 关闭初始分流；选择 `--model-router decisions` 时也关闭初始分流，避免预先切到 large
-导致 Decisions 被单向升级规则短路。四组对照均关闭初始分流，使该配置在四组之间一致。
+`--no-router` 关闭初始分流；选择 `--model-router decisions|jev` 时也关闭初始分流，避免预先切到 large
+导致决策模型被单向升级规则短路。四组对照均关闭初始分流，使该配置在四组之间一致。
 
 `--fixed-model small|large` 优先固定生成角色，同时关闭初始经验分流，跳过模型路由请求与升级。
 研究默认 `research_model_policy=fixed`，只接受默认 `llm + rule`。

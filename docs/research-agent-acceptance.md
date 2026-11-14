@@ -53,13 +53,13 @@
 
 ## 5. 单任务持续优化协议：当前状态
 
-新要求见[评测方案](research-evaluation-plan.md)，选题依据见[长时 benchmark 调研](long-horizon-benchmarks.md)。本次仅更新方案，不改写历史结果。
+新要求见[评测方案](research-evaluation-plan.md)，选题依据见[长时 benchmark 调研](long-horizon-benchmarks.md)，实现范围见[接入说明](research-benchmarks.md)。历史结果保留，新协议单独报告。
 
 | 新协议需要的证据 | 当前状态 |
 | --- | --- |
 | 一个 episode 内反馈影响后续选择 | 第 2 节的 A-01 记录提供具体案例；仍需在新任务和固定预算下测量系统收益 |
-| 同预算反馈迭代 / 独立尝试的 RA-08、RA-AC-08 对照 | 未实现独立尝试控制组，未执行正式对照；原 v0/v19 比较不能替代 |
-| 15/30 分钟预算下的进步、Token、费用曲线 | 尚未执行；需要处理现有 1.10× 达标即停与 6 请求 / 4 候选限制 |
-| ALE-Bench / AlgoTune / KernelBench 独立最终结果 | 已调研，未接入、未运行 |
+| 同预算反馈迭代 / 独立尝试的 RA-08、RA-AC-08 对照 | 独立控制组与成对入口已实现；原 v0/v19 比较不能替代新协议的正式对照 |
+| 15/30 分钟预算下的进步、Token、费用曲线 | 持续优化、预算截断及过程账本已实现；[15 分钟上限的 CPU 预实验](research/native-20261114/README.md)已完成，未见稳定收益；30 分钟多次正式实验未执行 |
+| ALE-Bench / AlgoTune / KernelBench 独立最终结果 | 三项首批子集已接入，四个 CPU 任务的参考方案已预检；本轮模型实验仅开发集，GPU 实机与独立最终结果待测 |
 
 现有 D 批 18/18 次零模型调用说明已验证程序复用有效，不单独证明本次长时研究过程的改进。已有 [EffiBench-X 四题真实实验](research/effibench-x-20261114/README.md)保留为端到端运行与性能结果，不作为新协议已通过的证据。

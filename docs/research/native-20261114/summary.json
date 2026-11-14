@@ -1,0 +1,78 @@
+[
+  {
+    "run_id": "run-20261114T043630-000c",
+    "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+    "mode": "feedback",
+    "model_requests": 17,
+    "candidates_proposed": 2,
+    "candidates_passed": 2,
+    "invalid_actions": {
+      "missing_field": 3
+    },
+    "best_candidate": "c0",
+    "best_dev_passed_cases": 2,
+    "dev_case_count": 2,
+    "accepted_dev_metric": 17753,
+    "highest_raw_dev_speedup": null,
+    "wall_clock_s": 232.127,
+    "estimated_cny": 0.360984,
+    "stop_reason": "agent_finished"
+  },
+  {
+    "run_id": "run-20261114T044022-922b",
+    "task_id": "ale-bench-ahc026-smoke-2960ce864b",
+    "mode": "independent",
+    "model_requests": 10,
+    "candidates_proposed": 7,
+    "candidates_passed": 6,
+    "invalid_actions": {
+      "missing_field": 2
+    },
+    "best_candidate": "c0",
+    "best_dev_passed_cases": 2,
+    "dev_case_count": 2,
+    "accepted_dev_metric": 17753,
+    "highest_raw_dev_speedup": null,
+    "wall_clock_s": 158.903,
+    "estimated_cny": 0.194805,
+    "stop_reason": "agent_finished"
+  },
+  {
+    "run_id": "run-20261114T044301-e2a7",
+    "task_id": "algotune-convolve_1d-smoke-901b0ea395",
+    "mode": "independent",
+    "model_requests": 11,
+    "candidates_proposed": 9,
+    "candidates_passed": 9,
+    "invalid_actions": {
+      "missing_field": 1
+    },
+    "best_candidate": "c0",
+    "best_dev_passed_cases": 2,
+    "dev_case_count": 2,
+    "accepted_dev_metric": 1.0,
+    "highest_raw_dev_speedup": 1.167267013639358,
+    "wall_clock_s": 92.166,
+    "estimated_cny": 0.081225,
+    "stop_reason": "agent_finished"
+  },
+  {
+    "run_id": "run-20261114T044433-9802",
+    "task_id": "algotune-convolve_1d-smoke-901b0ea395",
+    "mode": "feedback",
+    "model_requests": 19,
+    "candidates_proposed": 3,
+    "candidates_passed": 3,
+    "invalid_actions": {
+      "missing_field": 6
+    },
+    "best_candidate": "c0",
+    "best_dev_passed_cases": 2,
+    "dev_case_count": 2,
+    "accepted_dev_metric": 1.0,
+    "highest_raw_dev_speedup": 1.114689364319624,
+    "wall_clock_s": 186.967,
+    "estimated_cny": 0.27747,
+    "stop_reason": "agent_finished"
+  }
+]

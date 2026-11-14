@@ -3,6 +3,8 @@
 分支：`feat/research-benchmarks`，基于 `feat/effibench-x-adapter@19ce8db`。
 主线协议见[单任务持续优化方案](research-evaluation-plan.md)。
 
+首轮 ALE-Bench / AlgoTune 真实开发预实验已完成，见[结果与完整轨迹](research/native-20261114/README.md)。本批使用 v4 提示；之后补齐筛选规则与动作 JSON 示例的 v5 提示单独记录，未混入旧结果。
+
 ## 已接入范围
 
 | Benchmark | 当前支持题目 | 原生评价 | 执行环境 |

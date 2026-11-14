@@ -132,3 +132,8 @@ For example, `uv run routeevo tasks import-effibench codeforces/2104A --split sm
 imports a small trial task; use `--parquet PATH` for a local, checksum-verified shard.
 See [adapter boundaries, dataset size and evaluation protocol](../docs/benchmark-adapters.md)
 and [pilot validation](../docs/effibench-pilot.md). Run `uv run --extra benchmark pytest` to include importer tests.
+
+ALE-Bench, AlgoTune and KernelBench research subsets are available through `tasks import-ale-bench`,
+`tasks import-algotune` and `tasks import-kernelbench`. `research-compare` runs equal-budget feedback versus
+independent attempts within a task, using an empty snapshot and one fixed model.
+See [supported tasks, native evaluators and GPU worker setup](../docs/research-benchmarks.md).

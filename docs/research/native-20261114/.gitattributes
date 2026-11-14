@@ -1,0 +1,2 @@
+# Evaluated candidate bytes must retain their recorded SHA256, including whitespace.
+run-*/candidates/*.py -whitespace

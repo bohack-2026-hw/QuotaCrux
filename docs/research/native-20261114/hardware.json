@@ -1,0 +1,11 @@
+{
+  "observed_at": "2026-11-14T04:48:42.506+00:00",
+  "cpu": {
+    "Architecture": "x86_64",
+    "CPU(s)": "16",
+    "Model name": "Intel(R) Core(TM) Ultra X7 358H",
+    "Thread(s) per core": "1",
+    "Microcode version": "0x11d",
+    "CPU max MHz": "4800.0000"
+  }
+}

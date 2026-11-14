@@ -1,9 +1,9 @@
-# 路由 adaptor 与四组消融
+# 动作与模型选择：适配器和四组对照
 
 路由适配器最初基于 `f8fbb3e`，将两个决策点分开：**下一步做什么**和**由哪个生成模型处理**。
 当前集成保留默认 `action=llm, model=rule`，并与初始经验分流、在线任务流及 native 研究协议共存。
 legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`），
-其输出为离散选择和概率；代码与分析仍由 Qwen/GPT 生成。下方联调数据保留原执行版本与结果。
+其输出为离散选择和概率；代码与分析仍由 Qwen/GPT 生成。下方接口联测数据保留原执行版本与结果。
 
 ## 执行流程
 
@@ -32,7 +32,7 @@ flowchart TD
   `DecisionsModelRouter` 在每个待生成请求前选择 small/large，升级后保持 large。
   两者只替换选择依据，沿用基线的单向升级约束。
 - 决策输入为当时的 agent 可见状态、预算和模型配置。隐藏 final 数据及事后评测结果不进入路由请求。
-  两个 Decisions adaptor 共用 `llm/openai_decisions.py` 的严格响应校验；凭证仅从环境读取。
+  两个 Decisions 适配器共用 `llm/openai_decisions.py` 的严格响应校验；凭证仅从环境读取。
 - Runner 保有候选静态检查、沙箱、实测判定、停止与资源记账。生成模型返回与已选动作不同的 action
   会记为 `invalid_action/route_mismatch`；外部调用错误沿用既有错误记录与停止规则。
 
@@ -98,14 +98,14 @@ uv run routeevo ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
 
 OpenAI Decisions 使用既有实验中的官方端点与计价表，估算费用与生成费用分开。
 AIPing Qwen 暂无本仓库计价表，费用标记为 unknown；与已知 OpenAI 费用汇总时标记 partial。
-因此 `cost_usd_total` 在 partial 状态下仅是已知部分，不能解读为总成本。
+`cost_usd_total` 标为 partial 时，只包含已知费用。
 
 ## 当前集成约定
 
 初始经验分流 `_route()` 与运行中的 `ActionRouter`、`ModelRouter` 是独立配置。
 默认 legacy 运行先按经验覆盖度选择起始模型，后续再由动作路由与模型升级规则推进。
 `--no-router` 关闭初始分流；选择 `--model-router decisions` 时也关闭初始分流，避免预先切到 large
-导致 Decisions 被单向升级规则短路。四组消融均关闭初始分流，使该配置在四组之间一致。
+导致 Decisions 被单向升级规则短路。四组对照均关闭初始分流，使该配置在四组之间一致。
 
 `--fixed-model small|large` 优先固定生成角色，同时关闭初始经验分流，跳过模型路由请求与升级。
 研究默认 `research_model_policy=fixed`，只接受默认 `llm + rule`。
@@ -119,12 +119,12 @@ independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
 协调入口：[RouteEvo issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
 
-历史回放的负面结果见 [decision-model/README.md](../archive/decision-model/README.md)。
-本 adaptor 提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
+历史回放结果见 [decision-model/README.md](../archive/decision-model/README.md)。
+本适配器提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
 实际批次范围与结果见[路由研究入口](../research/native-routing/README.md)；
-最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/native-routing-plan.md)。下方是旧 legacy 联调，不能用作 native routing 的 baseline。
+最初 24 轮计划、冻结模板及规则计数语义见[原交接说明（归档）](../archive/native-routing-plan.md)。下方保留旧版接口联测结果，原生任务的 baseline 在对应批次重新运行。
 
-## 2026-11-14 联调结果
+## 2026-11-14 接口联测结果
 
 执行代码为 `813db15`，任务为 [routing-smoke-spec.json](../archive/decision-model/routing-smoke-spec.json) 中固定的
 30 万行、5000 keys、skew=0.8 的 groupagg；dev/final 种子分别为 1114/1115。
@@ -145,8 +145,8 @@ action_decisions 首个候选开发检查为 wrong_output，第二个候选开�
 
 7 次 Decisions 请求中，5 次成功、2 次 ConnectError；失败已计入预算，后续请求在预算内恢复。
 成功调用已知费用估算合计 **$0.0013514**。两次网络错误和五次 Qwen 调用的费用未知，
-本轮没有查询 AIPing 余额，不能把这个金额当作总费用。
-单任务、单次运行及两次网络错误不足以区分策略优劣；本轮确认两个替换点及四组实验入口都能运行，
+AIPing 的费用未查询，保留为未知。
+单任务、单次运行及两次网络错误不足以区分策略优劣；本轮确认两处替换逻辑及四组实验入口都能运行，
 保留 baseline 为默认策略。
 
 逐调用 usage、路由概率、候选哈希、开发结果和 final 原始计时见

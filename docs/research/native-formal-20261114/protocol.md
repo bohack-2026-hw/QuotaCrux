@@ -1,35 +1,35 @@
 # 正式研究协议 v2
 
-日期：2026-11-14。原协议与机器清单在首次正式模型请求前发布，提示版本为 `agent-prompt-v7`。ALE 实际执行源码固定 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`；Mac GC v2 与新增 Decisions 路由批次固定 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。本文同步交付状态与版本边界，原冻结清单和执行记录保留各自实际来源。
+日期：2026-11-14。提示版本为 `agent-prompt-v7`。ALE 使用代码版本 `990f598b87f7c93bd27b6ceef5751bbc2d39dd79`；Mac 新计时方法和 Decisions 路由使用 `912b20a4cfeb51af9c36d0679b23f0990abe862f`。下文的“冻结”指评测前固定代码、数据和参数，运行期间不再修改。
 
-## 预登记范围
+## 运行安排
 
-[central-plan.json](central-plan.json) 固定全部 30 项逻辑矩阵：ahc024 F/I 各3次；ahc026 F/N/I 各3次；convolve_1d F/N/I 各3次；pagerank F/I 各3次。F/N/I 为 feedback/no_feedback/independent，三组按 F-N-I / N-I-F / I-F-N 轮换，两组交替。每题5 dev/15 final。
+[central-plan.json](central-plan.json) 列出 30 次运行：ahc024 的 F/I 各3次，ahc026 的 F/N/I 各3次，convolve_1d 的 F/N/I 各3次，pagerank 的 F/I 各3次。F/N/I 分别为 feedback/no_feedback/independent。三组按 F-N-I / N-I-F / I-F-N 轮换，两组交替。每题使用5个开发用例（dev）和15个最终测试用例（final）。
 
-模型、数据生成参数和30项逻辑矩阵保持原冻结设置，源码和主机材料按实际执行分片记录。ALE 的 task/image/prompt/hash/core/15项次序见 [ale-freeze.json](ale-freeze.json)，15项已全部执行：14项 completed、1项因 API 错误 failed，15项冻结候选均通过 final；完整成果见 [ale/results/](ale/results/README.md)。失败运行状态与 final 验收分别保留。
+ALE 的任务、镜像、提示词、CPU 和15项顺序见 [ale-freeze.json](ale-freeze.json)。15项已执行：14项正常完成，1项因 API 错误失败；15个选定候选均通过最终测试。见 [ALE 结果](ale/results/README.md)。
 
-Mac 已接受 GC v2 计时修订，新任务、镜像与校准物理绑定仍待 #4 回传，原15项尚未启动；版本、保留的交错次序和启动核对见 [Mac交接](mac-handoff.md)。各模式仍在同题、同机、同源码/镜像下比较，旧v1计时不混入新v2汇总。新增 Decisions 路由使用独立计划和输出，Mac卷积另加12轮，不写入原30项矩阵。分片冻结允许各批校准与冻结核验通过后直接启动。
+Mac 已采用 GC v2 计时方法，待 #4 回传任务、镜像和校准记录后启动原15项，见 [Mac交接](mac-handoff.md)。各模式使用同题、同机、同代码和镜像，旧v1计时结果单独保留。Mac卷积另有12轮 Decisions 路由实验，使用独立计划和结果。各批校准及配置检查通过后即可启动。
 
 以下设置用于原30项固定模型批次：
 
 - 托管 Qwen3.8-27B，eval/v0，固定 small，关闭初始经验分流与模型升级。thinking=false、max_output_tokens=8192、response_format=json_object；完整公开配置进入冻结清单。
-- 每轮上限900秒、20模型请求、10候选、单模型请求120秒。允许主动finish，不因开发达标提前停止。真实墙钟含模型与评测时间；预算外完成的候选保留记录但不入选。
+- 每轮上限900秒、20模型请求、10候选、单模型请求120秒。允许主动finish，不因开发达标提前停止。实际耗时含模型与评测时间；预算外完成的候选保留记录但不入选。
 - 每题各模式共用外部裁判、最优选择规则和 final 流程。先记录 loop_ended/best，再执行 final；final 不返回模型、不重选。
-- ALE按原始score，5个dev用例各运行一次；AlgoTune以3预热/5计时为预登记起点，须由Mac校准确认。其3次研究重复与5次函数计时分别记录。
+- ALE按原始score，5个dev用例各运行一次；AlgoTune以3预热/5计时为预先确定起点，须由Mac校准确认。其3次研究重复与5次函数计时分别记录。
 
 ## 模型可见性
 
 F 保留当前任务全部候选、模型分析/假设/意图和真实评测反馈。I 每次只看到公共任务、冻结初始程序/基线与预算，仅允许 propose_candidate/finish。N 保留全部已提交代码、提交顺序、父关系、模型自己的分析/假设/意图，隐藏后续外部评测结果、验证步骤、错误、计时、分数、排名、真实best和按验证状态筛选的候选列表。
 
-三组共有首次 c0 的公开基线；N 后续重测 c0 也不更新这一公共快照。N/I 的真实 best 显示 withheld/null，不伪装成 c0。研究模式省略 parent 时统一使用 c0，显式 parent 可用于F/N迭代。N 的静态失败候选仍保留并可请求验证，真实失败照常落盘。
+三组都能看到初始程序 c0 的首次测试结果；N 组之后重测 c0 时仍显示首次结果。N/I 的最佳候选字段为 withheld/null。省略 parent 时统一使用 c0，F/N 可显式指定父候选。N 组中语法检查失败的代码也保留在列表中，允许再次请求验证。
 
-模型格式/动作参数错误可以返回；候选的语法、导入、编译、执行和裁判失败属于隐藏评测结果。native 的F/N均无cProfile工具。N保持真实请求数、候选数和总墙钟预算，因此仍存在总时间这一间接信号，不宣称消除所有时间侧信道。
+模型回复格式或动作参数错误会返回提示；N 组看不到代码的语法、导入、编译、执行和裁判错误。F/N 的原生评测任务都不提供 cProfile。N 组仍能看到已用请求数、候选数和总耗时，因此耗时可能间接透露评测情况。
 
 ## ALE 两路与失败处理
 
-接受 [desktop无模型校准](ale/README.md) 记录的执行条件：A/ahc024候选CPU2，B/ahc026候选CPU4；judge维持未绑核；不改变governor/EPP，不宣称核心独占。各worker独立VAR_DIR、SQLite、run.lock和compare.lock。
+按 [desktop校准](ale/README.md) 设置：ahc024 的候选程序固定使用 CPU2，ahc026 固定使用 CPU4；这些核心仍可能被其他进程使用。裁判未固定核心，governor/EPP 保持原值。每个执行进程（worker）有独立 VAR_DIR、SQLite、run.lock 和 compare.lock。
 
-前六个wave双路，双方结束后进入下一wave；后面三个wave为B单路。A每种模式各与B三种模式搭配一次；B每种模式均为两项双路、一项单路。wave等待在episode预算外，实际重叠及batch墙钟另记。desktop每worker最多一个在途模型请求，合计最多两个；公共调用原有限流/错误规则保留，不增加隐藏重试。
+前六批同时运行 A/B 两路，两路都结束后再开始下一批；后三批只运行 B。A 的每种模式分别与 B 的三种模式搭配一次，B 的每种模式有两次双路、一次单路。批间等待不占单轮研究预算；重叠时间和整批耗时另记。每路最多一个模型请求，全机最多两个；沿用原有限流和错误处理规则，不额外重试。
 
 final状态分 disabled/pending/completed/failed/not_run；completed须验收通过。final错误输出、超时、裁判异常保留为failed。c0性能final正确时报告1.0且normalized=true/measured=false；ALE使用实际score。失败、缺失、c0、零改善保留在分母和配对表，c0分数为零不计算百分比。
 
@@ -37,15 +37,15 @@ final状态分 disabled/pending/completed/failed/not_run；completed须验收通
 
 ## 费用、接口和验证
 
-[price-snapshot.json](price-snapshot.json) 冻结AIPing公开标价：输入¥3/百万Token、输出¥12/百万Token，缓存按普通输入价估算，不扣优惠和赠金；原始模型条目见 [provider-price.json](provider-price.json)。API实时账单与机器成本不等同于此估算，未知用量保留null。
+[price-snapshot.json](price-snapshot.json) 记录 AIPing 标价：输入¥3/百万Token，输出¥12/百万Token。缓存按普通输入价估算，不扣优惠和赠金；原始价格见 [provider-price.json](provider-price.json)。未知用量记null，实际账单和机器成本另计。
 
 新增只读 `/api/research-comparisons` 与 `/{comparison_id}`，直接读取既有比较JSON，可脱离原worker数据库展示。字段包括task/objective/mode/repeat/fair/dev/final/progress/usage/timing/cost。运行列表补research_mode/dev_only/final_status。[合成API示例](api-example.json) 明确标记fixture，不计入实验。
 
-新增隔离、比较、报告/API的40项针对性检查全部通过，包括实际模型输入的反事实一致性、静态失败重验证、c0重测、final异常、失败样本、公平性、价格和未知费用。已通过的相关回归保留；按用户要求停止耗时全量测试，未将其记为全量通过。生产改动与样例以GPG签名发布。
+40项输入隔离、对照、报告/API检查通过，覆盖：修改隐藏评测结果后模型输入不变、语法检查失败后重测、c0重测、final异常、失败样本、配置一致性及费用。全量测试未跑完。代码与样例已用GPG签名发布。
 
 ## 执行
 
-以下保留已完成 ALE 批次的启动命令：在desktop的固定源码checkout内，使用已登记的两worker任务包，先运行不带`--execute`的冻结一致性检查，再执行同一命令加`--execute`。脚本核对源码SHA、干净checkout、模型、任务manifest、镜像、schema和各模式提示哈希，拒绝覆盖已有批次目录。当前待执行的 Mac 原15轮及新增路由12轮按 [Mac交接](mac-handoff.md)完成v2物理绑定后启动。
+以下保留已完成 ALE 批次的启动命令：在desktop的固定源码checkout内，使用已登记的两worker任务包，先运行不带`--execute`的冻结一致性检查，再执行同一命令加`--execute`。脚本核对源码SHA、干净checkout、模型、任务manifest、镜像、schema和各模式提示哈希，拒绝覆盖已有批次目录。当前待执行的 Mac 原15轮及新增路由12轮按 [Mac交接](mac-handoff.md)完成v2任务、镜像和机器登记后启动。
 
 ```bash
 cd /home/hycx233/routeevo-ale-formal-20261114/repo/backend
@@ -55,4 +55,4 @@ cd /home/hycx233/routeevo-ale-formal-20261114/repo/backend
   --out /home/hycx233/routeevo-ale-formal-20261114/formal-v2 --execute
 ```
 
-脚本按本次任务复用 `research_compare.execute(plan=...)`，不是新的队列服务。每wave记录墙钟，中央结果按预登记seq/task_id/repeat/mode匹配；完整真实请求、候选、评测和SQLite仍保留在各worker目录。
+脚本复用 `research_compare.execute(plan=...)`，逐批记录耗时。结果按计划中的seq/task_id/repeat/mode匹配，请求、候选、评测和SQLite保存在各worker目录。

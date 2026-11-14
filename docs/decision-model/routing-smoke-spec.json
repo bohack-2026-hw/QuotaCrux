@@ -1,0 +1,12 @@
+{
+  "family": "groupagg",
+  "tasks": [
+    {
+      "task_id": "routing-smoke-01",
+      "split": "smoke",
+      "params": {"rows": 300000, "keys": 5000, "skew": 0.8},
+      "dev_seed": 1114,
+      "final_seed": 1115
+    }
+  ]
+}

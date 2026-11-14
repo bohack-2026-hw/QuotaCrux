@@ -109,3 +109,50 @@ EffiBench 分支的 benchmark adapter 可继续通过既有 task/evaluator 接�
 
 历史回放的负面结果见 [decision-model/README.md](decision-model/README.md)。
 本 adaptor 提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
+
+## 2026-11-14 联调结果
+
+执行代码为 `813db15`，任务为 [routing-smoke-spec.json](decision-model/routing-smoke-spec.json) 中固定的
+30 万行、5000 keys、skew=0.8 的 groupagg；dev/final 种子分别为 1114/1115。
+四组各运行一次，统一使用 v0、6 次请求、4 个候选、300 秒循环、120 秒请求超时、5 轮交替计时。
+生成模型配置为 AIPing `Qwen3.8-27B`（thinking=false）与 `gpt-6.1-sol`（xhigh）；
+实际生成调用全部由 Qwen 完成，未触发 GPT 升级。模型选择的两次成功判断均选择 small。
+
+| 组 | Qwen 请求 | Decisions 请求 | 总耗时 | final 中位加速比 | final 达标 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| baseline | 1 | 0 | 20.494 s | 1.3044× | 是 |
+| action_decisions | 2 | 3 | 34.937 s | 1.2631× | 否 |
+| model_decisions | 1 | 2 | 20.881 s | 1.1443× | 是 |
+| both_decisions | 1 | 2 | 23.618 s | 1.2969× | 是 |
+
+四组最终产物均正确，`fair=true`，除 routing 外共享配置 hash 为 `ac9717d00b1da0f8`。
+action_decisions 首个候选开发检查为 wrong_output，第二个候选开发验证达标；final 中候选最慢
+178.315 ms 略慢于基线最快 178.102 ms，未满足原有的全样本分离门槛，保留未达标结果。
+
+7 次 Decisions 请求中，5 次成功、2 次 ConnectError；失败已计入预算，后续请求在预算内恢复。
+成功调用已知费用估算合计 **$0.0013514**。两次网络错误和五次 Qwen 调用的费用未知，
+本轮没有查询 AIPing 余额，不能把这个金额当作总费用。
+单任务、单次运行及两次网络错误不足以区分策略优劣；本轮确认两个替换点及四组实验入口都能运行，
+保留 baseline 为默认策略。
+
+逐调用 usage、路由概率、候选哈希、开发结果和 final 原始计时见
+[routing-smoke-results.json](decision-model/routing-smoke-results.json)。本地完整报告与模型请求响应保存在
+`backend/var/runs/<run_id>/`；批次汇总为
+`backend/var/routing-ablations/routing-20261114T032721-aad0.json`。
+
+复现本轮配置：
+
+```sh
+cd backend
+uv run routeevo tasks build --spec ../docs/decision-model/routing-smoke-spec.json
+uv run routeevo ablate-routing routing-smoke-01 --snapshot v0 --repeats 1 \
+  --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
+```
+
+验证记录：
+
+- `python -m pytest -q`：60 passed，包含原有 Docker 回归；有一条 FastAPI TestClient 的依赖弃用提示。
+- Python 编译、Git diff 检查、前端 TypeScript/Vite 构建及 oxlint 通过。
+- 前端构建使用原工作区已安装依赖，其 `pnpm-lock.yaml` 与本分支字节一致；新安装受到本机
+  minimumReleaseAge 策略阻止，未改动依赖锁或该策略。
+- 已通过 issue #1 与本地 EffiBench agent 交接独占 Docker/Qwen 调用窗口，本轮完成后已释放。

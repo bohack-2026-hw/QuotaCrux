@@ -1,0 +1,1308 @@
+{
+  "code_commit": "813db150cb7cc2d7d14ab9c23359cd838d426679",
+  "ablation_id": "routing-20261114T032721-aad0",
+  "created_at": "2026-11-14T03:27:21.123+00:00",
+  "ended_at": "2026-11-14T03:29:01.181+00:00",
+  "task_spec": "routing-smoke-spec.json",
+  "task_manifest_sha256": "e7d8555fcab977de0ac4a237dfa8166425297bb3344698a16d2c5fd18d4afbc5",
+  "snapshot_id": "v0",
+  "repeats": 1,
+  "fair": true,
+  "shared_config_hashes": [
+    "ac9717d00b1da0f8"
+  ],
+  "models": {
+    "large": {
+      "base_url": "https://api.openai.com/v1",
+      "enable_thinking": null,
+      "extra": {},
+      "max_output_tokens": 32000,
+      "model": "gpt-6.1-sol",
+      "provider": "openai_responses",
+      "reasoning_effort": "xhigh",
+      "response_format": "json_schema",
+      "role": "large",
+      "temperature": null
+    },
+    "small": {
+      "base_url": "https://aiping.cn/api/v1",
+      "enable_thinking": false,
+      "extra": {},
+      "max_output_tokens": 8192,
+      "model": "Qwen3.8-27B",
+      "provider": "chat_compat",
+      "reasoning_effort": null,
+      "response_format": "json_object",
+      "role": "small",
+      "temperature": null
+    }
+  },
+  "limits": {
+    "max_candidates": 4,
+    "max_code_bytes": 20000,
+    "max_model_requests": 6,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "model_request_timeout_s": 120.0,
+    "token_budget": null,
+    "wall_clock_s": 300.0
+  },
+  "measure": {
+    "cpus": 1.0,
+    "max_output_bytes": 67108864,
+    "memory": "1g",
+    "pids_limit": 64,
+    "ready_timeout_s": 30.0,
+    "repeats": 5
+  },
+  "evaluator_version": "groupagg-eval-2",
+  "environment": {
+    "container_python": "3.12-slim (pinned digest in Dockerfile)",
+    "docker_server": "29.9.3 linux/amd64",
+    "image_id": "sha256:4b9d5900ff655d52acfeb025b28622f610463c4d6cf32e6bc0ae87f9af903d33",
+    "image_tag": "routeevo-sandbox:d055c99c833a",
+    "limits": {
+      "cpus": 1.0,
+      "memory": "1g",
+      "network": "none",
+      "pids_limit": 64,
+      "read_only_rootfs": true,
+      "user": "65534:65534"
+    }
+  },
+  "known_decisions_cost_usd": 0.0013514,
+  "unknown_cost_calls": 7,
+  "interpretation": "One smoke task, one run per variant. All 4 final outputs are correct; 3 satisfy the unchanged stable-speedup rule. Two Decisions ConnectErrors have unknown usage/cost; all hosted Qwen costs are unknown. No GPT generation was requested. These runs validate integration, not comparative efficacy.",
+  "runs": [
+    {
+      "variant": "baseline",
+      "run_id": "run-20261114T032721-4c07",
+      "routing": {
+        "action": "llm",
+        "model": "rule"
+      },
+      "config_fingerprint": "0cdec0b22bfde4de",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 1.3044,
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "达到目标：c1 最终测试正确，加速比 1.3044"
+      },
+      "iterations": {
+        "model_requests": 1,
+        "routing_requests": 0,
+        "generation_requests": 1,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 20.494,
+        "agent_loop_s": 15.49,
+        "agent_loop_elapsed_s": 15.49,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 5.0,
+        "model_wait_s": 8.69,
+        "dev_evaluation_s": 6.782,
+        "evidence_tool_s": 0,
+        "container_startup_s": 5.992
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 0,
+          "ok": 0,
+          "errors": {},
+          "latency_s": 0,
+          "input_tokens": 0,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.0,
+          "cost_status": "no_model_calls",
+          "cost_unknown_calls": 0,
+          "price_versions": []
+        },
+        "generation": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 8.69,
+          "input_tokens": 2012,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 356,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 1,
+          "price_versions": []
+        }
+      },
+      "final_evaluation": {
+        "evaluation_id": "c0b35622d3cf",
+        "candidate_id": "c1",
+        "status": "passed",
+        "correct": true,
+        "speedup": 1.3044,
+        "candidate_median_s": 0.1578254330015625,
+        "baseline_median_s": 0.2058605050042388,
+        "timing": {
+          "baseline": {
+            "iqr": 0.01439443749768543,
+            "max": 0.21310627200000454,
+            "median": 0.2058605050042388,
+            "min": 0.18987263300368795
+          },
+          "baseline_min_max_s": [
+            0.18987263300368795,
+            0.21310627200000454
+          ],
+          "baseline_s": [
+            0.20867404800083023,
+            0.20311881200177595,
+            0.21310627200000454,
+            0.18987263300368795,
+            0.2058605050042388
+          ],
+          "candidate": {
+            "iqr": 0.012190329001896316,
+            "max": 0.17438611900433898,
+            "median": 0.1578254330015625,
+            "min": 0.15452503300184617
+          },
+          "candidate_min_max_s": [
+            0.15452503300184617,
+            0.17438611900433898
+          ],
+          "candidate_s": [
+            0.17438611900433898,
+            0.16232159599894658,
+            0.15452503300184617,
+            0.1578254330015625,
+            0.15780202399764676
+          ],
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+        },
+        "failure": null,
+        "duration_s": 5.0,
+        "note": null
+      },
+      "candidates": [
+        {
+          "candidate_id": "c0",
+          "origin": "initial",
+          "parent_candidate_id": null,
+          "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+          "model_call_id": null,
+          "dev_evaluations": [
+            {
+              "evaluation_id": "cc0195366e7b",
+              "status": "passed",
+              "correct": 1,
+              "speedup": null,
+              "improved": null,
+              "goal_met": null
+            }
+          ]
+        },
+        {
+          "candidate_id": "c1",
+          "origin": "model",
+          "parent_candidate_id": "c0",
+          "code_sha256": "44822f1363e8ab81d819aa1aa20e73144a7987f957f60eaddb5d73e6e4d568b7",
+          "model_call_id": "m1",
+          "dev_evaluations": [
+            {
+              "evaluation_id": "45dbe4bfacd4",
+              "status": "passed",
+              "correct": 1,
+              "speedup": 1.1168,
+              "improved": 1,
+              "goal_met": 1
+            }
+          ]
+        }
+      ],
+      "routing_steps": [],
+      "calls": [
+        {
+          "call_id": "run-20261114T032721-4c07/m1",
+          "role": "small",
+          "provider": "chat_compat",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2012,
+          "cached_input_tokens": 0,
+          "output_tokens": 356,
+          "reasoning_tokens": null,
+          "usage_source": "reported",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": null,
+          "latency_s": 8.69
+        }
+      ]
+    },
+    {
+      "variant": "action_decisions",
+      "run_id": "run-20261114T032741-0a43",
+      "routing": {
+        "action": "decisions",
+        "model": "rule"
+      },
+      "config_fingerprint": "f6b60b7e0c26ae62",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 1.2631,
+        "goal_met": false,
+        "valid_artifact": true,
+        "summary": "有产物但未达标：c2 最终测试正确，加速比 1.2631"
+      },
+      "iterations": {
+        "model_requests": 5,
+        "routing_requests": 3,
+        "generation_requests": 2,
+        "candidates_proposed": 2,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 1,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 1,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 34.937,
+        "agent_loop_s": 30.0,
+        "agent_loop_elapsed_s": 30.0,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 4.934,
+        "model_wait_s": 22.963,
+        "dev_evaluation_s": 6.991,
+        "evidence_tool_s": 0,
+        "container_startup_s": 6.171
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 3,
+          "ok": 2,
+          "errors": {
+            "network": 1
+          },
+          "latency_s": 5.41,
+          "input_tokens": 6172,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": 0.000617,
+          "cost_status": "partial",
+          "cost_unknown_calls": 1,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "generation": {
+          "requests": 2,
+          "ok": 2,
+          "errors": {},
+          "latency_s": 17.553,
+          "input_tokens": 5409,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 1536,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 647,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 2,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 2,
+          "price_versions": []
+        }
+      },
+      "final_evaluation": {
+        "evaluation_id": "7f903225d542",
+        "candidate_id": "c2",
+        "status": "passed",
+        "correct": true,
+        "speedup": 1.2631,
+        "candidate_median_s": 0.15658821200486273,
+        "baseline_median_s": 0.19779204400401795,
+        "timing": {
+          "baseline": {
+            "iqr": 0.01845645549838082,
+            "max": 0.20772565999504877,
+            "median": 0.19779204400401795,
+            "min": 0.17810227500012843
+          },
+          "baseline_min_max_s": [
+            0.17810227500012843,
+            0.20772565999504877
+          ],
+          "baseline_s": [
+            0.17810227500012843,
+            0.19779204400401795,
+            0.20166814399999566,
+            0.20772565999504877,
+            0.19437861799815437
+          ],
+          "candidate": {
+            "iqr": 0.01728911049576709,
+            "max": 0.17831495399877895,
+            "median": 0.15658821200486273,
+            "min": 0.14536924500134774
+          },
+          "candidate_min_max_s": [
+            0.14536924500134774,
+            0.17831495399877895
+          ],
+          "candidate_s": [
+            0.15643751100287773,
+            0.1580700229969807,
+            0.14536924500134774,
+            0.15658821200486273,
+            0.17831495399877895
+          ],
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+        },
+        "failure": null,
+        "duration_s": 4.934,
+        "note": null
+      },
+      "candidates": [
+        {
+          "candidate_id": "c0",
+          "origin": "initial",
+          "parent_candidate_id": null,
+          "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+          "model_call_id": null,
+          "dev_evaluations": [
+            {
+              "evaluation_id": "9c28ce83cf81",
+              "status": "passed",
+              "correct": 1,
+              "speedup": null,
+              "improved": null,
+              "goal_met": null
+            }
+          ]
+        },
+        {
+          "candidate_id": "c1",
+          "origin": "model",
+          "parent_candidate_id": "c0",
+          "code_sha256": "0291fba880318c5480163db4eca75eaf6cb05d2d601bb5882aa8c450b385ec16",
+          "model_call_id": "m2",
+          "dev_evaluations": [
+            {
+              "evaluation_id": "d7cdcb7ad503",
+              "status": "wrong_output",
+              "correct": 0,
+              "speedup": null,
+              "improved": null,
+              "goal_met": null
+            }
+          ]
+        },
+        {
+          "candidate_id": "c2",
+          "origin": "model",
+          "parent_candidate_id": "c1",
+          "code_sha256": "72800efe9e9d0958088a6589d187be726e9c172480c5672c44d01ce8cc52e3e5",
+          "model_call_id": "m5",
+          "dev_evaluations": [
+            {
+              "evaluation_id": "59aa421a833b",
+              "status": "passed",
+              "correct": 1,
+              "speedup": 1.2578,
+              "improved": 1,
+              "goal_met": 1
+            }
+          ]
+        }
+      ],
+      "routing_steps": [
+        {
+          "seq": 2,
+          "actor": "model",
+          "action": "route_action",
+          "status": "done",
+          "purpose": "Decisions 选择动作 propose_candidate",
+          "expected_result": null,
+          "verification": null,
+          "hypothesis": null,
+          "params": {},
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.96,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.0,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.02,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.97,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.01,
+                    "value": "profile_candidate:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "next_decision": "propose_candidate",
+          "candidate_id": null,
+          "evaluation_id": null,
+          "model_call_id": "run-20261114T032741-0a43/m1",
+          "model_role": "router_action",
+          "tool_call_id": null,
+          "started_at": "2026-11-14T03:27:43.503+00:00",
+          "ended_at": "2026-11-14T03:27:46.372+00:00"
+        },
+        {
+          "seq": 6,
+          "actor": "model",
+          "action": "route_action",
+          "status": "done",
+          "purpose": "Decisions 选择动作 propose_candidate",
+          "expected_result": null,
+          "verification": null,
+          "hypothesis": null,
+          "params": {},
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.99,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.0,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.01,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.99,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "profile_candidate:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "profile_candidate:c1"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c1"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "next_decision": "propose_candidate",
+          "candidate_id": null,
+          "evaluation_id": null,
+          "model_call_id": "run-20261114T032741-0a43/m4",
+          "model_role": "router_action",
+          "tool_call_id": null,
+          "started_at": "2026-11-14T03:27:57.378+00:00",
+          "ended_at": "2026-11-14T03:27:58.186+00:00"
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T032741-0a43/m1",
+          "role": "router_action",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": "gpt-6-luna",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2463,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "usage_source": "reported",
+          "cost_usd": 0.0002463,
+          "cost_status": "estimated",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 2.865
+        },
+        {
+          "call_id": "run-20261114T032741-0a43/m2",
+          "role": "small",
+          "provider": "chat_compat",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2068,
+          "cached_input_tokens": 768,
+          "output_tokens": 331,
+          "reasoning_tokens": null,
+          "usage_source": "reported",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": null,
+          "latency_s": 8.956
+        },
+        {
+          "call_id": "run-20261114T032741-0a43/m3",
+          "role": "router_action",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": null,
+          "status": "error",
+          "error_kind": "network",
+          "error_message": "ConnectError; usage unknown, request may have been billed",
+          "input_tokens": null,
+          "cached_input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null,
+          "usage_source": "unknown",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 1.742
+        },
+        {
+          "call_id": "run-20261114T032741-0a43/m4",
+          "role": "router_action",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": "gpt-6-luna",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 3709,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "usage_source": "reported",
+          "cost_usd": 0.0003709,
+          "cost_status": "estimated",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 0.803
+        },
+        {
+          "call_id": "run-20261114T032741-0a43/m5",
+          "role": "small",
+          "provider": "chat_compat",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 3341,
+          "cached_input_tokens": 768,
+          "output_tokens": 316,
+          "reasoning_tokens": null,
+          "usage_source": "reported",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": null,
+          "latency_s": 8.597
+        }
+      ]
+    },
+    {
+      "variant": "model_decisions",
+      "run_id": "run-20261114T032816-b756",
+      "routing": {
+        "action": "llm",
+        "model": "decisions"
+      },
+      "config_fingerprint": "34ec4f6eae667eee",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 1.1443,
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "达到目标：c1 最终测试正确，加速比 1.1443"
+      },
+      "iterations": {
+        "model_requests": 3,
+        "routing_requests": 2,
+        "generation_requests": 1,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 1,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 20.881,
+        "agent_loop_s": 15.936,
+        "agent_loop_elapsed_s": 15.936,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 4.941,
+        "model_wait_s": 9.186,
+        "dev_evaluation_s": 6.725,
+        "evidence_tool_s": 0,
+        "container_startup_s": 5.923
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 2,
+          "ok": 1,
+          "errors": {
+            "network": 1
+          },
+          "latency_s": 1.599,
+          "input_tokens": 2434,
+          "input_tokens_unknown_calls": 1,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 1,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 1,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": 0.000243,
+          "cost_status": "partial",
+          "cost_unknown_calls": 1,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "generation": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 7.587,
+          "input_tokens": 2077,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 768,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 420,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 1,
+          "price_versions": []
+        }
+      },
+      "final_evaluation": {
+        "evaluation_id": "d07d9d3f6365",
+        "candidate_id": "c1",
+        "status": "passed",
+        "correct": true,
+        "speedup": 1.1443,
+        "candidate_median_s": 0.17217917200468946,
+        "baseline_median_s": 0.1970264249976026,
+        "timing": {
+          "baseline": {
+            "iqr": 0.011094474495621398,
+            "max": 0.20306208200054243,
+            "median": 0.1970264249976026,
+            "min": 0.18675587700272445
+          },
+          "baseline_min_max_s": [
+            0.18675587700272445,
+            0.20306208200054243
+          ],
+          "baseline_s": [
+            0.1970264249976026,
+            0.19692301700706594,
+            0.20280576100049075,
+            0.20306208200054243,
+            0.18675587700272445
+          ],
+          "candidate": {
+            "iqr": 0.012774617502145702,
+            "max": 0.1738906680038781,
+            "median": 0.17217917200468946,
+            "min": 0.1606570180010749
+          },
+          "candidate_min_max_s": [
+            0.1606570180010749,
+            0.1738906680038781
+          ],
+          "candidate_s": [
+            0.1738906680038781,
+            0.16127827500167768,
+            0.17217917200468946,
+            0.1735938600031659,
+            0.1606570180010749
+          ],
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+        },
+        "failure": null,
+        "duration_s": 4.941,
+        "note": null
+      },
+      "candidates": [
+        {
+          "candidate_id": "c0",
+          "origin": "initial",
+          "parent_candidate_id": null,
+          "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+          "model_call_id": null,
+          "dev_evaluations": [
+            {
+              "evaluation_id": "101a4b4429e8",
+              "status": "passed",
+              "correct": 1,
+              "speedup": null,
+              "improved": null,
+              "goal_met": null
+            }
+          ]
+        },
+        {
+          "candidate_id": "c1",
+          "origin": "model",
+          "parent_candidate_id": "c0",
+          "code_sha256": "1b76b40e64aa3a859fbe201067dd27b9922dd0bfc4e73c9f17fa37a97f84cc0b",
+          "model_call_id": "m3",
+          "dev_evaluations": [
+            {
+              "evaluation_id": "ce3889473f7e",
+              "status": "passed",
+              "correct": 1,
+              "speedup": 1.1059,
+              "improved": 1,
+              "goal_met": 1
+            }
+          ]
+        }
+      ],
+      "routing_steps": [
+        {
+          "seq": 3,
+          "actor": "model",
+          "action": "route_model",
+          "status": "done",
+          "purpose": "Decisions 模型路由选择 small",
+          "expected_result": null,
+          "verification": null,
+          "hypothesis": null,
+          "params": {},
+          "result": {
+            "answers": [
+              {
+                "choice": "small",
+                "confidence": 1.0,
+                "name": "model",
+                "probabilities": [
+                  {
+                    "probability": 1.0,
+                    "value": "small"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "large"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "small"
+          },
+          "next_decision": "continue with small model",
+          "candidate_id": null,
+          "evaluation_id": null,
+          "model_call_id": "run-20261114T032816-b756/m2",
+          "model_role": "router_model",
+          "tool_call_id": null,
+          "started_at": "2026-11-14T03:28:19.078+00:00",
+          "ended_at": "2026-11-14T03:28:20.103+00:00"
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T032816-b756/m1",
+          "role": "router_model",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": null,
+          "status": "error",
+          "error_kind": "network",
+          "error_message": "ConnectError; usage unknown, request may have been billed",
+          "input_tokens": null,
+          "cached_input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null,
+          "usage_source": "unknown",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 0.578
+        },
+        {
+          "call_id": "run-20261114T032816-b756/m2",
+          "role": "router_model",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": "gpt-6-luna",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2434,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "usage_source": "reported",
+          "cost_usd": 0.0002434,
+          "cost_status": "estimated",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 1.021
+        },
+        {
+          "call_id": "run-20261114T032816-b756/m3",
+          "role": "small",
+          "provider": "chat_compat",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2077,
+          "cached_input_tokens": 768,
+          "output_tokens": 420,
+          "reasoning_tokens": null,
+          "usage_source": "reported",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": null,
+          "latency_s": 7.587
+        }
+      ]
+    },
+    {
+      "variant": "both_decisions",
+      "run_id": "run-20261114T032837-bb1d",
+      "routing": {
+        "action": "decisions",
+        "model": "decisions"
+      },
+      "config_fingerprint": "5585fc8734e51477",
+      "status": "completed",
+      "stop_reason": "goal_reached",
+      "outcome": {
+        "run_completed": true,
+        "candidate_ran": true,
+        "dev_validation_passed": true,
+        "dev_improved": true,
+        "best_from_reuse": false,
+        "best_is_initial": false,
+        "final_evaluated": true,
+        "final_correct": true,
+        "final_speedup": 1.2969,
+        "goal_met": true,
+        "valid_artifact": true,
+        "summary": "达到目标：c1 最终测试正确，加速比 1.2969"
+      },
+      "iterations": {
+        "model_requests": 3,
+        "routing_requests": 2,
+        "generation_requests": 1,
+        "candidates_proposed": 1,
+        "candidates_passed": 1,
+        "candidates_improved": 1,
+        "candidates_no_gain": 0,
+        "candidates_failed": 0,
+        "programs_reused": 0,
+        "programs_reused_improved": 0,
+        "invalid_actions": 0,
+        "unusable_replies": 0,
+        "api_errors": 0,
+        "evidence_calls": 0,
+        "upgrades": 0,
+        "upgrade_at_step": null
+      },
+      "timing": {
+        "wall_clock_total_s": 23.618,
+        "agent_loop_s": 18.854,
+        "agent_loop_elapsed_s": 18.854,
+        "agent_loop_limit_s": 300.0,
+        "agent_loop_overrun_s": 0.0,
+        "final_evaluation_s": 4.76,
+        "model_wait_s": 12.144,
+        "dev_evaluation_s": 6.683,
+        "evidence_tool_s": 0,
+        "container_startup_s": 6.06
+      },
+      "usage_by_purpose": {
+        "routing": {
+          "requests": 2,
+          "ok": 2,
+          "errors": {},
+          "latency_s": 1.626,
+          "input_tokens": 4908,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 0,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 0,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": 0,
+          "reasoning_tokens_unknown_calls": 0,
+          "cost_usd": 0.000491,
+          "cost_status": "estimated",
+          "cost_unknown_calls": 0,
+          "price_versions": [
+            "openai-decisions-standard-short-2026-11-14"
+          ]
+        },
+        "generation": {
+          "requests": 1,
+          "ok": 1,
+          "errors": {},
+          "latency_s": 10.518,
+          "input_tokens": 2106,
+          "input_tokens_unknown_calls": 0,
+          "cached_input_tokens": 768,
+          "cached_input_tokens_unknown_calls": 0,
+          "output_tokens": 434,
+          "output_tokens_unknown_calls": 0,
+          "reasoning_tokens": null,
+          "reasoning_tokens_unknown_calls": 1,
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "cost_unknown_calls": 1,
+          "price_versions": []
+        }
+      },
+      "final_evaluation": {
+        "evaluation_id": "865f413f78e9",
+        "candidate_id": "c1",
+        "status": "passed",
+        "correct": true,
+        "speedup": 1.2969,
+        "candidate_median_s": 0.14308596599585144,
+        "baseline_median_s": 0.1855716959980782,
+        "timing": {
+          "baseline": {
+            "iqr": 0.005299033000483178,
+            "max": 0.18814834699878702,
+            "median": 0.1855716959980782,
+            "min": 0.18033932099933736
+          },
+          "baseline_min_max_s": [
+            0.18033932099933736,
+            0.18814834699878702
+          ],
+          "baseline_s": [
+            0.18654270200204337,
+            0.18033932099933736,
+            0.1855716959980782,
+            0.18814834699878702,
+            0.18375366200052667
+          ],
+          "candidate": {
+            "iqr": 0.012165810996521031,
+            "max": 0.14824595100071747,
+            "median": 0.14308596599585144,
+            "min": 0.13189799600513652
+          },
+          "candidate_min_max_s": [
+            0.13189799600513652,
+            0.14824595100071747
+          ],
+          "candidate_s": [
+            0.13189799600513652,
+            0.1387025350049953,
+            0.14308596599585144,
+            0.1466862020024564,
+            0.14824595100071747
+          ],
+          "improved_rule": "all candidate samples faster than all baseline samples",
+          "method": "1 warm-up each (doubles as correctness check), 5 alternating rounds, median ratio"
+        },
+        "failure": null,
+        "duration_s": 4.76,
+        "note": null
+      },
+      "candidates": [
+        {
+          "candidate_id": "c0",
+          "origin": "initial",
+          "parent_candidate_id": null,
+          "code_sha256": "2c4ccd7b476c04d0203c366bde13adaac43074d2632f5fa59b3fb2a84fc6e8f3",
+          "model_call_id": null,
+          "dev_evaluations": [
+            {
+              "evaluation_id": "bf756cfd50ae",
+              "status": "passed",
+              "correct": 1,
+              "speedup": null,
+              "improved": null,
+              "goal_met": null
+            }
+          ]
+        },
+        {
+          "candidate_id": "c1",
+          "origin": "model",
+          "parent_candidate_id": "c0",
+          "code_sha256": "4d3f15f0dcfc1902d5cd97025b8a1da5c65ec3b63e368b2bab50173359061b18",
+          "model_call_id": "m3",
+          "dev_evaluations": [
+            {
+              "evaluation_id": "77b81e3eb10f",
+              "status": "passed",
+              "correct": 1,
+              "speedup": 1.3842,
+              "improved": 1,
+              "goal_met": 1
+            }
+          ]
+        }
+      ],
+      "routing_steps": [
+        {
+          "seq": 2,
+          "actor": "model",
+          "action": "route_action",
+          "status": "done",
+          "purpose": "Decisions 选择动作 propose_candidate",
+          "expected_result": null,
+          "verification": null,
+          "hypothesis": null,
+          "params": {},
+          "result": {
+            "answers": [
+              {
+                "choice": "propose_candidate",
+                "confidence": 0.93,
+                "name": "action",
+                "probabilities": [
+                  {
+                    "probability": 0.01,
+                    "value": "finish"
+                  },
+                  {
+                    "probability": 0.03,
+                    "value": "analyze"
+                  },
+                  {
+                    "probability": 0.94,
+                    "value": "propose_candidate"
+                  },
+                  {
+                    "probability": 0.02,
+                    "value": "profile_candidate:c0"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "run_validation:c0"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "propose_candidate"
+          },
+          "next_decision": "propose_candidate",
+          "candidate_id": null,
+          "evaluation_id": null,
+          "model_call_id": "run-20261114T032837-bb1d/m1",
+          "model_role": "router_action",
+          "tool_call_id": null,
+          "started_at": "2026-11-14T03:28:39.359+00:00",
+          "ended_at": "2026-11-14T03:28:40.348+00:00"
+        },
+        {
+          "seq": 3,
+          "actor": "model",
+          "action": "route_model",
+          "status": "done",
+          "purpose": "Decisions 模型路由选择 small",
+          "expected_result": null,
+          "verification": null,
+          "hypothesis": null,
+          "params": {},
+          "result": {
+            "answers": [
+              {
+                "choice": "small",
+                "confidence": 1.0,
+                "name": "model",
+                "probabilities": [
+                  {
+                    "probability": 1.0,
+                    "value": "small"
+                  },
+                  {
+                    "probability": 0.0,
+                    "value": "large"
+                  }
+                ],
+                "type": "choice"
+              }
+            ],
+            "choice": "small"
+          },
+          "next_decision": "continue with small model",
+          "candidate_id": null,
+          "evaluation_id": null,
+          "model_call_id": "run-20261114T032837-bb1d/m2",
+          "model_role": "router_model",
+          "tool_call_id": null,
+          "started_at": "2026-11-14T03:28:40.349+00:00",
+          "ended_at": "2026-11-14T03:28:40.994+00:00"
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "run-20261114T032837-bb1d/m1",
+          "role": "router_action",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": "gpt-6-luna",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2463,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "usage_source": "reported",
+          "cost_usd": 0.0002463,
+          "cost_status": "estimated",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 0.985
+        },
+        {
+          "call_id": "run-20261114T032837-bb1d/m2",
+          "role": "router_model",
+          "provider": "openai_decisions",
+          "model_requested": "gpt-6-luna",
+          "model_returned": "gpt-6-luna",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2445,
+          "cached_input_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "usage_source": "reported",
+          "cost_usd": 0.0002445,
+          "cost_status": "estimated",
+          "price_version": "openai-decisions-standard-short-2026-11-14",
+          "latency_s": 0.641
+        },
+        {
+          "call_id": "run-20261114T032837-bb1d/m3",
+          "role": "small",
+          "provider": "chat_compat",
+          "model_requested": "Qwen3.8-27B",
+          "model_returned": "Qwen3.8-27B",
+          "status": "ok",
+          "error_kind": null,
+          "error_message": null,
+          "input_tokens": 2106,
+          "cached_input_tokens": 768,
+          "output_tokens": 434,
+          "reasoning_tokens": null,
+          "usage_source": "reported",
+          "cost_usd": null,
+          "cost_status": "unknown",
+          "price_version": null,
+          "latency_s": 10.518
+        }
+      ]
+    }
+  ]
+}

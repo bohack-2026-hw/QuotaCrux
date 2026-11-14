@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import config, db
-from .families import groupagg
+from . import families
 
 TARGET_MIN_SPEEDUP = 1.10
 LOCK_PATH = config.TASK_SPEC_DIR / "lock.json"
@@ -67,19 +67,13 @@ class Task:
     def target_min_speedup(self) -> float:
         return float(self.manifest["target"]["min_speedup"])
 
+    @property
+    def family(self) -> str:
+        return self.manifest["family"]
 
-def _examples(seed: int, order: str) -> list[dict]:
-    """Small visible input/output pairs, generated from seeds unrelated to dev/final data."""
-    cases = [
-        groupagg.GenParams(rows=0, keys=1, seed=seed),
-        groupagg.GenParams(rows=10, keys=4, seed=seed + 1, key_len_min=1, key_len_max=3, order=order, value_min=-20, value_max=20),
-        groupagg.GenParams(rows=8, keys=8, seed=seed + 2, key_len_min=1, key_len_max=4, value_min=-5, value_max=5),
-    ]
-    out = []
-    for p in cases:
-        data = groupagg.generate(p)
-        out.append({"input": data.decode(), "output": groupagg.reference_output(data).decode()})
-    return out
+    @property
+    def fam(self):
+        return families.get(self.manifest["family"])
 
 
 def _write(path: Path, data: bytes) -> dict:
@@ -87,38 +81,40 @@ def _write(path: Path, data: bytes) -> dict:
     return {"file": path.name, "sha256": sha256_bytes(data), "bytes": len(data)}
 
 
+SPLITS = ("A", "B", "C", "D", "S", "T", "smoke")
+
+
 def build_task(family: str, entry: dict, out_root: Path = config.TASK_DATA_DIR) -> Task:
-    if family != groupagg.FAMILY:
-        raise ValueError(f"unsupported family {family!r}")
+    fam = families.get(entry.get("family", family))
     task_id, split = entry["task_id"], entry["split"]
-    if split not in ("A", "B", "C", "D", "smoke"):
-        raise ValueError(f"{task_id}: split must be A, B, C, D or smoke")
+    if split not in SPLITS:
+        raise ValueError(f"{task_id}: split must be one of {SPLITS}")
     params = dict(entry["params"])
-    dev_p = groupagg.GenParams(**params, seed=entry["dev_seed"])
-    final_p = groupagg.GenParams(**{**params, **entry.get("final_overrides", {})}, seed=entry["final_seed"])
+    dev_p = fam.GenParams(**params, seed=entry["dev_seed"])
+    final_p = fam.GenParams(**{**params, **entry.get("final_overrides", {})}, seed=entry["final_seed"])
 
     tmp = out_root / f".{task_id}.building"
     shutil.rmtree(tmp, ignore_errors=True)
     tmp.mkdir(parents=True)
     files = {}
     for name, p in (("dev", dev_p), ("final", final_p)):
-        data = groupagg.generate(p)
+        data = fam.generate(p)
         files[f"{name}_input"] = _write(tmp / f"{name}_input.csv", data)
-        files[f"{name}_expected"] = _write(tmp / f"{name}_expected.csv", groupagg.reference_output(data))
+        files[f"{name}_expected"] = _write(tmp / f"{name}_expected.csv", fam.reference_output(data))
         if name == "dev":
-            dev_profile = groupagg.profile(data)
+            dev_profile = fam.profile(data)
     files["dev_profile"] = _write(tmp / "dev_profile.json", json.dumps(dev_profile, indent=2).encode())
-    files["examples"] = _write(tmp / "examples.json", json.dumps(_examples(entry.get("examples_seed", 7), params.get("order", "random")), indent=2).encode())
-    files["contract"] = _write(tmp / "contract.txt", groupagg.CONTRACT.encode())
-    files["initial"] = _write(tmp / "initial.py", groupagg.INITIAL_CODE_PATH.read_bytes())
+    files["examples"] = _write(tmp / "examples.json", json.dumps(fam.examples(entry.get("examples_seed", 7), params), indent=2).encode())
+    files["contract"] = _write(tmp / "contract.txt", fam.CONTRACT.encode())
+    files["initial"] = _write(tmp / "initial.py", fam.INITIAL_CODE_PATH.read_bytes())
 
     manifest = {
         "task_id": task_id,
-        "family": family,
+        "family": fam.FAMILY,
         "split": split,
         "notes": entry.get("notes", ""),
-        "generator_version": groupagg.GENERATOR_VERSION,
-        "checker_version": groupagg.CHECKER_VERSION,
+        "generator_version": fam.GENERATOR_VERSION,
+        "checker_version": fam.CHECKER_VERSION,
         "generator_python": platform.python_version(),
         "dev_params": dev_p.to_dict(),
         "final_params": final_p.to_dict(),
@@ -145,15 +141,20 @@ def build_task(family: str, entry: dict, out_root: Path = config.TASK_DATA_DIR) 
     tmp.rename(final_dir)
     if not row:
         db.insert("tasks", {
-            "task_id": task_id, "family": family, "split": split,
+            "task_id": task_id, "family": fam.FAMILY, "split": split,
             "manifest_json": db.dumps(manifest), "manifest_sha256": manifest_sha, "registered_at": db.now(),
         })
     return Task(task_id, split, final_dir, manifest)
 
 
 def build_spec(spec_path: Path) -> list[Task]:
+    """A spec names a default family; an entry may name its own (mixed-family batches)."""
     spec = json.loads(spec_path.read_text())
-    return [build_task(spec["family"], entry) for entry in spec["tasks"]]
+    return [build_task(spec.get("family", ""), entry) for entry in spec["tasks"]]
+
+
+def spec_paths() -> list[Path]:
+    return sorted(config.TASK_SPEC_DIR.glob("spec*.json"))
 
 
 def load(task_id: str, verify: bool = True) -> Task:

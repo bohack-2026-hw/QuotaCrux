@@ -11,11 +11,11 @@ import uuid
 from dataclasses import dataclass, field
 
 from . import config, db
-from .families import groupagg
 from .sandbox import executor
 from .taskpkg import Task, sha256_bytes
 
-EVALUATOR_VERSION = "groupagg-eval-2"
+# eval-3 dispatches correctness checks and contract cases to the task's family; the procedure is groupagg-eval-2's.
+EVALUATOR_VERSION = "eval-3"
 
 # Sample statuses that mean the candidate itself misbehaved, as opposed to the sandbox failing.
 CANDIDATE_FAILURES = {"compile_error", "runtime_error", "timeout", "output_limit", "memory_limit"}
@@ -85,6 +85,7 @@ def evaluate(
     data, expected = in_path.read_bytes(), exp_path.read_bytes()
     baseline_code = baseline_code if baseline_code is not None else task.initial_code.encode()
     timeout = limits.measurement_timeout_s
+    fam = task.fam
     samples: list[dict] = []
     ev = Evaluation(uuid.uuid4().hex[:12], task.task_id, dataset, "pending", False, None, None, None, None, None, None, None)
 
@@ -110,13 +111,13 @@ def evaluate(
         if r.status != "ok":
             return fail(r.status, sample_failure(r))
         ev.executed = True
-        chk = groupagg.check_output(r.stdout, expected)
+        chk = fam.check_output(r.stdout, expected)
         ev.format_ok, ev.correct = chk["format_ok"], chk["correct"]
         if not chk["correct"]:
             return fail(chk["failure"]["category"], chk["failure"])
 
         # 1b. Small public contract cases: correct on this data distribution is not enough.
-        for name, text in groupagg.CONTRACT_CASES.items():
+        for name, text in fam.CONTRACT_CASES.items():
             case_in = text.encode()
             r = executor.run_sample(code, case_in, timeout, measure)
             record("candidate", f"contract:{name}", r)
@@ -125,12 +126,12 @@ def evaluate(
             case_fail = {"contract_case": name, "input": text}
             if r.status != "ok":
                 return fail(r.status, {**sample_failure(r), **case_fail})
-            chk = groupagg.check_output(r.stdout, groupagg.reference_output(case_in))
+            chk = fam.check_output(r.stdout, fam.reference_output(case_in))
             if not chk["correct"]:
                 ev.format_ok, ev.correct = chk["format_ok"], False
                 return fail("contract_violation", {
                     "category": "contract_violation", **case_fail,
-                    "expected": groupagg.reference_output(case_in).decode(),
+                    "expected": fam.reference_output(case_in).decode(),
                     "got": r.stdout[:2000].decode("utf-8", errors="replace"), "check": chk["failure"],
                 })
         if not measure_timing:
@@ -140,7 +141,7 @@ def evaluate(
         # 2. Baseline warm-up doubles as a sanity check of the evaluator itself.
         r = executor.run_sample(baseline_code, data, timeout, measure)
         record("baseline", "warmup_check", r)
-        if r.status != "ok" or not groupagg.check_output(r.stdout, expected)["correct"]:
+        if r.status != "ok" or not fam.check_output(r.stdout, expected)["correct"]:
             return fail("sandbox_error" if r.status == "sandbox_error" else "baseline_failed", sample_failure(r))
 
         # 3. Alternating measurements, order flipped each round to cancel drift.
@@ -155,7 +156,7 @@ def evaluate(
                     if who == "baseline":
                         return fail("sandbox_error" if r.status == "sandbox_error" else "baseline_failed", sample_failure(r))
                     return fail("unstable", {**sample_failure(r), "message": f"candidate failed on timed run {i} after passing the check"})
-                if who == "candidate" and not groupagg.check_output(r.stdout, expected)["correct"]:
+                if who == "candidate" and not fam.check_output(r.stdout, expected)["correct"]:
                     return fail("unstable", {"category": "unstable", "message": f"candidate output changed on timed run {i}"})
                 (base_t if who == "baseline" else cand_t).append(r.elapsed_s)
 
@@ -202,7 +203,7 @@ def profile_candidate(task: Task, code: bytes, measure: config.MeasureConfig, li
     text = r.stderr_tail
     begin, end = text.find("ROUTEEVO_PROFILE_BEGIN"), text.find("ROUTEEVO_PROFILE_END")
     report = text[begin + len("ROUTEEVO_PROFILE_BEGIN"): end].strip() if 0 <= begin < end else None
-    correct = groupagg.check_output(r.stdout, exp_path.read_bytes())["correct"] if r.status == "ok" else None
+    correct = task.fam.check_output(r.stdout, exp_path.read_bytes())["correct"] if r.status == "ok" else None
     return {
         "status": r.status,
         "profiled_elapsed_s": r.elapsed_s,

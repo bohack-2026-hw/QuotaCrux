@@ -1,0 +1,290 @@
+{
+ "notes": "Added on 2026-11-14, before the router and the online mode were built. Two new task families (logstats, intervals) next to groupagg. T = tuning tasks for the new families and the router. S = a sealed online stream that mixes all three families in a fixed order: each new family first appears with no experience, later tasks repeat similar or shifted conditions. S is run once, after the configuration is frozen on T.",
+ "tasks": [
+  {
+   "task_id": "smoke-logstats",
+   "split": "smoke",
+   "family": "logstats",
+   "notes": "tiny instance for functional checks and tests",
+   "params": {
+    "rows": 20000,
+    "endpoints": 50,
+    "hours": 6,
+    "error_rate": 0.05
+   },
+   "dev_seed": 9101,
+   "final_seed": 9102,
+   "examples_seed": 9103
+  },
+  {
+   "task_id": "smoke-intervals",
+   "split": "smoke",
+   "family": "intervals",
+   "notes": "tiny instance for functional checks and tests",
+   "params": {
+    "rows": 50000,
+    "value_max": 2000000,
+    "length_mean": 20
+   },
+   "dev_seed": 9111,
+   "final_seed": 9112,
+   "examples_seed": 9113
+  },
+  {
+   "task_id": "T-L1",
+   "split": "T",
+   "family": "logstats",
+   "notes": "logstats, time-ordered, few endpoints",
+   "params": {
+    "rows": 180000,
+    "endpoints": 250,
+    "hours": 24,
+    "order": "time",
+    "skew": 0.7,
+    "error_rate": 0.02
+   },
+   "dev_seed": 5101,
+   "final_seed": 5102,
+   "examples_seed": 5103
+  },
+  {
+   "task_id": "T-L2",
+   "split": "T",
+   "family": "logstats",
+   "notes": "logstats, shuffled, many endpoints",
+   "params": {
+    "rows": 160000,
+    "endpoints": 1800,
+    "hours": 60,
+    "order": "shuffled",
+    "error_rate": 0.07
+   },
+   "dev_seed": 5111,
+   "final_seed": 5112,
+   "examples_seed": 5113
+  },
+  {
+   "task_id": "T-I1",
+   "split": "T",
+   "family": "intervals",
+   "notes": "intervals, random order, small non-negative values",
+   "params": {
+    "rows": 700000,
+    "value_max": 40000000,
+    "length_mean": 40
+   },
+   "dev_seed": 5201,
+   "final_seed": 5202,
+   "examples_seed": 5203
+  },
+  {
+   "task_id": "T-I2",
+   "split": "T",
+   "family": "intervals",
+   "notes": "intervals, sorted, values across +-10^12",
+   "params": {
+    "rows": 600000,
+    "value_min": -1000000000000,
+    "value_max": 1000000000000,
+    "length_mean": 1000000,
+    "order": "sorted"
+   },
+   "dev_seed": 5211,
+   "final_seed": 5212,
+   "examples_seed": 5213
+  },
+  {
+   "task_id": "S-01",
+   "split": "S",
+   "family": "logstats",
+   "notes": "stream 1: first access log (new family)",
+   "params": {
+    "rows": 160000,
+    "endpoints": 300,
+    "hours": 24,
+    "order": "time",
+    "skew": 0.8,
+    "error_rate": 0.02
+   },
+   "dev_seed": 6101,
+   "final_seed": 6102,
+   "examples_seed": 6103
+  },
+  {
+   "task_id": "S-02",
+   "split": "S",
+   "family": "groupagg",
+   "notes": "stream 2: group-by, random order, medium cardinality (known family)",
+   "params": {
+    "key_len_min": 4,
+    "key_len_max": 12,
+    "rows": 1400000,
+    "keys": 25000,
+    "order": "random",
+    "skew": 0.6
+   },
+   "dev_seed": 6201,
+   "final_seed": 6202,
+   "examples_seed": 6203
+  },
+  {
+   "task_id": "S-03",
+   "split": "S",
+   "family": "logstats",
+   "notes": "stream 3: access log like stream 1",
+   "params": {
+    "rows": 200000,
+    "endpoints": 200,
+    "hours": 48,
+    "order": "time",
+    "skew": 0.6,
+    "error_rate": 0.03
+   },
+   "dev_seed": 6301,
+   "final_seed": 6302,
+   "examples_seed": 6303
+  },
+  {
+   "task_id": "S-04",
+   "split": "S",
+   "family": "intervals",
+   "notes": "stream 4: first interval merge (new family)",
+   "params": {
+    "rows": 700000,
+    "value_max": 50000000,
+    "length_mean": 50
+   },
+   "dev_seed": 6401,
+   "final_seed": 6402,
+   "examples_seed": 6403
+  },
+  {
+   "task_id": "S-05",
+   "split": "S",
+   "family": "logstats",
+   "notes": "stream 5: access log under new conditions: shuffled, many endpoints, many errors",
+   "params": {
+    "rows": 150000,
+    "endpoints": 2000,
+    "hours": 72,
+    "order": "shuffled",
+    "error_rate": 0.08
+   },
+   "dev_seed": 6501,
+   "final_seed": 6502,
+   "examples_seed": 6503
+  },
+  {
+   "task_id": "S-06",
+   "split": "S",
+   "family": "intervals",
+   "notes": "stream 6: interval merge like stream 4",
+   "params": {
+    "rows": 800000,
+    "value_max": 40000000,
+    "length_mean": 40
+   },
+   "dev_seed": 6601,
+   "final_seed": 6602,
+   "examples_seed": 6603
+  },
+  {
+   "task_id": "S-07",
+   "split": "S",
+   "family": "groupagg",
+   "notes": "stream 7: group-by, sorted input (known family)",
+   "params": {
+    "key_len_min": 4,
+    "key_len_max": 12,
+    "rows": 1300000,
+    "keys": 8000,
+    "order": "sorted",
+    "skew": 0.0
+   },
+   "dev_seed": 6701,
+   "final_seed": 6702,
+   "examples_seed": 6703
+  },
+  {
+   "task_id": "S-08",
+   "split": "S",
+   "family": "intervals",
+   "notes": "stream 8: interval merge under new conditions: sorted, values across +-10^12",
+   "params": {
+    "rows": 600000,
+    "value_min": -1000000000000,
+    "value_max": 1000000000000,
+    "length_mean": 1000000,
+    "order": "sorted"
+   },
+   "dev_seed": 6801,
+   "final_seed": 6802,
+   "examples_seed": 6803
+  },
+  {
+   "task_id": "S-09",
+   "split": "S",
+   "family": "logstats",
+   "notes": "stream 9: access log like stream 1",
+   "params": {
+    "rows": 180000,
+    "endpoints": 350,
+    "hours": 24,
+    "order": "time",
+    "skew": 0.7,
+    "error_rate": 0.02
+   },
+   "dev_seed": 6901,
+   "final_seed": 6902,
+   "examples_seed": 6903
+  },
+  {
+   "task_id": "S-10",
+   "split": "S",
+   "family": "intervals",
+   "notes": "stream 10: interval merge like stream 4, more overlap",
+   "params": {
+    "rows": 750000,
+    "value_max": 20000000,
+    "length_mean": 60
+   },
+   "dev_seed": 7001,
+   "final_seed": 7002,
+   "examples_seed": 7003
+  },
+  {
+   "task_id": "S-11",
+   "split": "S",
+   "family": "groupagg",
+   "notes": "stream 11: group-by, high cardinality (known family)",
+   "params": {
+    "key_len_min": 4,
+    "key_len_max": 12,
+    "rows": 900000,
+    "keys": 500000,
+    "order": "random",
+    "skew": 0.0
+   },
+   "dev_seed": 7101,
+   "final_seed": 7102,
+   "examples_seed": 7103
+  },
+  {
+   "task_id": "S-12",
+   "split": "S",
+   "family": "logstats",
+   "notes": "stream 12: access log like stream 5, nearly time-ordered",
+   "params": {
+    "rows": 220000,
+    "endpoints": 1500,
+    "hours": 48,
+    "order": "nearly_time",
+    "disorder": 0.05,
+    "error_rate": 0.06
+   },
+   "dev_seed": 7201,
+   "final_seed": 7202,
+   "examples_seed": 7203
+  }
+ ]
+}

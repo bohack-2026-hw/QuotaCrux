@@ -157,17 +157,45 @@ def table(s, x, y, cols, rows, rh=64, head_size=13, size=15, hot_col=None, align
 
 B_ = {"bold": True, "color": BLUE}
 
+
+def autoplay(slide, spid, ms):
+    """Timing that starts a video as soon as the slide shows and plays it once."""
+    from pptkit import frag
+    from pptx.oxml.ns import qn
+    old = slide._element.find(qn("p:timing"))
+    if old is not None:
+        slide._element.remove(old)
+    nav = ('<p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>'
+           '<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst>')
+    xml = (f'<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst>'
+           f'<p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst>'
+           f'<p:par><p:cTn id="3" fill="hold"><p:stCondLst><p:cond delay="indefinite"/><p:cond evt="onBegin" delay="0"><p:tn val="2"/></p:cond></p:stCondLst><p:childTnLst>'
+           f'<p:par><p:cTn id="4" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>'
+           f'<p:par><p:cTn id="5" presetID="1" presetClass="mediacall" presetSubtype="0" fill="hold" nodeType="afterEffect"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>'
+           f'<p:cmd type="call" cmd="playFrom(0.0)"><p:cBhvr><p:cTn id="6" dur="{ms}" fill="hold"/><p:tgtEl><p:spTgt spid="{spid}"/></p:tgtEl></p:cBhvr></p:cmd>'
+           f'</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par>'
+           f'</p:childTnLst></p:cTn>{nav}</p:seq>'
+           f'<p:video><p:cMediaNode vol="0"><p:cTn id="7" fill="hold" display="0"><p:stCondLst><p:cond delay="indefinite"/></p:stCondLst></p:cTn>'
+           f'<p:tgtEl><p:spTgt spid="{spid}"/></p:tgtEl></p:cMediaNode></p:video>'
+           f'</p:childTnLst></p:cTn></p:par></p:tnLst></p:timing>')
+    el = frag(xml)
+    ext = slide._element.find(qn("p:extLst"))
+    if ext is not None:
+        ext.addprevious(el)
+    else:
+        slide._element.append(el)
+
 # ============================================================== 0 intro (auto-advances)
-s, tl = new(notes="BoHack 开场：Logo 画出后自动进入封面。")
-K = 5
-ox, oy = (1920 - 171 * K) / 2, (1080 - 38 * K) / 2
-mark, word = lockup(s, ox, oy, K)
-tl.wipe(mark, 200, 1100, direction="left").wipe(word, 1100, 700, direction="left")
-tr = s._element.find(".//{http://schemas.openxmlformats.org/presentationml/2006/main}transition")
+# the bohack.top opening, captured frame by frame from the site: the pen draws the logo, then it settles top-left,
+# exactly where every later slide keeps it. Plays once (a video, since WPS loops GIFs), then the deck moves on.
+s, tl = new(notes="BoHack 开场动画（取自 bohack.top），播完自动进入封面。")
+TLS.remove(tl)
+mov = s.shapes.add_movie(A("bohack-intro.mp4"), 0, 0, prs.slide_width, prs.slide_height, poster_frame_image=A("bohack-intro-poster.png"), mime_type="video/mp4")
+autoplay(s, mov.shape_id, 2733)
 s._element.remove(s._element.find("{http://schemas.openxmlformats.org/markup-compatibility/2006}AlternateContent"))
-set_transition(s, "fade", 600)
+set_transition(s, "fade", 300)
 for t_ in s._element.iter("{http://schemas.openxmlformats.org/presentationml/2006/main}transition"):
-    t_.set("advTm", "1200")
+    t_.set("advTm", "2900")
 
 # ============================================================== 1 cover
 s, tl = new(notes="开场：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
@@ -495,7 +523,6 @@ for i, g in enumerate(body):
 s, tl = new(2, hi("测试难题：", ("搬箱子",)), "实测 · ALE-Bench ahc026",
             notes="测试难题是 AtCoder 启发式竞赛第 26 题：200 个箱子分在 10 堆，按编号顺序搬出。搬一摞 k 个箱子耗 k+1 份力气。初始程序的真实操作里，第一步就把 19 个箱子压在了箱子 8 上，后面要为此再付 29 份力气。\n\n来源：ALE-Bench ahc026 题面 · video/data/make_replay.py")
 im1 = pic(s, A("still-warehouse.png"), L - 20, 300, 820, 537)
-tl.zoom(im1, 300, 800)
 for i, (k_, v) in enumerate([("规模", "200 个箱子 · 10 堆 · 每堆 20"), ("目标", "按 1、2、3… 的顺序搬出仓库"), ("搬动", "搬走一摞 k 个箱子，耗 k+1 份力气"), ("搬出", "最小编号的箱子在顶上时搬出，不耗力气"), ("得分", "10000 − 总能耗，越省越高")]):
     y = 300 + i * 100
     g = [T(s, 900, y, 120, 84, k_, size=18, bold=True, color=BLUE, anchor="m"), T(s, 1020, y, 824, 84, v, size=20, anchor="m")]
@@ -565,7 +592,7 @@ for i, (f, lab_, v, c) in enumerate([("still-c0.png", "初始程序", "1,158", I
     x = 820 + i * 520
     im = pic(s, A(f), x, 290, 500, 638)
     hd_ = T(s, x, 936, 500, 50, [[(lab_ + " · 本用例总能耗  ", {"color": INK2, "size": 16}), (v, {"color": c, "bold": True, "size": 24})]], size=16, anchor="m", align="c", wrap=False)
-    tl.rise(im, 1500 + i * 300, 700, off=0.03).fade(hd_, 1700 + i * 300, 500)
+    tl.fade(hd_, 1700 + i * 300, 500)
 
 # ============================================================== 16 routing
 s, tl = new(2, hi("谁来决定下一步，", ("同样影响结果",)), "实测 · 调度对照",
@@ -661,7 +688,7 @@ for i, (x, f, cap) in enumerate([(L, "console-home.png", "总览：批次、轮�
     fr = rect(s, x - 3, 320 - 3, w + 6, h + 6, RULE, radius=6)
     im = pic(s, A(f), x, 320, w, h)
     c_ = T(s, x, 320 + h + 24, w, 44, cap, size=18, bold=True, align="c")
-    tl.rise(fr, 300 + i * 400, 700, off=0.04).rise(im, 300 + i * 400, 700, off=0.04).fade(c_, 800 + i * 400, 500)
+    tl.fade(c_, 800 + i * 400, 500)
 
 # ============================================================== 21 advantages
 s, tl = new(3, hi("同一个系统里的", ("受控对比",)), "优势对比",
@@ -699,7 +726,7 @@ for i, (n_, d_) in enumerate([("−44.7%", "ahc026 隐藏测试总能耗"), ("25
 qf = rect(s, 1494, 300, 350, 350, CARD, radius=12, line=RULE, line_w=1.5)
 qi = pic(s, A("qr.png"), 1519, 325, 300, 300)
 qt = T(s, 1494, 668, 350, 40, "扫码查看代码与报告", size=16, color=INK2, align="c")
-tl.zoom(qf, 2900, 600).zoom(qi, 3000, 600).fade(qt, 3300, 400)
+tl.fade(qt, 3300, 400)
 tl.fade(T(s, L, 930, 1000, 44, "github.com/bohack-2026-hw/QuotaCrux", size=17, color=INK2, latin=NUM), 3300, 500)
 
 for t in TLS:

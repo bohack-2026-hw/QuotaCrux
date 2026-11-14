@@ -163,7 +163,8 @@ def presentation(manifest: dict) -> dict:
 
 def environment_info(task, measure) -> dict:
     return {**task.manifest["native"]["candidate_image"], "judge": task.manifest["native"]["judge_image"],
-            "limits": measure.to_dict(), "protocol": "isolated-function-timing-v1", "threads": 1}
+            "limits": measure.to_dict(), "protocol": "isolated-function-timing-v2", "threads": 1,
+            "gc_policy": "automatic_gc_disabled_during_solve"}
 
 
 def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=None, measure_timing=True,
@@ -197,14 +198,18 @@ def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=
                 try:
                     data = json.loads(sample.stdout)
                     times = data["times_s"]
-                    if len(times) != request["repeats"] or len(data["solutions"]) != request["repeats"] + request["warmups"] or any(not native.finite_number(t) or t <= 0 for t in times):
+                    if (len(times) != request["repeats"] or
+                            len(data["solutions"]) != request["repeats"] + request["warmups"] or
+                            data.get("gc_policy") != "automatic_gc_disabled_during_solve" or
+                            any(not native.finite_number(t) or t <= 0 for t in times)):
                         raise ValueError("invalid function measurement")
                 except (ValueError, KeyError, TypeError) as exc:
                     ev.status = "format_error" if who == "candidate" else "baseline_failed"
                     ev.detail["failure"] = {"category": ev.status, "message": str(exc)}
                     return ev
                 measured[who].append(times)
-                samples[-1].update(times_s=times, initialization_s=data["initialization_s"], warmup_count=request["warmups"])
+                samples[-1].update(times_s=times, initialization_s=data["initialization_s"],
+                                   warmup_count=request["warmups"], gc_policy=data["gc_policy"])
                 judged[who].append({"problem": case["problem"], "solutions": data["solutions"]})
         ev.executed = True
         for who in ("candidate", "baseline"):
@@ -234,7 +239,9 @@ def evaluate(task, code, dataset, measure, limits, *, run_id=None, candidate_id=
             ev.goal_met = ev.improved and ev.speedup >= task.target_min_speedup
             ev.detail["timing"] = {"candidate_s": cs, "baseline_s": bs, "candidate_min_max_s": [min(cs), max(cs)],
                 "baseline_min_max_s": [min(bs), max(bs)], "warmup_count": measure.function_warmups,
-                "method": "warm-ups + repeated solve calls per case; fresh globals/input; imports and serialization excluded"}
+                "gc_policy": "automatic_gc_disabled_during_solve",
+                "method": ("warm-ups + repeated solve calls per case; fresh globals/input; imports, serialization "
+                           "and automatic cyclic GC excluded")}
         return ev
     except (RuntimeError, ValueError, KeyError) as exc:
         ev.status = "budget_exhausted" if deadline is not None and time.perf_counter() >= deadline else "checker_error"

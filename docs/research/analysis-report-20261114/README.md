@@ -1,6 +1,6 @@
 # QuotaCrux / 枢决：研究优化实验报告
 
-**[阅读 PDF（19 页，v1.1）](output/pdf/quotacrux-research-report.pdf)**
+**[阅读 PDF（19 页，v1.2）](output/pdf/quotacrux-research-report.pdf)**
 
 报告围绕系统机制、实验结果和过程分析展开，作为后续 PPT、海报与演示的数据来源。正文使用思源宋体，标题使用思源黑体 Medium；七张图统一中文标注，并保存独立矢量 PDF。
 
@@ -46,15 +46,15 @@
 
     bash build.sh
 
-构建流程核验 desktop 三批 524 个清单条目，从原始 JSON 重算 desktop 数据和六张图，再从已保存的 Mac 分析 JSON 重建计时图，最后编译 LaTeX。该命令不运行模型或 benchmark；首次执行可能下载绘图依赖。
+构建流程核验 desktop 三批 524 个清单条目，从原始 JSON 重算 desktop 数据和六张图，再审计已合入的 Mac 归档并重算其分析 JSON 和计时图，最后编译 LaTeX。该命令不运行模型或 benchmark；首次执行可能下载绘图依赖。
 
 只更新正文时，执行两遍：
 
     xelatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf -jobname=quotacrux-research-report report.tex
 
-Mac 原始结果目前位于 PR #20。取得对应版本后，可单独重新分析：
+Mac 结果已通过 PR #20 合入；修复版归档为 `5962203`，可单独重新分析：
 
-    uv run --with matplotlib==3.10.8 python scripts/analyze_mac.py --source /path/to/mac-exploratory-20261114 --source-commit fcf186c3932b2bd86879deeed5b636e20c4e823c
+    uv run --with matplotlib==3.10.8 python scripts/analyze_mac.py --source ../mac-exploratory-20261114 --source-commit 5962203315dc1c229cd6ef3255d06e2dc5745436
 
 脚本只读取本地目录，输出分析 JSON、代码一致性检查和图表。--plot-only 使用已保存的分析 JSON，仅重建图形。
 
@@ -64,8 +64,8 @@ Mac 原始结果目前位于 PR #20。取得对应版本后，可单独重新分
 - 固定 Qwen 执行源码：990f598b87f7c93bd27b6ceef5751bbc2d39dd79。
 - 路由及 Mac 最终执行源码：912b20a4cfeb51af9c36d0679b23f0990abe862f。
 - [固定 Qwen 结果](../native-formal-20261114/ale/results/README.md)、[路由短批](../native-routing/20261114/short-results/README.md)、[停止长批](../native-routing/20261114/long-batch-stopped/README.md)。
-- [Mac 补交版本](https://github.com/bohack-2026-hw/RouteEvo/tree/fcf186c3932b2bd86879deeed5b636e20c4e823c/docs/research/mac-exploratory-20261114)及[导出复核记录](https://github.com/bohack-2026-hw/RouteEvo/pull/20#issuecomment-6875817264)。
+- [Mac 归档修复版本](https://github.com/bohack-2026-hw/QuotaCrux/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114)及[导出复核记录](https://github.com/bohack-2026-hw/QuotaCrux/pull/20#issuecomment-6875817264)。
 
-Mac 补交文件的数值账本已核对。候选导出器误处理部分代码方括号，导致 10 份候选与运行时哈希不符，正在等待重新导出；分析 JSON 保留 needs_reexport 状态。远端 Qwen 的错误次数已按新记录更正为三个失败批次、合计 19 次 HTTP 503。
+Mac 导出方括号问题已修复，受损程序按原有运行/任务身份哈希恢复；189 项清单、24 份候选、12 份 best、16 份公开任务源码及 53 份归档程序语法检查通过。分析 JSON 为 verified_archive。恢复记录见 [recovery.json](../mac-exploratory-20261114/recovery.json)。本轮按现有材料收尾，不再等待 Mac 补交或追加评测，原正式 15+12 计划保持取消。远端 Qwen 的三个失败批次共 19 次 HTTP 503。
 
-验证包括归档哈希、原始数据重算、独立内容复核、LaTeX 编译、字体嵌入与 PDF 逐页检查。源码仓库与历史实验标识继续使用 RouteEvo。
+验证包括归档哈希、原始数据重算、独立内容复核、LaTeX 编译、字体嵌入与 PDF 逐页检查。源码仓库为 QuotaCrux，历史实验标识保留 RouteEvo。

@@ -7,7 +7,8 @@ export UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/routeevo-report-uv-cache}"
 export MPLCONFIGDIR="${MPLCONFIGDIR:-${TMPDIR:-/tmp}/routeevo-matplotlib}"
 python3 scripts/verify_sources.py
 uv run --with matplotlib==3.10.8 python scripts/analyze.py
-uv run --with matplotlib==3.10.8 python scripts/analyze_mac.py --plot-only
+python3 ../mac-exploratory-20261114/audit_results.py
+uv run --with matplotlib==3.10.8 python scripts/analyze_mac.py --source-commit 5962203315dc1c229cd6ef3255d06e2dc5745436
 mkdir -p output/pdf
 for pass in 1 2; do
   if ! xelatex -interaction=nonstopmode -halt-on-error \

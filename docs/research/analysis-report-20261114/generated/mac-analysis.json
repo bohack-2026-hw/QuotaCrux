@@ -1,35 +1,17 @@
 {
   "schema_version": 1,
-  "source_commit": "fcf186c3932b2bd86879deeed5b636e20c4e823c",
+  "source_commit": "5962203315dc1c229cd6ef3255d06e2dc5745436",
   "source_directory": "docs/research/mac-exploratory-20261114",
   "execution_code_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
   "scope": "Mac exploratory two-case dev records; final disabled; no experiments rerun",
   "audit": {
-    "export_checksum_count": 188,
+    "export_checksum_count": 189,
     "export_checksum_mismatches": [],
     "candidate_count": 16,
-    "candidate_record_hash_mismatches": [
-      "openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
-      "openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c0.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c1.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c2.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c3.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c0.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c1.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c2.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c3.py"
-    ],
-    "candidate_syntax_failures": [
-      "openai/runs/run-20261114T090029-3c04/candidates/c1.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c2.py",
-      "openai/runs/run-20261114T090029-3c04/candidates/c3.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c1.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c2.py",
-      "openai/runs/run-20261114T090451-aeec/candidates/c3.py"
-    ],
-    "status": "needs_reexport",
-    "root_cause": "BRACKETED_IPV6 sanitizer drops brackets from non-IP strings such as [0], [1:], [0.0]"
+    "candidate_record_hash_mismatches": [],
+    "candidate_syntax_failures": [],
+    "status": "verified_archive",
+    "root_cause": null
   },
   "batch_wall_s": 567.411237,
   "sum_slot_wall_s": 567.385,
@@ -101,8 +83,8 @@
           "parent": "c1",
           "path": "openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
           "recorded_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
-          "exported_sha256": "bb5beb296b9491b6542799867870d86347f1e7556d6f93d28a9cf4aaba50e537",
-          "hash_matches_run": false,
+          "exported_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
+          "hash_matches_run": true,
           "syntax_valid": true
         },
         {
@@ -110,8 +92,8 @@
           "parent": "c2",
           "path": "openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
           "recorded_sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7",
-          "exported_sha256": "644754ade2efde99068a344ad108c88cf54960da57c5fbd2409e48914319b897",
-          "hash_matches_run": false,
+          "exported_sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7",
+          "hash_matches_run": true,
           "syntax_valid": true
         }
       ],
@@ -279,8 +261,8 @@
           "parent": null,
           "path": "openai/runs/run-20261114T090029-3c04/candidates/c0.py",
           "recorded_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
-          "exported_sha256": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
-          "hash_matches_run": false,
+          "exported_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "hash_matches_run": true,
           "syntax_valid": true
         },
         {
@@ -288,39 +270,27 @@
           "parent": "c0",
           "path": "openai/runs/run-20261114T090029-3c04/candidates/c1.py",
           "recorded_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
-          "exported_sha256": "b8f37f5cd17e0444eab1975ec280b8c1de5e2b1a1f4ee8401398abdd8b52cb5c",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 17,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
+          "hash_matches_run": true,
+          "syntax_valid": true
         },
         {
           "candidate_id": "c2",
           "parent": "c0",
           "path": "openai/runs/run-20261114T090029-3c04/candidates/c2.py",
           "recorded_sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b",
-          "exported_sha256": "31e939568f1b66aaa56318173f80c5fc44b1410611a6e85861199f3a8f1039b3",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 17,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b",
+          "hash_matches_run": true,
+          "syntax_valid": true
         },
         {
           "candidate_id": "c3",
           "parent": "c0",
           "path": "openai/runs/run-20261114T090029-3c04/candidates/c3.py",
           "recorded_sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00",
-          "exported_sha256": "a6ac28ae018e3d5663be19dc9c6fef6ceedc0ed7185d069faa8c78f515ba4d10",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 17,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00",
+          "hash_matches_run": true,
+          "syntax_valid": true
         }
       ],
       "candidate_hypotheses": [
@@ -678,8 +648,8 @@
           "parent": null,
           "path": "openai/runs/run-20261114T090451-aeec/candidates/c0.py",
           "recorded_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
-          "exported_sha256": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
-          "hash_matches_run": false,
+          "exported_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+          "hash_matches_run": true,
           "syntax_valid": true
         },
         {
@@ -687,39 +657,27 @@
           "parent": "c0",
           "path": "openai/runs/run-20261114T090451-aeec/candidates/c1.py",
           "recorded_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
-          "exported_sha256": "72e1d9ce92bfbbc41de926eecebfb36473ef488ac5df10b3d99bf9c954005fd3",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 17,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+          "hash_matches_run": true,
+          "syntax_valid": true
         },
         {
           "candidate_id": "c2",
           "parent": "c1",
           "path": "openai/runs/run-20261114T090451-aeec/candidates/c2.py",
           "recorded_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
-          "exported_sha256": "545fbc86661cdd100f3ab94c1e140511e59f005810423cc3f123ff7680b17388",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 17,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
+          "hash_matches_run": true,
+          "syntax_valid": true
         },
         {
           "candidate_id": "c3",
           "parent": "c2",
           "path": "openai/runs/run-20261114T090451-aeec/candidates/c3.py",
           "recorded_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
-          "exported_sha256": "d0f31886359feacbb0b87332b16ceae2f69551043d1f3ac46b2349f8485a27c0",
-          "hash_matches_run": false,
-          "syntax_valid": false,
-          "syntax_error": {
-            "line": 21,
-            "message": "invalid syntax"
-          }
+          "exported_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
+          "hash_matches_run": true,
+          "syntax_valid": true
         }
       ],
       "candidate_hypotheses": [
@@ -862,62 +820,6 @@
     }
   ],
   "input_profiles": {
-    "algotune-pagerank-exploratory-short-20261114": {
-      "problem": "pagerank",
-      "cases": 2,
-      "memory_key": "f743c0884f",
-      "settings": {
-        "candidate_image": {
-          "image_tag": "routeevo-scientific:9df8e32a4952",
-          "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
-        },
-        "judge_image": {
-          "image_tag": "routeevo-algotune-pagerank:ee2973687637",
-          "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f"
-        },
-        "size": 1000,
-        "seed": 1729,
-        "allowed_imports": [
-          "numpy",
-          "scipy",
-          "networkx"
-        ],
-        "candidate_interface": "solve"
-      },
-      "input_profile": {
-        "source": "frozen_dev_inputs",
-        "generator_scale": 1000,
-        "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
-        "cases": [
-          {
-            "id": "0",
-            "nodes": 1000,
-            "directed_edges": 7950,
-            "node_id_type": "int",
-            "dangling_nodes": 1,
-            "out_degree": {
-              "min": 0,
-              "max": 18,
-              "mean": 7.95
-            },
-            "output_scores": 1000
-          },
-          {
-            "id": "1",
-            "nodes": 1000,
-            "directed_edges": 7878,
-            "node_id_type": "int",
-            "dangling_nodes": 0,
-            "out_degree": {
-              "min": 1,
-              "max": 18,
-              "mean": 7.878
-            },
-            "output_scores": 1000
-          }
-        ]
-      }
-    },
     "algotune-convolve_1d-exploratory-short-20261114": {
       "problem": "convolve_1d",
       "cases": 2,
@@ -988,6 +890,62 @@
             "output_shape": [
               37999
             ]
+          }
+        ]
+      }
+    },
+    "algotune-pagerank-exploratory-short-20261114": {
+      "problem": "pagerank",
+      "cases": 2,
+      "memory_key": "f743c0884f",
+      "settings": {
+        "candidate_image": {
+          "image_tag": "routeevo-scientific:9df8e32a4952",
+          "image_id": "sha256:71df710131a9d70dfabccc4b8a6e3a6456697df24591b08d2735b9fb693ea29d"
+        },
+        "judge_image": {
+          "image_tag": "routeevo-algotune-pagerank:ee2973687637",
+          "image_id": "sha256:3d820727c6a0df3f40ac79de892add04affa234b4b7e8b56617229cf51bb018f"
+        },
+        "size": 1000,
+        "seed": 1729,
+        "allowed_imports": [
+          "numpy",
+          "scipy",
+          "networkx"
+        ],
+        "candidate_interface": "solve"
+      },
+      "input_profile": {
+        "source": "frozen_dev_inputs",
+        "generator_scale": 1000,
+        "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+        "cases": [
+          {
+            "id": "0",
+            "nodes": 1000,
+            "directed_edges": 7950,
+            "node_id_type": "int",
+            "dangling_nodes": 1,
+            "out_degree": {
+              "min": 0,
+              "max": 18,
+              "mean": 7.95
+            },
+            "output_scores": 1000
+          },
+          {
+            "id": "1",
+            "nodes": 1000,
+            "directed_edges": 7878,
+            "node_id_type": "int",
+            "dangling_nodes": 0,
+            "out_degree": {
+              "min": 1,
+              "max": 18,
+              "mean": 7.878
+            },
+            "output_scores": 1000
           }
         ]
       }
@@ -1321,11 +1279,11 @@
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
-      "sha256": "bb5beb296b9491b6542799867870d86347f1e7556d6f93d28a9cf4aaba50e537"
+      "sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
-      "sha256": "644754ade2efde99068a344ad108c88cf54960da57c5fbd2409e48914319b897"
+      "sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T085753-a6bb/report.json",
@@ -1333,19 +1291,19 @@
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c0.py",
-      "sha256": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d"
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c1.py",
-      "sha256": "b8f37f5cd17e0444eab1975ec280b8c1de5e2b1a1f4ee8401398abdd8b52cb5c"
+      "sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c2.py",
-      "sha256": "31e939568f1b66aaa56318173f80c5fc44b1410611a6e85861199f3a8f1039b3"
+      "sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/candidates/c3.py",
-      "sha256": "a6ac28ae018e3d5663be19dc9c6fef6ceedc0ed7185d069faa8c78f515ba4d10"
+      "sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090029-3c04/report.json",
@@ -1373,19 +1331,19 @@
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c0.py",
-      "sha256": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d"
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c1.py",
-      "sha256": "72e1d9ce92bfbbc41de926eecebfb36473ef488ac5df10b3d99bf9c954005fd3"
+      "sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c2.py",
-      "sha256": "545fbc86661cdd100f3ab94c1e140511e59f005810423cc3f123ff7680b17388"
+      "sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/candidates/c3.py",
-      "sha256": "d0f31886359feacbb0b87332b16ceae2f69551043d1f3ac46b2349f8485a27c0"
+      "sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed"
     },
     {
       "path": "docs/research/mac-exploratory-20261114/openai/runs/run-20261114T090451-aeec/report.json",

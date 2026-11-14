@@ -33,9 +33,9 @@ Mac OpenAI & --- & 0.3356500 & 4 轮开发探索完成\\\bottomrule
 本轮复核覆盖归档文件、调用用量、候选哈希与运行记录。重新执行完整裁判还需要原 benchmark 输入及运行环境。样本配置包括固定模型各组三次重复、路由各组一次、Mac 每题两个开发用例；本报告据此给出逐次观测、过程分析和后续可检验的假设。
 
 \subsection{Mac 补交材料的复核状态}
-Mac 的 \texttt{fcf186c} 提交补齐了比较文件、报告、调用、计时及候选导出。数值账本已交叉核对；188 个导出清单条目与文件匹配。候选一致性复核发现，16 个 OpenAI 候选文件中 10 个与运行时记录哈希不符，6 个出现语法错误。原因是导出器的 IP 脱敏规则误处理了代码下标中的方括号。已请求修复导出规则并从原始数据重新导出。
+Mac 归档以 \texttt{5962203} 为准。旧导出器的 IP 脱敏规则误删了代码方括号；现已修复规则，并按原有运行报告与任务身份的 SHA256 恢复 25 份受损程序文件。189 个清单条目、24 份候选、12 份 best 与 16 份任务源码通过一致性核对，53 份归档程序通过语法检查。
 
-报告的 Mac 数值来自运行记录，算法描述结合候选声明与记录中的实现信息。代码文件的重导出状态、计时样本、人工协助分类和来源哈希集中保存在 \texttt{mac-analysis.json}。
+本次修复没有追加模型或性能实验；Mac 按现有材料收尾，原正式 15+12 计划保持取消。调用中匹配的完整程序副本同步恢复，其他脱敏说明与截断响应保留原导出内容。恢复依据见 \texttt{recovery.json}；计时、候选身份、人工协助分类及来源哈希见 \texttt{mac-analysis.json}，复核状态为 \texttt{verified\_archive}。
 
 \subsection{远端 Qwen 与人工协助记录}
 远端 LM Studio 运行 \texttt{qwen3.8-27b-uncensored-mlx}。代理配置导致前三个失败批次分别产生 12、6、1 次 HTTP 503，共 19 次；绕过代理后的直连请求耗时 120.193 秒，返回 2327 输入、2047 输出 tokens，其中 1707 为 reasoning，响应因长度上限截断，记录为 incomplete。
@@ -50,6 +50,6 @@ Mac 的 \texttt{fcf186c} 提交补齐了比较文件、报告、调用、计时�
 \item[S2] \href{\repo/tree/\snap/docs/research/native-formal-20261114/ale/results}{固定 Qwen 归档}：冻结计划、summary、comparison、15 轮候选与报告、模型调用、SHA256SUMS。
 \item[S3] \href{\repo/tree/\snap/docs/research/native-routing/20261114/short-results}{路由短批归档}：四种组合、原始提示、逐例最终得分、研究步骤和用量。
 \item[S4] \href{\repo/tree/\snap/docs/research/native-routing/20261114/long-batch-stopped}{停止长批归档}：原计划、停止记录和费用账本。
-\item[S5] \href{\repo/tree/fcf186c3932b2bd86879deeed5b636e20c4e823c/docs/research/mac-exploratory-20261114}{Mac 补交结果}：OpenAI 探索、远端 Qwen 尝试、人工协助结果与任务参数；\href{\repo/pull/20#issuecomment-6875817264}{候选导出一致性复核记录}。
+\item[S5] \href{\repo/tree/5962203315dc1c229cd6ef3255d06e2dc5745436/docs/research/mac-exploratory-20261114}{Mac 修复归档}：OpenAI 探索、远端 Qwen 尝试、人工协助结果与任务参数；\href{\repo/pull/20#issuecomment-6875817264}{候选导出一致性复核记录}。
 \item[S6] \href{\repo/blob/\snap/docs/project-description.md}{历史系统能力说明}及\href{\repo/blob/\snap/docs/results.md}{自建任务实验}：程序复验与跨任务经验积累的独立证据。
 \end{description}

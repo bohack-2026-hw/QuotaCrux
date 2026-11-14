@@ -2,7 +2,7 @@
 
 # QuotaCrux
 
-**Budget-aware autonomous research agent with decoupled action/model routing, zero-trust verification, and executable experience memory.**
+**Self-evolving, budget-aware autonomous research agent: decoupled action/model routing, zero-trust verification, and rollback-safe executable experience memory.**
 
 [简体中文](README.md) · [English](README.en.md) · [Docs Index](docs/README.md) · [Project Overview (PDF)](docs/presentation/project-overview.pdf) · [Poster (PDF)](docs/poster/QuotaCrux-poster.pdf) · [Slide Deck (PDF)](docs/presentation/QuotaCrux.pdf) · [Backend Guide](backend/README.md)
 
@@ -21,6 +21,26 @@ QuotaCrux treats code and algorithm optimization as a **closed-loop, budget-gove
 1. **Decoupled Routing (`ActionRouter` × `ModelRouter`)** — Separates *what step to take next* (`analyze`, `propose_candidate`, `profile_candidate`, `run_validation`, `finish`) from *which model tier generates the artifact* (`small` local/hosted Qwen vs. `large` `gpt-6.1-sol`). Both decisions can be driven by deterministic rules or the lightweight `gpt-6-luna` Decisions API, keeping strong-model tokens focused on breakthroughs—in the `ahc026` action-decisions study, Decisions routing accounted for **2.26%** of recorded USD spend.
 2. **Executable Experience, Not Just Text Tips** — In earlier ablations, storing text-only advice reduced API cost but *hurt* optimization quality (`1.41× → 1.29×`). QuotaCrux stores **verified programs paired with their applicability conditions** inside immutable snapshots (`v0, v1, …`). New tasks re-validate matching past programs in Docker *before* calling any LLM, escalate straight to the large model on unseen task families or conditions, and atomically publish new wins with instant rollback.
 3. **Zero-Trust Sandbox Evaluation & Full Resource Ledger** — Models cannot self-grade. Every candidate is checked in an isolated, network-disabled, read-only Docker container (or a dedicated GPU worker for KernelBench), timed alternately against the baseline with strict statistical gating (`U = 0`), and verified once more on a hidden final suite. Every token, reasoning token, latency, and unknown-cost response (`null`, never silently zeroed) is preserved in a reproducible ledger.
+
+---
+
+## Built for Better: Inspectable, Rollback-Safe Self-Evolution
+
+Aligned with the **"Built for Better — Building Self-Evolving Intelligence"** theme principle, QuotaCrux goes beyond one-shot task completion: every verified sandbox outcome feeds back into inspectable, diffable, rollback-safe experience snapshots so subsequent runs perform faster, cheaper, and more reliably:
+
+- **Quantitative proof that the next run beats the last**
+  - **Cross-round offline evolution (`v0 → v19`):** On the sealed `D-Batch` held-out suite, two learning rounds raised target attainment from `15/18` to **`18/18`**, median final speedup from `1.20×` to **`1.73×`**, and total runtime from `1782s` down to **`669s`**, achieving **`18/18` zero-LLM / `$0.000` USD** re-validation delivery on held-out tasks (prior learning rounds cost `$0.455` separately).
+  - **Live online stream evolution (`S-Stream`):** Starting from `v19` (containing only `groupagg` experience) across mixed seen and unseen task families, QuotaCrux escalated unseen families to the large tier once, captured verified code, and resolved **all `30/30` subsequent same-family tasks with zero LLM calls** (vs. `9/30` without memory), cutting overall GPT requests by **78%** (`27 → 6`) and cost from `$0.402` to `$0.086`.
+  - **Within-run correction & architectural self-evolution:** Within an episode, sandbox refutation drives targeted hypothesis revision and deterministic escalation (e.g., `A-01`: `0.90×` refuted → format error → escalated to `gpt-6.1-sol` reading exact failure feedback to reach **`1.45×`**). At the system level, our `C-Batch` ablation exposed that text-only memory (`v6`) actually *reduced* speedup (`1.41× → 1.29×`), driving the evolution to `v2` executable program reuse and `v3` coverage triage.
+- **Inspectable knowledge capture & failure-aware mistake avoidance**
+  No opaque "it got smarter" claims. The runner deterministically records **complete verified programs, 5 workload classification features, and tri-state sandbox verdicts** (`success` / `no_gain` / `failure` — e.g., `59` records in `v19`: `42` success, `13` no-gain, `4` failure; LLM prose stays tagged as unverified hypotheses). If a candidate program has a prior `no_gain` or `failure` record closer to the current workload than any `success` record, pre-LLM re-validation skips it automatically to prevent repeated mistakes, and the ledger logs every experience ID read and published.
+- **Immutable snapshots, diffs & instant safe rollback**
+  Every evolution step publishes an immutable snapshot (`v0, v1, …`) linked to its parent and source run. Operators can diff snapshots and safely roll back the active pointer via the Snapshots UI or CLI at any time while keeping the full pointer audit log intact:
+  ```bash
+  uv run quotacrux snapshots list                              # List snapshot lineage, record counts, and active pointer (*)
+  uv run quotacrux snapshots diff v0 v19                       # Compare added, removed, and shared experience IDs between snapshots
+  uv run quotacrux snapshots activate v0 --reason "baseline"   # Safely roll back active snapshot with full audit history
+  ```
 
 ---
 
@@ -150,6 +170,10 @@ cd backend
 
 # Run a single task with decoupled Decisions action routing
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
+
+# Deliver online while evolving snapshots, or learn serially across tasks
+uv run quotacrux run B-01 --mode online --snapshot v19
+uv run quotacrux learn A-01 A-02
 
 # Run a 4-way routing ablation (llm|decisions × rule|decisions) on a frozen snapshot
 uv run quotacrux ablate-routing B-01 B-02 --snapshot v0 --repeats 3

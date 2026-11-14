@@ -2,6 +2,7 @@
 import copy
 import dataclasses
 import json
+import os
 import uuid
 
 import pytest
@@ -189,7 +190,9 @@ def test_scripted_run_report_profile_and_export(tmp_path):
         {**base, "action": "propose_candidate", "code": task.initial_code, "parent_candidate_id": "c0"},
         {**base, "action": "finish", "finish_reason": "流程已验证"},
     ]}))
-    runner = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=script, measure=config.MeasureConfig(repeats=1)))
+    cpuset = str(min(os.sched_getaffinity(0)))
+    runner = Runner(RunOptions(task_id=task.task_id, snapshot_id="v0", script=script, router=False,
+                               measure=config.MeasureConfig(repeats=1, cpuset_cpus=cpuset, function_warmups=3)))
     runner.create()
     rep = runner.execute()
     assert rep["outcome"]["final_correct"]
@@ -200,6 +203,9 @@ def test_scripted_run_report_profile_and_export(tmp_path):
     out = tmp_path / "bundle"
     cli.export_bundle(rep["run_id"], out, narrative.run_markdown(rep["run_id"]))
     assert "import-effibench" in (out / "reproduce.sh").read_text()
+    check_line = next(line for line in (out / "reproduce.sh").read_text().splitlines()
+                      if line.startswith("uv run routeevo check"))
+    assert f"--cpuset-cpus {cpuset}" in check_line and "--function-warmups 3" in check_line
 
 
 @requires_docker
@@ -211,7 +217,7 @@ def test_candidate_checker_error_stops_without_upgrade_or_learning(tmp_path):
     script = tmp_path / "bad-checker.json"
     script.write_text(json.dumps({"small": [{"action": "propose_candidate", "purpose": "触发校验器异常", "expected_result": "明确停止",
                                             "verification": "外部评测器", "code": "print('bad')", "parent_candidate_id": "c0"}]}))
-    runner = Runner(RunOptions(task_id=task.task_id, mode="learn", snapshot_id="v0", script=script))
+    runner = Runner(RunOptions(task_id=task.task_id, mode="learn", snapshot_id="v0", script=script, router=False))
     runner.create()
     rep = runner.execute()
     assert rep["stop_reason"] == "environment_error"

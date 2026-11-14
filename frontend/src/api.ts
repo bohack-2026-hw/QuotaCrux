@@ -69,6 +69,7 @@ export interface Step {
   next_decision: string | null
   candidate_id: string | null
   model_call_id: string | null
+  model_role: string | null
   started_at: string
 }
 
@@ -155,10 +156,15 @@ export interface Report {
   final_evaluation: { status: string; correct: boolean | null; speedup: number | null; candidate_median_s: number | null; baseline_median_s: number | null } | null
   candidates: Candidate[]
   iterations: Record<string, number | null>
-  usage: { total: Ledger; by_model: Record<string, Ledger> }
+  usage: { total: Ledger; by_model: Record<string, Ledger>; by_purpose?: { routing: Ledger; generation: Ledger } }
   timing: Record<string, number | null>
   steps: Step[]
-  config: { limits: { max_model_requests: number; max_candidates: number; wall_clock_s: number }; models: Record<string, { model: string; reasoning_effort: string | null }> }
+  config: {
+    limits: { max_model_requests: number; max_candidates: number; wall_clock_s: number }
+    models: Record<string, { model: string; reasoning_effort: string | null }>
+    research_protocol?: { mode: string; fixed_model: 'small' | 'large' | null; final_evaluation: boolean }
+    routing?: { action: 'llm' | 'decisions'; model: 'rule' | 'decisions' }
+  }
   reproduce: Record<string, string | null>
 }
 
@@ -313,7 +319,8 @@ export const api = {
   live: () => call<LiveData>('/live'),
   tasks: () => call<TaskSummary[]>('/tasks'),
   runs: (taskId?: string) => call<RunRow[]>(`/runs?limit=300${taskId ? `&task_id=${taskId}` : ''}`),
-  startRun: (body: { task_id: string; mode: string; snapshot_id?: string; label?: string }) => post<{ run_id: string }>('/runs', body),
+  startRun: (body: { task_id: string; mode: string; snapshot_id?: string; label?: string;
+    action_router?: 'llm' | 'decisions'; model_router?: 'rule' | 'decisions' }) => post<{ run_id: string }>('/runs', body),
   stopRun: (id: string) => post(`/runs/${id}/stop`),
   run: (id: string) => call<Report>(`/runs/${id}`),
   candidate: (runId: string, cid: string) => call<{ code: string }>(`/runs/${runId}/candidates/${cid}`),

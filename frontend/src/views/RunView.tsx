@@ -130,6 +130,8 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
   const live = rep.status === 'running'
   const upgraded = (rep.iterations.upgrades ?? 0) > 0
   const routedLarge = rep.route?.route === 'large'
+  const fixedRole = rep.config.research_protocol?.fixed_model
+  const currentRole = fixedRole ?? (upgraded || routedLarge ? 'large' : 'small')
   const routeKey = rep.route?.reason ?? ((rep.iterations.model_requests ?? 0) === 0 && rep.outcome.best_from_reuse ? 'reuse' : null)
   const loopS = rep.timing.agent_loop_elapsed_s ?? 0
 
@@ -179,9 +181,9 @@ function RunDetail({ rep, onOpenExperience }: { rep: Report; onOpenExperience: (
         </div>
         <hr className="rule" />
         <div className="stats">
-          <Stat k="当前模型" v={(rep.iterations.model_requests ?? 0) === 0 && !live ? '未调用' : upgraded || routedLarge ? 'GPT' : 'Qwen'}
-            s={routedLarge ? `分流：${ROUTE[rep.route!.reason]?.[0] ?? rep.route!.reason}` : upgraded ? `第 ${rep.iterations.upgrade_at_step} 步按规则升级`
-              : (rep.iterations.model_requests ?? 0) === 0 && !live ? '复用经验中的程序直接交付' : '本地 · 未升级'} />
+          <Stat k="当前生成模型" v={(rep.iterations.generation_requests ?? rep.iterations.model_requests ?? 0) === 0 && !live ? '未调用' : roleName(currentRole)}
+            s={fixedRole ? `固定模型 · ${rep.config.models[fixedRole].model}` : routedLarge ? `分流：${ROUTE[rep.route!.reason]?.[0] ?? rep.route!.reason}` : upgraded ? `第 ${rep.iterations.upgrade_at_step} 步升级`
+              : (rep.iterations.generation_requests ?? rep.iterations.model_requests ?? 0) === 0 && !live ? '本次未请求生成模型' : '小模型 · 未升级'} />
           <Stat k="Token 输入 / 输出" v={`${fmt.n(u.input_tokens)} / ${fmt.n(u.output_tokens)}`}
             s={u.reasoning_tokens != null ? `其中推理 ${fmt.n(u.reasoning_tokens)}` : u.input_tokens_unknown_calls ? `${u.input_tokens_unknown_calls} 次调用用量未知` : '推理 token 未单列'} />
           <Stat k="模型费用" v={fmt.usd(u.cost_usd)} s={costNote(u.cost_status)} />
@@ -339,6 +341,8 @@ function StepRow({ s, rep }: { s: Step; rep: Report }) {
 }
 
 function modelOf(rep: Report, s: Step): string {
+  if (s.model_role) return roleName(s.model_role)
+  if (rep.config.research_protocol?.fixed_model) return roleName(rep.config.research_protocol.fixed_model)
   if (rep.route?.route === 'large') return roleName('large')
   const upgradeAt = rep.iterations.upgrade_at_step
   const role = upgradeAt != null && s.seq > upgradeAt ? 'large' : 'small'

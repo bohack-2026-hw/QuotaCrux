@@ -19,22 +19,13 @@ from .. import config, db, evaluator, memory, report, taskpkg
 from ..llm.base import LLMResult
 from ..llm.chat_compat import ChatCompatClient
 from ..llm.openai_responses import OpenAIResponsesClient
+from ..llm.openai_decisions import PRICE_VERSION as DECISION_PRICE_VERSION, estimate_decision_cost
 from ..llm.pricing import NOT_BILLED_ERRORS, estimate_cost
 from ..llm.scripted import ScriptedClient
 from ..sandbox import executor
-from . import actions, prompt
+from . import actions, prompt, routing
+from .routing import UPGRADE_RULE
 
-# v1 (used for A learning and the B comparison) only counted candidate misses. B showed that a small model can
-# spend its requests on analysis without producing a second miss, so the switch never happened. v2 also caps the
-# small model's requests without an on-target candidate. Applied to every snapshot alike.
-UPGRADE_RULE = {
-    "id": "upgrade-rule-v2",
-    "description": "start with the small model; switch to the large model for the rest of the run, if model requests "
-                   "remain, after 2 consecutive candidate attempts that are not correct-and-on-target or after 3 small-model "
-                   "requests without an on-target candidate",
-    "consecutive_misses": 2,
-    "max_small_requests_without_goal": 3,
-}
 API_ERRORS = {"timeout", "network", "rate_limit", "http_5xx", "http_4xx", "config"}
 FATAL_API_ERRORS = {"config", "http_4xx"}
 MAX_CONSECUTIVE_API_ERRORS = 2
@@ -60,6 +51,7 @@ class RunOptions:
     fixed_model: str | None = None  # small | large; research comparisons default to small
     final_evaluation: bool = True
     router: bool = True  # False: every run starts on the small model (ablation; changes the fingerprint)
+    routing: config.RoutingConfig = field(default_factory=config.RoutingConfig)
 
 
 def _make_clients(opts: RunOptions) -> tuple[dict, dict[str, config.ModelConfig]]:
@@ -95,7 +87,10 @@ class Runner:
                 raise ValueError("research comparisons require eval mode and empty snapshot v0")
             opts.snapshot_id = "v0"
             opts.fixed_model = opts.fixed_model or "small"
-        if opts.fixed_model:
+        if (opts.research_mode != "legacy" or self.task.is_native) and opts.routing != config.RoutingConfig():
+            raise ValueError("native and research runs require action_router=llm and model_router=rule")
+        if opts.fixed_model or opts.routing.model == "decisions":
+            # Explicit model selection takes precedence over the initial memory-based rule.
             opts.router = False
         if self.task.is_native and opts.mode != "eval":
             raise ValueError("native research benchmarks currently support eval mode only")
@@ -106,6 +101,7 @@ class Runner:
                              "tasks may write experience (held-out splits run in eval mode with a frozen snapshot)")
         self.limits, self.measure = opts.limits, opts.measure
         self.clients, self.model_cfgs = _make_clients(opts)
+        self.action_router, self.model_router = routing.make_routers(opts.routing, self.clients, self.model_cfgs)
         active = db.one("SELECT value FROM settings WHERE key = 'active_snapshot_id'")["value"]
         self.snapshot_id = opts.snapshot_id or active
         if not db.one("SELECT 1 FROM snapshots WHERE snapshot_id = ?", (self.snapshot_id,)):
@@ -173,6 +169,7 @@ class Runner:
         comparable = {
             "task_manifest_sha256": db.one("SELECT manifest_sha256 FROM tasks WHERE task_id = ?", (self.task.task_id,))["manifest_sha256"],
             "models": {r: c.public_dict() for r, c in self.model_cfgs.items()},
+            "routing": routing.manifest(self.opts.routing),
             "upgrade_rule": UPGRADE_RULE,
             "prompt": {"version": prompt.PROMPT_VERSION, "system_sha256": self.system_prompt_sha},
             "research_protocol": {"mode": self.opts.research_mode, "fixed_model": self.opts.fixed_model,
@@ -386,23 +383,41 @@ class Runner:
         return bool(ev.status == "passed" and ev.improved and ev.speedup is not None and ev.speedup >= self.run_target)
 
     def _iterate(self) -> None:
-        if db.one("SELECT stop_requested FROM runs WHERE run_id = ?", (self.run_id,))["stop_requested"]:
-            return self._stop("user_stopped", "stop requested")
-        blocked = self._budget_block()
-        if blocked:
-            return self._stop("budget_exhausted", blocked)
-        if not self.opts.fixed_model and self.role == "small" and self.small_requests >= UPGRADE_RULE["max_small_requests_without_goal"]:
-            self._upgrade(f"小模型已用 {self.small_requests} 次请求仍没有达标候选，按升级规则切换到大模型")
+        if not self._before_request():
+            return
+        # LLM action selection uses a generation model. Decisions can execute a tool without selecting one.
+        if self.opts.routing.action == "llm" and not self._select_model():
+            return
 
         started = db.now()
-        res, call_id, cfg = self._call_model()
+        state = self._routing_state()
+        if not self._before_request():
+            return
+        res, call_id, cfg = self._invoke(self.action_router.config_for(self.role),
+                                        lambda timeout: self.action_router.request(state, timeout))
         if not res.ok:
             return self._handle_model_failure(res, call_id, cfg, started)
         self.api_errors_in_row = 0
         if self.opts.research_mode != "legacy" and time.perf_counter() >= self.t0 + self.limits.wall_clock_s:
             return self._stop("budget_exhausted", "model response completed after the research deadline")
         try:
-            act = actions.parse(res.text or "")
+            selected = self.action_router.resolve(state, res)
+            if selected.choice:
+                self._step("model", "route_action", "done", started_at=started, model_call_id=call_id,
+                           purpose=f"Decisions 选择动作 {selected.choice}",
+                           result={"choice": selected.choice, "answers": json.loads(res.text)}, next_decision=selected.choice)
+            act = selected.action
+            if selected.generate:
+                if not self._select_model() or not self._before_request():
+                    return
+                started = db.now()
+                res, call_id, cfg = self._call_model(selected.generate)
+                if not res.ok:
+                    return self._handle_model_failure(res, call_id, cfg, started)
+                self.api_errors_in_row = 0
+                act = actions.parse(res.text or "")
+                if act.action != selected.generate:
+                    raise actions.InvalidAction("route_mismatch", f"router selected {selected.generate}, got {act.action}")
         except actions.InvalidAction as exc:
             return self._invalid(started, call_id, exc, raw=res.text)
 
@@ -419,15 +434,26 @@ class Runner:
 
     # ---------- model ----------
 
-    def _budget_block(self) -> str | None:
-        if self.requests_used >= self.limits.max_model_requests:
-            return f"model_requests: used {self.requests_used}/{self.limits.max_model_requests}"
+    def _budget_block(self, required_requests: int = 1) -> str | None:
+        if self.requests_used + required_requests > self.limits.max_model_requests:
+            return (f"model_requests: used {self.requests_used}/{self.limits.max_model_requests}"
+                    + (f"; need {required_requests}" if required_requests > 1 else ""))
         remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)
         if remaining < self.limits.min_request_window_s:
             return f"wall_clock: {remaining:.1f}s left, below the {self.limits.min_request_window_s:.0f}s request window"
         if self.limits.token_budget is not None and self.tokens_used >= self.limits.token_budget:
             return f"tokens: used {self.tokens_used}/{self.limits.token_budget}"
         return None
+
+    def _before_request(self, required_requests: int = 1) -> bool:
+        if db.one("SELECT stop_requested FROM runs WHERE run_id = ?", (self.run_id,))["stop_requested"]:
+            self._stop("user_stopped", "stop requested")
+            return False
+        blocked = self._budget_block(required_requests)
+        if blocked:
+            self._stop("budget_exhausted", blocked)
+            return False
+        return True
 
     def _budget_view(self) -> dict:
         elapsed = time.perf_counter() - self.t0
@@ -444,10 +470,9 @@ class Runner:
             "target_speedup": self.run_target, "task_target_speedup": self.task.target_min_speedup,
         }
 
-    def _call_model(self) -> tuple[LLMResult, str, config.ModelConfig]:
-        cfg = self.model_cfgs[self.role]
+    def _state(self) -> str:
         independent = self.opts.research_mode == "independent"
-        state = prompt.build_state(
+        return prompt.build_state(
             task=self.task,
             candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items() if not independent or cid == "c0"],
             evidence=[] if independent else self.evidence, history=[] if independent else self.history,
@@ -456,38 +481,93 @@ class Runner:
             experience_summary=self.experience_summary,
             budget=self._budget_view(), last_feedback=None if independent else self.last_feedback,
         )
+
+    def _routing_state(self) -> routing.RoutingState:
+        independent = self.opts.research_mode == "independent"
+        return routing.RoutingState(
+            system=self.system_prompt, text=self._state(), role=self.role, small_requests=self.small_requests,
+            misses=0 if independent else self.misses, requests_remaining=self.limits.max_model_requests - self.requests_used,
+            candidates_remaining=self.limits.max_candidates - self.model_candidates,
+            runnable_candidates=tuple(cid for cid, c in self.candidates.items()
+                                      if (not independent or cid == "c0")
+                                      and (c.get("latest_evaluation") or {}).get("status") != "static_check_failed"),
+            generation_requests=1 + int(not self.opts.fixed_model and self.model_router.config_for(self.role) is not None),
+            models={r: c.public_dict() for r, c in self.model_cfgs.items()},
+        )
+
+    def _select_model(self) -> bool:
+        if self.opts.fixed_model:
+            return True
+        state = self._routing_state()
+        cfg = self.model_router.config_for(self.role)
+        res = None
+        if cfg is not None:
+            if not self._before_request(required_requests=2):
+                return False
+            started = db.now()
+            res, call_id, cfg = self._invoke(cfg, lambda timeout: self.model_router.request(state, timeout))
+            if not res.ok:
+                self._handle_model_failure(res, call_id, cfg, started)
+                return False
+            self.api_errors_in_row = 0
+        selected = self.model_router.resolve(state, res)
+        if res is not None:
+            self._step("model", "route_model", "done", started_at=started, model_call_id=call_id,
+                       purpose=selected.reason, result={"choice": selected.role, "answers": json.loads(res.text)},
+                       next_decision=f"continue with {selected.role} model")
+        if selected.role != self.role:
+            self._upgrade(selected.reason)
+        return True
+
+    def _call_model(self, forced_action: str) -> tuple[LLMResult, str, config.ModelConfig]:
+        cfg = self.model_cfgs[self.role]
+        state = self._state() + f"\nThe action router selected {forced_action}. Return that action only, with its required fields."
+        schema = {**actions.ACTION_SCHEMA, "properties": {**actions.ACTION_SCHEMA["properties"],
+                  "action": {"type": "string", "enum": [forced_action]}}}
+        return self._invoke(cfg, lambda timeout: self.clients[self.role].complete(
+            self.system_prompt, state, schema, timeout, cfg.max_output_tokens))
+
+    def _invoke(self, cfg: config.ModelConfig, request) -> tuple[LLMResult, str, config.ModelConfig]:
         remaining = self.limits.wall_clock_s - (time.perf_counter() - self.t0)
         timeout = max(1.0, min(self.limits.model_request_timeout_s, remaining))
         call_id = f"m{self.requests_used + 1}"
-        db.add_event(self.run_id, "model_started", {"call_id": call_id, "role": self.role, "model": cfg.model, "timeout_s": round(timeout, 1)})
+        db.add_event(self.run_id, "model_started", {"call_id": call_id, "role": cfg.role, "model": cfg.model, "timeout_s": round(timeout, 1)})
         started = db.now()
-        res = self.clients[self.role].complete(self.system_prompt, state, actions.ACTION_SCHEMA, timeout, cfg.max_output_tokens)
+        res = request(timeout)
         ended = db.now()
         self.requests_used += 1
-        if self.role == "small":
+        if cfg.role == "small":
             self.small_requests += 1
-        cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
-                                                         res.error_kind not in NOT_BILLED_ERRORS, base_url=cfg.base_url)
+        if cfg.provider == "openai_decisions":
+            cost = estimate_decision_cost(res)
+            cost_status = "estimated" if cost is not None else "unknown"
+            if res.error_kind in NOT_BILLED_ERRORS:
+                cost, cost_status = 0.0, "not_billed"
+            price_version = DECISION_PRICE_VERSION
+        else:
+            cost, cost_status, price_version = estimate_cost(cfg.provider, cfg.model, res.usage,
+                                                             res.error_kind not in NOT_BILLED_ERRORS, base_url=cfg.base_url)
         u = res.usage
         if u.input_tokens is not None and u.output_tokens is not None:
             self.tokens_used += u.input_tokens + u.output_tokens
         path = self.dir / "calls" / f"{call_id}.json"
         path.write_text(json.dumps({"request": res.request_body, "response": res.response_body,
-                                    "system_prompt_sha256": self.system_prompt_sha}, ensure_ascii=False, indent=2, default=str))
+                                    "system_prompt_sha256": self.system_prompt_sha if cfg.provider != "openai_decisions" else None},
+                                   ensure_ascii=False, indent=2, default=str))
         db.insert("model_calls", {
-            "call_id": f"{self.run_id}/{call_id}", "run_id": self.run_id, "provider": cfg.provider, "role": self.role,
+            "call_id": f"{self.run_id}/{call_id}", "run_id": self.run_id, "provider": cfg.provider, "role": cfg.role,
             "model_requested": cfg.model, "model_returned": res.model_returned, "reasoning_effort": cfg.reasoning_effort,
             "max_output_tokens": cfg.max_output_tokens, "status": "ok" if res.ok else "error",
             "error_kind": res.error_kind, "error_message": res.error_message, "request_id": res.request_id,
             "input_tokens": u.input_tokens, "cached_input_tokens": u.cached_input_tokens, "output_tokens": u.output_tokens,
             "reasoning_tokens": u.reasoning_tokens, "usage_source": u.source,
-            "estimated_input_tokens": (len(self.system_prompt) + len(state)) // 4,
+            "estimated_input_tokens": len(json.dumps(res.request_body, ensure_ascii=False)) // 4,
             "cost_usd": cost, "cost_status": cost_status, "price_version": price_version,
             "latency_s": round(res.latency_s, 3), "request_path": str(path), "response_path": str(path),
             "started_at": started, "ended_at": ended,
         })
         db.add_event(self.run_id, "model_finished", {
-            "call_id": call_id, "role": self.role, "ok": res.ok, "error_kind": res.error_kind, "latency_s": round(res.latency_s, 2),
+            "call_id": call_id, "role": cfg.role, "ok": res.ok, "error_kind": res.error_kind, "latency_s": round(res.latency_s, 2),
             "input_tokens": u.input_tokens, "output_tokens": u.output_tokens, "reasoning_tokens": u.reasoning_tokens,
             "cost_usd": cost, "cost_status": cost_status,
         })
@@ -500,7 +580,7 @@ class Runner:
         fatal = kind in FATAL_API_ERRORS or self.api_errors_in_row >= MAX_CONSECUTIVE_API_ERRORS
         decision = "stop: model_api_error" if is_api and fatal else "retry with a new request if budget allows"
         self._step("model", "model_request", "api_error" if is_api else "unusable_reply", started_at=started,
-                   model_call_id=call_id, result={"error_kind": kind, "message": res.error_message, "role": self.role},
+                   model_call_id=call_id, result={"error_kind": kind, "message": res.error_message, "role": cfg.role},
                    next_decision=decision)
         if is_api and fatal:
             return self._stop("model_api_error", f"{cfg.provider}/{cfg.model}: {kind}: {res.error_message}")
@@ -626,7 +706,8 @@ class Runner:
             if counts_as_attempt:
                 self.misses += 1
             decision = "continue"
-            if not self.opts.fixed_model and self.role == "small" and self.misses >= UPGRADE_RULE["consecutive_misses"]:
+            if (not self.opts.fixed_model and self.model_router.eager_after_validation and self.role == "small"
+                    and self.misses >= UPGRADE_RULE["consecutive_misses"]):
                 decision = ("upgrade to large model, continue" if self.requests_used < self.limits.max_model_requests
                             else "upgrade rule met but no model requests left")
         best = self.candidates[self.best_id].get("latest_evaluation") or {}
@@ -674,7 +755,8 @@ class Runner:
         if self.opts.fixed_model or self.requests_used >= self.limits.max_model_requests:
             return
         self.role = "large"
-        detail = {"rule": UPGRADE_RULE["id"], "misses": self.misses, "small_requests": self.small_requests,
+        detail = {"rule": UPGRADE_RULE["id"] if self.opts.routing.model == "rule" else "decisions-model-v1",
+                  "misses": self.misses, "small_requests": self.small_requests,
                   "to": self.model_cfgs["large"].model}
         self._step("program", "upgrade_model", "done", result=detail, next_decision="continue with large model", purpose=reason)
         db.add_event(self.run_id, "model_upgraded", detail)

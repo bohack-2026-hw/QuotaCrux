@@ -60,6 +60,7 @@ def build(run_id: str) -> dict:
     target = manifest["target"]["min_speedup"]
     steps = db.all_rows("SELECT * FROM steps WHERE run_id = ? ORDER BY seq", (run_id,))
     calls = db.all_rows("SELECT * FROM model_calls WHERE run_id = ? ORDER BY started_at", (run_id,))
+    call_roles = {c["call_id"]: c["role"] for c in calls}
     tools = db.all_rows("SELECT * FROM tool_calls WHERE run_id = ? ORDER BY started_at", (run_id,))
     evals = db.all_rows("SELECT * FROM evaluations WHERE run_id = ? ORDER BY started_at", (run_id,))
     cands = db.all_rows("SELECT * FROM candidates WHERE run_id = ? ORDER BY seq", (run_id,))
@@ -88,7 +89,7 @@ def build(run_id: str) -> dict:
     passed = [cid for cid in passed_all if cid in model_ids]
     improved = [cid for cid in improved_all if cid in model_ids]
     raised = next((s for s in steps if s["action"] == "set_target"), None)
-    routed = next((s for s in steps if s["action"] == "route_model"), None)
+    routed = next((s for s in steps if s["action"] == "route_model" and s["actor"] == "program"), None)
     route = json.loads(routed["result_json"]) if routed else None
 
     final_out = None
@@ -161,6 +162,8 @@ def build(run_id: str) -> dict:
         "candidates": cand_out,
         "iterations": {
             "model_requests": len(calls),
+            "routing_requests": sum(c["role"] in ("router_action", "router_model") for c in calls),
+            "generation_requests": sum(c["role"] not in ("router_action", "router_model") for c in calls),
             "candidates_proposed": len(model_cands),
             "candidates_passed": len(passed),
             "candidates_improved": len(improved),
@@ -180,7 +183,11 @@ def build(run_id: str) -> dict:
         "usage": {
             "total": total_ledger,
             "by_model": {k: _ledger(v) for k, v in by_role.items()},
-            "self_hosted_machine_cost": "unknown (not accounted)" if any(c["provider"] == "chat_compat" for c in calls) else None,
+            "by_purpose": {
+                "routing": _ledger([c for c in calls if c["role"] in ("router_action", "router_model")]),
+                "generation": _ledger([c for c in calls if c["role"] not in ("router_action", "router_model")]),
+            },
+            "self_hosted_machine_cost": "unknown (not accounted)" if any(c["cost_status"] == "local_no_api_fee" for c in calls) else None,
         },
         "timing": {
             "wall_clock_total_s": _secs(run["started_at"], run["ended_at"]),
@@ -200,7 +207,7 @@ def build(run_id: str) -> dict:
              "expected_result": s["expected_result"], "verification": s["verification"], "hypothesis": s["hypothesis"],
              "params": json.loads(s["params_json"]), "result": json.loads(s["result_json"]),
              "next_decision": s["next_decision"], "candidate_id": s["candidate_id"], "evaluation_id": s["evaluation_id"],
-             "model_call_id": s["model_call_id"], "tool_call_id": s["tool_call_id"],
+             "model_call_id": s["model_call_id"], "model_role": call_roles.get(s["model_call_id"]), "tool_call_id": s["tool_call_id"],
              "started_at": s["started_at"], "ended_at": s["ended_at"]}
             for s in steps
         ],
@@ -239,6 +246,8 @@ def _run_command(run, cfg: dict) -> str:
     argv = ["uv", "run", "routeevo", "run", run["task_id"], "--mode", run["mode"], "--snapshot", run["snapshot_id"]]
     if cfg.get("router", {}).get("version") == "off":
         argv += ["--no-router"]
+    routing = cfg.get("routing", {})
+    argv += ["--action-router", routing.get("action", "llm"), "--model-router", routing.get("model", "rule")]
     protocol = cfg.get("research_protocol", {})
     if protocol.get("mode"):
         argv += ["--research-mode", protocol["mode"]]

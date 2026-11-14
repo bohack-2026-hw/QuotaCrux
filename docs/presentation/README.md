@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | 项目介绍 | [Markdown](project-overview.md) | [PDF](project-overview.pdf) |
 | 现场演示脚本 | [Markdown](demo-script.md) | — |
-| 技术演示文稿（23 页） | [源文件](slides/) · [PowerPoint](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
+| 技术演示文稿（22 页） | [源文件](slides/) · [PowerPoint](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
 | 展示视频（2:43） | [手稿](../video/QuotaCrux-video-manuscript.md) | [MP4](../video/QuotaCrux-showcase.mp4) |
 | 海报 | [生成脚本](../../backend/scripts/build_poster.py) | [PDF](../poster/QuotaCrux-poster.pdf) · [预览](../poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) · [场景预览](../poster/QuotaCrux-xbanner-mockup.jpg) |
 

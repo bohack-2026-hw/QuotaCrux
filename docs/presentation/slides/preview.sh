@@ -1,7 +1,7 @@
 #!/bin/sh
 # usage: ./preview.sh -> preview/m1.jpg … (LibreOffice render with this Mac's fonts; for checking layout only)
 cd "$(dirname "$0")" && mkdir -p preview
-uv run -q --with python-pptx --with lxml python build.py preview/_preview.pptx >/dev/null || exit 1
+uv run -q --with python-pptx --with lxml --with pillow python build.py preview/_preview.pptx >/dev/null || exit 1
 rm -rf preview/pdf && mkdir -p preview
 FONTCONFIG_FILE=/opt/homebrew/etc/fonts/fonts.conf soffice --headless --convert-to pdf --outdir preview/pdf preview/_preview.pptx >/dev/null 2>&1
 uv run -q --with pymupdf --with pillow python - <<'PY'

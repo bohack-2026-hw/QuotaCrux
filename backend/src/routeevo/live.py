@@ -177,3 +177,39 @@ def live() -> dict:
         "active_snapshot": memory.active_snapshot(),
         "gpt_today": {"calls": spend["n"], "cost_usd": round(spend["c"] or 0, 4)},
     }
+
+
+# ---------- system design summary ----------
+
+def system_summary() -> dict:
+    """How the work split between the local small model and the cloud large model over every finished real run, and
+    which key node brought the large model in. Scripted runs are excluded; control arms are included (labelled)."""
+    real = ("r.status IN ('completed', 'failed', 'stopped') AND (json_extract(r.config_json, '$.scripted') IS NULL"
+            " OR json_extract(r.config_json, '$.scripted') = '[]')")
+    runs = db.all_rows(f"SELECT r.run_id,"
+                       " (SELECT COUNT(*) FROM model_calls m WHERE m.run_id = r.run_id AND m.role = 'small') AS small,"
+                       " (SELECT COUNT(*) FROM model_calls m WHERE m.run_id = r.run_id AND m.role = 'large') AS large,"
+                       " (SELECT origin FROM candidates c WHERE c.run_id = r.run_id AND c.candidate_id = r.best_candidate_id) AS best_origin,"
+                       f" e.goal_met FROM runs r LEFT JOIN evaluations e ON e.evaluation_id = r.final_evaluation_id WHERE {real}")
+    split = {"no_model": 0, "small_only": 0, "large_used": 0}
+    for r in runs:
+        split["no_model" if not (r["small"] or r["large"]) else "small_only" if not r["large"] else "large_used"] += 1
+    calls = {r["role"]: {"requests": r["n"], "cost_usd": round(r["c"] or 0, 4), "unknown_cost": r["u"]} for r in db.all_rows(
+        f"SELECT m.role, COUNT(*) AS n, SUM(m.cost_usd) AS c, SUM(m.cost_usd IS NULL AND m.cost_status = 'unknown') AS u"
+        f" FROM model_calls m JOIN runs r USING (run_id) WHERE {real} GROUP BY m.role")}
+    nodes = {"upgrade_two_misses": 0, "upgrade_small_cap": 0, "upgrade_decision_model": 0}
+    for s in db.all_rows(f"SELECT s.result_json FROM steps s JOIN runs r USING (run_id) WHERE s.action = 'upgrade_model' AND {real}"):
+        d = json.loads(s["result_json"] or "{}")
+        if "decision" in str(d.get("rule", "")):
+            nodes["upgrade_decision_model"] += 1
+        elif (d.get("misses") or 0) >= 2:
+            nodes["upgrade_two_misses"] += 1
+        else:
+            nodes["upgrade_small_cap"] += 1
+    routes = {r["reason"]: r["n"] for r in db.all_rows(
+        f"SELECT json_extract(s.result_json, '$.reason') AS reason, COUNT(*) AS n FROM steps s JOIN runs r USING (run_id)"
+        f" WHERE s.action = 'route_model' AND {real} GROUP BY reason")}
+    reuse_delivered = sum(1 for r in runs if not (r["small"] or r["large"]) and r["best_origin"] == "experience" and r["goal_met"])
+    return {"runs": len(runs), "split": split, "calls": calls, "upgrades": nodes, "routes": routes,
+            "reuse_delivered": reuse_delivered,
+            "scope": "every finished run with real models in this store, including control arms (fresh / v0 / router off)"}

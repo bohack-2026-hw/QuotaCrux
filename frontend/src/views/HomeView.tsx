@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { BatchBadges, CostTotal, ModeLegend, ModeMark, ProgressChart, Scoreboard } from '../components/research'
 import { Empty } from '../components/ui'
+import { SystemPanel } from '../components/SystemPanel'
 import { STUDY, fmt, rmode } from '../labels'
 import type { RBatch, RTask } from '../research'
 import { total } from '../research'
@@ -14,10 +15,11 @@ export function HomeView({ onOpenResearch }: { onOpenResearch: (id: string) => v
   const { entries } = useResearchList()
   const feedback = entries.find((e) => e.study !== 'routing') ?? null
   const routing = entries.find((e) => e.study === 'routing') ?? null
-  if (!feedback && !routing) return <div className="card"><Empty title="还没有研究批次" /></div>
+  if (!feedback && !routing) return <div><SystemPanel /><div className="card"><Empty title="还没有研究批次" /></div></div>
   const both = !!feedback && !!routing
   return (
     <div>
+      <SystemPanel />
       {feedback && <Study entry={feedback} titled={both} onOpen={onOpenResearch} />}
       {routing && <Study entry={routing} titled={both} onOpen={onOpenResearch} />}
     </div>

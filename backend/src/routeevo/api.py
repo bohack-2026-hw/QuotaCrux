@@ -46,6 +46,14 @@ def get_live() -> dict:
     return live.live()
 
 
+@app.get("/api/system-summary")
+def get_system_summary() -> dict:
+    """Small vs large model workload and the key nodes that called the large model, over all finished real runs."""
+    from . import live
+
+    return live.system_summary()
+
+
 @app.get("/api/health")
 def health() -> dict:
     running = db.one("SELECT run_id FROM runs WHERE status = 'running' ORDER BY started_at DESC LIMIT 1")

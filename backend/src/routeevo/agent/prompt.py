@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-PROMPT_VERSION = "agent-prompt-v6"
+PROMPT_VERSION = "agent-prompt-v7"
 
 SYSTEM_PROMPT = """\
 You are the decision module of RouteEvo, an agent that optimizes a Python program under a hard correctness constraint.
@@ -56,29 +56,54 @@ SYSTEM_PROMPT_SHA256 = hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()
 def system_prompt(task, research_mode: str) -> str:
     if research_mode == "legacy" and not task.is_native:
         return SYSTEM_PROMPT
-    actions = "Actions (set every field; fields an action does not use must be null)" + SYSTEM_PROMPT.split(
-        "Actions (set every field; fields an action does not use must be null)", 1)[1].split("\nExperience records", 1)[0]
-    control = ("Each request is an independent attempt from c0. Propose a complete fresh candidate with parent c0, "
-               "or finish. Do not request analyze, get_evidence or run_validation actions. Other attempts' code and "
-               "feedback are hidden; an external selector keeps the best feasible result." if research_mode == "independent" else
-               "Use this run's actual feedback to refine hypotheses and candidates. Continue improving within the budget; "
-               "meeting an intermediate threshold does not stop the research. Finish when further experiments are unlikely to help.")
+    controls = {
+        "independent": "Each request is an independent attempt from c0. Propose a complete fresh candidate with parent c0, "
+                       "or finish. Other attempts' code and feedback are hidden; an external selector keeps the best feasible result.",
+        "no_feedback": "Retain and refine your own code, analysis and hypotheses within this run. The frozen initial c0 "
+                       "evaluation is public. All subsequent evaluation results, including c0 rechecks, scores, timing, "
+                       "errors, rankings and the actual best candidate are withheld. All submitted candidates remain visible "
+                       "regardless of validity. An external selector still chooses the best feasible candidate. Choose an explicit "
+                       "parent; an omitted parent defaults to c0. Protocol-format errors remain visible. Request/candidate counts "
+                       "and total elapsed budget time remain visible; elapsed time includes model and evaluation work.",
+        "feedback": "Use this run's actual feedback to refine hypotheses and candidates.",
+    }
+    control = controls.get(research_mode, controls["feedback"]) + (
+        " Continue improving within the budget; meeting an intermediate threshold does not stop the research. "
+        "Finish when further experiments are unlikely to help.")
+    menu = ["Actions (set every field; unused fields must be null):",
+            "- propose_candidate: submit a complete program in code and its parent_candidate_id (defaults to c0). It is evaluated immediately.",
+            "- finish: end research; explain the decision in finish_reason. The external selector freezes the deliverable."]
+    if research_mode != "independent":
+        menu += ["- analyze: put your reasoning in analysis and an unverified explanation in hypothesis; no program effect.",
+                 "- run_validation: re-evaluate an existing candidate_id on dev data."]
+        if not task.is_native:
+            menu.append('- get_evidence: tool="profile_candidate" profiles candidate_id on dev data.')
+    menu.append("Every action, including analyze and finish, requires non-empty purpose, expected_result and verification. "
+                "Write purpose, expected_result, verification, hypothesis, analysis and finish_reason in Simplified Chinese. "
+                "Hypotheses are your conjectures, not externally verified facts.")
     scoring = ("Among candidates passing every feasibility check, the highest raw total score wins; improve on c0's score."
                if task.objective["metric"] == "score" else
                "Speedup is baseline median time divided by candidate median time. A correct candidate counts as improved "
                "and can replace c0 only when EVERY measured candidate sample is faster than EVERY baseline sample "
                "(max(candidate times) < min(baseline times)). A median speedup above 1 or the target alone is insufficient. "
-               "The feedback's timing_spread exposes those ranges. The target is a milestone, not a stopping condition.")
+               "The external selector applies these ranges. The target is a milestone, not a stopping condition.")
     example = {"action": "propose_candidate", "purpose": "说明本次改动目的", "expected_result": "写明预期结果",
                "verification": "写明验证方法", "hypothesis": None, "analysis": None, "tool": None,
                "candidate_id": None, "parent_candidate_id": "c0", "code": "<complete Python code>", "finish_reason": None}
+    examples = [example]
+    if research_mode != "independent":
+        examples.append({**example, "action": "analyze", "code": None, "parent_candidate_id": None,
+                         "analysis": "说明下一步实验的推理", "hypothesis": "写出待检验的解释"})
+    examples.append({**example, "action": "finish", "code": None, "parent_candidate_id": None,
+                     "purpose": "结束本轮研究", "expected_result": "交付外部选择器保留的候选",
+                     "verification": "对已冻结候选执行独立最终验收", "finish_reason": "说明停止理由"})
     return ("You are RouteEvo's research execution module. Reply with exactly one JSON action.\n"
             "The task contract specifies the candidate interface, installed libraries, objective and evaluator. "
             "Preserve correctness/feasibility for every valid input. Never access private tests, evaluator code or answers. "
             "All model, compilation and tool work consumes the episode budget.\n" + control + "\n" + scoring + "\n" +
-            ("This task provides native validation feedback; the cProfile evidence tool is unavailable.\n" if task.is_native else "") + actions +
-            "\nJSON shape example (replace the values; purpose, expected_result and verification must be non-empty strings):\n" +
-            json.dumps(example, ensure_ascii=False))
+            ("This task uses a native evaluator; profiling is unavailable.\n" if task.is_native else "") + "\n".join(menu) +
+            "\nJSON examples (replace the values; return ONE object):\n" +
+            "\n".join(json.dumps(item, ensure_ascii=False) for item in examples))
 
 
 def _block(title: str, body: str) -> str:
@@ -117,7 +142,9 @@ def build_state(
                               "(code omitted: a re-validated program from experience that is not the best of them)")
         else:
             cand_lines.append(f"### {c['candidate_id']}\n{json.dumps(head, ensure_ascii=False, indent=2)}\n```python\n{c['code']}\n```")
-    parts.append(_block("Candidates (c0 is the initial program; best so far is marked in budget)", "\n".join(cand_lines)))
+    description = ("actual best is withheld" if budget.get("best_result_visibility") == "withheld"
+                   else "best so far is marked in budget")
+    parts.append(_block(f"Candidates (c0 is the initial program; {description})", "\n".join(cand_lines)))
 
     if evidence:
         ev_lines = [f"### {e['tool']} on {e['candidate_id']} (step {e['step']})\n{json.dumps(e['result'], ensure_ascii=False, indent=2)}" for e in evidence]

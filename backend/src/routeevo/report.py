@@ -50,6 +50,23 @@ def _ledger(calls) -> dict:
     return out
 
 
+def final_state(run_id: str, run_status: str, enabled: bool, final: dict | None) -> tuple[str, str | None]:
+    """Distinguish a missing final test from a disabled or failed final test."""
+    if not enabled:
+        return "disabled", None
+    event = db.one("SELECT payload_json FROM events WHERE run_id=? AND type='final_eval_error'"
+                   " ORDER BY event_id DESC LIMIT 1", (run_id,))
+    if event:
+        return "failed", json.loads(event["payload_json"])["error"]
+    if final is not None:
+        return ("completed", None) if final["status"] == "passed" and final["correct"] else ("failed", final["status"])
+    if run_status == "running":
+        return "pending", None
+    if db.one("SELECT 1 FROM events WHERE run_id=? AND type='final_eval_started' LIMIT 1", (run_id,)):
+        return "failed", "final evaluation did not finish"
+    return "not_run", None
+
+
 def build(run_id: str) -> dict:
     run = db.one("SELECT * FROM runs WHERE run_id = ?", (run_id,))
     if not run:
@@ -95,15 +112,24 @@ def build(run_id: str) -> dict:
     final_out = None
     if final:
         detail = json.loads(final["detail_json"])
+        normalized = bool(target is not None and final["candidate_id"] == "c0"
+                          and final["status"] == "passed" and final["correct"])
         final_out = {
             "evaluation_id": final["evaluation_id"], "candidate_id": final["candidate_id"], "status": final["status"],
             "correct": bool(final["correct"]) if final["correct"] is not None else None,
-            "speedup": final["speedup"], "candidate_median_s": final["candidate_median_s"],
+            "speedup": 1.0 if normalized else final["speedup"], "candidate_median_s": final["candidate_median_s"],
             "baseline_median_s": final["baseline_median_s"], "timing": detail.get("timing"),
             "failure": detail.get("failure"), "duration_s": detail.get("duration_s"),
             "objective": detail.get("objective"), "case_count": detail.get("case_count"), "passed_cases": detail.get("passed_cases"),
-            "note": "initial program checked for correctness only; no improvement to measure" if final["candidate_id"] == "c0" else None,
+            "normalized": normalized,
+            "measured": target is None or (final["candidate_id"] != "c0" and final["speedup"] is not None),
+            "note": ("initial program verified correct; speedup normalized to 1.0, not re-timed" if normalized else
+                     "initial program; native score measured" if target is None and final["candidate_id"] == "c0" else None),
         }
+    final_enabled = cfg.get("research_protocol", {}).get("final_evaluation") is not False
+    final_status, final_error = final_state(run_id, run["status"], final_enabled, final_out)
+    # Historical runs can have a completed DB row even when their final checker raised.
+    status = "failed" if final_status == "failed" and run["status"] == "completed" else run["status"]
     goal_met = bool(final and final["goal_met"])
 
     by_role: dict[str, list] = {}
@@ -124,22 +150,26 @@ def build(run_id: str) -> dict:
                  "source": manifest.get("source"), "selection": manifest.get("selection")},
         "mode": run["mode"], "snapshot_id": run["snapshot_id"], "label": cfg.get("label"),
         "scripted_model": cfg.get("scripted") or [],
-        "status": run["status"], "stop_reason": run["stop_reason"], "stop_detail": run["stop_detail"],
+        "status": status, "recorded_status": run["status"],
+        "research_mode": cfg.get("research_protocol", {}).get("mode", "legacy"), "dev_only": not final_enabled,
+        "stop_reason": run["stop_reason"], "stop_detail": run["stop_detail"],
         "config_fingerprint": run["config_fingerprint"],
         "outcome": {
-            "run_completed": run["status"] == "completed",
+            "run_completed": status == "completed" and final_status in ("disabled", "completed"),
             "candidate_ran": any(e["executed"] for e in dev_evals if e["candidate_id"] != "c0"),
             "dev_validation_passed": bool(passed_all),
             "dev_improved": bool(improved_all),
             "best_from_reuse": any(c["candidate_id"] == best_id for c in reused),
             "best_is_initial": best_id == "c0",
             "final_evaluated": final is not None,
+            "final_status": final_status,
+            "final_error": final_error,
             "final_correct": final_out["correct"] if final_out else None,
             "final_speedup": final_out["speedup"] if final_out else None,
             "final_objective": final_out.get("objective") if final_out else None,
             "goal_met": goal_met,
-            "valid_artifact": bool(final_out and final_out["correct"]) if final_out else None,
-            "summary": _summary(run, best_id, final_out, goal_met),
+            "valid_artifact": False if final_status == "failed" else (bool(final_out["correct"]) if final_out else None),
+            "summary": _summary(run, best_id, final_out, goal_met, final_status, final_error),
         },
         "experience": {
             "snapshot_read": run["snapshot_id"],
@@ -251,6 +281,8 @@ def _run_command(run, cfg: dict) -> str:
     protocol = cfg.get("research_protocol", {})
     if protocol.get("mode"):
         argv += ["--research-mode", protocol["mode"]]
+    if protocol.get("model_policy") == "adaptive":
+        argv += ["--research-model-policy", "adaptive"]
     if protocol.get("fixed_model"):
         argv += ["--fixed-model", protocol["fixed_model"]]
     if protocol.get("final_evaluation") is False:
@@ -262,11 +294,18 @@ def _run_command(run, cfg: dict) -> str:
     return shlex.join(argv)
 
 
-def _summary(run, best_id: str | None, final: dict | None, goal_met: bool) -> str:
+def _summary(run, best_id: str | None, final: dict | None, goal_met: bool,
+             final_status: str, final_error: str | None) -> str:
     if run["status"] == "running":
         return "运行中"
     if not best_id:
         return f"没有有效产物（{run['stop_reason']}）"
+    if final_status == "failed" and final is None:
+        return f"最终测试异常：{final_error}；最佳候选 {best_id} 未完成最终验收"
+    if final_status == "failed":
+        return f"最终测试失败：{best_id}，{final_error}"
+    if final_status == "disabled":
+        return f"开发集运行，未启用最终测试；最佳候选 {best_id} 仅有开发验证结果"
     if final is None:
         return f"未执行最终测试（{run['stop_reason']}）；最佳候选 {best_id} 仅有开发验证结果"
     if not final["correct"]:

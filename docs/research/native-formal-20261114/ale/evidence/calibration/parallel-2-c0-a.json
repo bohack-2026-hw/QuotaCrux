@@ -1,0 +1,109 @@
+{
+  "phase": "parallel",
+  "repeat": 2,
+  "worker": "a",
+  "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+  "cpu": "2",
+  "program": "c0",
+  "candidate_sha256": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38",
+  "evaluation": {
+    "evaluation_id": "df424fbfd040",
+    "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+    "dataset": "dev",
+    "status": "passed",
+    "executed": true,
+    "format_ok": true,
+    "correct": true,
+    "improved": false,
+    "goal_met": false,
+    "speedup": null,
+    "candidate_median_s": null,
+    "baseline_median_s": null,
+    "detail": {
+      "objective": {
+        "metric": "score",
+        "direction": "maximize",
+        "value": 5,
+        "baseline": 5,
+        "aggregation": "sum",
+        "cases": [
+          {
+            "correct": true,
+            "score": 1
+          },
+          {
+            "correct": true,
+            "score": 1
+          },
+          {
+            "correct": true,
+            "score": 1
+          },
+          {
+            "correct": true,
+            "score": 1
+          },
+          {
+            "correct": true,
+            "score": 1
+          }
+        ]
+      },
+      "case_count": 5,
+      "passed_cases": 5,
+      "samples": [
+        {
+          "case": "dev-0",
+          "status": "ok",
+          "elapsed_s": 0.04267290999996476,
+          "ready_latency_s": 0.12057724599981157,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 7264
+        },
+        {
+          "case": "dev-1",
+          "status": "ok",
+          "elapsed_s": 0.03433845499966992,
+          "ready_latency_s": 0.11921691099996679,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 7282
+        },
+        {
+          "case": "dev-2",
+          "status": "ok",
+          "elapsed_s": 0.03594881100070779,
+          "ready_latency_s": 0.12351784900056373,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 7325
+        },
+        {
+          "case": "dev-3",
+          "status": "ok",
+          "elapsed_s": 0.04101033900042239,
+          "ready_latency_s": 0.11765723299868114,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 7400
+        },
+        {
+          "case": "dev-4",
+          "status": "ok",
+          "elapsed_s": 0.04577236799923412,
+          "ready_latency_s": 0.21561798000038834,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 7333
+        }
+      ],
+      "container_ready_latency_s": 0.6965872189994116,
+      "duration_s": 1.273,
+      "dataset_sha256": "17251589b9709b7d7d2b58600b37bfee103d4d8e81a23a4e9836b035b8c0e5b0",
+      "candidate_sha256": "6794fae834029f6e80eaaf448029d900314f5833ad2074f773cc30b036b15e38"
+    },
+    "started_at": "2026-11-14T06:54:26.850+00:00",
+    "ended_at": "2026-11-14T06:54:28.123+00:00"
+  }
+}

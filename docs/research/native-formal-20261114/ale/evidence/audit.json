@@ -1,0 +1,194 @@
+{
+  "status": "passed",
+  "top_level_calibration_evaluations": 24,
+  "persisted_evaluations": 36,
+  "additional_c0_reference_evaluations": 12,
+  "model_calls": 0,
+  "final_evaluations": 0,
+  "candidate_affinity_verified": true,
+  "candidate_core_exclusive": false,
+  "judge_affinity_configured": false,
+  "groups": [
+    {
+      "worker": "a",
+      "program": "c0",
+      "per_repeat_sample_median_s": {
+        "serial": [
+          0.03315619000022707,
+          0.03358328900139895,
+          0.03953081800136715
+        ],
+        "parallel": [
+          0.043964563999907114,
+          0.04101033900042239,
+          0.04236773299999186
+        ]
+      },
+      "paired_parallel_over_serial": [
+        1.32598359460499,
+        1.2211531455038265,
+        1.0717646419187834
+      ]
+    },
+    {
+      "worker": "a",
+      "program": "cpu_control",
+      "per_repeat_sample_median_s": {
+        "serial": [
+          1.2628495509998174,
+          1.2650749140011612,
+          1.2644923719999497
+        ],
+        "parallel": [
+          1.27531940299923,
+          1.271647646000929,
+          1.2683725280003273
+        ]
+      },
+      "paired_parallel_over_serial": [
+        1.009874376555418,
+        1.0051955278908975,
+        1.0030685483647803
+      ]
+    },
+    {
+      "worker": "b",
+      "program": "c0",
+      "per_repeat_sample_median_s": {
+        "serial": [
+          0.03379128800042963,
+          0.03412221500002488,
+          0.03511534599965671
+        ],
+        "parallel": [
+          0.04494497300038347,
+          0.042745647000629106,
+          0.03891153499898792
+        ]
+      },
+      "paired_parallel_over_serial": [
+        1.3300757579827094,
+        1.2527219291185505,
+        1.1081062678228577
+      ]
+    },
+    {
+      "worker": "b",
+      "program": "cpu_control",
+      "per_repeat_sample_median_s": {
+        "serial": [
+          1.263331066000319,
+          1.2709150110003975,
+          1.2606002859993168
+        ],
+        "parallel": [
+          1.266223615000854,
+          1.3013827079994371,
+          1.260813691000294
+        ]
+      },
+      "paired_parallel_over_serial": [
+        1.002289620732349,
+        1.0239730404750331,
+        1.0001692883964468
+      ]
+    }
+  ],
+  "observed_cpu_busy_percent": {
+    "cpu": 11.15733736762481,
+    "cpu0": 2.0623128949994456,
+    "cpu1": 1.8590240123934934,
+    "cpu2": 49.11367161533348,
+    "cpu3": 3.5413899955732626,
+    "cpu4": 48.432480336767476,
+    "cpu5": 3.651654310058648,
+    "cpu6": 3.8712531799579692,
+    "cpu7": 3.9840637450199203,
+    "cpu8": 4.293460219099258,
+    "cpu9": 4.095638698251052,
+    "cpu10": 4.405091311566132,
+    "cpu11": 4.624917017039168
+  },
+  "batches": [
+    {
+      "phase": "serial",
+      "repeat": 1,
+      "program": "c0",
+      "wall_clock_s": 2.801
+    },
+    {
+      "phase": "serial",
+      "repeat": 1,
+      "program": "cpu_control",
+      "wall_clock_s": 17.304
+    },
+    {
+      "phase": "parallel",
+      "repeat": 1,
+      "program": "c0",
+      "wall_clock_s": 1.339
+    },
+    {
+      "phase": "parallel",
+      "repeat": 1,
+      "program": "cpu_control",
+      "wall_clock_s": 8.554
+    },
+    {
+      "phase": "parallel",
+      "repeat": 2,
+      "program": "c0",
+      "wall_clock_s": 1.371
+    },
+    {
+      "phase": "parallel",
+      "repeat": 2,
+      "program": "cpu_control",
+      "wall_clock_s": 8.551
+    },
+    {
+      "phase": "serial",
+      "repeat": 2,
+      "program": "c0",
+      "wall_clock_s": 2.728
+    },
+    {
+      "phase": "serial",
+      "repeat": 2,
+      "program": "cpu_control",
+      "wall_clock_s": 17.869
+    },
+    {
+      "phase": "serial",
+      "repeat": 3,
+      "program": "c0",
+      "wall_clock_s": 2.862
+    },
+    {
+      "phase": "serial",
+      "repeat": 3,
+      "program": "cpu_control",
+      "wall_clock_s": 17.268
+    },
+    {
+      "phase": "parallel",
+      "repeat": 3,
+      "program": "c0",
+      "wall_clock_s": 1.329
+    },
+    {
+      "phase": "parallel",
+      "repeat": 3,
+      "program": "cpu_control",
+      "wall_clock_s": 8.426
+    }
+  ],
+  "serial_batch_wall_clock_s": 60.832,
+  "parallel_batch_wall_clock_s": 29.57,
+  "batch_wall_clock_ratio_parallel_over_serial": 0.4860928458705944,
+  "notes": [
+    "Raw candidate_cpu_isolation means candidate affinity only; CPU exclusivity was not configured.",
+    "Raw evaluations=24 counts top-level calls; cpu_control also evaluates c0, yielding 36 DB rows.",
+    "Control programs retain c0 output; scores do not test time-limited search quality."
+  ]
+}

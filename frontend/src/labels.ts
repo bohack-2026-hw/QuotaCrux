@@ -6,6 +6,7 @@ export const ACTION: Record<string, string> = {
   analyze: '分析', get_evidence: '取证', propose_candidate: '提出候选', run_validation: '验证',
   finish: '结束', upgrade_model: '升级模型', model_request: '模型请求', invalid: '无效回复',
   reuse_candidate: '复用已验证程序', set_target: '提高本次目标',
+  route_action: '选择动作', route_model: '选择模型',
 }
 
 const STATUS: Record<string, [string, Tone]> = {
@@ -71,6 +72,7 @@ export const fmt = {
 }
 
 export const roleName = (role: string | undefined, model?: string) =>
+  role === 'router_action' || role === 'router_model' ? 'Decisions' :
   role === 'large' ? `GPT${model ? ` · ${model}` : ''}` : role === 'small' ? `Qwen${model ? ` · ${model}` : ''}` : role ?? ''
 
 /** Program stop details are short English facts; render the common shapes in Chinese, keep anything else verbatim. */

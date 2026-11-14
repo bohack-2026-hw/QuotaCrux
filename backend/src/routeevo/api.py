@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import threading
 from pathlib import Path
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,8 @@ class StartRun(BaseModel):
     label: str | None = None
     # Name of a scripted-model fixture (functional demo only); omit for real models.
     script: str | None = None
+    action_router: Literal["llm", "decisions"] = "llm"
+    model_router: Literal["rule", "decisions"] = "rule"
 
 
 @app.get("/api/health")
@@ -84,7 +87,8 @@ def start_run(body: StartRun) -> dict:
         raise HTTPException(409, f"comparison {busy['comparison_id']} is running")
     try:
         runner = Runner(RunOptions(task_id=body.task_id, mode=body.mode, snapshot_id=body.snapshot_id,
-                                   label=body.label, script=script))
+                                   label=body.label, script=script,
+                                   routing=config.RoutingConfig(action=body.action_router, model=body.model_router)))
         run_id = runner.create()
     except RunBusy as exc:
         raise HTTPException(409, str(exc)) from None

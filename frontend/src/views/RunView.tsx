@@ -330,6 +330,7 @@ function StepRow({ s, rep }: { s: Step; rep: Report }) {
 }
 
 function modelOf(rep: Report, s: Step): string {
+  if (s.model_role) return roleName(s.model_role)
   const upgradeAt = rep.iterations.upgrade_at_step
   const role = upgradeAt != null && s.seq > upgradeAt ? 'large' : 'small'
   return roleName(role)

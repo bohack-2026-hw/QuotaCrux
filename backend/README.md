@@ -39,6 +39,7 @@ Full experiment from a clean `var/`: `scripts/experiment.sh` (learn on A, then c
 | `uv run routeevo experience <id>` | One experience record with its evidence |
 | `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
 | `uv run routeevo comparison <id> [--json]` | Comparison summary |
+| `uv run routeevo ablate-routing B-01 … --snapshot v0 --repeats 3` | Four independent action/model routing combinations on one frozen snapshot; [protocol](../docs/routing-adapters.md) |
 | `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Note on what experience changed / Markdown research record of one run |
 | `uv run routeevo export-run <run_id> --bundle DIR` | Research deliverable: record, `best.py`, all candidates, raw model calls, `report.json`, `reproduce.sh` |
 | `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
@@ -107,6 +108,9 @@ formal runs; `scripts/export_research.py` exports rule-selected sample bundles t
 
 Actions: `analyze`, `get_evidence` (cProfile), `propose_candidate` (validated immediately), `run_validation`,
 `finish`. Defaults: 6 model requests, 4 candidates, 300 s loop, 120 s per request, 10 s per sample.
+`run` and `learn` accept `--action-router llm|decisions` and `--model-router rule|decisions` (defaults: `llm`, `rule`).
+Decisions calls share the request/token/time budget with generation; reports split routing and generation usage.
+See [routing adapters](../docs/routing-adapters.md) for the execution flow, API fields and four-way ablation.
 The small model runs first; after 2 consecutive candidates that are not correct-and-on-target, or 3 small-model
 requests without an on-target candidate (`upgrade-rule-v2`; B ran under v1, which only had the first condition), the
 run switches to the large model for good. `goal_reached` means the dev-data goal stopped the loop; the frozen best

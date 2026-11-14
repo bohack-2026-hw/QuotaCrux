@@ -83,6 +83,15 @@ def test_missing_key_does_not_send(monkeypatch):
     assert decisions.estimate_decision_cost(result) == 0
 
 
+@pytest.mark.parametrize("field", ["input_tokens_details", "output_tokens_details"])
+def test_invalid_usage_details_are_a_recorded_response_failure(monkeypatch, field):
+    data = response_data()
+    data["usage"][field] = "invalid"
+    mock_response(monkeypatch, data)
+    result = decisions.decide({}, [replay.ROUTE_QUESTION])
+    assert not result.ok and result.error_kind == "bad_response"
+
+
 def test_heldout_bundle_is_rejected_before_loading_inputs(tmp_path):
     replay.write_json(tmp_path / "report.json", {"task": {"split": "D"}, "scripted_model": False})
     with pytest.raises(ValueError, match="A/B"):

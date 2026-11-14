@@ -1,7 +1,7 @@
 import { api } from '../api'
 import type { Report } from '../api'
 import { usePoll } from '../hooks'
-import { ACTION, fmt } from '../labels'
+import { ACTION, fmt, roleName } from '../labels'
 import { StatusChip } from './ui'
 
 /* Same held-out task, same repeat index, two snapshots: what the agent actually did under each. */
@@ -36,7 +36,7 @@ function Column({ title, color, rep, onOpenRun }: { title: string; color: string
         <tbody>
           {rep.steps.map((s) => {
             const r = s.result as Record<string, unknown>
-            const who = s.actor === 'program' ? '程序' : up != null && s.seq > up ? 'GPT' : 'Qwen'
+            const who = s.actor === 'program' ? '程序' : roleName(s.model_role ?? (up != null && s.seq > up ? 'large' : 'small'))
             return (
               <tr key={s.seq}>
                 <td className="mono" style={{ width: 28 }}>{s.seq}</td>

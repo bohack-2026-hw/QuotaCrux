@@ -53,6 +53,7 @@ export interface Step {
   next_decision: string | null
   candidate_id: string | null
   model_call_id: string | null
+  model_role: string | null
   started_at: string
 }
 

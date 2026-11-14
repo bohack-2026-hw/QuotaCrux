@@ -95,11 +95,13 @@ def decide(evidence: dict, questions: list[dict], timeout_s: float = 30.0) -> LL
     usage = data.get("usage")
     if isinstance(usage, dict):
         details = usage.get("input_tokens_details") or {}
-        if not isinstance(details, dict):
+        output_details = usage.get("output_tokens_details") or {}
+        if not isinstance(details, dict) or not isinstance(output_details, dict):
             result.error_kind, result.error_message = "bad_response", "invalid usage details"
             return result
         result.usage = Usage(input_tokens=usage.get("input_tokens"), cached_input_tokens=details.get("cached_tokens"),
                              cache_write_tokens=details.get("cache_write_tokens"), output_tokens=usage.get("output_tokens"),
+                             reasoning_tokens=output_details.get("reasoning_tokens"),
                              source="reported", raw=usage)
     result.model_returned = data.get("model")
     problem = _validate_answers(data.get("answers"), questions)

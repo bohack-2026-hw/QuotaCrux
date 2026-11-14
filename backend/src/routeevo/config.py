@@ -61,10 +61,23 @@ class MeasureConfig:
 
 
 @dataclass(frozen=True)
+class RoutingConfig:
+    action: str = "llm"
+    model: str = "rule"
+
+    def __post_init__(self):
+        if self.action not in ("llm", "decisions") or self.model not in ("rule", "decisions"):
+            raise ValueError("routing requires action=llm|decisions and model=rule|decisions")
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ModelConfig:
-    provider: str  # "openai_responses" | "chat_compat" | "scripted"
+    provider: str  # "openai_responses" | "chat_compat" | "openai_decisions" | "scripted"
     model: str
-    role: str  # "small" | "large"
+    role: str  # "small" | "large" | "router_action" | "router_model"
     base_url: str | None = None
     reasoning_effort: str | None = None
     enable_thinking: bool | None = None

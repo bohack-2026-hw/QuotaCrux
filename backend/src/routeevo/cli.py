@@ -46,7 +46,8 @@ def cmd_run(args) -> None:
     from .agent.runner import RunOptions, Runner
 
     opts = RunOptions(task_id=args.task_id, mode=args.mode, snapshot_id=args.snapshot, limits=_limits(args),
-                      script=Path(args.script).resolve() if args.script else None, label=args.label)
+                      script=Path(args.script).resolve() if args.script else None, label=args.label,
+                      routing=config.RoutingConfig(action=args.action_router, model=args.model_router))
     runner = Runner(opts)
     run_id = runner.create()
     print(f"run {run_id} started (task {args.task_id}, mode {args.mode}, snapshot {runner.snapshot_id})", file=sys.stderr)
@@ -60,7 +61,8 @@ def cmd_learn(args) -> None:
 
     start = memory.active_snapshot()
     for task_id in args.task_ids:
-        runner = Runner(RunOptions(task_id=task_id, mode="learn", label=args.label))
+        runner = Runner(RunOptions(task_id=task_id, mode="learn", label=args.label,
+                                   routing=config.RoutingConfig(action=args.action_router, model=args.model_router)))
         runner.create()
         print(f"learn {task_id}: run {runner.run_id} reads {runner.snapshot_id}", file=sys.stderr)
         rep = runner.execute()
@@ -73,6 +75,8 @@ def _print_summary(rep: dict) -> None:
     o, u, t = rep["outcome"], rep["usage"]["total"], rep["timing"]
     lines = [
         f"run            {rep['run_id']}{'  [scripted ' + '+'.join(rep['scripted_model']) + ': functional check only]' if rep['scripted_model'] else ''}",
+        f"routing        action={rep['config'].get('routing', {}).get('action', 'llm')} "
+        f"model={rep['config'].get('routing', {}).get('model', 'rule')}",
         f"status         {rep['status']} / stop: {rep['stop_reason']} ({rep['stop_detail']})",
         f"outcome        {o['summary']}",
         f"flags          ran={o['candidate_ran']} dev_passed={o['dev_validation_passed']} dev_improved={o['dev_improved']} "
@@ -172,6 +176,12 @@ def cmd_compare(args) -> None:
     cid = compare.create(args.task_ids, args.a, args.b, args.repeats, args.label, script)
     print(f"comparison {cid}: {len(args.task_ids)} tasks x 2 snapshots x {args.repeats} repeats, serial", file=sys.stderr)
     _print_comparison(compare.execute(cid))
+
+
+def cmd_ablate_routing(args) -> None:
+    from . import routing_ablation
+
+    _print(routing_ablation.execute(args.task_ids, args.snapshot, args.repeats, limits=_limits(args)))
 
 
 def _print_comparison(s: dict) -> None:
@@ -308,6 +318,8 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--snapshot", help="experience snapshot id (default: active)")
     r.add_argument("--script", help="scripted model JSON (functional checks only)")
     r.add_argument("--label")
+    r.add_argument("--action-router", choices=["llm", "decisions"], default="llm")
+    r.add_argument("--model-router", choices=["rule", "decisions"], default="rule")
     r.add_argument("--max-requests", type=int)
     r.add_argument("--max-candidates", type=int)
     r.add_argument("--wall-clock", type=float)
@@ -317,6 +329,8 @@ def main(argv: list[str] | None = None) -> None:
     ln = sub.add_parser("learn", help="serial learn-mode runs over tasks (each publishes on top of the last)")
     ln.add_argument("task_ids", nargs="+")
     ln.add_argument("--label")
+    ln.add_argument("--action-router", choices=["llm", "decisions"], default="llm")
+    ln.add_argument("--model-router", choices=["rule", "decisions"], default="rule")
     ln.set_defaults(fn=cmd_learn)
 
     rp = sub.add_parser("report")
@@ -372,6 +386,15 @@ def main(argv: list[str] | None = None) -> None:
     cp.add_argument("--label")
     cp.add_argument("--script", help="scripted model JSON (functional checks only)")
     cp.set_defaults(fn=cmd_compare)
+    ab = sub.add_parser("ablate-routing", help="four routing combinations on the same frozen snapshot, serial")
+    ab.add_argument("task_ids", nargs="+")
+    ab.add_argument("--snapshot", required=True)
+    ab.add_argument("--repeats", type=int, default=1)
+    ab.add_argument("--max-requests", type=int)
+    ab.add_argument("--max-candidates", type=int)
+    ab.add_argument("--wall-clock", type=float)
+    ab.add_argument("--request-timeout", type=float)
+    ab.set_defaults(fn=cmd_ablate_routing)
     cs = sub.add_parser("comparison")
     cs.add_argument("comparison_id")
     cs.add_argument("--json", action="store_true")

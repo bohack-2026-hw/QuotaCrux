@@ -90,5 +90,5 @@
 
 ## 复现
 
-- 重跑：`uv run routeevo run algotune-convolve_1d-smoke-901b0ea395 --mode eval --snapshot v0 --research-mode independent --fixed-model small --dev-only --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0`
-- 复核最佳产物：`uv run routeevo check algotune-convolve_1d-smoke-901b0ea395 var/runs/run-20261114T044301-e2a7/candidates/c0.py --dataset final`
+- 重跑：`uv run quotacrux run algotune-convolve_1d-smoke-901b0ea395 --mode eval --snapshot v0 --research-mode independent --fixed-model small --dev-only --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0`
+- 复核最佳产物：`uv run quotacrux check algotune-convolve_1d-smoke-901b0ea395 var/runs/run-20261114T044301-e2a7/candidates/c0.py --dataset final`

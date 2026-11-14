@@ -1,21 +1,23 @@
-# 研究成果样例
+# 实验批次与结果
 
-由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付：研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、原始模型请求与回复 `model_calls/`、结构化报告 `report.json` 和复核脚本 `reproduce.sh`。任意一次运行都可以用 `uv run routeevo export-run <run_id> --bundle <目录>` 导出。
+先从[评测规则](../evaluation/README.md)选择实验类型，再按下表查看批次的设置和结果。每份批次报告链接到计划、候选、请求及原始数据。最新完成范围先看[2026-11-14 实验数据汇总](20261114-summary.md)。
 
-| 案例 | 任务 · 读取快照 | 结论 | 请求 · 费用 | 说明 |
-|---|---|---|---|---|
-| [反馈驱动的修正链（第一版）](run-20261113T161733-7c5a/README.md) | A-01 · v0 | 达到目标：c3 最终测试正确，加速比 1.4367 | 3 次 · $0.029 | Qwen 的第一个假设被实测反驳（0.90×），第二个候选输出格式错误；连续两次未达标触发升级，GPT 读到具体失败反馈后提出新假设并得到支持。 |
-| [站在已知最佳上继续研究（第二版）](run-20261113T212515-d6bd/README.md) | A-05 · v17 | 达到目标：c6 最终测试正确，加速比 1.6925 | 4 次 · $0.076 | A-05：程序先复验经验中的已验证程序，最好的 c1 已达 1.25×；学习运行把目标提高到 1.3085×，模型以它为起点提出 c6，开发数据 1.70×，假设得到支持。 |
-| [没有验证出改进（第一版）](run-20261113T162613-8f0a/README.md) | A-05 · v4 | 无改进：保留初始程序，最终测试正确 | 6 次 · $0.053 | 高基数工作负载上 Qwen 两个、GPT 一个候选都正确但更慢（0.80—0.83×），三个假设均被反驳；预算耗尽后交付初始程序，结论是“没有验证出改进”。 |
-| [复验已验证程序直接达标（第二版留出）](run-20261113T222043-be0a/README.md) | D-01 · v19 | 达到目标：c1 最终测试正确，加速比 1.4481 | 0 次 · $0.000 | D 批留出任务、读取 v19：程序复验经验中条件最接近的已验证程序，不调用任何模型即达标并交付。 |
-| [全新问题：分流器直接交给大模型（第三版）](run-20261114T041659-fa51/README.md) | S-01 · v19 | 达到目标：c1 最终测试正确，加速比 6.3494 | 1 次 · $0.017 | S-01（访问日志统计 · 按时间 · 160,000 行 · 300 个接口 · 24 小时 · 错误率 0.02）：读取的快照里没有这个任务族的任何经验，分流器按全新问题直接交给 GPT；1 次请求、0.017 美元，最终测试 6.35×；在线模式把验证过的程序写入 v46。 |
-| [相似问题：复用刚学到的程序（第三版）](run-20261114T041926-31a6/README.md) | S-03 · v47 | 达到目标：c1 最终测试正确，加速比 6.6523 | 0 次 · $0.000 | S-03（访问日志统计 · 按时间 · 200,000 行 · 200 个接口 · 48 小时 · 错误率 0.03）：读取 v47，程序复验上一个同族任务写入的程序，不调用模型，10 秒交付，最终测试 6.65×。 |
-| [开发达标、最终测试未达标](run-20261113T224936-2ade/README.md) | D-02 · v0 | 有产物但未达标：c1 最终测试正确，加速比 1.0802 | 1 次 · $0.000 | 开发数据上已达标并停止；冻结候选在隐藏最终数据上正确，但没有满足“全部样本快于基线且 ≥ 1.10×”，按规则如实记为未达标。 |
+| 批次 | 范围与状态 | 入口 |
+| --- | --- | --- |
+| 原生正式评测 v2（2026-11-14） | 中央计划 30 项。ALE 15 项已执行：14 completed、1 API 错误 failed，15 项冻结候选均通过 final；Mac 原正式计划本轮取消启动，探索结果与正式批次分开记录 | [协议](native-formal-20261114/protocol.md) · [中央计划](native-formal-20261114/central-plan.json) · [ALE 结果](native-formal-20261114/ale/results/README.md) · [Mac 交接](native-formal-20261114/mac-handoff.md) · [Mac 校准与探索说明](native-formal-20261114/algotune/README.md) |
+| Native Decisions 路由（2026-11-14） | ahc026 四组各 1 次，360 秒探索实验：4/4 completed、4/4 final 通过；单独保留中止的 900 秒长批 | [结果摘要](native-routing/20261114/RESULTS.md) · [完整短批证据](native-routing/20261114/short-results/README.md) · [中止长批](native-routing/20261114/long-batch-stopped/README.md) · [系列入口](native-routing/README.md) |
+| Mac dev-only 探索（2026-11-14） | 固定 Sol 的四项 2-case dev 探索，远端 LM Studio 失败/截断与人工语义重建单列；final disabled、高负载，不并入取消的正式 15+12 计划 | [结果包与离线审计](mac-exploratory-20261114/README.md) |
+| 原生 CPU 第二轮（2026-11-14） | 校准后的 ALE / AlgoTune F/I 开发对照，dev-only，未评测 final | [报告](native-r2-20261114/README.md) · [协议](native-r2-20261114/protocol.md) · [审计](native-r2-20261114/protocol-audit.json) |
+| 原生 CPU 第一轮（2026-11-14） | ALE / AlgoTune 首轮开发预实验，dev-only，未评测 final | [报告](native-20261114/README.md) · [清单](native-20261114/manifest.json) |
+| EffiBench-X 四题（2026-11-14） | 60/60 final 用例通过，2/4 题达到加速目标，按币种记录费用 | [报告](effibench-x-20261114/README.md) · [计划](effibench-x-20261114/plan.json) · [结果](effibench-x-20261114/results.json) |
+| 经验学习第一至三版 | groupagg、D 留出及 S 任务流，属于早期跨任务经验实验 | [历史汇总](../archive/memory-learning-results.md) · [代表性研究交付样例](case-studies.md) |
 
-## 外部评测集试运行
+## 如何阅读一份实验
 
-[EffiBench-X 四题真实模型评测（2026-11-14）](effibench-x-20261114/README.md)：Qwen3.8-27B 与 GPT-6.1 Sol，60/60 final 用例通过，2/4 题达到加速目标；完整计时、逐调用用量、人民币/美元费用和复现产物一并归档。
+先读批次 `README.md` 或协议，再看 manifest / plan 和汇总，最后按 run ID 查看 `report.json`、候选、原始请求与复现脚本。分别查看研究运行、最终测试和配置检查的结果。
 
-[原生 CPU 第一轮](native-20261114/README.md)与[校准后的第二轮](native-r2-20261114/README.md)：ALE-Bench / AlgoTune 的任务内 feedback 与 independent 对照。第二轮固定 Qwen，AlgoTune 保留开发加速为 1.8343× / 1.2101×；ALE independent 得分 18,230。两批原始记录和失败结果均保留，最终集未评测。
+`run-*` 目录保存研究样例，日期目录保存各批次材料。`SHA256SUMS` 用于检查文件是否被改动。
 
-[Mac dev-only 探索结果包（2026-11-14）](mac-exploratory-20261114/README.md)：固定 `gpt-6.1-sol` 的四项 2-case dev 探索、远端 LM Studio 失败/截断证据及单列的人工语义重建。该包 final disabled、运行时主机高负载且 `formal_results_eligible=false`，不属于上方正式成果样例，也不并入已取消的 formal 15+12 计划。
+`backend/scripts/export_research.py` 生成 [examples.md](case-studies.md) 并更新选中的样例目录；本索引手工维护。单次导出可使用 `uv run quotacrux export-run <run_id> --bundle <目录>`。
+
+[返回文档导航](../README.md)。

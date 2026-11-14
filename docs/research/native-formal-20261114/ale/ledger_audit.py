@@ -3,7 +3,7 @@ import argparse
 parser=argparse.ArgumentParser()
 parser.add_argument('--root',type=pathlib.Path,required=True)
 root=parser.parse_args().root
-from routeevo import config
+from quotacrux import config
 models=config.default_model_configs()
 result={'recorded_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'model':models['small'].public_dict(),'dotenv_mode':oct((root/'repo/backend/.env').stat().st_mode & 0o777),'workers':{}}
 for name in ('a','b'):

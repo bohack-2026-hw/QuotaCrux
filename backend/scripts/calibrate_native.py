@@ -16,9 +16,9 @@ import statistics
 import subprocess
 from unittest.mock import patch
 
-from routeevo import config, db, taskpkg
-from routeevo.benchmarks import algotune
-from routeevo.sandbox import executor
+from quotacrux import config, db, taskpkg
+from quotacrux.benchmarks import algotune
+from quotacrux.sandbox import executor
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -101,7 +101,7 @@ def check_affinity(task, measure: config.MeasureConfig) -> dict:
                                                   "warmups": measure.function_warmups}).encode(),
                                  config.RunLimits().measurement_timeout_s, measure,
                                  image=task.manifest["native"]["candidate_image"]["image_id"],
-                                 harness="/opt/routeevo/scientific_harness.py")
+                                 harness="/opt/quotacrux/scientific_harness.py")
     record = {"started_at": started_at, "ended_at": db.now(), **sample.summary()}
     if sample.status != "ok":
         raise RuntimeError(f"affinity probe failed: {sample.status}: {sample.stderr_tail}")
@@ -217,10 +217,10 @@ def main() -> None:
                                                cpuset_cpus=args.cpuset_cpus)}
     original = task.initial_code.encode()
     programs = {"original": original, "delayed": slowed_program(original, args.control_delay_ms)}
-    source_paths = [Path(__file__), ROOT / "backend/src/routeevo/config.py",
-                    ROOT / "backend/src/routeevo/sandbox/executor.py",
-                    ROOT / "backend/src/routeevo/benchmarks/algotune.py",
-                    ROOT / "backend/src/routeevo/benchmarks/native_tools/scientific_harness.py"]
+    source_paths = [Path(__file__), ROOT / "backend/src/quotacrux/config.py",
+                    ROOT / "backend/src/quotacrux/sandbox/executor.py",
+                    ROOT / "backend/src/quotacrux/benchmarks/algotune.py",
+                    ROOT / "backend/src/quotacrux/benchmarks/native_tools/scientific_harness.py"]
     result = {"schema": "native-calibration-v1", "status": "planned", "created_at": db.now(),
               "task_id": task.task_id, "dataset": "dev", "model_requests": 0, "warmup_count": args.warmups,
               "control_delay_ms": args.control_delay_ms,

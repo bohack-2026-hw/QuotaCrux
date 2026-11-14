@@ -6,9 +6,9 @@ import uuid
 
 import pytest
 
-from routeevo import config, db, evaluator, routing_ablation
-from routeevo.agent import runner
-from routeevo.benchmarks import ale, algotune, native
+from quotacrux import config, db, evaluator, routing_ablation
+from quotacrux.agent import runner
+from quotacrux.benchmarks import ale, algotune, native
 from test_routing import harness
 
 

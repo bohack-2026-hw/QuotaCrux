@@ -8,11 +8,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from routeevo import config, db, evaluator, report, routing_ablation, taskpkg
-from routeevo.agent import actions, routing, runner
-from routeevo.families import groupagg
-from routeevo.llm.base import LLMResult, Usage
-from routeevo.sandbox import executor
+from quotacrux import config, db, evaluator, report, routing_ablation, taskpkg
+from quotacrux.agent import actions, routing, runner
+from quotacrux.families import groupagg
+from quotacrux.llm.base import LLMResult, Usage
+from quotacrux.sandbox import executor
 
 
 @pytest.fixture
@@ -227,7 +227,7 @@ def test_ablation_stops_and_saves_failed_run(harness):
 
 def test_api_accepts_routing_choices_and_rejects_unknown_ones(harness, monkeypatch):
     from fastapi.testclient import TestClient
-    from routeevo import api
+    from quotacrux import api
 
     class InlineThread:
         def __init__(self, target, **kwargs):

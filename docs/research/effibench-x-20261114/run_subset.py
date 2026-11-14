@@ -11,10 +11,10 @@ from pathlib import Path
 
 import httpx
 
-from routeevo import config, db, evaluator, taskpkg
-from routeevo.agent.runner import Runner, RunOptions, UPGRADE_RULE
-from routeevo.llm.pricing import PRICE_TABLES
-from routeevo.sandbox import executor
+from quotacrux import config, db, evaluator, taskpkg
+from quotacrux.agent.runner import Runner, RunOptions, UPGRADE_RULE
+from quotacrux.llm.pricing import PRICE_TABLES
+from quotacrux.sandbox import executor
 
 
 def write(path, value):

@@ -33,7 +33,7 @@ type Theme = 'dark' | 'light'
 function initialTheme(): Theme {
   const q = new URLSearchParams(window.location.search).get('theme')
   if (q === 'light' || q === 'dark') return q
-  try { return window.localStorage.getItem('routeevo.theme') === 'light' ? 'light' : 'dark' } catch { return 'dark' }
+  try { return (window.localStorage.getItem('quotacrux.theme') ?? window.localStorage.getItem('routeevo.theme')) === 'light' ? 'light' : 'dark' } catch { return 'dark' }
 }
 
 function readHash(): { tab: Tab; arg: string | null } {
@@ -49,7 +49,7 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(initialTheme)
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    try { window.localStorage.setItem('routeevo.theme', theme) } catch { /* per-viewer convenience only */ }
+    try { window.localStorage.setItem('quotacrux.theme', theme) } catch { /* per-viewer convenience only */ }
   }, [theme])
   const health = usePoll(api.health, [], 3000)
   const snaps = usePoll(api.snapshots, [], 5000)
@@ -74,7 +74,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand"><span className="logo">R</span><span className="name">routeevo</span></div>
+        <div className="brand" aria-label="QuotaCrux 枢决"><span className="logo" aria-hidden="true">Q</span><span className="name">QuotaCrux<span className="slash"> / </span>枢决</span></div>
         <nav className="nav">
           {TABS.filter((t) => !t.minor).map((t) => (
             <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => go(t.id)}>{t.lbl}</button>

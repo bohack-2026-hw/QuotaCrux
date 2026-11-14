@@ -69,5 +69,5 @@
 ## 复现
 
 ```sh
-uv run routeevo run algotune-convolve_1d-smoke-eeb3cd9d83 --mode eval --snapshot v0 --research-mode feedback --fixed-model small --dev-only --cpuset-cpus 2 --function-warmups 3 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0
+uv run quotacrux run algotune-convolve_1d-smoke-eeb3cd9d83 --mode eval --snapshot v0 --research-mode feedback --fixed-model small --dev-only --cpuset-cpus 2 --function-warmups 3 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0
 ```

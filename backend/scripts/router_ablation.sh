@@ -13,9 +13,9 @@ for rep in $(seq 1 "$repeats"); do
     if (( (rep + i) % 2 == 0 )); then order="on off"; else order="off on"; fi
     for arm in $order; do
       if [[ $arm == on ]]; then
-        uv run routeevo run "$t" --mode eval --snapshot "$snap" --label "router ablation · on" | sed -n 's/^\(run\|status\|cost\|time\) */\1 /p'
+        uv run quotacrux run "$t" --mode eval --snapshot "$snap" --label "router ablation · on" | sed -n 's/^\(run\|status\|cost\|time\) */\1 /p'
       else
-        uv run routeevo run "$t" --mode eval --snapshot "$snap" --no-router --label "router ablation · off" | sed -n 's/^\(run\|status\|cost\|time\) */\1 /p'
+        uv run quotacrux run "$t" --mode eval --snapshot "$snap" --no-router --label "router ablation · off" | sed -n 's/^\(run\|status\|cost\|time\) */\1 /p'
       fi
     done
     i=$((i + 1))

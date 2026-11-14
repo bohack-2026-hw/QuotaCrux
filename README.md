@@ -78,13 +78,34 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 
 ## 系统架构与研究闭环
 
-**图 1 端到端流程。** 每次运行先在沙箱里复验经验快照中最相近的已验证程序，达标就直接交付；未达标时由分流器按经验覆盖情况选择模型档位，进入任务内研究循环。交付后，learn / online 模式把验证过的结果原子发布为新快照，供下一次运行读取。
+```mermaid
+flowchart LR
+    T[冻结任务包<br/>契约 · 初始程序 c0 · 开发/最终集] --> R
+    K[(不可变经验快照 vN)] -->|已验证程序与条件特征| R
 
-<img src="docs/assets/readme/architecture-pipeline-zh.png" alt="QuotaCrux 端到端流程：任务包与经验快照 → 模型前复验 → 经验覆盖分流器 → 轻量 / 强模型 → 任务内研究循环 → 冻结最佳与最终测试 → 交付与新快照" width="780" />
+    R[模型前程序复验<br/>最多 3 个最相近历史方案] -->|评测/在线模式达标| F
+    R -->|未达标，或学习模式提高目标| Triage{经验覆盖分流器}
 
-**图 2 任务内研究循环。** `ActionRouter` 决定下一步做什么，`ModelRouter` 决定生成步骤交给哪个模型档位；所有候选都由独立裁判实测，只有严格优于当前最佳才会替换。
+    Triage -->|同族相近条件| Small[轻量模型层<br/>本地 / 托管 Qwen]
+    Triage -->|全新任务族或新条件| Large[云端强模型层<br/>gpt-6.1-sol]
 
-<img src="docs/assets/readme/research-loop-zh.png" alt="QuotaCrux 任务内研究循环：可见状态 → ActionRouter → ModelRouter → 生成 → 静态检查 → 独立裁判 → 严格更优才更新最佳，否则留档并继续" width="780" />
+    Small --> Loop
+    Large --> Loop
+
+    subgraph Loop[受预算约束的任务内研究循环]
+        direction TB
+        S[可见状态构造<br/>契约 · 候选 · 裁判事实 · 剩余预算] --> AR{ActionRouter<br/>llm 或 decisions}
+        AR -->|analyze / propose| MR{ModelRouter<br/>rule 或 decisions}
+        MR --> Gen[生成候选代码或分析]
+        AR -->|profile / validate / finish| Exec
+        Gen --> Check[静态检查] --> Exec[隔离沙箱 / 原生裁判<br/>交替计时与契约用例校验]
+        Exec -->|仅严格优于当前最佳才更新| S
+    end
+
+    Loop -->|达标 / 预算耗尽 / 主动结束| F[冻结开发最佳候选<br/>隐藏最终集独立测试]
+    F --> Bundle[研究报告 · 资源账本 · 一键复现包]
+    Bundle -->|learn / online 可写分片| K2[(原子发布新快照 vN+1)]
+```
 
 ---
 
@@ -190,8 +211,6 @@ DeepSeek Harness 团队发布的 [SuperAgent 研究原型](https://github.com/de
 - **Node.js 与 `pnpm`**（用于构建前端可视化控制台）
 - **模型配置：** `OPENAI_API_KEY`（用于 `gpt-6.1-sol` / `gpt-6-luna`）以及兼容 OpenAI 接口的轻量模型服务（本地 Ollama `qwen3.8:27b-mlx` 或托管 `Qwen3.8-27B`）
 
-启用 Jev 路由时，在 `backend/.env` 中另行设置 `TYPESAFE_API_KEY`；`TYPESAFE_MODEL` 默认固定为 `jev-1.14.0`。
-
 ### 1. 安装依赖并启动控制台
 
 ```bash
@@ -205,11 +224,9 @@ uv run quotacrux serve           # 打开 http://127.0.0.1:8000（API 文档位�
 ```
 
 <details>
-<summary>控制台运行界面与路演展架预览</summary>
+<summary>控制台运行界面预览（研究运行与假设判定账本）</summary>
 
-| 研究运行与假设判定账本 | 路演展示海报（X 展架场景预览） |
-| :---: | :---: |
-| ![运行界面](frontend/docs/screenshots/run-1440-dark.png) | ![X展架预览](docs/poster/QuotaCrux-xbanner-mockup.jpg) |
+<img src="frontend/docs/screenshots/run-1440-dark.png" alt="QuotaCrux 研究运行与假设判定账本" width="780" />
 
 </details>
 
@@ -220,9 +237,6 @@ cd backend
 
 # 使用 Decisions 动作路由运行单个任务
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
-
-# 使用 Jev 动作路由；模型路由也可改为 --model-router jev
-uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # 在线边交付边进化（自动发布新快照），或串行多任务自主学习
 uv run quotacrux run B-01 --mode online --snapshot v19
@@ -283,7 +297,7 @@ uv run --extra benchmark pytest
 | --- | --- | --- |
 | **文档总览** | [docs/README.md](docs/README.md) | 赛题 → 需求 → 设计 → 评测 → 实验 → 验收的完整导航 |
 | **项目介绍与路演** | [项目介绍 (PDF)](docs/presentation/project-overview.pdf) · [演示文稿 (PDF)](docs/presentation/QuotaCrux.pdf) · [技术汇报 (PDF)](docs/presentation/QuotaCrux-technical.pdf) · [演示脚本](docs/presentation/demo-script.md) | 路演材料、技术幻灯片与现场演示流程（含 [Markdown 原文](docs/presentation/project-overview.md)） |
-| **展示海报** | [展架海报 (PDF)](docs/poster/QuotaCrux-poster.pdf) · [高清预览图](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) · [X 展架场景预览](docs/poster/QuotaCrux-xbanner-mockup.jpg) | `80 × 180 cm` 印刷级矢量海报及导出预览 |
+| **展示海报** | [展架海报 (PDF)](docs/poster/QuotaCrux-poster.pdf) · [高清预览图](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) | `80 × 180 cm` 印刷级矢量海报及导出预览 |
 | **架构与接入设计** | [后端指南](backend/README.md) · [动作与模型路由](docs/design/action-model-routing.md) · [EffiBench-X 接入](docs/design/effibench-integration.md) · [原生 Benchmark 接入](docs/design/native-benchmarks.md) | CLI / HTTP API、四组路由消融、EffiBench-X / ALE / AlgoTune / KernelBench 协议 |
 | **需求与验收** | [产品需求](docs/requirements/product-requirements.md) · [核心需求](docs/requirements/core-requirements.md) · [验收记录](docs/requirements/acceptance-record.md) | 研究闭环规则、经验与快照版本机制、RA-AC-01–08 逐条证据对照 |
 | **实验数据与报告** | [研究实验报告 (19 页 PDF)](docs/research/analysis-report-20261114/output/pdf/quotacrux-research-report.pdf)（[说明](docs/research/analysis-report-20261114/README.md)） · [Mac 探索归档](docs/research/mac-exploratory-20261114/README.md) · [2026-11-14 数据汇总](docs/research/20261114-summary.md) · [实验批次索引](docs/research/README.md) · [路由短批结果](docs/research/native-routing/20261114/RESULTS.md) · [ALE 正式结果](docs/research/native-formal-20261114/ale/results/README.md) · [经验学习结果](docs/archive/memory-learning-results.md) | 全部实证实验报告、图表复现脚本、运行边界（[运行时规则](docs/archive/legacy-runtime-rules.md)）与集成记录 |

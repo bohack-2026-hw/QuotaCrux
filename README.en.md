@@ -78,13 +78,34 @@ Aligned with the **"Built for Better — Building Self-Evolving Intelligence"** 
 
 ## Architecture & Research Loop
 
-**Figure 1, end-to-end flow.** Each run first re-checks the closest verified programs from the experience snapshot in the sandbox and delivers right away if one meets the target. Otherwise the triage step picks a model tier from how well the snapshot covers the task, and the within-task research loop takes over. After delivery, learn and online modes publish the verified results as a new snapshot for the next run.
+```mermaid
+flowchart LR
+    T[Frozen Task Package<br/>Contract · Initial c0 · Dev/Final] --> R
+    K[(Immutable Snapshot vN)] -->|Verified programs + buckets| R
 
-<img src="docs/assets/readme/architecture-pipeline-en.png" alt="QuotaCrux end-to-end flow: task package and snapshot → pre-model re-check → triage → small or cloud model → research loop → frozen best and final test → delivery and new snapshot" width="780" />
+    R[Pre-LLM Re-validation<br/>Up to 3 closest programs] -->|Target met in eval/online| F
+    R -->|Not met / learn mode raises target| Triage{Experience Triage}
 
-**Figure 2, within-task research loop.** `ActionRouter` decides what to do next and `ModelRouter` decides which model tier generates. Every candidate is measured by the independent judge and replaces the current best only when it is strictly better.
+    Triage -->|Familiar conditions| Small[Small Tier<br/>Local / Hosted Qwen]
+    Triage -->|New family or conditions| Large[Large Tier<br/>gpt-6.1-sol]
 
-<img src="docs/assets/readme/research-loop-en.png" alt="QuotaCrux within-task research loop: visible state → ActionRouter → ModelRouter → generate → static check → independent judge → update best only if strictly better, otherwise keep on record and continue" width="780" />
+    Small --> Loop
+    Large --> Loop
+
+    subgraph Loop[Budgeted Within-Task Research Loop]
+        direction TB
+        S[Visible State<br/>Task · Candidates · Verdicts · Budget] --> AR{ActionRouter<br/>llm or decisions}
+        AR -->|analyze / propose| MR{ModelRouter<br/>rule or decisions}
+        MR --> Gen[Generate Code / Analysis]
+        AR -->|profile / validate / finish| Exec
+        Gen --> Check[Static Check] --> Exec[Isolated Sandbox / Native Judge<br/>Alternating Timing & Contract Cases]
+        Exec -->|Verdict updates best if strictly better| S
+    end
+
+    Loop -->|Budget exhausted / goal reached / finish| F[Freeze Best Candidate<br/>Hidden Final Evaluation]
+    F --> Bundle[Report · Ledger · Reproducible Export]
+    Bundle -->|learn / online on writable split| K2[(Atomic Snapshot vN+1)]
+```
 
 ---
 
@@ -190,8 +211,6 @@ Evaluated on sealed Python optimization benchmarks (3 built-in families: `groupa
 - **Node.js + `pnpm`** (only required to build/serve the React dashboard)
 - **Model endpoints:** an `OPENAI_API_KEY` (for `gpt-6.1-sol` / `gpt-6-luna`) and an OpenAI-compatible small-model endpoint (local Ollama `qwen3.8:27b-mlx` or hosted `Qwen3.8-27B`)
 
-For Jev routing, also set `TYPESAFE_API_KEY` in `backend/.env`; `TYPESAFE_MODEL` defaults to the pinned `jev-1.14.0`.
-
 ### 1. Install & Launch the Dashboard
 
 ```bash
@@ -205,11 +224,9 @@ uv run quotacrux serve           # Open http://127.0.0.1:8000 (API docs at /docs
 ```
 
 <details>
-<summary>Web Dashboard & Exhibition Poster Preview</summary>
+<summary>Web Dashboard Run Inspector & Verdict Ledger Preview</summary>
 
-| Run Inspector & Verdict Ledger | Exhibition Poster Mockup |
-| :---: | :---: |
-| ![QuotaCrux Run View](frontend/docs/screenshots/run-1440-dark.png) | ![QuotaCrux X-Banner](docs/poster/QuotaCrux-xbanner-mockup.jpg) |
+<img src="frontend/docs/screenshots/run-1440-dark.png" alt="QuotaCrux Run Inspector and Verdict Ledger" width="780" />
 
 </details>
 
@@ -220,9 +237,6 @@ cd backend
 
 # Run a single task with decoupled Decisions action routing
 uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
-
-# Use Jev action routing; model routing can also use --model-router jev
-uv run quotacrux run B-01 --snapshot v0 --no-router --action-router jev --model-router rule
 
 # Deliver online while evolving snapshots, or learn serially across tasks
 uv run quotacrux run B-01 --mode online --snapshot v19
@@ -283,7 +297,7 @@ uv run --extra benchmark pytest
 | --- | --- | --- |
 | **Docs Index** | [docs/README.md](docs/README.md) | Master map from competition brief → requirements → design → evaluation → acceptance |
 | **Presentations & Overview** | [Project Overview (PDF)](docs/presentation/project-overview.pdf) · [Roadshow Deck (PDF)](docs/presentation/QuotaCrux.pdf) · [Technical Deck (PDF)](docs/presentation/QuotaCrux-technical.pdf) · [Demo Script](docs/presentation/demo-script.md) | System overview ([Markdown](docs/presentation/project-overview.md)), slides, and walkthrough script |
-| **Posters** | [Poster (PDF)](docs/poster/QuotaCrux-poster.pdf) · [High-Res Preview](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) · [X-Banner Mockup](docs/poster/QuotaCrux-xbanner-mockup.jpg) | `80 × 180 cm` print-ready vector poster and previews |
+| **Posters** | [Poster (PDF)](docs/poster/QuotaCrux-poster.pdf) · [High-Res Preview](docs/poster/倍漾量化-瀚海Vastsea-枢决QuotaCrux.jpg) | `80 × 180 cm` print-ready vector poster and preview |
 | **Architecture & Adapters** | [Backend Guide](backend/README.md) · [Action & Model Routing](docs/design/action-model-routing.md) · [EffiBench-X Integration](docs/design/effibench-integration.md) · [Native Benchmarks](docs/design/native-benchmarks.md) | CLI / HTTP API, routing ablation protocol, EffiBench-X / ALE / AlgoTune / KernelBench setup |
 | **Requirements & Acceptance** | [Product Requirements](docs/requirements/product-requirements.md) · [Core Requirements](docs/requirements/core-requirements.md) · [Acceptance Record](docs/requirements/acceptance-record.md) | Research loop specs, snapshot versioning, and RA-AC-01–08 traceability |
 | **Reports & Experiments** | [Research Report (19p PDF)](docs/research/analysis-report-20261114/output/pdf/quotacrux-research-report.pdf) ([Notes](docs/research/analysis-report-20261114/README.md)) · [Mac Exploratory Archive](docs/research/mac-exploratory-20261114/README.md) · [2026-11-14 Summary](docs/research/20261114-summary.md) · [Batch Index](docs/research/README.md) · [Routing Results](docs/research/native-routing/20261114/RESULTS.md) · [ALE Results](docs/research/native-formal-20261114/ale/results/README.md) · [Memory Results](docs/archive/memory-learning-results.md) | Audited empirical reports, chart scripts, runtime rules ([legacy-runtime-rules.md](docs/archive/legacy-runtime-rules.md)), and integration logs |

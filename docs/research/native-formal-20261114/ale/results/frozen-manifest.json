@@ -1,0 +1,282 @@
+{
+  "plan_id": "research-ale-formal-20261114-v2",
+  "protocol": "within-task-feedback-v2",
+  "code_sha": "990f598b87f7c93bd27b6ceef5751bbc2d39dd79",
+  "executor_sha256": "88631e5de89c2dafe5adfc2b155fe22ea41f8d959bc2d1a1f58d8bb31fb8c144",
+  "central_plan_sha256": "b8dddb6e21f00ac7af2297f4c2198b49b0c925b3130171e8a201cefdc842bcc3",
+  "model": {
+    "provider": "chat_compat",
+    "model": "Qwen3.8-27B",
+    "role": "small",
+    "base_url": "https://aiping.cn/api/v1",
+    "reasoning_effort": null,
+    "enable_thinking": false,
+    "max_output_tokens": 8192,
+    "temperature": null,
+    "response_format": "json_object",
+    "extra": {}
+  },
+  "workers": {
+    "a": {
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "manifest_sha256": "1be26f2a809875d8fee65fc5ca8aa3a46955a467516c0946cc6d938802b8e6ef",
+      "measure": {
+        "repeats": 5,
+        "function_warmups": 1,
+        "cpus": 1.0,
+        "cpuset_cpus": "2",
+        "memory": "1g",
+        "pids_limit": 64,
+        "max_output_bytes": 67108864,
+        "ready_timeout_s": 30.0
+      },
+      "environment": {
+        "image_tag": "routeevo-sandbox:d055c99c833a",
+        "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+        "docker_server": "29.9.3 linux/amd64",
+        "container_python": "3.12-slim (pinned digest in Dockerfile)",
+        "limits": {
+          "cpus": 1.0,
+          "cpuset_cpus": "2",
+          "memory": "1g",
+          "pids_limit": 64,
+          "network": "none",
+          "read_only_rootfs": true,
+          "user": "65534:65534"
+        },
+        "judge": {
+          "image_tag": "routeevo-ale-ahc024:440437e8b148",
+          "image_id": "sha256:ee44715bc32a6abd30a73f69c850912f10aa07ec8a476b62cb745a8ce708805a"
+        }
+      },
+      "problem": "ahc024",
+      "prompt_sha256": {
+        "feedback": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab",
+        "independent": "18654d8a0f958db273fb6ab4731361a44bb1f564c827605f71df76efa9628dc8"
+      }
+    },
+    "b": {
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "manifest_sha256": "a89676c4da2b451c55af5ef3db9a164d44f3db6edd3c1ea5dcfad2fcb44b3ba0",
+      "measure": {
+        "repeats": 5,
+        "function_warmups": 1,
+        "cpus": 1.0,
+        "cpuset_cpus": "4",
+        "memory": "1g",
+        "pids_limit": 64,
+        "max_output_bytes": 67108864,
+        "ready_timeout_s": 30.0
+      },
+      "environment": {
+        "image_tag": "routeevo-sandbox:d055c99c833a",
+        "image_id": "sha256:adcc187ce2ca1745a7956ca4f2546e9ff984110733a4d03ee44233ef157436fb",
+        "docker_server": "29.9.3 linux/amd64",
+        "container_python": "3.12-slim (pinned digest in Dockerfile)",
+        "limits": {
+          "cpus": 1.0,
+          "cpuset_cpus": "4",
+          "memory": "1g",
+          "pids_limit": 64,
+          "network": "none",
+          "read_only_rootfs": true,
+          "user": "65534:65534"
+        },
+        "judge": {
+          "image_tag": "routeevo-ale-ahc026:c4cb5eec9f62",
+          "image_id": "sha256:6fa4bb666ea4b6fc05ec17820f09d9e14c7f1f1d1f9bef2bfddf7ac8d993da76"
+        }
+      },
+      "problem": "ahc026",
+      "prompt_sha256": {
+        "feedback": "3fb9d99e026a3c2e3e3c2313bdf24068ddc64f2022a93ac13aeda17822773aab",
+        "no_feedback": "182344ffb66c51838fdf3bf26486caab2ca1d37ac5754d675165d4b264b9cca8",
+        "independent": "18654d8a0f958db273fb6ab4731361a44bb1f564c827605f71df76efa9628dc8"
+      }
+    }
+  },
+  "ale_plan": [
+    {
+      "wave": 1,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 1,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 1
+    },
+    {
+      "wave": 1,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 2
+    },
+    {
+      "wave": 2,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 1,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 3
+    },
+    {
+      "wave": 2,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 4
+    },
+    {
+      "wave": 3,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 2,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 5
+    },
+    {
+      "wave": 3,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 1,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 6
+    },
+    {
+      "wave": 4,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 7
+    },
+    {
+      "wave": 4,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 8
+    },
+    {
+      "wave": 5,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 9
+    },
+    {
+      "wave": 5,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 10
+    },
+    {
+      "wave": 6,
+      "worker": "a",
+      "task_id": "ale-bench-ahc024-formal-20261114-d052b16d54",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "2",
+      "expected_concurrency": 2,
+      "seq": 11
+    },
+    {
+      "wave": 6,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 2,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 2,
+      "seq": 12
+    },
+    {
+      "wave": 7,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "independent",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 13
+    },
+    {
+      "wave": 8,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 14
+    },
+    {
+      "wave": 9,
+      "worker": "b",
+      "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+      "repeat": 3,
+      "mode": "no_feedback",
+      "candidate_cpu": "4",
+      "expected_concurrency": 1,
+      "seq": 15
+    }
+  ],
+  "pricing": {
+    "model": "Qwen3.8-27B",
+    "currency": "CNY",
+    "unit": "per_1m_tokens",
+    "input_per_1m": 3,
+    "output_per_1m": 12,
+    "source": "https://aiping.cn/api/v1/models",
+    "retrieved_at": "2026-11-14T07:24:31.643548+00:00",
+    "unit_evidence": {
+      "url": "https://assets.qc-ai.cn/aiping/assets/ModelList-DLME3VcJ.js",
+      "currency_symbol": "￥",
+      "text_model_price_denominator": "/M"
+    },
+    "cache_policy": "cached input charged at standard input rate for estimate; discounts/credits excluded"
+  },
+  "parallel_policy": "waves 1-6 have both workers; wait for both before advancing; waves 7-9 worker b only; wait outside episode budget",
+  "judge_affinity": "unset; accepted as recorded in desktop dev calibration d0df527; no exclusive-core claim",
+  "failure_policy": "preserve all records; stop batch after infrastructure/internal/model API error or user stop; no automatic slot rerun; final candidate failure stays in results",
+  "mac_binding_status": "pending issue #4; no Mac run authorized by this host manifest",
+  "limits": {
+    "max_model_requests": 20,
+    "max_candidates": 10,
+    "wall_clock_s": 900,
+    "model_request_timeout_s": 120.0,
+    "measurement_timeout_s": 10.0,
+    "min_request_window_s": 15.0,
+    "token_budget": null,
+    "max_code_bytes": 20000
+  },
+  "prompt_version": "agent-prompt-v7",
+  "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
+  "frozen_at": "2026-11-14T07:31:01.232532+00:00"
+}

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 from typing import Protocol
@@ -22,9 +22,11 @@ UPGRADE_RULE = {
 }
 ACTION_INSTRUCTIONS = (
     "Select the next action for this code optimization run, using the task, evidence and remaining budget. "
-    "Prefer actions that can yield a correct candidate meeting the active speedup target. Tools and validation "
+    "Prefer actions that improve the supplied task objective while satisfying correctness and feasibility. "
+    "Use the objective's metric and direction: raw score is not a speedup ratio. Tools and validation "
     "operate only on dev data. A generation action requires additional model requests; direct tool actions do not. "
-    "Finish when further work is unlikely to help. Do not infer an unseen candidate's measured performance."
+    "In feedback research, reaching a target does not end exploration; finish when further work is unlikely "
+    "to help within the remaining budget. Do not infer an unseen candidate's measured performance."
 )
 MODEL_INSTRUCTIONS = (
     "Choose which code-generating model should handle the pending request. Weigh progress, failed approaches, "
@@ -51,11 +53,17 @@ class RoutingState:
     runnable_candidates: tuple[str, ...]
     generation_requests: int
     models: dict
+    objective: dict = field(default_factory=lambda: {"metric": "speedup", "direction": "maximize"})
+    available_tools: tuple[str, ...] = ("profile_candidate",)
+    can_validate: bool = True
+    research_mode: str = "legacy"
 
     def evidence(self) -> dict:
         return {"agent_instructions": self.system, "state": self.text, "generation_models": self.models,
                 "small_requests": self.small_requests, "candidate_misses": self.misses,
-                "generation_requests_needed": self.generation_requests}
+                "generation_requests_needed": self.generation_requests,
+                "objective": self.objective, "available_tools": list(self.available_tools),
+                "can_validate": self.can_validate, "research_mode": self.research_mode}
 
 
 @dataclass(frozen=True)
@@ -115,10 +123,11 @@ class DecisionsActionRouter:
             if state.candidates_remaining > 0:
                 choices.append({"value": "propose_candidate", "description": "Ask the generation model for a complete candidate, then validate it."})
         for cid in state.runnable_candidates:
-            choices.extend([
-                {"value": f"profile_candidate:{cid}", "description": f"Profile {cid} on dev data."},
-                {"value": f"run_validation:{cid}", "description": f"Re-measure {cid} on dev data."},
-            ])
+            if "profile_candidate" in state.available_tools:
+                choices.append({"value": f"profile_candidate:{cid}", "description": f"Profile {cid} on dev data."})
+            if state.can_validate:
+                choices.append({"value": f"run_validation:{cid}",
+                                "description": f"Re-evaluate {cid} with the task's dev judge and objective."})
         return {"type": "choice", "name": "action", "instructions": ACTION_INSTRUCTIONS, "choices": choices}
 
     def request(self, state: RoutingState, timeout_s: float) -> LLMResult:
@@ -182,7 +191,7 @@ def make_routers(config: RoutingConfig, clients: dict, models: dict) -> tuple[Ac
 
 
 def manifest(config: RoutingConfig) -> dict:
-    return {**config.to_dict(), "version": "routing-adapters-v1", "decision_model": openai_decisions.MODEL,
+    return {**config.to_dict(), "version": "routing-adapters-v2", "decision_model": openai_decisions.MODEL,
             "action_prompt_sha256": hashlib.sha256(ACTION_INSTRUCTIONS.encode()).hexdigest(),
             "model_prompt_sha256": hashlib.sha256(MODEL_INSTRUCTIONS.encode()).hexdigest(),
             "upgrade_is_irreversible": True, "budget_counts": "all routing and generation requests"}

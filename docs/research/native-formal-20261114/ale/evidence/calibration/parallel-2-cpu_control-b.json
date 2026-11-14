@@ -1,0 +1,109 @@
+{
+  "phase": "parallel",
+  "repeat": 2,
+  "worker": "b",
+  "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+  "cpu": "4",
+  "program": "cpu_control",
+  "candidate_sha256": "3c13277d850b9804081e5bcf44dd94b4851c853775197ea2e3874580f6e50bd4",
+  "evaluation": {
+    "evaluation_id": "8c427d337091",
+    "task_id": "ale-bench-ahc026-formal-20261114-66cd5cc2e0",
+    "dataset": "dev",
+    "status": "passed",
+    "executed": true,
+    "format_ok": true,
+    "correct": true,
+    "improved": false,
+    "goal_met": false,
+    "speedup": null,
+    "candidate_median_s": null,
+    "baseline_median_s": null,
+    "detail": {
+      "objective": {
+        "metric": "score",
+        "direction": "maximize",
+        "value": 44120,
+        "baseline": 44120,
+        "aggregation": "sum",
+        "cases": [
+          {
+            "correct": true,
+            "score": 8934
+          },
+          {
+            "correct": true,
+            "score": 8819
+          },
+          {
+            "correct": true,
+            "score": 8811
+          },
+          {
+            "correct": true,
+            "score": 8788
+          },
+          {
+            "correct": true,
+            "score": 8768
+          }
+        ]
+      },
+      "case_count": 5,
+      "passed_cases": 5,
+      "samples": [
+        {
+          "case": "dev-0",
+          "status": "ok",
+          "elapsed_s": 1.2535007690003113,
+          "ready_latency_s": 0.14227816899983736,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 2004
+        },
+        {
+          "case": "dev-1",
+          "status": "ok",
+          "elapsed_s": 1.3212946439998632,
+          "ready_latency_s": 0.11335274700104492,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 2083
+        },
+        {
+          "case": "dev-2",
+          "status": "ok",
+          "elapsed_s": 1.2844692879989452,
+          "ready_latency_s": 0.15540542200142227,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 2058
+        },
+        {
+          "case": "dev-3",
+          "status": "ok",
+          "elapsed_s": 1.3013827079994371,
+          "ready_latency_s": 0.10795196799881523,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 2067
+        },
+        {
+          "case": "dev-4",
+          "status": "ok",
+          "elapsed_s": 1.3379826769996725,
+          "ready_latency_s": 0.1139098229996307,
+          "exit_code": 0,
+          "stderr_tail": "",
+          "stdout_bytes": 2094
+        }
+      ],
+      "container_ready_latency_s": 0.6328981290007505,
+      "duration_s": 8.437,
+      "dataset_sha256": "695b38610d4b1d52f168b975b5bfeba85abb26eea917d72535137d643410d32a",
+      "candidate_sha256": "3c13277d850b9804081e5bcf44dd94b4851c853775197ea2e3874580f6e50bd4"
+    },
+    "started_at": "2026-11-14T06:54:28.223+00:00",
+    "ended_at": "2026-11-14T06:54:36.660+00:00"
+  }
+}

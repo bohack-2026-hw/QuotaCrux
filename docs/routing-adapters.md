@@ -2,7 +2,7 @@
 
 路由适配器最初基于 `f8fbb3e`，将两个决策点分开：**下一步做什么**和**由哪个生成模型处理**。
 当前集成保留默认 `action=llm, model=rule`，并与初始经验分流、在线任务流及 native 研究协议共存。
-非 native 的 legacy 运行可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`），
+legacy 运行，以及显式启用 adaptive 的 native feedback 研究，可以将两个开关独立替换为 OpenAI Decisions（`gpt-6-luna`），
 其输出为离散选择和概率；代码与分析仍由 Qwen/GPT 生成。下方联调数据保留原执行版本与结果。
 
 ## 执行流程
@@ -65,8 +65,9 @@ uv run routeevo ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
 仅改变 routing；按任务和重复轮次轮换组别顺序，串行执行。运行均为 eval，不发布经验；拒绝使用包含
 这些任务经验的快照。`v0` 为空快照，适合观察路由本身；非空快照可能在复用阶段直接完成，报告保留这类零调用运行。
 
-汇总写入 `var/routing-ablations/<id>.json`，每次运行仍有完整 `var/runs/<id>/report.json`。
-汇总的 `fair` 检查实际配置中只有 routing 不同、任务 manifest 不漂移、快照一致且所有计划运行已结束。
+新汇总写入 `var/comparisons/research-routing-<id>.json`，每次运行仍有完整 `var/runs/<id>/report.json`。
+汇总的 `fair` 按同一任务检查实际配置仅有两个 routing 开关不同、完整环境与 manifest 不漂移、快照一致，
+并核对冻结计划和四组矩阵。未全部记录时为 null；final 完整性由独立字段报告。
 这是配置可比性检查；样本量及计时波动仍需根据实际结果判断。环境、内部或模型 API 错误会停止批次并记录失败。
 
 `run`、`learn` 命令均接受两个开关；HTTP 单次运行也可选择：
@@ -107,8 +108,10 @@ AIPing Qwen 暂无本仓库计价表，费用标记为 unknown；与已知 OpenA
 导致 Decisions 被单向升级规则短路。四组消融均关闭初始分流，使该配置在四组之间一致。
 
 `--fixed-model small|large` 优先固定生成角色，同时关闭初始经验分流，跳过模型路由请求与升级。
-native 任务，以及 `research_mode=feedback|independent` 的运行，只接受默认 `llm + rule`；
-其他路由组合在发送请求前明确拒绝。研究模式保持 eval、v0 与固定模型约束；independent 模式只见 c0，
+研究默认 `research_model_policy=fixed`，只接受默认 `llm + rule`。
+`research_mode=feedback` 显式配合 `research_model_policy=adaptive` 时允许 native 四组路由，固定 eval/v0、
+`fixed_model=None` 和初始分流关闭；native 菜单按真实能力去掉 cProfile，并传入 score/speedup 目标。
+independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 没有前次分析、候选或评测反馈，只允许提出独立候选或结束。
 
 初始分流的 `route_model` 步骤由 `program` 记录，Decisions 的模型选择由 `model` 记录。
@@ -118,6 +121,8 @@ benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标�
 
 历史回放的负面结果见 [decision-model/README.md](decision-model/README.md)。
 本 adaptor 提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
+新增 24 轮研究的冻结模板、实际规则计数语义和交接约定见
+[native routing study](research/native-routing/README.md)。下方是旧 legacy 联调，不能用作 native routing 的 baseline。
 
 ## 2026-11-14 联调结果
 

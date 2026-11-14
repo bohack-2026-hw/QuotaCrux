@@ -8,7 +8,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from routeevo import config, db, evaluator, routing_ablation, taskpkg
+from routeevo import config, db, evaluator, report, routing_ablation, taskpkg
 from routeevo.agent import actions, routing, runner
 from routeevo.families import groupagg
 from routeevo.llm.base import LLMResult, Usage
@@ -182,13 +182,13 @@ def test_ablation_freezes_snapshot_and_detects_other_config_changes(harness, mon
     assert set(result["sides"]) == set(routing_ablation.VARIANTS)
     assert {s["routing_requests"] for s in result["sides"].values()} == {0, 1, 3, 4}
     assert json.loads(Path(result["artifact"]).read_text())["fair"]
-    reports = {row["run_id"]: routing_ablation.report.build(row["run_id"]) for row in result["runs"]}
+    reports = {row["run_id"]: report.build(row["run_id"]) for row in result["runs"]}
     assert all(rep["config"]["router"]["version"] == "off" for rep in reports.values())
     assert len({r["config_fingerprint"] for r in reports.values()}) == 4
-    changed = copy.deepcopy(reports)
-    changed[result["runs"][-1]["run_id"]]["config"]["limits"]["max_candidates"] += 1
-    monkeypatch.setattr(routing_ablation.report, "build", changed.__getitem__)
-    assert not routing_ablation.summarize(result)["fair"]
+    changed = copy.deepcopy(result)
+    changed["runs"][-1]["comparison_config"]["config"]["limits"]["max_candidates"] += 1
+    monkeypatch.setattr(report, "build", lambda *a: pytest.fail("portable summary must not query the source database"))
+    assert not routing_ablation.summarize(changed)["fair"]
 
 
 def test_ablation_rotates_order_and_rejects_duplicate_tasks():
@@ -197,6 +197,23 @@ def test_ablation_rotates_order_and_rejects_duplicate_tasks():
     assert {rows[i]["variant"] for i in (0, 4, 8, 12)} == set(routing_ablation.VARIANTS)
     with pytest.raises(ValueError):
         routing_ablation.plan(["a", "a"], 1)
+
+
+@pytest.mark.parametrize("can_validate", [True, False])
+def test_native_decision_menu_uses_objective_and_available_capabilities(can_validate):
+    state = routing.RoutingState(system="native instructions", text="dev feedback", role="small",
+        small_requests=0, misses=0, requests_remaining=20, candidates_remaining=10,
+        runnable_candidates=("c0",), generation_requests=2, models={},
+        objective={"metric": "score", "direction": "maximize"}, available_tools=(),
+        can_validate=can_validate, research_mode="feedback")
+    question = routing.DecisionsActionRouter().question(state)
+    choices = {choice["value"] for choice in question["choices"]}
+    assert "profile_candidate:c0" not in choices
+    assert ("run_validation:c0" in choices) == can_validate
+    assert {"finish", "analyze", "propose_candidate"} <= choices
+    assert state.evidence()["objective"] == {"metric": "score", "direction": "maximize"}
+    assert state.evidence()["available_tools"] == []
+    assert state.evidence()["research_mode"] == "feedback"
 
 
 def test_ablation_stops_and_saves_failed_run(harness):

@@ -25,6 +25,15 @@ const TABS: { id: Tab; lbl: string; minor?: boolean; title: string; en: string; 
   { id: 'live', lbl: '实时', minor: true, title: '实时进度', en: 'live', desc: '正在运行的实验与机器负载，每 2 秒刷新。' },
 ]
 
+type Theme = 'dark' | 'light'
+
+/** ?theme=light|dark wins (for links and screenshots), then the viewer's last choice; storage may be unavailable. */
+function initialTheme(): Theme {
+  const q = new URLSearchParams(window.location.search).get('theme')
+  if (q === 'light' || q === 'dark') return q
+  try { return window.localStorage.getItem('routeevo.theme') === 'light' ? 'light' : 'dark' } catch { return 'dark' }
+}
+
 function readHash(): { tab: Tab; arg: string | null } {
   const [tab, arg] = window.location.hash.replace('#', '').split('/')
   return { tab: (TABS.some((t) => t.id === tab) ? tab : 'home') as Tab, arg: arg ?? null }
@@ -35,6 +44,11 @@ export default function App() {
   const [runId, setRunId] = useState<string | null>(tab === 'run' ? arg : null)
   const [snapshot, setSnapshot] = useState<string | null>(null)
   const [focusExp, setFocusExp] = useState<string | null>(null)
+  const [theme, setTheme] = useState<Theme>(initialTheme)
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try { window.localStorage.setItem('routeevo.theme', theme) } catch { /* per-viewer convenience only */ }
+  }, [theme])
   const health = usePoll(api.health, [], 3000)
   const snaps = usePoll(api.snapshots, [], 5000)
   const active = snaps.data?.active_snapshot_id ?? 'v0'
@@ -70,7 +84,8 @@ export default function App() {
         </nav>
         <div className="status">
           {latest?.model?.name && <span className="model" title="最近研究批次使用的固定模型"><b>{latest.model.name}</b>{latest.model.hosted == null ? '' : latest.model.hosted ? ' · 托管' : ' · 本地'}</span>}
-          <span><span className={`pulse ${health.error ? 'off' : running ? '' : 'idle'}`} />{health.error ? '后端离线' : running ? '运行中' : '空闲'}</span>
+          <span title={health.error ? '后端未连接：研究页显示仓库存档的真实记录' : undefined}><span className={`pulse ${health.error ? 'off' : running ? '' : 'idle'}`} />{health.error ? '离线 · 存档数据' : running ? '运行中' : '空闲'}</span>
+          <button className="theme-btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? '切换到浅色' : '切换到深色'} title={theme === 'dark' ? '浅色（投影仪）' : '深色'}>{theme === 'dark' ? '☀' : '☾'}</button>
         </div>
       </header>
       <main>

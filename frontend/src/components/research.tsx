@@ -131,11 +131,11 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
         </g>
         {task.baseline != null && <g className="baseline">
           <line x1={left} x2={W - right} y1={y(task.baseline)} y2={y(task.baseline)} />
-          <text x={left + 4} y={y(task.baseline) - 5}>基线 {task.metric === 'score' ? fmt.n(task.baseline) : '1×'}</text>
+          <text x={left + 4} y={y(task.baseline) + 15}>基线 {task.metric === 'score' ? fmt.n(task.baseline) : '1×'}</text>
         </g>}
         {task.minSpeedup != null && <g className="target">
           <line x1={left} x2={W - right} y1={y(task.minSpeedup)} y2={y(task.minSpeedup)} strokeDasharray="4 4" />
-          <text x={W - right - 4} y={y(task.minSpeedup) - 5} textAnchor="end">开发目标 {task.minSpeedup}×</text>
+          <text x={left + 4} y={y(task.minSpeedup) - 6}>开发目标 {task.minSpeedup}×</text>
         </g>}
         {series.map((s) => {
           const m = rmode(s.r.mode)
@@ -145,8 +145,8 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
           const changes = s.pts.filter((p, i) => i === 0 || p.y !== s.pts[i - 1].y)
           return (
             <g key={`${s.r.mode}-${s.r.repeat}`}>
-              <path d={d} fill="none" stroke={m.color} strokeWidth={2} strokeLinejoin="round" strokeDasharray={multiRepeat && s.r.repeat > 1 ? (s.r.repeat === 2 ? '6 3' : '2 3') : undefined} />
-              {s.end != null && <line x1={x(s.end)} x2={x(s.end)} y1={y(s.pts[s.pts.length - 1].y) - 5} y2={y(s.pts[s.pts.length - 1].y) + 5} stroke={m.color} strokeWidth={2} />}
+              <path d={d} fill="none" stroke={m.color} strokeWidth={3} strokeLinejoin="round" strokeDasharray={multiRepeat && s.r.repeat > 1 ? (s.r.repeat === 2 ? '6 3' : '2 3') : undefined} />
+              {s.end != null && <line x1={x(s.end)} x2={x(s.end)} y1={y(s.pts[s.pts.length - 1].y) - 5} y2={y(s.pts[s.pts.length - 1].y) + 5} stroke={m.color} strokeWidth={3} />}
               {changes.map((p, i) => (
                 <g key={i} onMouseMove={(e) => {
                   const b = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect()
@@ -154,7 +154,7 @@ export function ProgressChart({ task, axis, currency, height = 240 }: { task: RT
                     text: `${m.label} r${s.r.repeat} · ${p.p.candidate ?? '—'} · ${metricText(task.metric, p.y)} · ${Math.round(p.p.t)}s · ${p.p.tokens != null ? fmt.n(p.p.tokens) : '?'} Token${p.p.cost != null ? ` · ${money(p.p.cost, currency)} 估` : ''}` })
                 }}>
                   <circle cx={x(p.x)} cy={y(p.y)} r={12} fill="transparent" />
-                  <Shape shape={m.shape} x={x(p.x)} y={y(p.y)} r={4.5} fill={m.color} stroke="var(--card)" />
+                  <Shape shape={m.shape} x={x(p.x)} y={y(p.y)} r={5.5} fill={m.color} stroke="var(--card)" />
                 </g>
               ))}
             </g>
@@ -247,6 +247,7 @@ export function BatchBadges({ b }: { b: RBatch }) {
       {finalChip}
       <FairChip b={b} />
       <Chip>每组 {reps} 次</Chip>
+      {b.limits && <Chip>每轮上限 {b.limits.wall_clock_s}s · {b.limits.max_model_requests} 次请求 · {b.limits.max_candidates} 个候选</Chip>}
     </div>
   )
 }

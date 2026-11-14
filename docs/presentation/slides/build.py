@@ -33,10 +33,23 @@ Image.new("RGB", (192, 108), BG).save(PAPER)
 # bohack.top lockup, in its own CSS px: mark (0,0,56,38) and text block (70,3.2,101,31.6); 171 x 38 overall
 
 
-def lockup(s, x, y, k):
+def imgshape(s, path, x, y, w, h, name=None):
+    """A rectangle filled with an image: animates like any shape (WPS drops pictures that carry entrance effects)."""
+    from pptx.oxml.ns import qn
+    from pptkit import frag
+    shp = rect(s, x, y, w, h, None, name=name)
+    _, rid = s.part.get_or_add_image_part(path)
+    sp = shp._element.spPr
+    sp.remove(sp.find(qn("a:noFill")))
+    sp.find(qn("a:prstGeom")).addnext(frag(f'<a:blipFill rotWithShape="1"><a:blip r:embed="{rid}"/><a:stretch><a:fillRect/></a:stretch></a:blipFill>'))
+    return shp
+
+
+def lockup(s, x, y, k, shapes=False):
     """BoHack mark + text at scale k; shared names let morph carry them from the intro to the header."""
-    return [pic(s, A("bohack-mark.png"), x, y, 56 * k, 38 * k, name="!!bhmark"),
-            pic(s, A("bohack-text.png"), x + 70 * k, y + 3.2 * k, 101 * k, 31.6 * k, name="!!bhtext")]
+    f = imgshape if shapes else pic
+    return [f(s, A("bohack-mark.png"), x, y, 56 * k, 38 * k, name="!!bhmark"),
+            f(s, A("bohack-text.png"), x + 70 * k, y + 3.2 * k, 101 * k, 31.6 * k, name="!!bhtext")]
 
 
 HDR_K = 1.2  # header lockup: 205 x 46 px, centred on y = 56
@@ -185,21 +198,17 @@ def autoplay(slide, spid, ms):
     else:
         slide._element.append(el)
 
-# ============================================================== 0 intro (auto-advances)
-# the bohack.top opening, captured frame by frame from the site: the pen draws the logo, then it settles top-left,
-# exactly where every later slide keeps it. Plays once (a video, since WPS loops GIFs), then the deck moves on.
-s, tl = new(notes="BoHack 开场动画（取自 bohack.top），播完自动进入封面。")
-TLS.remove(tl)
-mov = s.shapes.add_movie(A("bohack-intro.mp4"), 0, 0, prs.slide_width, prs.slide_height, poster_frame_image=A("bohack-intro-poster.png"), mime_type="video/mp4")
-autoplay(s, mov.shape_id, 2733)
-s._element.remove(s._element.find("{http://schemas.openxmlformats.org/markup-compatibility/2006}AlternateContent"))
-set_transition(s, "fade", 300)
-for t_ in s._element.iter("{http://schemas.openxmlformats.org/presentationml/2006/main}transition"):
-    t_.set("advTm", "2900")
-
 # ============================================================== 1 cover
-s, tl = new(notes="开场：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
-lockup(s, L, 56 - 19 * HDR_K, HDR_K)
+s, tl = new(notes="开场（先自动播放 BoHack 开场动画）：QuotaCrux（枢决）是一个在预算里做研究的 Agent。三个关键词：动作与模型解耦路由、隔离沙箱里的独立裁判、可回退的可执行经验快照。")
+# the bohack.top opening, captured frame by frame from the site, plays on the cover itself (once): the pen draws
+# the logo, it settles top-left exactly where every later slide keeps it, and the cover builds on top of it.
+mov = s.shapes.add_movie(A("bohack-intro.mp4"), 0, 0, prs.slide_width, prs.slide_height, poster_frame_image=A("bohack-intro-poster.png"), mime_type="video/mp4")
+tl.add(mov, "play", 0, 2733)
+# the same lockup appears over the video's last frame the moment it ends, so nothing changes on screen when the
+# player drops the finished video back to its blank poster
+for sh in lockup(s, L, 56 - 19 * HDR_K, HDR_K, shapes=True):
+    tl.fade(sh, 2700, 60)
+INTRO_MS = 2800
 t1 = T(s, 1144, 32, 700, 48, "倍漾量化 · Research Agent 赛道", size=15, align="r", anchor="m")
 rule = line(s, L, 88, R, 88, INK, 2, name="!!rule")
 brand = T(s, 60, 120, 1300, 240, "QuotaCrux", size=118, bold=True, color=BLUE, latin=NUM, name="!!brand")
@@ -208,7 +217,7 @@ tag = T(s, 420, 420, 900, 60, "预算感知的 Research Agent", size=24, color=I
 slogan = T(s, 76, 560, 1400, 96, [[("把有限预算，用在", {}), ("关键节点", {"color": BLUE})]], size=40, bold=True)
 uline = line(s, 76 + 8 * 80, 666, 76 + 12 * 80, 666, ORANGE, 5)
 tl.fade(t1, 0, 400).wipe(rule, 0, 700)
-tl.add(brand, "rise", 200, 500, letters=True, lt_pct=9000, off=0.04)
+tl.rise(brand, 150, 800, off=0.04)
 tl.fade(cn, 900, 600).rise(tag, 1000, 600).rise(slogan, 1200, 700).wipe(uline, 1700, 500)
 steps = ["规划", "取证", "假设", "实验", "验证", "修正"]
 for i, st_ in enumerate(steps):
@@ -729,6 +738,8 @@ qt = T(s, 1494, 668, 350, 40, "扫码查看代码与报告", size=16, color=INK2
 tl.fade(qt, 3300, 400)
 tl.fade(T(s, L, 930, 1000, 44, "github.com/bohack-2026-hw/QuotaCrux", size=17, color=INK2, latin=NUM), 3300, 500)
 
+for f in TLS[0].fx[3:]:
+    f["delay"] += INTRO_MS
 for t in TLS:
     t.build()
 prs.core_properties.title = "QuotaCrux 枢决 · 技术演示"

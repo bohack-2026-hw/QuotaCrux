@@ -328,6 +328,10 @@ class Timeline:
                 kids = (f'<p:animRot by="{by}"><p:cBhvr><p:cTn id="{nid()}" dur="{dur}" fill="hold" '
                         f'accel="30000" decel="50000"/>{tgt(sid)}<p:attrNameLst><p:attrName>r</p:attrName>'
                         f'</p:attrNameLst></p:cBhvr></p:animRot>')
+            elif k == "play":
+                preset, cls, sub = 1, "mediacall", 0
+                kids = (f'<p:cmd type="call" cmd="playFrom(0.0)"><p:cBhvr><p:cTn id="{nid()}" dur="{dur}" fill="hold"/>'
+                        f'{tgt(sid)}</p:cBhvr></p:cmd>')
             elif k == "path":
                 preset, cls, sub = 0, "path", 0
                 if kw.get("loop"):
@@ -356,7 +360,10 @@ class Timeline:
                f'</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn>'
                f'<p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>'
                f'<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst>'
-               f'</p:seq></p:childTnLst></p:cTn></p:par></p:tnLst>'
+               f'</p:seq>' + "".join(
+                   f'<p:video><p:cMediaNode vol="0"><p:cTn id="{nid()}" fill="hold" display="1"><p:stCondLst>'
+                   f'<p:cond delay="indefinite"/></p:stCondLst></p:cTn>{tgt(f["sid"])}</p:cMediaNode></p:video>'
+                   for f in self.fx if f["kind"] == "play") + '</p:childTnLst></p:cTn></p:par></p:tnLst>'
                + (f'<p:bldLst>{bld}{bld_all}</p:bldLst>' if (bld or bld_all) else "") + '</p:timing>')
         el = frag(xml)
         root = self.slide._element

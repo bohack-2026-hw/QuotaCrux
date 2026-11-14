@@ -1,0 +1,55 @@
+\section{数据附录、版本与复核记录}\label{sec:appendix}
+\subsection{固定模型实验的全部最终结果}
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}llrrrL@{}}\toprule
+任务 & 策略 & r1 & r2 & r3 & 初始程序交付\\\midrule
+ahc024 & F & 15 & 15 & 15 & 3\\
+ahc024 & I & 15 & 15 & 15 & 3\\
+ahc026 & F & 133352 & 131864 & 132273 & 1\\
+ahc026 & I & 133031 & 135088 & 131864 & 1\\
+ahc026 & N & 132015 & 135718 & 132428 & 0\\\bottomrule
+\end{tabularx}
+\end{smalltable}
+ahc026 的初始最终得分为 131864，ahc024 为 15。I/r2 因 HTTP 400 终止，研究状态为 failed；已有候选通过最终测试，得分 135088。续批只执行此前未启动的位置。
+
+\subsection{本轮各批费用与完成范围}
+\begin{smalltable}
+\begin{tabularx}{\linewidth}{@{}LrrL@{}}\toprule
+批次 & CNY 已知小计 & USD 已知小计 & 完成范围\\\midrule
+固定 Qwen & 7.445133 & --- & 14 完成、1 接口错误终止\\
+路由短批 & 0.441477 & 0.8042835 & 四组各完成一次\\
+停止长批 & 0.128631 & 0.7716757 & 1 完成、1 人工停止、10 未启动\\
+Mac OpenAI & --- & 0.3356500 & 4 轮开发探索完成\\\bottomrule
+\end{tabularx}
+\end{smalltable}
+
+上述批次的已知小计为 CNY 8.015241 与 USD 1.9116092。固定 Qwen 有一次 HTTP 400、路由两批各有一次 Sol timeout 未返回用量，合计三次调用保留未知费用。费用范围为表中四个批次的模型服务估算。
+
+原 900 秒路由长批有 12 个计划位置，完成的 baseline 最终得分为 139950；action 轮由用户停止，其余位置未启动。该批墙钟为 1036.929 秒，comparison 中 fair 为 null。短批另用 360 秒预算、独立计划与账本记录。
+
+\subsection{版本与数据来源}
+固定 Qwen 执行源码为 \texttt{990f598}，路由与 Mac 最终执行源码为 \texttt{912b20a}。desktop 分析来自仓库快照 \texttt{cd9cc4f} 的归档。报告重算 439 个输入文件，保存对应 SHA256；另外核验三批完整清单的 356、114、54 个条目，共 524 项。
+
+本轮复核覆盖归档文件、调用用量、候选哈希与运行记录。重新执行完整裁判还需要原 benchmark 输入及运行环境。样本配置包括固定模型各组三次重复、路由各组一次、Mac 每题两个开发用例；本报告据此给出逐次观测、过程分析和后续可检验的假设。
+
+\subsection{Mac 补交材料的复核状态}
+Mac 的 \texttt{fcf186c} 提交补齐了比较文件、报告、调用、计时及候选导出。数值账本已交叉核对；188 个导出清单条目与文件匹配。候选一致性复核发现，16 个 OpenAI 候选文件中 10 个与运行时记录哈希不符，6 个出现语法错误。原因是导出器的 IP 脱敏规则误处理了代码下标中的方括号。已请求修复导出规则并从原始数据重新导出。
+
+报告的 Mac 数值来自运行记录，算法描述结合候选声明与记录中的实现信息。代码文件的重导出状态、计时样本、人工协助分类和来源哈希集中保存在 \texttt{mac-analysis.json}。
+
+\subsection{远端 Qwen 与人工协助记录}
+远端 LM Studio 运行 \texttt{qwen3.8-27b-uncensored-mlx}。代理配置导致前三个失败批次分别产生 12、6、1 次 HTTP 503，共 19 次；绕过代理后的直连请求耗时 120.193 秒，返回 2327 输入、2047 输出 tokens，其中 1707 为 reasoning，响应因长度上限截断，记录为 incomplete。
+
+另有一份人工语义重建程序：作者根据模型可见推理补全实现，整理导入并调整变量名。它在独立两例开发检查中取得 1.225486 倍加速，参考与候选中位时间分别为 0.947241 和 0.772951 ms。该程序在元数据中归为人工协助产物。
+
+\subsection{证据索引与图表重建}
+报告目录包含 LaTeX 正文、按章节组织的源文件、可重算 JSON 和独立矢量图。desktop 分析通过 \texttt{scripts/analyze.py} 重算；Mac 分析使用 \texttt{scripts/analyze\_mac.py} 读取对应结果目录。构建命令、字体依赖和源数据获取方式见同目录 README。
+
+\begin{description}[style=nextline,leftmargin=2.8em,labelwidth=2.5em,itemsep=6pt]
+\item[S1] \href{\repo/tree/\snap/backend/src/routeevo/agent}{研究与路由实现}：runner、prompt、routing 及 Decisions 客户端；\href{\repo/tree/\snap/backend/src/routeevo/benchmarks}{benchmark 实现}：AlgoTune adapter 与 native\_tools/scientific\_harness.py。
+\item[S2] \href{\repo/tree/\snap/docs/research/native-formal-20261114/ale/results}{固定 Qwen 归档}：冻结计划、summary、comparison、15 轮候选与报告、模型调用、SHA256SUMS。
+\item[S3] \href{\repo/tree/\snap/docs/research/native-routing/20261114/short-results}{路由短批归档}：四种组合、原始提示、逐例最终得分、研究步骤和用量。
+\item[S4] \href{\repo/tree/\snap/docs/research/native-routing/20261114/long-batch-stopped}{停止长批归档}：原计划、停止记录和费用账本。
+\item[S5] \href{\repo/tree/fcf186c3932b2bd86879deeed5b636e20c4e823c/docs/research/mac-exploratory-20261114}{Mac 补交结果}：OpenAI 探索、远端 Qwen 尝试、人工协助结果与任务参数；\href{\repo/pull/20#issuecomment-6875817264}{候选导出一致性复核记录}。
+\item[S6] \href{\repo/blob/\snap/docs/project-description.md}{历史系统能力说明}及\href{\repo/blob/\snap/docs/results.md}{自建任务实验}：程序复验与跨任务经验积累的独立证据。
+\end{description}

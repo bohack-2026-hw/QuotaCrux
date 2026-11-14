@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import re
@@ -146,6 +147,49 @@ def audit_ledger(ledger: dict[str, Any]) -> None:
     assert set(ledger["schemas"]) == set(ledger["tables"])
 
 
+def audit_programs() -> dict[str, int]:
+    candidates = best_files = task_programs = 0
+    for report_path in sorted(ROOT.glob("**/runs/*/report.json")):
+        report = strict_json(report_path)
+        batch = report_path.parents[2]
+        ledger = strict_json(batch / "ledger.json")
+        recorded = {
+            row["candidate_id"]: row["code_sha256"]
+            for row in table(ledger, "candidates") if row["run_id"] == report["run_id"]
+        }
+        rows = report["candidates"]
+        assert set(recorded) == {row["candidate_id"] for row in rows}
+        for row in rows:
+            path = report_path.parent / "candidates" / f'{row["candidate_id"]}.py'
+            actual = hashlib.sha256(path.read_bytes()).hexdigest()
+            assert actual == row["code_sha256"] == recorded[row["candidate_id"]], (
+                f"candidate differs from execution identity: {path.relative_to(ROOT)}"
+            )
+            candidates += 1
+        best = report["best_candidate"]
+        if best:
+            candidate = report_path.parent / "candidates" / f'{best["candidate_id"]}.py'
+            assert (report_path.parent / "best.py").read_bytes() == candidate.read_bytes()
+            best_files += 1
+    for identity_path in sorted(ROOT.glob("**/tasks/*/task-identity.json")):
+        identity = strict_json(identity_path)
+        for name, metadata in identity["files"].items():
+            path = identity_path.parent / name
+            if path.suffix == ".py" and metadata["content_committed"]:
+                data = path.read_bytes()
+                assert hashlib.sha256(data).hexdigest() == metadata["sha256"], (
+                    f"task program differs from source identity: {path.relative_to(ROOT)}"
+                )
+                assert len(data) == metadata["bytes"]
+                task_programs += 1
+    programs = [ROOT / relative for relative in relative_files()
+                if relative.suffix == ".py" and relative not in TOOL_FILES]
+    for path in programs:
+        ast.parse(path.read_bytes(), filename=path.relative_to(ROOT).as_posix())
+    return {"candidates": candidates, "best_files": best_files,
+            "task_programs": task_programs, "syntax_checked": len(programs)}
+
+
 def audit_openai() -> dict[str, Any]:
     comparison = load("openai/comparison.json")
     metadata = load("openai/evidence/run-metadata.json")
@@ -280,6 +324,7 @@ def main() -> None:
         "checksum_files": checksum_files,
         "privacy_files": privacy_files,
         "export": audit_export_manifest(),
+        "program_integrity": audit_programs(),
         "openai": audit_openai(),
         "remote": audit_remote(),
         "formal_results_eligible": False,

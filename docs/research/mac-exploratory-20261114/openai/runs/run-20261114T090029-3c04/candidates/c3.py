@@ -9,12 +9,12 @@ def solve(problem):
     if n == 0:
         return {'pagerank_scores': []}
     if n == 1:
-        return {'pagerank_scores': 1.0}
+        return {'pagerank_scores': [1.0]}
 
     lengths = np.fromiter(map(len, adjacency), dtype=np.int64, count=n)
     indptr = np.empty(n + 1, dtype=np.int64)
-    indptr0 = 0
-    np.cumsum(lengths, out=indptr1:)
+    indptr[0] = 0
+    np.cumsum(lengths, out=indptr[1:])
     m = int(indptr[-1])
     index_dtype = np.int32 if n <= 2147483647 and m <= 2147483647 else np.int64
     indices = np.fromiter(chain.from_iterable(adjacency), dtype=index_dtype, count=m)
@@ -25,7 +25,7 @@ def solve(problem):
     degree = np.diff(matrix.indptr)
     inverse_degree = np.zeros(n, dtype=np.float64)
     np.divide(1.0, degree, out=inverse_degree, where=degree != 0)
-    matrix.data: = np.repeat(inverse_degree, degree)
+    matrix.data[:] = np.repeat(inverse_degree, degree)
     transition = matrix.transpose(copy=False)
     dangling = np.flatnonzero(degree == 0)
 

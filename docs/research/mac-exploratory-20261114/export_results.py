@@ -99,6 +99,15 @@ def _redact_ip(address: str) -> str:
     return "localhost" if parsed.is_loopback else "<REDACTED_IP>"
 
 
+def _redact_bracketed_ipv6(match: re.Match[str]) -> str:
+    address = match.group("address")
+    try:
+        ipaddress.IPv6Address(address.split("%", 1)[0])
+    except ValueError:
+        return match.group(0)
+    return _redact_ip(address)
+
+
 def _redact_local_checkout(match: re.Match[str]) -> str:
     path = match.group(0)
     normalized = path.replace("\\", "/")
@@ -136,7 +145,7 @@ def sanitize_text(text: str, var_dir: Path, evidence_dir: Path) -> str:
     text = WINDOWS_HOME.sub("<LOCAL_HOME>", text)
     text = URL_IPV4_ENDPOINT.sub(_redact_url_endpoint, text)
     text = LMSTUDIO_IPV4_ENDPOINT.sub(_redact_lmstudio_endpoint, text)
-    text = BRACKETED_IPV6.sub(lambda match: _redact_ip(match.group("address")), text)
+    text = BRACKETED_IPV6.sub(_redact_bracketed_ipv6, text)
     text = POSSIBLE_IPV6.sub(lambda match: _redact_ip(match.group(0)), text)
     text = IPV4.sub(lambda match: _redact_ip(match.group(0)), text)
     text = OPENAI_OPAQUE_ID.sub("<OPENAI_OPAQUE_ID>", text)
@@ -175,7 +184,13 @@ def write_json(source: Path, destination: Path, var_dir: Path, evidence_dir: Pat
 
 def write_text(source: Path, destination: Path, var_dir: Path, evidence_dir: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    text = source.read_text()
+    data = source.read_bytes()
+    text = data.decode("utf-8")
+    if source.suffix == ".py":
+        if sanitize_text(text, var_dir, evidence_dir) != text:
+            raise ValueError(f"program requires manual privacy review; cannot preserve bytes: {source.name}")
+        destination.write_bytes(data)
+        return
     try:
         value = json.loads(text)
     except json.JSONDecodeError:

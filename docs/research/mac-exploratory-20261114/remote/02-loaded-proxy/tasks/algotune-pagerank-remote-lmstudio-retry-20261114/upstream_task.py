@@ -113,7 +113,7 @@ class PageRankTask(Task):
             A dictionary containing the PageRank scores as a list, ordered by node index.
             {"pagerank_scores": [score_node_0, score_node_1, ..., score_node_n-1]}
             Returns {"pagerank_scores": []} for n=0.
-            Returns {"pagerank_scores": 1.0} for n=1.
+            Returns {"pagerank_scores": [1.0]} for n=1.
         """
         adj_list = problem["adjacency_list"]
         n = len(adj_list)
@@ -122,7 +122,7 @@ class PageRankTask(Task):
             return {"pagerank_scores": []}
         if n == 1:
             # Single node graph, PageRank is 1.0
-            return {"pagerank_scores": 1.0}
+            return {"pagerank_scores": [1.0]}
 
         # Reconstruct the NetworkX DiGraph
         G = nx.DiGraph()
@@ -138,7 +138,7 @@ class PageRankTask(Task):
             pagerank_dict = nx.pagerank(G, alpha=self.alpha, max_iter=self.max_iter, tol=self.tol)
 
             # Convert dict to list ordered by node index
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
             for node, score in pagerank_dict.items():
                 if 0 <= node < n:
                     pagerank_list[node] = float(score)
@@ -148,11 +148,11 @@ class PageRankTask(Task):
         except nx.PowerIterationFailedConvergence:
             logging.error(f"networkx.pagerank failed to converge after {self.max_iter} iterations.")
             # Return uniform distribution as a fallback? Or zeros? Let's return zeros.
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
         except Exception as e:
             logging.error(f"networkx.pagerank failed with an unexpected error: {e}")
             # Return zeros as a fallback
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
 
         solution = {"pagerank_scores": pagerank_list}
         return solution
@@ -235,7 +235,7 @@ class PageRankTask(Task):
             logging.debug("Solution verification successful for n=0.")
             return True
         if n == 1:
-            expected_scores_np = np.array(1.0)
+            expected_scores_np = np.array([1.0])
             if np.allclose(proposed_scores_np, expected_scores_np, rtol=RTOL, atol=ATOL):
                 logging.debug("Solution verification successful for n=1.")
                 return True

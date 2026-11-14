@@ -9,12 +9,12 @@ def solve(problem):
     if n == 0:
         return {'pagerank_scores': []}
     if n == 1:
-        return {'pagerank_scores': 1.0}
+        return {'pagerank_scores': [1.0]}
 
     degrees = np.fromiter((len(row) for row in adjacency), dtype=np.int64, count=n)
     indptr = np.empty(n + 1, dtype=np.int64)
-    indptr0 = 0
-    np.cumsum(degrees, out=indptr1:)
+    indptr[0] = 0
+    np.cumsum(degrees, out=indptr[1:])
     m = int(indptr[-1])
     if m == 0:
         return {'pagerank_scores': [1.0 / n] * n}
@@ -25,7 +25,7 @@ def solve(problem):
     degrees = np.diff(matrix.indptr)
     inverse = np.zeros(n, dtype=np.float64)
     np.divide(1.0, degrees, out=inverse, where=degrees != 0)
-    matrix.data: = np.repeat(inverse, degrees)
+    matrix.data[:] = np.repeat(inverse, degrees)
     transition = matrix.transpose().tocsr()
     dangling = np.flatnonzero(degrees == 0)
 

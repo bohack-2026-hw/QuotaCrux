@@ -32,14 +32,14 @@ class PageRankTask(object):
             A dictionary containing the PageRank scores as a list, ordered by node index.
             {"pagerank_scores": [score_node_0, score_node_1, ..., score_node_n-1]}
             Returns {"pagerank_scores": []} for n=0.
-            Returns {"pagerank_scores": 1.0} for n=1.
+            Returns {"pagerank_scores": [1.0]} for n=1.
         """
         adj_list = problem['adjacency_list']
         n = len(adj_list)
         if n == 0:
             return {'pagerank_scores': []}
         if n == 1:
-            return {'pagerank_scores': 1.0}
+            return {'pagerank_scores': [1.0]}
         G = nx.DiGraph()
         G.add_nodes_from(range(n))
         for u, neighbors in enumerate(adj_list):
@@ -47,7 +47,7 @@ class PageRankTask(object):
                 G.add_edge(u, v)
         try:
             pagerank_dict = nx.pagerank(G, alpha=self.alpha, max_iter=self.max_iter, tol=self.tol)
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
             for node, score in pagerank_dict.items():
                 if 0 <= node < n:
                     pagerank_list[node] = float(score)
@@ -55,10 +55,10 @@ class PageRankTask(object):
                     logging.warning(f'PageRank returned score for unexpected node {node}')
         except nx.PowerIterationFailedConvergence:
             logging.error(f'networkx.pagerank failed to converge after {self.max_iter} iterations.')
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
         except Exception as e:
             logging.error(f'networkx.pagerank failed with an unexpected error: {e}')
-            pagerank_list = 0.0 * n
+            pagerank_list = [0.0] * n
         solution = {'pagerank_scores': pagerank_list}
         return solution
 

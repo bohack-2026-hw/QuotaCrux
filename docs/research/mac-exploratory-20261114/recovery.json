@@ -1,0 +1,178 @@
+{
+  "source_export_commit": "b5cc6f29dc4d46dca0c5a0f13a1161205684476b",
+  "method": "Restore brackets removed by BRACKETED_IPV6; accept program bytes only when SHA256 matches the pre-existing run report or task identity. Restore matching whole programs in embedded strings.",
+  "new_experiments": false,
+  "mac_redelivery_required": false,
+  "program_files": [
+    {
+      "path": "openai/runs/run-20261114T085753-a6bb/candidates/c2.py",
+      "exported_sha256_before": "bb5beb296b9491b6542799867870d86347f1e7556d6f93d28a9cf4aaba50e537",
+      "restored_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
+      "identity_source": "openai/runs/run-20261114T085753-a6bb/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T085753-a6bb/candidates/c3.py",
+      "exported_sha256_before": "644754ade2efde99068a344ad108c88cf54960da57c5fbd2409e48914319b897",
+      "restored_sha256": "8cf13fb08f495b3e94658099442c4e58857fb1fd0d7a952766af39fab6d6b6f7",
+      "identity_source": "openai/runs/run-20261114T085753-a6bb/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T085753-a6bb/best.py",
+      "exported_sha256_before": "bb5beb296b9491b6542799867870d86347f1e7556d6f93d28a9cf4aaba50e537",
+      "restored_sha256": "66276d14670de27e068194d7de06427182f7eb7d726af90cb511714c8442ab14",
+      "identity_source": "openai/runs/run-20261114T085753-a6bb/candidates/c2.py"
+    },
+    {
+      "path": "openai/runs/run-20261114T090029-3c04/candidates/c0.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "openai/runs/run-20261114T090029-3c04/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090029-3c04/candidates/c1.py",
+      "exported_sha256_before": "b8f37f5cd17e0444eab1975ec280b8c1de5e2b1a1f4ee8401398abdd8b52cb5c",
+      "restored_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
+      "identity_source": "openai/runs/run-20261114T090029-3c04/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090029-3c04/candidates/c2.py",
+      "exported_sha256_before": "31e939568f1b66aaa56318173f80c5fc44b1410611a6e85861199f3a8f1039b3",
+      "restored_sha256": "e9837ac9326159809d50a90204c5f1cd052df95319b407aec8d24db5fb81450b",
+      "identity_source": "openai/runs/run-20261114T090029-3c04/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090029-3c04/candidates/c3.py",
+      "exported_sha256_before": "a6ac28ae018e3d5663be19dc9c6fef6ceedc0ed7185d069faa8c78f515ba4d10",
+      "restored_sha256": "c8ab8fa020b07c8dda5a667d8a6a86ada4b46b7cdc6a59d9bded067f6570ad00",
+      "identity_source": "openai/runs/run-20261114T090029-3c04/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090029-3c04/best.py",
+      "exported_sha256_before": "b8f37f5cd17e0444eab1975ec280b8c1de5e2b1a1f4ee8401398abdd8b52cb5c",
+      "restored_sha256": "e5b0ef99fd654a68283d3b5e9709f59d0013d9350fdfaebea1983acdefe6f8d6",
+      "identity_source": "openai/runs/run-20261114T090029-3c04/candidates/c1.py"
+    },
+    {
+      "path": "openai/runs/run-20261114T090451-aeec/candidates/c0.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "openai/runs/run-20261114T090451-aeec/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090451-aeec/candidates/c1.py",
+      "exported_sha256_before": "72e1d9ce92bfbbc41de926eecebfb36473ef488ac5df10b3d99bf9c954005fd3",
+      "restored_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+      "identity_source": "openai/runs/run-20261114T090451-aeec/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090451-aeec/candidates/c2.py",
+      "exported_sha256_before": "545fbc86661cdd100f3ab94c1e140511e59f005810423cc3f123ff7680b17388",
+      "restored_sha256": "b7fddfc1fb36bda25eadeef0d4d4c0beff08c610b58d1344a1a3735c317610de",
+      "identity_source": "openai/runs/run-20261114T090451-aeec/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090451-aeec/candidates/c3.py",
+      "exported_sha256_before": "d0f31886359feacbb0b87332b16ceae2f69551043d1f3ac46b2349f8485a27c0",
+      "restored_sha256": "8e9b2dbcd4b6b7b16aae9c78e2bbe3feb1c0571fc5285a221f49d921c3eec6ed",
+      "identity_source": "openai/runs/run-20261114T090451-aeec/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "openai/runs/run-20261114T090451-aeec/best.py",
+      "exported_sha256_before": "72e1d9ce92bfbbc41de926eecebfb36473ef488ac5df10b3d99bf9c954005fd3",
+      "restored_sha256": "38883fca94463b4a85cc9ac27bf17d300d845fbc628595f61106983d77237258",
+      "identity_source": "openai/runs/run-20261114T090451-aeec/candidates/c1.py"
+    },
+    {
+      "path": "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/candidates/c0.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/best.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/candidates/c0.py"
+    },
+    {
+      "path": "remote/01-preload-proxy/runs/run-20261114T090926-632f/candidates/c0.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/01-preload-proxy/runs/run-20261114T090926-632f/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "remote/01-preload-proxy/runs/run-20261114T090926-632f/best.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/01-preload-proxy/runs/run-20261114T090926-632f/candidates/c0.py"
+    },
+    {
+      "path": "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/candidates/c0.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/report.json:candidates.code_sha256"
+    },
+    {
+      "path": "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/best.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/candidates/c0.py"
+    },
+    {
+      "path": "openai/tasks/algotune-pagerank-exploratory-short-20261114/initial.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "openai/tasks/algotune-pagerank-exploratory-short-20261114/task-identity.json:files.initial.py"
+    },
+    {
+      "path": "openai/tasks/algotune-pagerank-exploratory-short-20261114/upstream_task.py",
+      "exported_sha256_before": "af95af57381c39e3fbbef0b78bb983a0fac9a2a5d7a0db37c999a87e99b6bc9f",
+      "restored_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf",
+      "identity_source": "openai/tasks/algotune-pagerank-exploratory-short-20261114/task-identity.json:files.upstream_task.py"
+    },
+    {
+      "path": "remote/01-preload-proxy/tasks/algotune-pagerank-remote-lmstudio-short-20261114/initial.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/01-preload-proxy/tasks/algotune-pagerank-remote-lmstudio-short-20261114/task-identity.json:files.initial.py"
+    },
+    {
+      "path": "remote/01-preload-proxy/tasks/algotune-pagerank-remote-lmstudio-short-20261114/upstream_task.py",
+      "exported_sha256_before": "af95af57381c39e3fbbef0b78bb983a0fac9a2a5d7a0db37c999a87e99b6bc9f",
+      "restored_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf",
+      "identity_source": "remote/01-preload-proxy/tasks/algotune-pagerank-remote-lmstudio-short-20261114/task-identity.json:files.upstream_task.py"
+    },
+    {
+      "path": "remote/02-loaded-proxy/tasks/algotune-pagerank-remote-lmstudio-retry-20261114/initial.py",
+      "exported_sha256_before": "256aa9fb8aaa7b506dcdfa43113029dec0d8ee5609713ff9552928ea950c3b6d",
+      "restored_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "identity_source": "remote/02-loaded-proxy/tasks/algotune-pagerank-remote-lmstudio-retry-20261114/task-identity.json:files.initial.py"
+    },
+    {
+      "path": "remote/02-loaded-proxy/tasks/algotune-pagerank-remote-lmstudio-retry-20261114/upstream_task.py",
+      "exported_sha256_before": "af95af57381c39e3fbbef0b78bb983a0fac9a2a5d7a0db37c999a87e99b6bc9f",
+      "restored_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf",
+      "identity_source": "remote/02-loaded-proxy/tasks/algotune-pagerank-remote-lmstudio-retry-20261114/task-identity.json:files.upstream_task.py"
+    }
+  ],
+  "embedded_program_files": [
+    "openai/runs/run-20261114T085753-a6bb/calls/m2.json",
+    "openai/runs/run-20261114T085753-a6bb/calls/m3.json",
+    "openai/runs/run-20261114T090029-3c04/calls/m1.json",
+    "openai/runs/run-20261114T090029-3c04/calls/m2.json",
+    "openai/runs/run-20261114T090029-3c04/calls/m3.json",
+    "openai/runs/run-20261114T090451-aeec/calls/m1.json",
+    "openai/runs/run-20261114T090451-aeec/calls/m2.json",
+    "openai/runs/run-20261114T090451-aeec/calls/m3.json",
+    "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/calls/m1.json",
+    "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/calls/m2.json",
+    "remote/01-preload-proxy/runs/run-20261114T090921-d4b4/calls/m3.json",
+    "remote/01-preload-proxy/runs/run-20261114T090926-632f/calls/m1.json",
+    "remote/01-preload-proxy/runs/run-20261114T090926-632f/calls/m2.json",
+    "remote/01-preload-proxy/runs/run-20261114T090926-632f/calls/m3.json",
+    "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/calls/m1.json",
+    "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/calls/m2.json",
+    "remote/02-loaded-proxy/runs/run-20261114T091205-4bfc/calls/m3.json"
+  ],
+  "remaining_text_fidelity": "Other sanitized prose and partial model responses retain the original export; they are not certified as original bytes."
+}

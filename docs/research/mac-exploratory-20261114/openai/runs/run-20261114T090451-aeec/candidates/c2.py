@@ -9,12 +9,12 @@ def solve(problem):
     if n == 0:
         return {'pagerank_scores': []}
     if n == 1:
-        return {'pagerank_scores': 1.0}
+        return {'pagerank_scores': [1.0]}
 
     counts = np.fromiter(map(len, adjacency), dtype=np.int64, count=n)
     indptr = np.empty(n + 1, dtype=np.int64)
-    indptr0 = 0
-    np.cumsum(counts, out=indptr1:)
+    indptr[0] = 0
+    np.cumsum(counts, out=indptr[1:])
     m = int(indptr[-1])
     indices = np.fromiter(chain.from_iterable(adjacency), dtype=np.int64, count=m)
     data = np.ones(m, dtype=np.float64)

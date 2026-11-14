@@ -9,7 +9,7 @@ def solve(problem):
     if n == 0:
         return {'pagerank_scores': []}
     if n == 1:
-        return {'pagerank_scores': 1.0}
+        return {'pagerank_scores': [1.0]}
 
     counts = np.fromiter(map(len, adjacency), dtype=np.int64, count=n)
     m = int(counts.sum())
@@ -17,8 +17,8 @@ def solve(problem):
         return {'pagerank_scores': [1.0 / n] * n}
     index_type = np.int32 if max(n, m) < 2147483647 else np.int64
     outgoing_ptr = np.empty(n + 1, dtype=index_type)
-    outgoing_ptr0 = 0
-    np.cumsum(counts, out=outgoing_ptr1:)
+    outgoing_ptr[0] = 0
+    np.cumsum(counts, out=outgoing_ptr[1:])
     destinations = np.fromiter(chain.from_iterable(adjacency), dtype=index_type, count=m)
     incoming_ptr = np.empty(n + 1, dtype=index_type)
     sources = np.empty(m, dtype=index_type)

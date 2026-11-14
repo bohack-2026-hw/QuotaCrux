@@ -4,11 +4,17 @@
 
 ## 来源与边界
 
-- 执行代码固定为 [`912b20a4cfeb51af9c36d0679b23f0990abe862f`](https://github.com/bohack-2026-hw/RouteEvo/commit/912b20a4cfeb51af9c36d0679b23f0990abe862f)。
+- 执行代码固定为 [`912b20a4cfeb51af9c36d0679b23f0990abe862f`](https://github.com/bohack-2026-hw/QuotaCrux/commit/912b20a4cfeb51af9c36d0679b23f0990abe862f)。
 - OpenAI 批次固定 `gpt-6.1-sol`，每个任务只有 2 个 dev 用例，final evaluation disabled；运行时宿主处于高负载。
 - 远端批次使用 LM Studio 的 `qwen3.8-27b-uncensored-mlx`，与托管 Qwen 配置不是同一运行时或量化，不能合并统计。
 - 包内的机器路径、私有端点和凭据已清理；脱敏后的捕获 `run.log` 会提交，原始 SQLite/WAL、锁及 sealed dev/final 输入不提交。任务身份、输入文件和公开工件由哈希与字节数标识。
 - 顶层 [`export-manifest.json`](export-manifest.json) 将整个包标为 `formal_results_eligible=false`；[`SHA256SUMS`](SHA256SUMS) 与 [`audit_results.py`](audit_results.py) 用于离线完整性和口径复核。
+
+## 收尾与代码完整性
+
+本轮按现有材料收尾，不再等待 Mac 补交或追加测试。旧导出器误删 `[0]`、`[1:]`、`[0.0]` 等代码方括号；已修正为仅脱敏可解析的 IPv6，Python 文件必须保持原字节，否则导出明确失败并要求隐私复核。
+
+已恢复 25 份受影响的候选、best 和公开任务源码文件。恢复后的候选逐项匹配原有 report/ledger 的运行时 SHA256，任务源码匹配原有 task-identity 的 SHA256 与字节数；调用记录中匹配的完整程序副本同步恢复。恢复清单见 [recovery.json](recovery.json)。原始运行数值与身份哈希保持不变，没有重跑实验；其他脱敏说明和截断响应保留原导出内容，不作为原始字节证据。
 
 ## OpenAI-only dev 探索
 
@@ -82,7 +88,7 @@ formal_results_eligible=false
 python3 docs/research/mac-exploratory-20261114/audit_results.py
 ```
 
-审计会验证 SHA-256、隐私模式、4 个 OpenAI run、12 次成功调用、16 次 dev evaluation、0 次 final evaluation、19 次 HTTP 503、直连截断以及人工重建的非正式标记。
+审计会验证候选与 report/ledger 的运行时哈希、best 与候选一致性、公开任务源码身份、全部归档 Python 程序语法、SHA-256、隐私模式、4 个 OpenAI run、12 次成功调用、16 次 dev evaluation、0 次 final evaluation、19 次 HTTP 503、直连截断以及人工重建的非正式标记。
 
 有本机原始账本和外部证据目录时，可将清理后的包重新导出到临时目录：
 

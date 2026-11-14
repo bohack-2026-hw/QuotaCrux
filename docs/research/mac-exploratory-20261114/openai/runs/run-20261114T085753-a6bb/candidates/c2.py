@@ -20,5 +20,5 @@ def solve(problem):
     x[1, :nb] = b
     x[1, nb:] = 0.0
     f = rfft(x, axis=1, workers=2, overwrite_x=True)
-    f0 *= f1
-    return irfft(f0, n=n, overwrite_x=True)[:size]
+    f[0] *= f[1]
+    return irfft(f[0], n=n, overwrite_x=True)[:size]

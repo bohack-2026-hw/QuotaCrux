@@ -1,12 +1,18 @@
 {
   "status": "passed",
-  "forbidden_scan_files": 190,
-  "json_files": 111,
-  "checksum_files": 188,
-  "privacy_files": 187,
+  "forbidden_scan_files": 191,
+  "json_files": 112,
+  "checksum_files": 189,
+  "privacy_files": 188,
   "export": {
     "format": "routeevo-mac-exploratory-export-v1",
     "batches": 5
+  },
+  "program_integrity": {
+    "candidates": 24,
+    "best_files": 12,
+    "task_programs": 16,
+    "syntax_checked": 53
   },
   "openai": {
     "runs": 4,

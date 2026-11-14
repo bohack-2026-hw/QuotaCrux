@@ -1,0 +1,10 @@
+{
+  "requested_at": "2026-11-14T08:46:09.288496+00:00",
+  "reason": "User requested an exploratory subset around 30 minutes, maximum 1 hour. Preserve long-batch records; create a separate four-variant one-repeat batch with uniform 360-second budget.",
+  "active": [
+    {
+      "run_id": "run-20261114T084520-0ba7",
+      "status": "running"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "status": "ale_frozen_mac_awaiting_gc_v2_calibration",
+  "status": "superseded_by_user_short_subset",
   "study": "routing",
   "plan_id": "routing-native-20261114-v1",
   "experiment_sha": "912b20a4cfeb51af9c36d0679b23f0990abe862f",
@@ -637,5 +637,6 @@
   "action_schema_sha256": "e2747f52cc3529bdd4b542dc22676c4a88b1b9558af8160fc537165fe2499409",
   "prompt_version": "agent-prompt-v7",
   "executor_sha256": "9d938618594a90a692894c8be08e81ebec230d7bd660582d1d4f1df1eabb894f",
-  "ale_freeze": "ale-freeze.json"
+  "ale_freeze": "ale-freeze.json",
+  "active_desktop_freeze": "ale-short-freeze.json"
 }

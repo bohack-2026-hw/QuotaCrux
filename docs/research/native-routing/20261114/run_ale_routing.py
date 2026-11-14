@@ -1,4 +1,4 @@
-"""Check the frozen desktop routing study; --execute runs its 12 serial episodes."""
+"""Check the frozen desktop routing study; --execute runs its four short serial episodes."""
 from __future__ import annotations
 
 import argparse
@@ -11,8 +11,8 @@ import sqlite3
 import subprocess
 import sys
 
-ROOT = Path("/home/hycx233/routeevo-routing-formal-20261114")
-ALE_SEQUENCES = [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20]
+ROOT = Path("/home/hycx233/routeevo-routing-short-20261114")
+ALE_SEQUENCES = [1, 2, 3, 4]
 
 
 def require(condition, message):
@@ -36,15 +36,15 @@ def command(*args):
 
 def check(args):
     root = args.root.resolve()
-    repo = root / "repo"
     raw = args.freeze.read_bytes()
     frozen = json.loads(raw)
+    repo = Path(frozen["execution_repo"]).resolve()
     fields(frozen, ("status", "study", "plan_id", "experiment_sha", "executor_sha256", "uv_lock_sha256",
                     "mode", "research_mode", "research_model_policy", "snapshot_id", "fixed_model",
                     "initial_memory_router", "final_evaluation", "limits", "models", "tasks", "plan",
                     "prompt_hashes_by_task", "prompt_version", "action_schema_sha256", "routing_manifest",
                     "price_snapshots"), "freeze")
-    expected = {"status": "frozen_ale", "study": "routing", "mode": "eval", "research_mode": "feedback",
+    expected = {"status": "frozen_ale_short", "study": "routing", "mode": "eval", "research_mode": "feedback",
                 "research_model_policy": "adaptive", "snapshot_id": "v0", "fixed_model": None,
                 "initial_memory_router": False, "final_evaluation": True}
     for key, value in expected.items():
@@ -66,8 +66,8 @@ def check(args):
     require(config.BACKEND_DIR.resolve() == repo / "backend", "imported backend differs from execution checkout")
     fields(frozen["limits"], config.RunLimits.__dataclass_fields__, "limits")
     limits = config.RunLimits(**frozen["limits"])
-    require((limits.wall_clock_s, limits.max_model_requests, limits.max_candidates) == (900, 20, 10),
-            "routing budget must be 900 seconds / 20 total HTTP requests / 10 candidates")
+    require((limits.wall_clock_s, limits.max_model_requests, limits.max_candidates) == (360, 20, 10),
+            "routing budget must be 360 seconds / 20 total HTTP requests / 10 candidates")
     models = {key: value.public_dict() for key, value in config.default_model_configs().items()}
     models["decisions"] = routing.decision_config("router_action").public_dict()
     require(models == frozen["models"], "public small/large/decisions configuration differs")
@@ -85,14 +85,14 @@ def check(args):
         require(price["model"] == models[role]["model"], f"price model differs for {role}")
 
     plan = json.loads((args.plan or root / "ale-plan.json").read_bytes())
-    require(isinstance(plan, list) and len(plan) == 12, "ALE plan must contain 12 slots")
+    require(isinstance(plan, list) and len(plan) == 4, "ALE plan must contain four slots")
     task_ids = list(dict.fromkeys(row["task_id"] for row in plan))
     require(len(task_ids) == 1, "ALE routing study requires exactly one task")
     task_id = task_ids[0]
     routing_ablation.validate_plan(plan, task_ids)
     require(plan == [row for row in frozen["plan"] if row["task_id"] == task_id], "ALE plan differs from frozen order")
     require([row["seq"] for row in plan] == ALE_SEQUENCES, "original ALE sequence numbers changed")
-    expected_order = routing_ablation.make_plan(task_ids, 3)
+    expected_order = routing_ablation.make_plan(task_ids, 1)
     require(all(row["mode"] == "feedback" and (row["repeat"], row["variant"], row["routing"]) ==
                 (expected["repeat"], expected["variant"], expected["routing"])
                 for row, expected in zip(plan, expected_order)), "ALE repeat/variant rotation changed")
@@ -159,9 +159,9 @@ def check(args):
         with (root / "execution-freeze.json").open("xb") as output:
             output.write(raw)
         print(json.dumps(info), flush=True)
-        result = routing_ablation.execute(task_ids, "v0", repeats=3, limits=limits, measure=measure,
+        result = routing_ablation.execute(task_ids, "v0", repeats=1, limits=limits, measure=measure,
             research_mode="feedback", research_model_policy="adaptive", final_evaluation=True,
-            plan=plan, plan_id=frozen["plan_id"], pricing=prices, label="Frozen desktop ahc026 routing study")
+            plan=plan, plan_id=frozen["plan_id"], pricing=prices, label="Short exploratory desktop ahc026 routing study")
         print(json.dumps({"comparison_id": result["comparison_id"], "status": result["status"],
                           "fair": result["fair"], "artifact": result["path"]}), flush=True)
         return 0 if result["status"] == "completed" else 1

@@ -1,0 +1,417 @@
+{
+  "fixture": true,
+  "description": "Synthetic API contract example; scores, timing, usage and price are illustrative, not experiment evidence.",
+  "list_endpoint": "GET /api/research-comparisons",
+  "detail_endpoint": "GET /api/research-comparisons/research-api-fixture",
+  "list_response": [
+    {
+      "comparison_id": "research-api-fixture",
+      "api_contract": "research-comparison-v1",
+      "protocol": "within-task-feedback-v2",
+      "label": "Fixture only: not an experimental result",
+      "status": "interrupted",
+      "fair": null,
+      "final_evaluation": true,
+      "dev_only": false,
+      "created_at": "2026-11-14T08:00:00+00:00",
+      "ended_at": null,
+      "task_ids": [
+        "algotune-fixture"
+      ],
+      "tasks": [
+        {
+          "task_id": "algotune-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          },
+          "workload": "Illustrative fixture workload"
+        }
+      ],
+      "modes": [
+        "feedback",
+        "independent",
+        "no_feedback"
+      ],
+      "runs_total": 4,
+      "runs_finished": 3,
+      "final_status_counts": {
+        "completed": 2,
+        "failed": 1,
+        "not_run": 1
+      },
+      "cost": {
+        "amount": null,
+        "currency": "CNY",
+        "status": "unknown",
+        "source": "https://example.test/fixture-price",
+        "price_snapshot": {
+          "model": "Qwen3.8-27B",
+          "currency": "CNY",
+          "unit": "per_1m_tokens",
+          "input_per_1m": 3,
+          "output_per_1m": 12,
+          "source": "https://example.test/fixture-price",
+          "retrieved_at": "2026-11-14T08:00:00+00:00"
+        }
+      }
+    }
+  ],
+  "detail_response": {
+    "comparison_id": "research-api-fixture",
+    "protocol": "within-task-feedback-v2",
+    "label": "Fixture only: not an experimental result",
+    "status": "interrupted",
+    "fair": null,
+    "final_evaluation": true,
+    "price_snapshot": {
+      "model": "Qwen3.8-27B",
+      "currency": "CNY",
+      "unit": "per_1m_tokens",
+      "input_per_1m": 3,
+      "output_per_1m": 12,
+      "source": "https://example.test/fixture-price",
+      "retrieved_at": "2026-11-14T08:00:00+00:00"
+    },
+    "created_at": "2026-11-14T08:00:00+00:00",
+    "ended_at": null,
+    "runs": [
+      {
+        "seq": 1,
+        "task_id": "algotune-fixture",
+        "task": {
+          "task_id": "algotune-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          },
+          "workload": "Illustrative fixture workload"
+        },
+        "repeat": 1,
+        "mode": "feedback",
+        "run_id": "run-fixture-1",
+        "status": "completed",
+        "best_candidate_id": "c1",
+        "best_dev": {
+          "status": "passed",
+          "speedup": 1.5
+        },
+        "final_evaluation": {
+          "status": "passed",
+          "correct": true,
+          "speedup": 1.5,
+          "normalized": false,
+          "measured": true
+        },
+        "outcome": {
+          "final_status": "completed",
+          "final_evaluated": true,
+          "final_correct": true,
+          "final_error": null,
+          "valid_artifact": true
+        },
+        "iterations": {
+          "model_requests": 1,
+          "candidates_proposed": 1,
+          "candidates_passed": 1
+        },
+        "usage": {
+          "requests": 1,
+          "input_tokens": 1000,
+          "output_tokens": 100,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "timing": {
+          "wall_clock_total_s": 12,
+          "model_wait_s": 10,
+          "dev_evaluation_s": 1,
+          "final_evaluation_s": 1
+        },
+        "progress": [
+          {
+            "elapsed_s": 11,
+            "metric": "speedup",
+            "value": 1.5,
+            "usage": {
+              "requests": 1,
+              "input_tokens": 1000,
+              "output_tokens": 100,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.0042,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://example.test/fixture-price",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://example.test/fixture-price",
+                "retrieved_at": "2026-11-14T08:00:00+00:00"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            }
+          }
+        ],
+        "cost": {
+          "amount": 0.0042,
+          "currency": "CNY",
+          "status": "estimated",
+          "source": "https://example.test/fixture-price",
+          "price_snapshot": {
+            "model": "Qwen3.8-27B",
+            "currency": "CNY",
+            "unit": "per_1m_tokens",
+            "input_per_1m": 3,
+            "output_per_1m": 12,
+            "source": "https://example.test/fixture-price",
+            "retrieved_at": "2026-11-14T08:00:00+00:00"
+          },
+          "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+        },
+        "final_status": "completed",
+        "dev_status": "passed"
+      },
+      {
+        "seq": 2,
+        "task_id": "algotune-fixture",
+        "task": {
+          "task_id": "algotune-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          },
+          "workload": "Illustrative fixture workload"
+        },
+        "repeat": 1,
+        "mode": "independent",
+        "run_id": "run-fixture-2",
+        "status": "completed",
+        "best_candidate_id": "c0",
+        "best_dev": {
+          "status": "passed",
+          "speedup": 1.0
+        },
+        "final_evaluation": {
+          "status": "passed",
+          "correct": true,
+          "speedup": 1.0,
+          "normalized": true,
+          "measured": false
+        },
+        "outcome": {
+          "final_status": "completed",
+          "final_evaluated": true,
+          "final_correct": true,
+          "final_error": null,
+          "valid_artifact": true
+        },
+        "iterations": {
+          "model_requests": 1,
+          "candidates_proposed": 1,
+          "candidates_passed": 1
+        },
+        "usage": {
+          "requests": 1,
+          "input_tokens": 1000,
+          "output_tokens": 100,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "timing": {
+          "wall_clock_total_s": 12,
+          "model_wait_s": 10,
+          "dev_evaluation_s": 1,
+          "final_evaluation_s": 1
+        },
+        "progress": [
+          {
+            "elapsed_s": 11,
+            "metric": "speedup",
+            "value": 1.0,
+            "usage": {
+              "requests": 1,
+              "input_tokens": 1000,
+              "output_tokens": 100,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.0042,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://example.test/fixture-price",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://example.test/fixture-price",
+                "retrieved_at": "2026-11-14T08:00:00+00:00"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            }
+          }
+        ],
+        "cost": {
+          "amount": 0.0042,
+          "currency": "CNY",
+          "status": "estimated",
+          "source": "https://example.test/fixture-price",
+          "price_snapshot": {
+            "model": "Qwen3.8-27B",
+            "currency": "CNY",
+            "unit": "per_1m_tokens",
+            "input_per_1m": 3,
+            "output_per_1m": 12,
+            "source": "https://example.test/fixture-price",
+            "retrieved_at": "2026-11-14T08:00:00+00:00"
+          },
+          "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+        },
+        "final_status": "completed",
+        "dev_status": "passed"
+      },
+      {
+        "seq": 3,
+        "task_id": "algotune-fixture",
+        "task": {
+          "task_id": "algotune-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          },
+          "workload": "Illustrative fixture workload"
+        },
+        "repeat": 1,
+        "mode": "no_feedback",
+        "run_id": "run-fixture-3",
+        "status": "failed",
+        "best_candidate_id": "c0",
+        "best_dev": {
+          "status": "passed",
+          "speedup": 1.0
+        },
+        "final_evaluation": null,
+        "outcome": {
+          "final_status": "failed",
+          "final_evaluated": false,
+          "final_correct": null,
+          "final_error": "Fixture: checker failed",
+          "valid_artifact": false
+        },
+        "iterations": {
+          "model_requests": 1,
+          "candidates_proposed": 1,
+          "candidates_passed": 1
+        },
+        "usage": {
+          "requests": 1,
+          "input_tokens": 1000,
+          "output_tokens": 100,
+          "input_tokens_unknown_calls": 0,
+          "output_tokens_unknown_calls": 0
+        },
+        "timing": {
+          "wall_clock_total_s": 12,
+          "model_wait_s": 10,
+          "dev_evaluation_s": 1,
+          "final_evaluation_s": 1
+        },
+        "progress": [
+          {
+            "elapsed_s": 11,
+            "metric": "speedup",
+            "value": 1.0,
+            "usage": {
+              "requests": 1,
+              "input_tokens": 1000,
+              "output_tokens": 100,
+              "input_tokens_unknown_calls": 0,
+              "output_tokens_unknown_calls": 0
+            },
+            "cost": {
+              "amount": 0.0042,
+              "currency": "CNY",
+              "status": "estimated",
+              "source": "https://example.test/fixture-price",
+              "price_snapshot": {
+                "model": "Qwen3.8-27B",
+                "currency": "CNY",
+                "unit": "per_1m_tokens",
+                "input_per_1m": 3,
+                "output_per_1m": 12,
+                "source": "https://example.test/fixture-price",
+                "retrieved_at": "2026-11-14T08:00:00+00:00"
+              },
+              "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+            }
+          }
+        ],
+        "cost": {
+          "amount": 0.0042,
+          "currency": "CNY",
+          "status": "estimated",
+          "source": "https://example.test/fixture-price",
+          "price_snapshot": {
+            "model": "Qwen3.8-27B",
+            "currency": "CNY",
+            "unit": "per_1m_tokens",
+            "input_per_1m": 3,
+            "output_per_1m": 12,
+            "source": "https://example.test/fixture-price",
+            "retrieved_at": "2026-11-14T08:00:00+00:00"
+          },
+          "note": "Token-price estimate; cached input uses the frozen input rate; discounts and credits excluded."
+        },
+        "final_status": "failed",
+        "dev_status": "passed"
+      },
+      {
+        "seq": 4,
+        "task_id": "algotune-fixture",
+        "task": {
+          "task_id": "algotune-fixture",
+          "family": "algotune",
+          "objective": {
+            "metric": "speedup",
+            "direction": "maximize"
+          },
+          "workload": "Illustrative fixture workload"
+        },
+        "repeat": 2,
+        "mode": "feedback",
+        "status": "not_run",
+        "final_status": "not_run",
+        "dev_status": "not_run",
+        "cost": {
+          "amount": null,
+          "currency": "CNY",
+          "status": "unknown",
+          "source": "https://example.test/fixture-price",
+          "price_snapshot": {
+            "model": "Qwen3.8-27B",
+            "currency": "CNY",
+            "unit": "per_1m_tokens",
+            "input_per_1m": 3,
+            "output_per_1m": 12,
+            "source": "https://example.test/fixture-price",
+            "retrieved_at": "2026-11-14T08:00:00+00:00"
+          }
+        }
+      }
+    ],
+    "api_contract": "research-comparison-v1",
+    "dev_only": false
+  }
+}

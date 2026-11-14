@@ -6,6 +6,7 @@ Runs are globally serial (one file lock) so model inference and other runs never
 from __future__ import annotations
 
 import fcntl
+import copy
 import hashlib
 import json
 import time
@@ -47,7 +48,8 @@ class RunOptions:
     measure: config.MeasureConfig = field(default_factory=config.MeasureConfig)
     script: Path | None = None  # scripted stand-in model, functional checks only
     label: str | None = None
-    research_mode: str | None = None  # legacy | feedback | independent
+    research_mode: str | None = None  # legacy | feedback | independent | no_feedback
+    research_model_policy: str = "fixed"  # adaptive is a separate feedback-only routing study
     fixed_model: str | None = None  # small | large; research comparisons default to small
     final_evaluation: bool = True
     router: bool = True  # False: every run starts on the small model (ablation; changes the fingerprint)
@@ -78,17 +80,25 @@ class Runner:
         self.opts = opts
         self.task = taskpkg.load(opts.task_id)
         opts.research_mode = opts.research_mode or ("feedback" if self.task.is_native else "legacy")
-        if opts.research_mode not in ("legacy", "feedback", "independent"):
+        if opts.research_mode not in ("legacy", "feedback", "independent", "no_feedback"):
             raise ValueError("invalid research mode")
         if opts.fixed_model not in (None, "small", "large"):
             raise ValueError("fixed_model must be small or large")
+        if opts.research_model_policy not in ("fixed", "adaptive"):
+            raise ValueError("research_model_policy must be fixed or adaptive")
+        adaptive = opts.research_mode != "legacy" and opts.research_model_policy == "adaptive"
+        if adaptive and (opts.research_mode != "feedback" or opts.fixed_model is not None):
+            raise ValueError("adaptive research requires feedback and no fixed_model")
         if opts.research_mode != "legacy":
             if opts.mode != "eval" or opts.snapshot_id not in (None, "v0"):
                 raise ValueError("research comparisons require eval mode and empty snapshot v0")
             opts.snapshot_id = "v0"
-            opts.fixed_model = opts.fixed_model or "small"
-        if (opts.research_mode != "legacy" or self.task.is_native) and opts.routing != config.RoutingConfig():
-            raise ValueError("native and research runs require action_router=llm and model_router=rule")
+            if adaptive:
+                opts.router = False
+            else:
+                opts.fixed_model = opts.fixed_model or "small"
+        if (opts.research_mode != "legacy" or self.task.is_native) and not adaptive and opts.routing != config.RoutingConfig():
+            raise ValueError("fixed native and research runs require action_router=llm and model_router=rule")
         if opts.fixed_model or opts.routing.model == "decisions":
             # Explicit model selection takes precedence over the initial memory-based rule.
             opts.router = False
@@ -123,6 +133,8 @@ class Runner:
         self.best_id: str | None = None
         self.evidence: list[dict] = []
         self.history: list[dict] = []
+        self.model_history: list[dict] = []
+        self.initial_feedback: dict | None = None
         self.last_feedback: dict | None = None
         self.experiences: list[dict] = []
         self.experience_summary: dict | None = None
@@ -173,6 +185,7 @@ class Runner:
             "upgrade_rule": UPGRADE_RULE,
             "prompt": {"version": prompt.PROMPT_VERSION, "system_sha256": self.system_prompt_sha},
             "research_protocol": {"mode": self.opts.research_mode, "fixed_model": self.opts.fixed_model,
+                                  "model_policy": self.opts.research_model_policy,
                                   "final_evaluation": self.opts.final_evaluation},
             "action_schema_sha256": hashlib.sha256(json.dumps(actions.ACTION_SCHEMA, sort_keys=True).encode()).hexdigest(),
             "limits": self.limits.to_dict(),
@@ -224,14 +237,20 @@ class Runner:
                                                   "stop_detail": self.stop_detail, "best_candidate_id": self.best_id})
         db.add_event(self.run_id, "loop_ended", {"stop_reason": self.stop_reason, "detail": self.stop_detail,
                                                  "loop_elapsed_s": round(loop_elapsed, 3), "best_candidate_id": self.best_id})
+        final_failed = False
         try:
             self._final_evaluation()
         except Exception as exc:  # noqa: BLE001
+            final_failed = True
             db.add_event(self.run_id, "final_eval_error", {"error": f"{type(exc).__name__}: {exc}"})
+        final_row = db.one("SELECT e.status FROM runs r JOIN evaluations e ON e.evaluation_id=r.final_evaluation_id WHERE r.run_id=?", (self.run_id,))
+        final_failed = final_failed or bool(final_row and final_row["status"] != "passed")
         if self.opts.mode in memory.WRITING_MODES:
             self._publish()
         status = {"user_stopped": "stopped", "environment_error": "failed", "internal_error": "failed",
                   "model_api_error": "failed"}.get(self.stop_reason, "completed")
+        if final_failed:
+            status = "failed"
         db.update("runs", "run_id", self.run_id, {"status": status, "ended_at": db.now()})
         rep = report.build(self.run_id)
         (self.dir / "report.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2))
@@ -272,6 +291,7 @@ class Runner:
                   "speedup": 1.0 if ev.correct and self.task.target_min_speedup is not None else None,
                   "note": "initial program; measured score" if self.task.target_min_speedup is None else "initial program; speedup 1.0 by definition"}
         self.candidates[cid]["latest_evaluation"] = latest
+        self.initial_feedback = copy.deepcopy(latest)
         ok = ev.status == "passed"
         if ok:
             self.best_id = cid
@@ -457,7 +477,8 @@ class Runner:
 
     def _budget_view(self) -> dict:
         elapsed = time.perf_counter() - self.t0
-        visible_best = "c0" if self.opts.research_mode == "independent" else self.best_id
+        hidden_results = self.opts.research_mode in ("independent", "no_feedback")
+        visible_best = None if hidden_results else self.best_id
         best = self.candidates.get(visible_best or "", {}).get("latest_evaluation", {})
         return {
             "model_requests_used": self.requests_used, "model_requests_max": self.limits.max_model_requests,
@@ -466,33 +487,51 @@ class Runner:
             "current_model_role": self.role, "upgraded_to_large_model": self.role == "large" and not self.opts.fixed_model and (self.route or {}).get("route") != "large",
             "best_candidate_id": visible_best, "best_dev_speedup": best.get("speedup"),
             "best_objective": best.get("objective"), "research_mode": self.opts.research_mode,
+            "best_result_visibility": "withheld" if hidden_results else "visible",
             "routed_to": (self.route or {}).get("route"),
             "target_speedup": self.run_target, "task_target_speedup": self.task.target_min_speedup,
         }
 
     def _state(self) -> str:
         independent = self.opts.research_mode == "independent"
+        no_feedback = self.opts.research_mode == "no_feedback"
+        candidates = [{"candidate_id": cid, **c} for cid, c in self.candidates.items() if not independent or cid == "c0"]
+        if independent or no_feedback:
+            candidates = [{k: v for k, v in c.items() if k != "latest_evaluation"} for c in candidates]
+            for c in candidates:
+                if c["candidate_id"] == "c0":
+                    c["latest_evaluation"] = self.initial_feedback
+        last_feedback = self.last_feedback
+        if independent:
+            last_feedback = None
+        elif no_feedback and (last_feedback or {}).get("problem") not in ("invalid_action", "bad_response", "not_json", "empty_response", "truncated"):
+            last_feedback = None
         return prompt.build_state(
             task=self.task,
-            candidates=[{"candidate_id": cid, **c} for cid, c in self.candidates.items() if not independent or cid == "c0"],
-            evidence=[] if independent else self.evidence, history=[] if independent else self.history,
+            candidates=candidates,
+            evidence=[] if independent or no_feedback else self.evidence,
+            history=[] if independent else self.model_history if no_feedback else self.history,
             experiences=self.experiences, snapshot_id=self.snapshot_id,
-            hide_code=set() if independent else self._hidden_reused(),
+            hide_code=set() if independent or no_feedback else self._hidden_reused(),
             experience_summary=self.experience_summary,
-            budget=self._budget_view(), last_feedback=None if independent else self.last_feedback,
+            budget=self._budget_view(), last_feedback=last_feedback,
         )
 
     def _routing_state(self) -> routing.RoutingState:
         independent = self.opts.research_mode == "independent"
+        no_feedback = self.opts.research_mode == "no_feedback"
         return routing.RoutingState(
             system=self.system_prompt, text=self._state(), role=self.role, small_requests=self.small_requests,
-            misses=0 if independent else self.misses, requests_remaining=self.limits.max_model_requests - self.requests_used,
+            misses=0 if independent or no_feedback else self.misses, requests_remaining=self.limits.max_model_requests - self.requests_used,
             candidates_remaining=self.limits.max_candidates - self.model_candidates,
             runnable_candidates=tuple(cid for cid, c in self.candidates.items()
                                       if (not independent or cid == "c0")
-                                      and (c.get("latest_evaluation") or {}).get("status") != "static_check_failed"),
+                                      and (no_feedback or (c.get("latest_evaluation") or {}).get("status") != "static_check_failed")),
             generation_requests=1 + int(not self.opts.fixed_model and self.model_router.config_for(self.role) is not None),
             models={r: c.public_dict() for r, c in self.model_cfgs.items()},
+            objective=self.task.objective,
+            available_tools=() if self.task.is_native else actions.EVIDENCE_TOOLS,
+            can_validate=not independent, research_mode=self.opts.research_mode,
         )
 
     def _select_model(self) -> bool:
@@ -611,7 +650,7 @@ class Runner:
             raise actions.InvalidAction("unavailable_tool", "use native validation feedback for this benchmark; cProfile is unavailable")
         if act.tool not in actions.EVIDENCE_TOOLS:
             raise actions.InvalidAction("unknown_tool", f"tool must be one of {actions.EVIDENCE_TOOLS}")
-        cid = self._existing_candidate(act.candidate_id, require_runnable=True)
+        cid = self._existing_candidate(act.candidate_id, require_runnable=self.opts.research_mode != "no_feedback")
         t_start, started_tool = time.perf_counter(), db.now()
         result = evaluator.profile_candidate(self.task, self.candidates[cid]["code"].encode(), self.measure, self.limits)
         tool_id = f"t{len(self.evidence) + 1}"
@@ -636,7 +675,7 @@ class Runner:
             raise actions.InvalidAction("candidate_budget", "no candidate budget left")
         if self.opts.research_mode == "independent" and act.parent_candidate_id not in (None, "c0"):
             raise actions.InvalidAction("independent_parent", "independent attempts can only modify c0")
-        parent = self._existing_candidate(act.parent_candidate_id or ("c0" if self.opts.research_mode == "independent" else self.best_id), require_runnable=False)
+        parent = self._existing_candidate(act.parent_candidate_id or (self.best_id if self.opts.research_mode == "legacy" else "c0"), require_runnable=False)
         static_error = None
         try:
             actions.check_code(act.code, self.limits.max_code_bytes, tuple(self.task.manifest.get("native", {}).get("allowed_imports", [])))
@@ -655,9 +694,15 @@ class Runner:
         self._after_validation(cid, ev, counts_as_attempt=True)
 
     def _do_validate(self, act: actions.Action, call_id: str, started: str) -> None:
-        cid = self._existing_candidate(act.candidate_id, require_runnable=True)
+        cid = self._existing_candidate(act.candidate_id, require_runnable=self.opts.research_mode != "no_feedback")
         self._model_step(act, "requested", call_id, started, candidate_id=cid, next_decision="re-measure candidate")
-        ev = self._validate(cid)
+        try:
+            actions.check_code(self.candidates[cid]["code"], self.limits.max_code_bytes,
+                               tuple(self.task.manifest.get("native", {}).get("allowed_imports", [])))
+        except actions.InvalidAction as exc:
+            ev = self._static_failure(cid, exc)
+        else:
+            ev = self._validate(cid)
         self._after_validation(cid, ev, counts_as_attempt=False)
 
     def _do_finish(self, act: actions.Action, call_id: str, started: str) -> None:
@@ -810,6 +855,8 @@ class Runner:
         summary = {"step": self.seq, "actor": actor, "action": action, "status": status}
         if purpose:
             summary["purpose"] = purpose
+        if self.opts.research_mode == "feedback" and actor == "model":
+            summary.update(expected_result=expected, verification=verification, hypothesis=hypothesis, params=params or {})
         if candidate_id:
             summary["candidate_id"] = candidate_id
         if result and actor == "program":
@@ -819,6 +866,14 @@ class Runner:
             if hypothesis:
                 summary["hypothesis"] = hypothesis
         self.history.append(summary)
+        if self.opts.research_mode == "no_feedback" and actor == "model":
+            # Only model-authored intent and protocol errors enter the ablation's next request.
+            visible = {"request": self.requests_used, "action": action, "purpose": purpose,
+                       "expected_result": expected, "verification": verification, "hypothesis": hypothesis,
+                       "params": params or {}, "candidate_id": candidate_id}
+            if status == "invalid_action":
+                visible["protocol_error"] = result
+            self.model_history.append(visible)
         db.add_event(self.run_id, "step", {**summary, "next_decision": next_decision})
         return self.seq
 

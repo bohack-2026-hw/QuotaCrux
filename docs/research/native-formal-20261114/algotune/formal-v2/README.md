@@ -1,5 +1,7 @@
 # Mac AlgoTune formal timing-v2 candidate
 
+> 历史计划：本轮原15+12轮长计划已取消启动。此目录保留当时的runner/freeze候选；当前完成范围与原始证据交付状态见[本轮数据汇总](../../../20261114-summary.md)。运行源码的历史冻结身份继续保留。
+
 This directory is the isolated timing-v2 candidate for issue #4. The parent
 `algotune/` evidence remains the timing-v1 provisional preflight and is not
 rewritten or presented as an accepted formal calibration.

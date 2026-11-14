@@ -124,3 +124,11 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `GET /api/comparisons/{id}`,
 `POST /api/comparisons/{id}/stop`, `GET /api/comparisons/{id}/note` (three-line evolution note),
 `GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `routeevo serve` is running.
+
+## Additional benchmark: EffiBench-X
+
+`uv sync --extra benchmark --python 3.12.11` enables the pinned Python dataset importer.
+For example, `uv run routeevo tasks import-effibench codeforces/2104A --split smoke --dev-cases 3 --case-limit 6`
+imports a small trial task; use `--parquet PATH` for a local, checksum-verified shard.
+See [adapter boundaries, dataset size and evaluation protocol](../docs/benchmark-adapters.md)
+and [pilot validation](../docs/effibench-pilot.md). Run `uv run --extra benchmark pytest` to include importer tests.

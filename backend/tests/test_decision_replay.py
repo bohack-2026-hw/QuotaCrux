@@ -7,7 +7,7 @@ import shutil
 import httpx
 import pytest
 
-from routeevo.llm import openai_decisions as decisions
+from quotacrux.llm import openai_decisions as decisions
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("decision_replay", ROOT / "backend/scripts/decision_replay.py")

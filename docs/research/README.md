@@ -17,6 +17,6 @@
 
 `run-*` 目录保存研究样例，日期目录保存各批次材料。`SHA256SUMS` 用于检查文件是否被改动。
 
-`backend/scripts/export_research.py` 生成 [examples.md](case-studies.md) 并更新选中的样例目录；本索引手工维护。单次导出可使用 `uv run routeevo export-run <run_id> --bundle <目录>`。
+`backend/scripts/export_research.py` 生成 [examples.md](case-studies.md) 并更新选中的样例目录；本索引手工维护。单次导出可使用 `uv run quotacrux export-run <run_id> --bundle <目录>`。
 
 [返回文档导航](../README.md)。

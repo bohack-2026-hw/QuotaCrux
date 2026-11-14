@@ -1,6 +1,6 @@
 # 研究过程案例
 
-由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付：研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、原始模型请求与回复 `model_calls/`、结构化报告 `report.json` 和复核脚本 `reproduce.sh`。任意一次运行都可以用 `uv run routeevo export-run <run_id> --bundle <目录>` 导出。
+由 `backend/scripts/export_research.py` 按规则从正式运行中选出并导出，每个目录是一份完整交付：研究记录（`README.md`：研究任务、过程、假设与实验、最终测试、资源、复现）、最佳程序 `best.py`、全部候选、原始模型请求与回复 `model_calls/`、结构化报告 `report.json` 和复核脚本 `reproduce.sh`。任意一次运行都可以用 `uv run quotacrux export-run <run_id> --bundle <目录>` 导出。
 
 | 案例 | 任务 · 读取快照 | 结论 | 请求 · 费用 | 说明 |
 |---|---|---|---|---|

@@ -6,12 +6,12 @@
 | --- | --- | --- |
 | 项目介绍 | [Markdown](project-overview.md) | [PDF](project-overview.pdf) |
 | 现场演示脚本 | [Markdown](demo-script.md) | — |
-| 项目演示文稿 | [PowerPoint](RouteEvo.pptx) | — |
-| 技术演示文稿 | [PowerPoint](RouteEvo-technical.pptx) | — |
-| 幻灯片 PDF | — | [PDF](RouteEvo.pdf) |
+| 项目演示文稿 | [PowerPoint](QuotaCrux.pptx) | [PDF](QuotaCrux.pdf) |
+| 技术演示文稿 | [PowerPoint](QuotaCrux-technical.pptx) | [PDF](QuotaCrux-technical.pdf) |
+| 幻灯片 PDF | — | [PDF](QuotaCrux.pdf) |
 | 海报 | [素材](../poster/assets/) | [PDF](../poster/QuotaCrux-poster.pdf) · [预览](../poster/QuotaCrux-poster-preview.jpg) |
 
-图表与截图在 [deck/](deck/)。`backend/scripts/build_deck.py` 默认输出 `RouteEvo.pptx`，截图取 `deck/shots/`；海报由 `backend/scripts/build_poster.py` 生成到 `docs/poster/`。
+图表与截图在 [deck/](deck/)。`backend/scripts/build_deck.py` 默认输出技术文稿 `QuotaCrux-technical.pptx`，截图取 `deck/shots/`；海报由 `backend/scripts/build_poster.py` 生成到 `docs/poster/`。
 
 Markdown 导出 PDF 时，从 `backend/` 执行：
 

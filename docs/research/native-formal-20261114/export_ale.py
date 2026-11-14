@@ -23,8 +23,8 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 sys.path.insert(0, str(REPO / "backend/src"))
 
-from routeevo.research_compare import comparable, summarize  # noqa: E402
-from routeevo.research_views import comparison_summary, estimate_cost, validate_pricing  # noqa: E402
+from quotacrux.research_compare import comparable, summarize  # noqa: E402
+from quotacrux.research_views import comparison_summary, estimate_cost, validate_pricing  # noqa: E402
 
 CODE_SHA = "990f598b87f7c93bd27b6ceef5751bbc2d39dd79"
 PLAN_ID = "research-ale-formal-20261114-v2"

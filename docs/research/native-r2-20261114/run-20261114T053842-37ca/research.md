@@ -78,5 +78,5 @@
 ## 复现
 
 ```sh
-uv run routeevo run ale-bench-ahc026-smoke-2960ce864b --mode eval --snapshot v0 --research-mode independent --fixed-model small --dev-only --cpuset-cpus 2 --function-warmups 3 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0
+uv run quotacrux run ale-bench-ahc026-smoke-2960ce864b --mode eval --snapshot v0 --research-mode independent --fixed-model small --dev-only --cpuset-cpus 2 --function-warmups 3 --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120.0
 ```

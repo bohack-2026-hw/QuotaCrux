@@ -14,8 +14,8 @@ from pathlib import Path
 import re
 import statistics
 
-from routeevo.config import load_dotenv
-from routeevo.llm.openai_decisions import MODEL, PRICE_VERSION, decide, estimate_decision_cost
+from quotacrux.config import load_dotenv
+from quotacrux.llm.openai_decisions import MODEL, PRICE_VERSION, decide, estimate_decision_cost
 
 PROTOCOL = "decision-replay-v1"
 THRESHOLD = 0.5

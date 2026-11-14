@@ -15,7 +15,7 @@
 | AlgoTune | `convolve_1d`、`pagerank` | 上游 `is_solution` 数值校验；初始 `solve` / 候选 `solve` 的函数加速比 | 本机 CPU，NumPy / SciPy / NetworkX |
 | KernelBench | Level 1 `1_Square_matrix_multiplication_` | 参考张量对照、CUDA events 计时 | 独立 GPU worker；面向 desktop 的 RTX 2080 Ti |
 
-目前接入上表中的题目。ALE 报告原始得分；AlgoTune 和 KernelBench 按下述方法计时。下载数据和运行产物保存在 `backend/var/`（或 `ROUTEEVO_VAR_DIR`）。
+目前接入上表中的题目。ALE 报告原始得分；AlgoTune 和 KernelBench 按下述方法计时。下载数据和运行产物保存在 `backend/var/`（或 `QUOTACRUX_VAR_DIR`）。
 
 固定来源：
 
@@ -33,17 +33,17 @@
 uv sync --python 3.12.11
 
 # 首轮小样本：2 个开发用例，3 个封存最终用例。
-uv run routeevo tasks import-ale-bench ahc026 --split smoke --dev-cases 2 --final-cases 3
-uv run routeevo tasks import-algotune convolve_1d --split smoke --dev-cases 2 --final-cases 3 --size 1000
-uv run routeevo tasks list
+uv run quotacrux tasks import-ale-bench ahc026 --split smoke --dev-cases 2 --final-cases 3
+uv run quotacrux tasks import-algotune convolve_1d --split smoke --dev-cases 2 --final-cases 3 --size 1000
+uv run quotacrux tasks list
 
 # 用导入输出的任务 ID 替换占位符。两题合计 4 个 episode，串行交替组别顺序。
-uv run routeevo research-compare ALE_TASK_ID ALGOTUNE_TASK_ID \
+uv run quotacrux research-compare ALE_TASK_ID ALGOTUNE_TASK_ID \
   --repeats 1 --wall-clock 900 --max-requests 20 --max-candidates 10 \
   --fixed-model small --dev-only
 
 # 单个 episode 也可独立启动。
-uv run routeevo run TASK_ID --research-mode feedback --fixed-model small \
+uv run quotacrux run TASK_ID --research-mode feedback --fixed-model small \
   --wall-clock 900 --max-requests 20 --max-candidates 10 --dev-only
 ```
 
@@ -61,15 +61,15 @@ uv run routeevo run TASK_ID --research-mode feedback --fixed-model small \
 - `report.json` 保存每次验证后的最佳结果、完成时间、累计请求、Token 与费用记录。`progress` 可按实际完成时间重建预算内的阶梯曲线，不将晚完成候选倒填到早期检查点。
 
 ```bash
-uv run routeevo report RUN_ID --json
-uv run routeevo export-run RUN_ID --bundle ../artifacts/RUN_ID
+uv run quotacrux report RUN_ID --json
+uv run quotacrux export-run RUN_ID --bundle ../artifacts/RUN_ID
 ```
 
 成对结果写入 `var/comparisons/research-*.json`，各轮研究 的完整报告、候选和请求仍按既有目录存储。控制台的比较结果给出文件路径。美元费用未知时维持 `null`；使用其他币种的服务需按该批冻结价目表单独报告估算，不记为零。
 
 ## 各裁判的边界
 
-ALE 使用数据集内的原始 `gen` / `vis`，Cargo.lock 锁定 Rust 依赖。初始程序是 RouteEvo 提供的简单可行方案：`ahc024` 输出原图，`ahc026` 按顺序移除箱子并把遮挡箱移到较短栈。得分与上述初始程序比较。候选沿用 1 CPU、1 GiB、无网络、只读容器；单用例时间上限取题目约束与运行配置较小者。裁判在独立镜像内运行，候选容器没有裁判文件、期望答案或最终套件。
+ALE 使用数据集内的原始 `gen` / `vis`，Cargo.lock 锁定 Rust 依赖。初始程序是 QuotaCrux 提供的简单可行方案：`ahc024` 输出原图，`ahc026` 按顺序移除箱子并把遮挡箱移到较短栈。得分与上述初始程序比较。候选沿用 1 CPU、1 GiB、无网络、只读容器；单用例时间上限取题目约束与运行配置较小者。裁判在独立镜像内运行，候选容器没有裁判文件、期望答案或最终套件。
 
 AlgoTune 固定 NumPy 2.5.4、SciPy 1.18.1、NetworkX 3.7，单线程。仅移除上游 Task 注册器/基类和装饰器，保留这两题的生成、参考解和校验方法；初始程序提取 `solve` 及初始化代码。输入以 JSON + 数值数组 base64 传递，不使用 pickle。校验器额外拒绝 NaN/Inf 和错误数组形状。
 
@@ -81,20 +81,20 @@ AlgoTune 固定 NumPy 2.5.4、SciPy 1.18.1、NetworkX 3.7，单线程。仅移�
 
 2026-11-14 远端检查：2080 Ti，11264 MiB，驱动 615.78.08；Docker 仅登记 runc，GPU runtime 待配置。此机 SSH 需显式使用 `-F /home/hycx233/.ssh/config`，避开系统配置 include 的权限错误。以下示例的 ssh/scp 和 worker-command 在该环境中也需加上 `-F`。
 
-部署到 `desktop` 的独立目录（下面以 `/home/USER/routeevo-kernel-worker` 为例）：
+部署到 `desktop` 的独立目录（下面以 `/home/USER/quotacrux-kernel-worker` 为例）：
 
 ```bash
 # 从仓库根目录复制 worker、harness、checker 与 Dockerfile。
-ssh desktop 'mkdir -p ~/routeevo-kernel-worker'
-scp backend/src/routeevo/benchmarks/native_tools/kernel_*.py \
-    backend/src/routeevo/benchmarks/native_tools/Kernelbench.Dockerfile desktop:routeevo-kernel-worker/
-ssh desktop 'cd ~/routeevo-kernel-worker && docker build -f Kernelbench.Dockerfile -t routeevo-kernel:cu126 .'
-ssh desktop 'docker image inspect routeevo-kernel:cu126 --format "{{.Id}}"'
+ssh desktop 'mkdir -p ~/quotacrux-kernel-worker'
+scp backend/src/quotacrux/benchmarks/native_tools/kernel_*.py \
+    backend/src/quotacrux/benchmarks/native_tools/Kernelbench.Dockerfile desktop:quotacrux-kernel-worker/
+ssh desktop 'cd ~/quotacrux-kernel-worker && docker build -f Kernelbench.Dockerfile -t quotacrux-kernel:cu126 .'
+ssh desktop 'docker image inspect quotacrux-kernel:cu126 --format "{{.Id}}"'
 
 cd backend
-uv run routeevo tasks import-kernelbench 1_Square_matrix_multiplication_ --split smoke \
+uv run quotacrux tasks import-kernelbench 1_Square_matrix_multiplication_ --split smoke \
   --dev-cases 2 --final-cases 5 --image sha256:IMAGE_ID \
-  --worker-command '["ssh","-o","BatchMode=yes","desktop","python3","/home/USER/routeevo-kernel-worker/kernel_worker.py"]'
+  --worker-command '["ssh","-o","BatchMode=yes","desktop","python3","/home/USER/quotacrux-kernel-worker/kernel_worker.py"]'
 ```
 
 worker 需要 Docker GPU runtime；镜像固定 PyTorch 2.8.0 / CUDA 12.6 / NumPy 2.2.6，实际执行使用不可变镜像 ID。导入和运行时核对 GPU 型号、驱动和镜像环境。

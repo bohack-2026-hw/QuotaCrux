@@ -1,4 +1,4 @@
-# RouteEvo 现场演示脚本
+# QuotaCrux 现场演示脚本
 
 目标时长 8—10 分钟。顺序按 PRD 第 11 节：研究问题、预算和基线 → 一条真实的证据—假设—实验—修正链 → 最佳方案、独立结果和资源用量记录 → 系统本身的评估。历史实验标明运行时间，现场演示另开新运行。
 
@@ -8,10 +8,10 @@
 open -a OrbStack                                 # Docker
 ollama ps                                        # 确认 qwen3.8:27b-mlx 已加载；没有就先跑一次 probe 预热
 cd backend
-uv run routeevo probe small                      # Qwen 预热，期望 10—20 s 内返回 propose_candidate
-uv run routeevo probe large                      # GPT 连通性，约 20 s、约 $0.01
-uv run routeevo snapshots list                   # 确认生效版本是 v19（* 标记；分组聚合两轮学习的最终快照）
-uv run routeevo serve                            # 浏览器打开 http://127.0.0.1:8000
+uv run quotacrux probe small                      # Qwen 预热，期望 10—20 s 内返回 propose_candidate
+uv run quotacrux probe large                      # GPT 连通性，约 20 s、约 $0.01
+uv run quotacrux snapshots list                   # 确认生效版本是 v19（* 标记；分组聚合两轮学习的最终快照）
+uv run quotacrux serve                            # 浏览器打开 http://127.0.0.1:8000
 ```
 
 - 浏览器全屏，缩放 110%—125%，投影上数字要清楚。

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from routeevo import routing_ablation as ablation
+from quotacrux import routing_ablation as ablation
 from test_routing import harness
 
 

@@ -3,8 +3,8 @@ from dataclasses import replace
 
 import pytest
 
-from routeevo import config
-from routeevo.agent import routing, runner
+from quotacrux import config
+from quotacrux.agent import routing, runner
 from test_research_protocol import score_task, scripted_run
 from test_routing import harness
 

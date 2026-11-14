@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from routeevo import config, research_compare as rc
+from quotacrux import config, research_compare as rc
 
 
 @pytest.fixture
@@ -202,7 +202,7 @@ def test_unexpected_execution_error_preserves_slot_and_releases_lock(execution):
 
 
 def test_cli_infers_task_ids_from_frozen_plan(tmp_path, monkeypatch, capsys):
-    from routeevo import cli
+    from quotacrux import cli
     path = tmp_path / "plan.json"
     plan = [{"seq": 11, "task_id": "a", "repeat": 3, "mode": "no_feedback", "wave": 6}]
     path.write_text(json.dumps({"runs": plan}))

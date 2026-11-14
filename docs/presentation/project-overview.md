@@ -1,12 +1,12 @@
-# RouteEvo 项目介绍
+# QuotaCrux（枢决） 项目介绍
 
-RouteEvo 是一个自动改进程序的 **Research Agent 系统**，参加倍漾量化 Research Agent 赛道。给它初始程序、数据、目标和预算，它会分析问题、写出改进方案、运行测试，再根据结果继续修改。最后提供最佳程序、测试结果和运行记录。
+QuotaCrux 是一个自动改进程序的 **Research Agent 系统**，参加倍漾量化 Research Agent 赛道。给它初始程序、数据、目标和预算，它会分析问题、写出改进方案、运行测试，再根据结果继续修改。最后提供最佳程序、测试结果和运行记录。
 
 评估看两件事：程序是否正确、性能提高多少，以及为此花了多少时间、Token 和费用。系统还会保存验证过的程序和适用条件，供之后的任务重用。
 
 **主要结果**：在 12 个任务、3 次重放的 S 任务流中，使用经验后，大模型请求从 27 次降到 6 次，费用从 $0.402 降到 $0.086；两侧均有 36/36 次达标，最终加速比中位数均为 1.86×。各版实验和失败情况见第 5 节。
 
-| 研究环节 | 在 RouteEvo 中 |
+| 研究环节 | 在 QuotaCrux 中 |
 | --- | --- |
 | 规划 | 研究问题、基线、允许修改范围、工具、预算在运行开始前固定；模型可用“分析”写下计划 |
 | 收集证据 | 数据概况；“取证”在沙箱中对候选做 cProfile；每次评测返回状态、加速比、失败类别和公开反例 |
@@ -155,10 +155,10 @@ S 任务流从 v19 出发（只有分组聚合的经验）：12 个任务按固�
 ```sh
 cd backend && uv sync && cp .env.example .env     # 填 OPENAI_API_KEY；Ollama 中运行 qwen3.8:27b-mlx
 scripts/experiment.sh                             # 重建任务包 → A 学习两轮 → B、D 对照 → S 任务流 → 分流器对照
-uv run routeevo serve                             # 界面：http://127.0.0.1:8000
+uv run quotacrux serve                             # 界面：http://127.0.0.1:8000
 ```
 
-单次研究运行：`uv run routeevo run B-01 --snapshot v0`；全新问题在线运行：`uv run routeevo run T-L1 --mode online --snapshot v19`；任务流：`uv run routeevo stream S-01 … --start v19`；导出完整研究成果：`uv run routeevo export-run <run_id> --bundle <目录>`（研究记录、最佳程序、全部候选、原始模型调用、`report.json`、`reproduce.sh`）；经验带来的变化：`uv run routeevo explain <comparison_id>`。
+单次研究运行：`uv run quotacrux run B-01 --snapshot v0`；全新问题在线运行：`uv run quotacrux run T-L1 --mode online --snapshot v19`；任务流：`uv run quotacrux stream S-01 … --start v19`；导出完整研究成果：`uv run quotacrux export-run <run_id> --bundle <目录>`（研究记录、最佳程序、全部候选、原始模型调用、`report.json`、`reproduce.sh`）；经验带来的变化：`uv run quotacrux explain <comparison_id>`。
 
 [研究成果样例](../research/)按规则从正式运行中选出：反馈驱动的修正链、站在已知最佳上继续研究、没有验证出改进、复验已验证程序直接达标、开发达标但最终测试未达标。A-01 样例的 `reproduce.sh` 在最终数据上复核得到 1.44×（记录值 1.4367×），第二版 D-01 样例复核得到 1.4473×（记录值 1.4481×），第三版 S-01 样例（全新任务族直接交给大模型）复核：正确，6.69×（记录值 6.35×）。RA-01—08 与 RA-AC-01—08 的逐条对照见 [Research Agent 验收对照](../requirements/acceptance-record.md)。
 

@@ -4,7 +4,7 @@
 
 ## 1. 选择结论
 
-**研究主线优先 ALE-Bench，性能优化备选 AlgoTune；有 RTX 2080 Ti 后，KernelBench 也值得做小规模预检。** 这是基于任务结构、当前架构与可用资源的接入判断，尚无 RouteEvo 在这些 benchmark 上的效果结果。
+**研究主线优先 ALE-Bench，性能优化备选 AlgoTune；有 RTX 2080 Ti 后，KernelBench 也值得做小规模预检。** 这是基于任务结构、当前架构与可用资源的接入判断，尚无 QuotaCrux 在这些 benchmark 上的效果结果。
 
 | Benchmark | 核实规模 | 一项任务的研究内容与时长计算方式 | 资源与本项目适配 |
 | --- | --- | --- | --- |
@@ -41,9 +41,9 @@
 
 ### 复用与改动
 
-[上游评测代码](https://github.com/SakanaAI/ALE-Bench/blob/8ba16e6baf743aa8736516c45d1c52afdbd4de99/docs/evaluation.md)已有 repeated sampling 与 self-refinement，并提供 public/private evaluation；这与我们要验证的“利用反馈是否优于独立尝试”直接对应。上游按采样次数组织的对照，仍需改为 RouteEvo 统一预算后才能回答我们的成本问题。
+[上游评测代码](https://github.com/SakanaAI/ALE-Bench/blob/8ba16e6baf743aa8736516c45d1c52afdbd4de99/docs/evaluation.md)已有 repeated sampling 与 self-refinement，并提供 public/private evaluation；这与我们要验证的“利用反馈是否优于独立尝试”直接对应。上游按采样次数组织的对照，仍需改为 QuotaCrux 统一预算后才能回答我们的成本问题。
 
-RouteEvo 可复用任务冻结、候选记录、资源用量记录和结果导出。必须新增原生裁判调用、可行性/分数/优化方向、最佳候选规则和预算内持续优化；不能把得分装入 `speedup` 字段。最终种子、参考结果、排名映射与私有裁判状态留在可信评测侧，不把完整 session 对象暴露给候选或模型。
+QuotaCrux 可复用任务冻结、候选记录、资源用量记录和结果导出。必须新增原生裁判调用、可行性/分数/优化方向、最佳候选规则和预算内持续优化；不能把得分装入 `speedup` 字段。最终种子、参考结果、排名映射与私有裁判状态留在可信评测侧，不把完整 session 对象暴露给候选或模型。
 
 CPU 串行小规模运行即可预检；上游建议统一机器来比较性能。本地试验应报告实际机器与裁判版本，不直接套用另一台硬件的时间或排名结论。
 
@@ -58,7 +58,7 @@ CPU 串行小规模运行即可预检；上游建议统一机器来比较性能�
 - [`convolve_1d`](https://github.com/oripress/AlgoTune/blob/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/convolve_1d/convolve_1d.py)：NumPy/SciPy 一维卷积，有数值误差约束，适合比较不同实现和规模下的算法选择。
 - [`pagerank`](https://github.com/oripress/AlgoTune/blob/dff9914c10800c7a031c9e8c3d4d1c8cd1b38906/AlgoTuneTasks/pagerank/pagerank.py)：NetworkX/NumPy 图计算，验证分数归一性及参考容差，适合观察数据结构与计算路径改进。
 
-它们没有 GPU 必需条件，但当前 RouteEvo 的标准库、1 GB 沙箱不适合直接照搬。上游配置给验证 worker 的内存上限为 14 GB；这不是每题最低需求，需按选定题目预检实际峰值。数据可按任务生成或加载，本次未核实全任务数据总大小，因此不报估算总量。
+它们没有 GPU 必需条件，但当前 QuotaCrux 的标准库、1 GB 沙箱不适合直接照搬。上游配置给验证 worker 的内存上限为 14 GB；这不是每题最低需求，需按选定题目预检实际峰值。数据可按任务生成或加载，本次未核实全任务数据总大小，因此不报估算总量。
 
 接入时保留上游的输入生成、数值验证和函数计时语义，固定 BLAS/线程配置；将安装、导入、编译与目标函数耗时分别记录。当前 EffiBench 的完整进程计时不可直接当作 AlgoTune 分数。上游汇总使用加速比调和平均，本地子集应同时列逐题结果并明确协议差异。
 

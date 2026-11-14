@@ -6,8 +6,8 @@ import uuid
 from fastapi.testclient import TestClient
 import pytest
 
-from routeevo import api, config, db, evaluator, report, research_views
-from routeevo.benchmarks import native
+from quotacrux import api, config, db, evaluator, report, research_views
+from quotacrux.benchmarks import native
 
 
 PRICE = {"model": "Qwen3.8-27B", "currency": "CNY", "unit": "per_1m_tokens",

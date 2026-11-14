@@ -1,0 +1,327 @@
+{
+  "affinity_probe": {
+    "elapsed_s": 0.043306041999812805,
+    "ended_at": "2026-11-14T07:33:09.229+00:00",
+    "exit_code": 0,
+    "observed_affinities": [
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ]
+    ],
+    "ready_latency_s": 0.1622621670001081,
+    "requested_affinity": [
+      2
+    ],
+    "started_at": "2026-11-14T07:33:09.023+00:00",
+    "status": "ok",
+    "stderr_tail": "",
+    "stdout_bytes": 255,
+    "warmup_count": 3
+  },
+  "calibration_file": "evidence/calibration-pagerank.json",
+  "calibration_program_sha256": {
+    "delayed": "22f398ac9bdf74a3602e4eb647aa7cdfeb39937d0d7bafde3ee7051479ed6cd2",
+    "original": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
+  },
+  "candidate_image": {
+    "architecture": "arm64",
+    "created": "2026-11-14T15:28:38.146584813+08:00",
+    "digest_note": "Local BuildKit image has no registry RepoDigest; image_id is the immutable local identity.",
+    "image_id": "sha256:fed60f772eae5dfbe9b664b26450e6678ff541fe790a37968cde616859cfb5f9",
+    "os": "linux",
+    "repo_digests": [],
+    "repo_tags": [
+      "routeevo-scientific:6251644e51bd"
+    ],
+    "size_bytes": 383804334
+  },
+  "checker_contract": "Input is {'adjacency_list': list[list[int]]}; row i lists the destinations of outgoing edges from node i, with nodes indexed 0 to n-1. Return {'pagerank_scores': list[float | int]} in node-index order, with exactly n finite non-negative values. A NumPy array is not accepted in place of that list. The reference is networkx.pagerank with alpha=0.85, max_iter=100, tol=1e-6. The judge compares scores to that reference using numpy.allclose(rtol=1e-5, atol=1e-8); for n>1 it also checks that the sum is 1 with math.isclose(rel_tol=1e-5, abs_tol=1e-8). The reference convergence tolerance and the judge comparison tolerance are separate parameters.",
+  "final_evaluations": 0,
+  "judge_image": {
+    "architecture": "arm64",
+    "created": "2026-11-14T15:28:53.444061364+08:00",
+    "digest_note": "Local BuildKit image has no registry RepoDigest; image_id is the immutable local identity.",
+    "image_id": "sha256:1d0ca27092f2616f71e7eecdaa1853ef9c920e248e41b7b22fe53387630da14b",
+    "os": "linux",
+    "repo_digests": [],
+    "repo_tags": [
+      "routeevo-algotune-pagerank:29d14679bce8"
+    ],
+    "size_bytes": 383818931
+  },
+  "manifest": {
+    "adapter_version": "research-benchmarks-v1",
+    "dev_params": {
+      "cases": 5
+    },
+    "family": "algotune",
+    "files": {
+      "UPSTREAM_LICENSE.txt": {
+        "bytes": 1096,
+        "file": "UPSTREAM_LICENSE.txt",
+        "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d"
+      },
+      "contract": {
+        "bytes": 1107,
+        "file": "contract.txt",
+        "sha256": "c8a6f2f637aa9e6ab2f5bc6c930fb3fa7473b70f04f26c1a313d265c17657c9f"
+      },
+      "dev_expected": {
+        "bytes": 2,
+        "file": "dev-expected.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "dev_input": {
+        "bytes": 205350,
+        "file": "dev.json",
+        "sha256": "8c04f4d8ff7b2e008a85c179f6f1fb4d3f2e9b2ef792e30ae28b321fe67331b5"
+      },
+      "dev_profile": {
+        "bytes": 1543,
+        "file": "dev_profile.json",
+        "sha256": "ddc56a62b42159e3f5c4a493a77632a95bdbc70c8f597534b5997d631f795cb2"
+      },
+      "examples": {
+        "bytes": 2,
+        "file": "examples.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "final_expected": {
+        "bytes": 2,
+        "file": "final-expected.json",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "final_input": {
+        "bytes": 616115,
+        "file": "final.json",
+        "sha256": "a159632f3411bec5f86361ec3aaa31c83f883e00e175335706a501c1191ee419"
+      },
+      "initial": {
+        "bytes": 2415,
+        "file": "initial.py",
+        "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
+      },
+      "upstream_task.py": {
+        "bytes": 12308,
+        "file": "upstream_task.py",
+        "sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf"
+      }
+    },
+    "final_params": {
+      "cases": 15
+    },
+    "native": {
+      "allowed_imports": [
+        "numpy",
+        "scipy",
+        "networkx"
+      ],
+      "candidate_image": {
+        "image_id": "sha256:fed60f772eae5dfbe9b664b26450e6678ff541fe790a37968cde616859cfb5f9",
+        "image_tag": "routeevo-scientific:6251644e51bd"
+      },
+      "candidate_interface": "solve",
+      "judge_image": {
+        "image_id": "sha256:1d0ca27092f2616f71e7eecdaa1853ef9c920e248e41b7b22fe53387630da14b",
+        "image_tag": "routeevo-algotune-pagerank:29d14679bce8"
+      },
+      "seed": 1729,
+      "size": 1000
+    },
+    "notes": "RouteEvo research subset",
+    "problem": {
+      "key": "pagerank",
+      "title": "pagerank"
+    },
+    "selection": {
+      "dev_cases": 5,
+      "final_cases": 15
+    },
+    "source": {
+      "license": "MIT",
+      "repository": "oripress/AlgoTune",
+      "revision": "dff9914c10800c7a031c9e8c3d4d1c8cd1b38906",
+      "task_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf"
+    },
+    "split": "formal-20261114",
+    "target": {
+      "direction": "maximize",
+      "metric": "speedup",
+      "min_speedup": 1.1
+    },
+    "task_id": "algotune-pagerank-formal-20261114-b2ad8ba1c8"
+  },
+  "manifest_canonical_sha256": "61ab8297dfa51ccce5c79a77bc7dafe074bb6fa41936f7065b4ccbbe024994f4",
+  "manifest_file_sha256": "c0db3b349d58b80062ec3f59e8d7b439ce8109831268c0f74749090428376119",
+  "measure": {
+    "cpus": 1.0,
+    "cpuset_cpus": "2",
+    "function_warmups": 3,
+    "max_output_bytes": 67108864,
+    "memory": "1g",
+    "pids_limit": 64,
+    "ready_timeout_s": 30.0,
+    "repeats": 5
+  },
+  "model_requests": 0,
+  "package_files": {
+    "UPSTREAM_LICENSE.txt": {
+      "bytes": 1096,
+      "file": "UPSTREAM_LICENSE.txt",
+      "observed_sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d",
+      "sha256": "06027a4230b1df2d71ce945b081fb814335d13b98b5509e453f15f60ab55d90d"
+    },
+    "contract": {
+      "bytes": 1107,
+      "file": "contract.txt",
+      "observed_sha256": "c8a6f2f637aa9e6ab2f5bc6c930fb3fa7473b70f04f26c1a313d265c17657c9f",
+      "sha256": "c8a6f2f637aa9e6ab2f5bc6c930fb3fa7473b70f04f26c1a313d265c17657c9f"
+    },
+    "dev_expected": {
+      "bytes": 2,
+      "file": "dev-expected.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "dev_input": {
+      "bytes": 205350,
+      "file": "dev.json",
+      "observed_sha256": "8c04f4d8ff7b2e008a85c179f6f1fb4d3f2e9b2ef792e30ae28b321fe67331b5",
+      "sha256": "8c04f4d8ff7b2e008a85c179f6f1fb4d3f2e9b2ef792e30ae28b321fe67331b5"
+    },
+    "dev_profile": {
+      "bytes": 1543,
+      "file": "dev_profile.json",
+      "observed_sha256": "ddc56a62b42159e3f5c4a493a77632a95bdbc70c8f597534b5997d631f795cb2",
+      "sha256": "ddc56a62b42159e3f5c4a493a77632a95bdbc70c8f597534b5997d631f795cb2"
+    },
+    "examples": {
+      "bytes": 2,
+      "file": "examples.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "final_expected": {
+      "bytes": 2,
+      "file": "final-expected.json",
+      "observed_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "final_input": {
+      "bytes": 616115,
+      "file": "final.json",
+      "observed_sha256": "a159632f3411bec5f86361ec3aaa31c83f883e00e175335706a501c1191ee419",
+      "sha256": "a159632f3411bec5f86361ec3aaa31c83f883e00e175335706a501c1191ee419"
+    },
+    "initial": {
+      "bytes": 2415,
+      "file": "initial.py",
+      "observed_sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd",
+      "sha256": "01e5952d19d37e475c90510cf609f9eb43704fd7d4bbf9181aaf081616e55fdd"
+    },
+    "upstream_task.py": {
+      "bytes": 12308,
+      "file": "upstream_task.py",
+      "observed_sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf",
+      "sha256": "d1faaa764330381e8d39f51bd144bdfde60dd4cf3d9c32c5497e3b5507a5dbdf"
+    }
+  },
+  "package_files_verified": true,
+  "problem": "pagerank",
+  "sqlite_manifest_matches_disk": true,
+  "task_id": "algotune-pagerank-formal-20261114-b2ad8ba1c8",
+  "var_dir": "backend/var-algotune-formal-20261114",
+  "workload_profiles": {
+    "dev": {
+      "cases": [
+        {
+          "dangling_nodes": 1,
+          "directed_edges": 7950,
+          "id": "0",
+          "node_id_type": "int",
+          "nodes": 1000,
+          "out_degree": {
+            "max": 18,
+            "mean": 7.95,
+            "min": 0
+          },
+          "output_scores": 1000
+        },
+        {
+          "dangling_nodes": 0,
+          "directed_edges": 7878,
+          "id": "1",
+          "node_id_type": "int",
+          "nodes": 1000,
+          "out_degree": {
+            "max": 18,
+            "mean": 7.878,
+            "min": 1
+          },
+          "output_scores": 1000
+        },
+        {
+          "dangling_nodes": 0,
+          "directed_edges": 8074,
+          "id": "2",
+          "node_id_type": "int",
+          "nodes": 1000,
+          "out_degree": {
+            "max": 19,
+            "mean": 8.074,
+            "min": 1
+          },
+          "output_scores": 1000
+        },
+        {
+          "dangling_nodes": 0,
+          "directed_edges": 7950,
+          "id": "3",
+          "node_id_type": "int",
+          "nodes": 1000,
+          "out_degree": {
+            "max": 22,
+            "mean": 7.95,
+            "min": 1
+          },
+          "output_scores": 1000
+        },
+        {
+          "dangling_nodes": 0,
+          "directed_edges": 8057,
+          "id": "4",
+          "node_id_type": "int",
+          "nodes": 1000,
+          "out_degree": {
+            "max": 17,
+            "mean": 8.057,
+            "min": 1
+          },
+          "output_scores": 1000
+        }
+      ],
+      "generator_scale": 1000,
+      "generator_scale_note": "size is the argument to generate_problem, not an observed input length.",
+      "input_sha256": "8c04f4d8ff7b2e008a85c179f6f1fb4d3f2e9b2ef792e30ae28b321fe67331b5",
+      "source": "frozen_dev_input_statistics_only"
+    },
+    "final": {
+      "case_count": 15,
+      "details_published": false,
+      "input_sha256": "a159632f3411bec5f86361ec3aaa31c83f883e00e175335706a501c1191ee419",
+      "source": "sealed_final_input"
+    }
+  }
+}

@@ -5,17 +5,17 @@
 团队已于 2026-11-14 确认选择倍漾量化 Research Agent 赛道。系统在给定数据、工具和资源限制下，自主完成“规划—收集证据—提出假设—实验—验证—修正”，交付可复现的成果，并将执行经验用于后续研究。
 
 - [文档总导航](docs/README.md)：需求、工程设计、评测批次、展示材料与历史归档。
-- 提交材料：[项目说明](docs/presentation/project-overview.md)（[PDF](docs/presentation/project-overview.pdf)） · [实验批次与结果](docs/research/README.md) · [历史经验实验](docs/archive/memory-learning-results.md)（[PDF](docs/archive/memory-learning-results.pdf)） · [演示文稿](docs/presentation/QuotaCrux.pptx)（[PDF](docs/presentation/QuotaCrux.pdf)）
+- 提交材料：[项目说明](docs/presentation/project-overview.md)（[PDF](docs/presentation/project-overview.pdf)） · [本轮实验汇总](docs/research/20261114-summary.md) · [实验批次与结果](docs/research/README.md) · [历史经验实验](docs/archive/memory-learning-results.md)（[PDF](docs/archive/memory-learning-results.pdf)） · [演示文稿](docs/presentation/QuotaCrux.pptx)（[PDF](docs/presentation/QuotaCrux.pdf)）
 - [验收记录](docs/requirements/acceptance-record.md)：RA-AC-01—08 逐条对应的实现与证据 · [研究成果样例](docs/research/) · [演示脚本](docs/presentation/demo-script.md)
 - [产品需求](docs/requirements/product-requirements.md) · [赛题原文与团队选择](docs/requirements/competition-brief.md)
 - [首版开工决策与 agent 问题答复](docs/archive/initial-implementation-decisions.md) · [核心运行与经验管理需求](docs/requirements/core-requirements.md)
 - [主分支集成记录](docs/archive/integration-20261114.md) · [原生 benchmark 第二轮真实评测](docs/research/native-r2-20261114/README.md) · [独立动作/模型路由](docs/design/action-model-routing.md)
 
-2026-11-14 已整合 shared-core、独立路由和外部 benchmark 开发线。除自建任务流外，现已接入 EffiBench-X、ALE-Bench、AlgoTune 与 KernelBench，并支持同一任务内 feedback / independent 对照。第二轮固定 Qwen 的 CPU 开发预实验中，AlgoTune 两组保留加速为 1.8343× / 1.2101×；ALE 独立组得分提高 2.69%。这批最终集与 KernelBench GPU 实机实验尚未执行，完整配置和费用见上述报告。
+2026-11-14 已整合 shared-core、独立路由和外部 benchmark 开发线。除自建任务流外，现已接入 EffiBench-X、ALE-Bench、AlgoTune 与 KernelBench，并支持同一任务内 feedback / independent 对照。第二轮固定 Qwen 的 CPU 开发预实验中，AlgoTune 两组保留加速为 1.8343× / 1.2101×；ALE 独立组得分提高 2.69%。这批开发预实验未执行最终集，KernelBench GPU 实机实验也尚未执行。后续 ALE 正式批次已完成 15 轮研究（14 completed、1 API 错误 failed），15 份冻结交付候选均通过 final；路由短批 4 轮均完成并通过 final。Mac 的探索性开发集结果与正式批次分开记录，配置、费用和完成范围见[本轮实验汇总](docs/research/20261114-summary.md)。
 
 首版评估任务是 Python 分组聚合程序的性能优化：初始程序正确，正确性为硬约束，程序处理耗时为主指标，同时统计 Agent 的总耗时、Token 和费用。使用自部署 Qwen + GPT-6.1 Sol（xhigh）、Python 3.12 + SQLite + FastAPI，在固定机器的 Docker 环境中运行。
 
-当前状态：研究闭环、独立评测、资源账本、经验版本与回退、分流器、在线记忆、对照评测和展示界面均已实现并完成正式运行，覆盖 3 个任务族（分组聚合、访问日志统计、区间合并）。第三版的做法是：熟悉的问题由程序复验已验证程序直接交付；全新的任务族或没有相近经验的条件，由分流器直接交给大模型；做完的结果在线写入经验，下一个相似问题直接复用。在运行前封存的 S 任务流上（12 个任务、3 个任务族、3 次重放），带记忆与不带记忆相比：大模型请求 27 → 6，费用 $0.402 → $0.086，总耗时 1486 s → 1064 s，达标 36/36 → 36/36，最终加速比中位数 1.86× → 1.86×；任务族首次出现之后的任务，30/30 次没有调用任何模型。第二版在实现前封存的 D 批分组聚合任务上：达标 15/18 → 18/18，最终加速比中位数 1.20× → 1.73×，GPT 费用 $0.376 → $0.000。第一版（只有文字经验）更省，但最终加速比从 1.41× 降到 1.29×，这一发现是后续修改的依据。各种情况的处理见[边界条件](docs/archive/legacy-runtime-rules.md)，完整数据见实验结果。
+早期经验学习阶段：研究闭环、独立评测、资源账本、经验版本与回退、分流器、在线记忆、对照评测和展示界面均已实现并完成正式运行，覆盖 3 个任务族（分组聚合、访问日志统计、区间合并）。第三版的做法是：熟悉的问题由程序复验已验证程序直接交付；全新的任务族或没有相近经验的条件，由分流器直接交给大模型；做完的结果在线写入经验，下一个相似问题直接复用。在运行前封存的 S 任务流上（12 个任务、3 个任务族、3 次重放），带记忆与不带记忆相比：大模型请求 27 → 6，费用 $0.402 → $0.086，总耗时 1486 s → 1064 s，达标 36/36 → 36/36，最终加速比中位数 1.86× → 1.86×；任务族首次出现之后的任务，30/30 次没有调用任何模型。第二版在实现前封存的 D 批分组聚合任务上：达标 15/18 → 18/18，最终加速比中位数 1.20× → 1.73×，GPT 费用 $0.376 → $0.000。第一版（只有文字经验）更省，但最终加速比从 1.41× 降到 1.29×，这一发现是后续修改的依据。各种情况的处理见[边界条件](docs/archive/legacy-runtime-rules.md)，完整数据见实验结果。
 
 按现有赛事说明，项目材料于 11 月 15 日 08:00 前提交，当日上午现场展示，时区为 Asia/Shanghai。
 

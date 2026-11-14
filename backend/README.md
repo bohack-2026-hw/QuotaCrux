@@ -1,4 +1,6 @@
-# RouteEvo backend
+# QuotaCrux（枢决） backend
+
+The project is named **QuotaCrux（枢决）**. The Python package and CLI are `quotacrux`; use `QUOTACRUX_VAR_DIR` and `QUOTACRUX_NO_DOTENV` for configuration. Existing `ROUTEEVO_VAR_DIR` / `ROUTEEVO_NO_DOTENV` values and `routeevo.sqlite3` databases remain supported. New stores use `quotacrux.sqlite3`.
 
 The [shared core](../docs/requirements/core-requirements.md), M1–M3: three task families, the Qwen / GPT execution loop with a router,
 a Docker sandbox with an external evaluator, a resource ledger, program-extracted experience with immutable snapshots
@@ -12,9 +14,9 @@ dashboard. Boundary conditions, case by case: [docs/archive/legacy-runtime-rules
 cd backend
 uv sync                      # Python 3.12 + deps
 cp .env.example .env         # fill OPENAI_API_KEY, QWEN_BASE_URL, QWEN_MODEL
-uv run routeevo tasks build  # regenerate the frozen task packages (hashes checked against tasks/lock.json)
-(cd ../frontend && pnpm install && pnpm build)   # dashboard, served by `routeevo serve`
-uv run routeevo serve        # http://127.0.0.1:8000
+uv run quotacrux tasks build  # regenerate the frozen task packages (hashes checked against tasks/lock.json)
+(cd ../frontend && pnpm install && pnpm build)   # dashboard, served by `quotacrux serve`
+uv run quotacrux serve        # http://127.0.0.1:8000
 ```
 
 Docker (OrbStack) must be running; the sandbox image is built on first use. Local Qwen runs in Ollama
@@ -28,25 +30,25 @@ ablation).
 
 | Command | Purpose |
 | --- | --- |
-| `uv run routeevo run A-01 [--mode eval\|online\|learn] [--snapshot v0] [--no-router]` | One agent run with the real models; prints the summary and writes `var/runs/<id>/report.json` |
-| `uv run routeevo run A-01 --script tests/fixtures/scripts/success.json` | Same loop with a scripted model; functional checks only, labelled in reports |
-| `uv run routeevo report <run_id> [--json]` | Rebuild the report from stored records |
-| `uv run routeevo runs` / `stop <run_id>` | List runs / request a stop after the current step |
-| `uv run routeevo check A-01 path/to/candidate.py [--dataset final]` | Evaluate a program outside any run |
-| `uv run routeevo calibrate A-01` | Time the initial program and fixed input-transfer overhead |
-| `uv run routeevo tasks list` / `tasks lock` | Show tasks / pin manifests in `tasks/lock.json` before B/C comparisons |
-| `uv run routeevo learn A-01 A-02 …` | Serial learn-mode runs; each publishes a snapshot on top of the previous one |
+| `uv run quotacrux run A-01 [--mode eval\|online\|learn] [--snapshot v0] [--no-router]` | One agent run with the real models; prints the summary and writes `var/runs/<id>/report.json` |
+| `uv run quotacrux run A-01 --script tests/fixtures/scripts/success.json` | Same loop with a scripted model; functional checks only, labelled in reports |
+| `uv run quotacrux report <run_id> [--json]` | Rebuild the report from stored records |
+| `uv run quotacrux runs` / `stop <run_id>` | List runs / request a stop after the current step |
+| `uv run quotacrux check A-01 path/to/candidate.py [--dataset final]` | Evaluate a program outside any run |
+| `uv run quotacrux calibrate A-01` | Time the initial program and fixed input-transfer overhead |
+| `uv run quotacrux tasks list` / `tasks lock` | Show tasks / pin manifests in `tasks/lock.json` before B/C comparisons |
+| `uv run quotacrux learn A-01 A-02 …` | Serial learn-mode runs; each publishes a snapshot on top of the previous one |
 | `scripts/experiment.sh [learn\|compare-b\|compare-d\|stream\|ablation]` | The formal experiment: two A learning rounds from v0, B comparison, sealed D comparison, sealed S stream, router ablation |
-| `uv run routeevo stream S-01 … --start v19 --repeats 3` | Online stream: the same task sequence with accumulating memory (online mode) vs from a fixed start (eval), alternating, serial |
-| `uv run routeevo snapshots list\|show v3\|diff v0 v3\|activate v1 --reason …` | Snapshots, diffs and rollback |
-| `uv run routeevo experience <id>` | One experience record with its evidence |
-| `uv run routeevo compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
-| `uv run routeevo comparison <id> [--json]` | Comparison summary |
-| `uv run routeevo ablate-routing B-01 … --snapshot v0 --repeats 3` | Four independent action/model routing combinations on one frozen snapshot; [protocol](../docs/design/action-model-routing.md) |
-| `uv run routeevo explain <comparison_id>` / `export-run <run_id>` | Note on what experience changed / Markdown research record of one run |
-| `uv run routeevo export-run <run_id> --bundle DIR` | Research deliverable: record, `best.py`, all candidates, raw model calls, `report.json`, `reproduce.sh` |
-| `uv run routeevo probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
-| `uv run routeevo serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
+| `uv run quotacrux stream S-01 … --start v19 --repeats 3` | Online stream: the same task sequence with accumulating memory (online mode) vs from a fixed start (eval), alternating, serial |
+| `uv run quotacrux snapshots list\|show v3\|diff v0 v3\|activate v1 --reason …` | Snapshots, diffs and rollback |
+| `uv run quotacrux experience <id>` | One experience record with its evidence |
+| `uv run quotacrux compare B-01 … --a v0 --b v6 --repeats 3` | Frozen held-out comparison (serial, alternating, no writes) |
+| `uv run quotacrux comparison <id> [--json]` | Comparison summary |
+| `uv run quotacrux ablate-routing B-01 … --snapshot v0 --repeats 3` | Four independent action/model routing combinations on one frozen snapshot; [protocol](../docs/design/action-model-routing.md) |
+| `uv run quotacrux explain <comparison_id>` / `export-run <run_id>` | Note on what experience changed / Markdown research record of one run |
+| `uv run quotacrux export-run <run_id> --bundle DIR` | Research deliverable: record, `best.py`, all candidates, raw model calls, `report.json`, `reproduce.sh` |
+| `uv run quotacrux probe small\|large` | Send one real first-step request; prints latency, tokens, cost |
+| `uv run quotacrux serve` | HTTP API on :8000; also serves `frontend/dist` at `/` |
 | `uv run pytest` | Unit tests plus end-to-end flows (needs Docker) |
 
 ## Task families
@@ -57,7 +59,7 @@ ablation).
 | `logstats` | access log lines → per (hour, method, path): count, 5xx count, latency sum and max | regex + `datetime.strptime` |
 | `intervals` | merge overlapping or touching closed integer intervals (values up to ±10^12) | `csv` + tuple sort |
 
-Each family is one module in `src/routeevo/families/`: contract, initial program, deterministic generator, trusted
+Each family is one module in `src/quotacrux/families/`: contract, initial program, deterministic generator, trusted
 reference output, workload profile and 5 condition buckets, 7 public contract cases, output checker. The evaluator,
 experience store, router and UI dispatch on the task's family. A task package (`tasks/spec*.json` →
 `var/tasks/<id>/`) holds the contract, initial code, visible examples, a dev data profile, dev data and an independent
@@ -161,12 +163,12 @@ price-table version and estimated cost; raw requests and responses are in `var/r
 `GET /api/snapshots`, `GET /api/snapshots/{id}`, `GET /api/snapshots/{a}/diff/{b}`, `PUT /api/snapshots/active`,
 `GET /api/experiences/{id}`, `GET|POST /api/comparisons`, `POST /api/streams`, `GET /api/comparisons/{id}` (streams too),
 `POST /api/comparisons/{id}/stop`, `GET /api/comparisons/{id}/note` (three-line evolution note),
-`GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `routeevo serve` is running.
+`GET|POST /api/sessions`, `GET /api/runs/{id}/markdown` (research record). Interactive docs at `/docs` when `quotacrux serve` is running.
 
 ## Additional benchmark: EffiBench-X
 
 `uv sync --extra benchmark --python 3.12.11` enables the pinned Python dataset importer.
-For example, `uv run routeevo tasks import-effibench codeforces/2104A --split smoke --dev-cases 3 --case-limit 6`
+For example, `uv run quotacrux tasks import-effibench codeforces/2104A --split smoke --dev-cases 3 --case-limit 6`
 imports a small trial task; use `--parquet PATH` for a local, checksum-verified shard.
 See [adapter boundaries, dataset size and evaluation protocol](../docs/design/effibench-integration.md)
 and [pilot validation](../docs/archive/effibench-preflight.md). Run `uv run --extra benchmark pytest` to include importer tests.

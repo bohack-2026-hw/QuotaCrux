@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from routeevo import compare, config, db, memory, narrative, report, research
+from quotacrux import compare, config, db, memory, narrative, report, research
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "archive" / "memory-learning-results.md"
 

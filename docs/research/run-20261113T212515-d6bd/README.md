@@ -84,5 +84,5 @@
 
 ## 复现
 
-- 重跑：`uv run routeevo run A-05 --mode learn --snapshot v17`
-- 复核最佳产物：`uv run routeevo check A-05 candidates/c6.py --dataset final`
+- 重跑：`uv run quotacrux run A-05 --mode learn --snapshot v17`
+- 复核最佳产物：`uv run quotacrux check A-05 candidates/c6.py --dataset final`

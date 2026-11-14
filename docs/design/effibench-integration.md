@@ -40,11 +40,11 @@ flowchart LR
 | 题目数 | 623，全部带 Python 参考解 |
 | 接口类型 | 285 个 `io`，338 个 `functional`；全部 functional 题带 Python runner |
 | 来源 | Aizu 33、AtCoder 149、CodeChef 93、Codeforces 10、LeetCode 338 |
-| 上游 split | 只有 `test`；RouteEvo 的 A/B/C/D 是本地实验划分 |
+| 上游 split | 只有 `test`；QuotaCrux 的 A/B/C/D 是本地实验划分 |
 | 分片 | 20 个 Parquet，合计 **2,341,977,516 bytes**，约 **2.34 GB / 2.18 GiB** |
 | 用例数 | 官方说明每题 100 个；导入时记录实际条数并去除重复输入 |
 
-题目目录、分片大小和 SHA256 在 `backend/src/routeevo/benchmarks/effibench_catalog.json`。规模与 Python 覆盖通过读取全部 20 个分片的元数据和选定列核实；没有把 2.34 GB 数据放进 Git。部分题目的测试字符串很大，解压时所需内存可能明显高于压缩文件大小。
+题目目录、分片大小和 SHA256 在 `backend/src/quotacrux/benchmarks/effibench_catalog.json`。规模与 Python 覆盖通过读取全部 20 个分片的元数据和选定列核实；没有把 2.34 GB 数据放进 Git。部分题目的测试字符串很大，解压时所需内存可能明显高于压缩文件大小。
 
 上游运行逻辑参考 [EffiBench-X `21b6668a`](https://github.com/EffiBench/EffiBench-X/tree/21b6668a49a342c843e679cc5ed16081064a5768)，相关许可证及修改说明见 [第三方说明](../../THIRD_PARTY_NOTICES.md)。
 
@@ -68,19 +68,19 @@ flowchart LR
 ```bash
 uv sync --extra benchmark --python 3.12.11
 
-# 每题只下载所在分片，缓存到当前 ROUTEEVO_VAR_DIR/benchmarks/。
+# 每题只下载所在分片，缓存到当前 QUOTACRUX_VAR_DIR/benchmarks/。
 # 下列两题在同一个 7,321,349-byte 分片中，第二次导入可复用缓存。
-uv run --extra benchmark routeevo tasks import-effibench codeforces/2104A \
+uv run --extra benchmark quotacrux tasks import-effibench codeforces/2104A \
   --split smoke --dev-cases 3 --case-limit 6
-uv run --extra benchmark routeevo tasks import-effibench leetcode/3188 \
+uv run --extra benchmark quotacrux tasks import-effibench leetcode/3188 \
   --split smoke --dev-cases 3 --case-limit 6
 
-uv run routeevo tasks list
-uv run routeevo run ebx-codeforces-2104A-smoke-3-6 --mode eval --snapshot v0
-uv run routeevo run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
+uv run quotacrux tasks list
+uv run quotacrux run ebx-codeforces-2104A-smoke-3-6 --mode eval --snapshot v0
+uv run quotacrux run ebx-leetcode-3188-smoke-3-6 --mode eval --snapshot v0
 ```
 
-离线导入加 `--parquet /path/to/test-00009-of-00020.parquet`，仍然验证固定 SHA256。去掉 `--case-limit` 即导入该题全部去重后用例；`--split` 必须明确指定，只有 A/smoke 可发布学习经验。不要把用于正式留出的题目先放入学习 split；pilot 与正式评测应使用独立 `ROUTEEVO_VAR_DIR`。
+离线导入加 `--parquet /path/to/test-00009-of-00020.parquet`，仍然验证固定 SHA256。去掉 `--case-limit` 即导入该题全部去重后用例；`--split` 必须明确指定，只有 A/smoke 可发布学习经验。不要把用于正式留出的题目先放入学习 split；pilot 与正式评测应使用独立 `QUOTACRUX_VAR_DIR`。
 
 一题有 100 个独立用例时，完整计时的容器启动次数较多：一个含 N 个用例的 suite，计时评测执行 12×N 次候选/基线程序，另有 12 次独立校验。预算检查仍在现有 Runner 的步骤边界进行；先用小子集测量每次实验成本，再决定正式批次和实际耗时预算。
 

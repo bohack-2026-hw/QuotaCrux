@@ -40,10 +40,10 @@ uv sync --frozen --python 3.12.11
 MAC_VAR="$PWD/var-algotune-formal-v2-20261114"
 MAC_EVIDENCE="$MAC_VAR/evidence"
 mkdir -p "$MAC_EVIDENCE"
-export ROUTEEVO_NO_DOTENV=1
-export ROUTEEVO_VAR_DIR="$MAC_VAR"
+export QUOTACRUX_NO_DOTENV=1
+export QUOTACRUX_VAR_DIR="$MAC_VAR"
 for problem in convolve_1d pagerank; do
-  .venv/bin/routeevo tasks import-algotune "$problem" \
+  .venv/bin/quotacrux tasks import-algotune "$problem" \
     --split formal-v2-20261114 --dev-cases 5 --final-cases 15 --size 1000 --seed 1729
 done
 # 将变量设为本次 importer 实际返回的新 task_id。
@@ -57,10 +57,10 @@ done
 
 控制强度沿用已登记的3ms/20ms，不删除慢点或临时调统计门槛。只需要本次镜像/任务重建和这轮校准；正常/异常GC恢复检查与全量pytest不重复。
 
-新证据回传 #4/#2 后，将prepared文件补全并另存为`mac-freeze.json`。首次付费请求前做一次最小核对：实际HEAD与清洁状态、冻结模型公开配置、两题包/SQLite/hash、镜像及v2环境字段、校准状态、模式提示hash和15项映射均一致即启动，无需等待再次确认。凭据由环境提供，取消准备阶段的`ROUTEEVO_NO_DOTENV`或显式加载所需模型环境，不将密钥写入冻结文件。按同一checkout/VAR_DIR串行运行：
+新证据回传 #4/#2 后，将prepared文件补全并另存为`mac-freeze.json`。首次付费请求前做一次最小核对：实际HEAD与清洁状态、冻结模型公开配置、两题包/SQLite/hash、镜像及v2环境字段、校准状态、模式提示hash和15项映射均一致即启动，无需等待再次确认。凭据由环境提供，取消准备阶段的`QUOTACRUX_NO_DOTENV`或显式加载所需模型环境，不将密钥写入冻结文件。按同一checkout/VAR_DIR串行运行：
 
 ```bash
-.venv/bin/routeevo research-compare \
+.venv/bin/quotacrux research-compare \
   --plan "$MAC_EVIDENCE/mac-freeze.json" --plan-id native-formal-20261114-mac-v2 \
   --pricing "$MAC_EVIDENCE/price-snapshot.json" --fixed-model small \
   --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120 \
@@ -81,7 +81,7 @@ done
 MAC_ROUTING_VAR="$PWD/var-algotune-routing-v2-20261114"
 MAC_ROUTING_EVIDENCE="$MAC_ROUTING_VAR/evidence"
 # 先在此新VAR_DIR登记已冻结的卷积包，并放入上述计划及三角色价格文件。
-ROUTEEVO_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/routeevo ablate-routing "$CONVOLVE_TASK_ID" \
+QUOTACRUX_VAR_DIR="$MAC_ROUTING_VAR" .venv/bin/quotacrux ablate-routing "$CONVOLVE_TASK_ID" \
   --snapshot v0 --repeats 3 --research-mode feedback --research-model-policy adaptive \
   --plan "$MAC_ROUTING_EVIDENCE/mac-routing-plan.json" --plan-id routing-native-20261114-mac-v2 \
   --pricing "$MAC_ROUTING_EVIDENCE/prices.json" \

@@ -42,7 +42,7 @@ ALE 原始 score 使用目标方向，AlgoTune 使用 speedup。动作选择、�
 `--pricing` 文件内容是三个角色的价格快照映射，而不是整个 freeze 文档。
 
 ```sh
-uv run routeevo ablate-routing TASK_ID --snapshot v0 --repeats 3 \
+uv run quotacrux ablate-routing TASK_ID --snapshot v0 --repeats 3 \
   --research-mode feedback --research-model-policy adaptive \
   --plan worker-plan.json --plan-id routing-native-v1 --pricing prices.json \
   --wall-clock 900 --max-requests 20 --max-candidates 10 --request-timeout 120 \

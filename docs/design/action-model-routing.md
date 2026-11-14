@@ -36,7 +36,7 @@ flowchart TD
 - Runner 保有候选静态检查、沙箱、实测判定、停止与资源记账。生成模型返回与已选动作不同的 action
   会记为 `invalid_action/route_mismatch`；外部调用错误沿用既有错误记录与停止规则。
 
-实现入口：`backend/src/routeevo/agent/routing.py`；接入点：`agent/runner.py` 的 `_iterate`、
+实现入口：`backend/src/quotacrux/agent/routing.py`；接入点：`agent/runner.py` 的 `_iterate`、
 `_select_model` 和 `_invoke`。没有更改任务、经验或 evaluator 接口。
 
 ## 四组配置
@@ -51,17 +51,17 @@ flowchart TD
 在 `backend/` 运行单组：
 
 ```sh
-uv run routeevo run B-01 --snapshot v0 --action-router decisions --model-router rule
+uv run quotacrux run B-01 --snapshot v0 --action-router decisions --model-router rule
 ```
 
 运行四组、每组重复 3 次：
 
 ```sh
-uv run routeevo ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
+uv run quotacrux ablate-routing B-01 B-02 --snapshot v0 --repeats 3 \
   --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
 ```
 
-任务需先通过 `routeevo tasks build` 注册。四组统一关闭初始经验分流，从 small 开始；比较固定任务、经验快照、生成模型、总预算、沙箱及评测器，
+任务需先通过 `quotacrux tasks build` 注册。四组统一关闭初始经验分流，从 small 开始；比较固定任务、经验快照、生成模型、总预算、沙箱及评测器，
 仅改变 routing；按任务和重复轮次轮换组别顺序，串行执行。运行均为 eval，不发布经验；拒绝使用包含
 这些任务经验的快照。`v0` 为空快照，适合观察路由本身；非空快照可能在复用阶段直接完成，报告保留这类零调用运行。
 
@@ -117,7 +117,7 @@ independent/no_feedback 不接受 adaptive。independent 模式只见 c0，
 初始分流的 `route_model` 步骤由 `program` 记录，Decisions 的模型选择由 `model` 记录。
 报告的 `route` 只取初始程序分流，逐步 `model_role` 与用途账本保留实际调用角色。
 benchmark adapter 沿用各自任务、评测器、raw-score 或 speedup 目标；研究截止时间与候选资格判定保持有效。
-协调入口：[RouteEvo issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
+协调入口：[QuotaCrux issue #1](https://github.com/bohack-2026-hw/RouteEvo/issues/1)。
 
 历史回放结果见 [decision-model/README.md](../archive/decisions-experiments/README.md)。
 本适配器提供受控对照入口；是否提高成功率、节省成本，要由四组实测判定。
@@ -158,8 +158,8 @@ AIPing 的费用未查询，保留为未知。
 
 ```sh
 cd backend
-uv run routeevo tasks build --spec ../docs/archive/decisions-experiments/routing-smoke-spec.json
-uv run routeevo ablate-routing routing-smoke-01 --snapshot v0 --repeats 1 \
+uv run quotacrux tasks build --spec ../docs/archive/decisions-experiments/routing-smoke-spec.json
+uv run quotacrux ablate-routing routing-smoke-01 --snapshot v0 --repeats 1 \
   --max-requests 6 --max-candidates 4 --wall-clock 300 --request-timeout 120
 ```
 

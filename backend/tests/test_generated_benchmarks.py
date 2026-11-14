@@ -3,8 +3,8 @@ import json
 
 import pytest
 
-from routeevo import config, evaluator, families, memory, taskpkg
-from routeevo.sandbox import executor
+from quotacrux import config, evaluator, families, memory, taskpkg
+from quotacrux.sandbox import executor
 
 
 PARAMS = {

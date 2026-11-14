@@ -19,7 +19,7 @@ from pathlib import Path
 
 import segno
 
-from routeevo import compare, db, live, report
+from quotacrux import compare, db, live, report
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "docs" / "poster" / "assets"

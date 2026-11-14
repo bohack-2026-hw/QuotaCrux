@@ -58,5 +58,5 @@
 
 ## 复现
 
-- 重跑：`uv run routeevo run S-01 --mode online --snapshot v19`
-- 复核最佳产物：`uv run routeevo check S-01 candidates/c1.py --dataset final`
+- 重跑：`uv run quotacrux run S-01 --mode online --snapshot v19`
+- 复核最佳产物：`uv run quotacrux check S-01 candidates/c1.py --dataset final`

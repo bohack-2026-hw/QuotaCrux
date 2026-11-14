@@ -1,6 +1,6 @@
 """Build the presentation deck from stored records (no hand-typed results).
 
-    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/presentation/RouteEvo.pptx]
+    uv run --with python-pptx --with matplotlib python scripts/build_deck.py [--out ../docs/presentation/QuotaCrux-technical.pptx]
 
 Charts follow the dashboard palette (validated with the dataviz validator on #fbf9f4): old snapshot #2a78d6,
 new snapshot #eb6834. Every number on a slide is read from the SQLite store or a comparison summary.
@@ -26,7 +26,7 @@ from pptx.enum.shapes import MSO_SHAPE  # noqa: E402
 from pptx.enum.text import PP_ALIGN  # noqa: E402
 from pptx.util import Emu, Pt  # noqa: E402
 
-from routeevo import compare, db, memory, narrative, report, research  # noqa: E402
+from quotacrux import compare, db, memory, narrative, report, research  # noqa: E402
 
 PAPER, CARD, INK, INK2, INK3 = "F2EEE5", "FBF9F4", "141412", "4A4843", "807C72"
 ACCENT, GOOD, BAD, OLD, NEW, RULE = "E8452C", "0A7A0A", "A12B2B", "2A78D6", "EB6834", "D9D2C2"
@@ -65,7 +65,7 @@ class Deck:
             line.fill.solid()
             line.fill.fore_color.rgb = rgb(INK)
             line.line.fill.background()
-        self.text(s, f"RouteEvo · {self.n}", 11.6, 7.05, 1.6, 0.3, size=9, color=INK3, align=PP_ALIGN.RIGHT)
+        self.text(s, f"QuotaCrux（枢决） · {self.n}", 11.6, 7.05, 1.6, 0.3, size=9, color=INK3, align=PP_ALIGN.RIGHT)
         return s
 
     @staticmethod
@@ -382,9 +382,9 @@ def build(out: Path, shots: Path) -> None:
     # 1 cover
     s = d.slide()
     s.background.fill.fore_color.rgb = rgb(INK)
-    box = d.text(s, "Route", 0.9, 2.0, 8, 1.4, size=80, color=PAPER, font="Georgia")
+    box = d.text(s, "Quota", 0.9, 2.0, 8, 1.4, size=80, color=PAPER, font="Georgia")
     evo = box.text_frame.paragraphs[0].add_run()
-    evo.text = "Evo"
+    evo.text = "Crux"
     evo.font.size, evo.font.italic, evo.font.name = Pt(80), True, "Georgia"
     evo.font.color.rgb = rgb(ACCENT)
     d.text(s, "把已验证的研究成果，变成下一次研究的起点", 0.95, 3.5, 11.5, 0.7, size=28, color=PAPER, font=HEAD_FONT, bold=True)
@@ -402,7 +402,7 @@ def build(out: Path, shots: Path) -> None:
                    f"模型请求中位数 {g(A['model_requests_median'])} → {g(B['model_requests_median'])} · GPT 费用 {usd(A['cost_usd_total'])} → {usd(B['cost_usd_total'])} · "
                    f"循环时长中位数 {A['agent_loop_s_median']:.0f}s → {B['agent_loop_s_median']:.0f}s"),
                0.95, 5.35, 11.8, 0.45, size=14, color=PAPER)
-    d.text(s, "BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
+    d.text(s, "QuotaCrux（枢决） · BoHack 2026 · 倍漾量化 Research Agent 赛道", 0.95, 6.3, 8, 0.4, size=12, color="9A9485")
 
     # 2 questions
     s = d.slide("我们要回答的两个问题", "问题定义")
@@ -872,9 +872,9 @@ def build(out: Path, shots: Path) -> None:
     s = d.slide("复现与界面", "交付")
     d.bullets(s, ["cd backend && uv sync && cp .env.example .env",
                   "scripts/experiment.sh   # 重建任务包 → A 学习两轮 → B、D 对照 → S 任务流",
-                  "uv run routeevo serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理 · 实时进度",
-                  "uv run routeevo export-run <run_id> --bundle <目录>   # 研究成果交付包",
-                  "uv run routeevo snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
+                  "uv run quotacrux serve   # 界面：总览 · 研究运行 · 经验查看 · 对照结果 · 版本管理 · 实时进度",
+                  "uv run quotacrux export-run <run_id> --bundle <目录>   # 研究成果交付包",
+                  "uv run quotacrux snapshots activate v0 --reason 回退   # 回退只切换指针，历史保留"], 0.6, 1.75, 6.4, 5, size=14)
     shot = shots / "home.png"
     if shot.exists():
         d.image(s, shot, 7.0, 1.75, 5.8)
@@ -886,7 +886,7 @@ def build(out: Path, shots: Path) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "RouteEvo.pptx"))
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "QuotaCrux-technical.pptx"))
     ap.add_argument("--shots", default=str(Path(__file__).resolve().parents[2] / "docs" / "presentation" / "deck" / "shots"))
     args = ap.parse_args()
     build(Path(args.out), Path(args.shots))

@@ -1,4 +1,4 @@
-# RouteEvo 产品需求（Research Agent）
+# QuotaCrux（枢决） 产品需求（Research Agent）
 
 版本：v0.4；日期：2026-11-14。本文定义产品要求，具体评测参数见[评测入口](../evaluation/README.md)。
 

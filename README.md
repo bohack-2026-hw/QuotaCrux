@@ -1,11 +1,11 @@
-# RouteEvo
+# QuotaCrux（枢决）
 
 一个根据实验反馈推进研究、积累执行经验的 Research Agent 系统。
 
 团队已于 2026-11-14 确认选择倍漾量化 Research Agent 赛道。系统在给定数据、工具和资源限制下，自主完成“规划—收集证据—提出假设—实验—验证—修正”，交付可复现的成果，并将执行经验用于后续研究。
 
 - [文档总导航](docs/README.md)：需求、工程设计、评测批次、展示材料与历史归档。
-- 提交材料：[项目说明](docs/presentation/project-overview.md)（[PDF](docs/presentation/project-overview.pdf)） · [实验批次与结果](docs/research/README.md) · [历史经验实验](docs/archive/memory-learning-results.md)（[PDF](docs/archive/memory-learning-results.pdf)） · [演示文稿](docs/presentation/RouteEvo.pptx)（[PDF](docs/presentation/RouteEvo.pdf)）
+- 提交材料：[项目说明](docs/presentation/project-overview.md)（[PDF](docs/presentation/project-overview.pdf)） · [实验批次与结果](docs/research/README.md) · [历史经验实验](docs/archive/memory-learning-results.md)（[PDF](docs/archive/memory-learning-results.pdf)） · [演示文稿](docs/presentation/QuotaCrux.pptx)（[PDF](docs/presentation/QuotaCrux.pdf)）
 - [验收记录](docs/requirements/acceptance-record.md)：RA-AC-01—08 逐条对应的实现与证据 · [研究成果样例](docs/research/) · [演示脚本](docs/presentation/demo-script.md)
 - [产品需求](docs/requirements/product-requirements.md) · [赛题原文与团队选择](docs/requirements/competition-brief.md)
 - [首版开工决策与 agent 问题答复](docs/archive/initial-implementation-decisions.md) · [核心运行与经验管理需求](docs/requirements/core-requirements.md)
@@ -23,9 +23,9 @@
 
 ```sh
 cd backend && uv sync && cp .env.example .env   # 填 OPENAI_API_KEY；本地 Qwen 走 Ollama
-uv run routeevo tasks build                     # 按 tasks/lock.json 重建冻结的任务包
+uv run quotacrux tasks build                     # 按 tasks/lock.json 重建冻结的任务包
 (cd ../frontend && pnpm install && pnpm build)
-uv run routeevo serve                           # 打开 http://127.0.0.1:8000
+uv run quotacrux serve                           # 打开 http://127.0.0.1:8000
 ```
 
 - [后端说明](backend/README.md)：研究循环、Docker 沙箱与外部评测器、经验快照、对照评测、命令与接口。

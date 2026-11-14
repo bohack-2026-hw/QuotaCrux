@@ -1,0 +1,39 @@
+// Plain-text formatting for research results, shared by the research components (kept out of component files).
+import { FAMILY_TITLE, RUN_STATE, STOP, fmt } from './labels'
+import type { RRun, RTask } from './research'
+import { total } from './research'
+
+/** Score and speedup keep their own units; a speedup carries four decimals as the reports do. */
+export function metricText(metric: string, v: number | null | undefined): string {
+  if (v == null) return '—'
+  return metric === 'score' ? `${fmt.n(v)} 分` : `${v.toFixed(4)}×`
+}
+
+export function metricName(metric: string) {
+  return metric === 'score' ? '原始得分' : '加速比'
+}
+
+export function deltaText(task: RTask, v: number | null): string | null {
+  if (v == null || task.baseline == null) return null
+  if (task.metric === 'score') {
+    const d = v - task.baseline
+    const pct = task.baseline ? (d / Math.abs(task.baseline)) * 100 : null
+    return `${d >= 0 ? '+' : ''}${fmt.n(d)}${pct != null ? `（${d >= 0 ? '+' : ''}${pct.toFixed(2)}%）` : ''}`
+  }
+  return null
+}
+
+export function sumText(vs: (number | null)[], f: (v: number) => string) {
+  const t = total(vs)
+  return t.value == null ? '未知' : `${f(t.value)}${t.partial ? '（部分未知）' : ''}`
+}
+
+export function familyName(f: string) {
+  return FAMILY_TITLE[f] ?? f
+}
+
+export function stopText(r: RRun): string {
+  if (r.state === 'planned') return '尚未开始'
+  if (r.state === 'running') return '研究中'
+  return STOP[r.stopReason ?? ''] ?? r.stopReason ?? RUN_STATE[r.state]?.[0] ?? r.state
+}
